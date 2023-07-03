@@ -30,6 +30,11 @@ export const CascadingSlotLocatorNames = {
     btnAutoSpin: "btnAutoSpin",
     lblErrorMsg: "lblErrorMsg",
     mnuHamburger: "mnuHamburger",
+    mnuHamburgerExpandSoundOn: "mnuHamburgerExpandSoundOn",
+    mnuHamburgerExpandSoundOff: "mnuHamburgerExpandSoundOff",
+    mnuHamburgerExpandTrialMode: "mnuHamburgerExpandTrialMode",
+    icoSound: "icoSound",
+    icoMusic: "icoMusic",
     btnTurbo: "btnTurbo",
     btnSpin: "btnSpin",
     imgTurboOn: "imgTurboOn",
@@ -61,6 +66,10 @@ export const CascadingSlotLocatorNames = {
     btnClosePopup: "btnClosePopup", //Others
     btnTotalStake: "btnTotalStake",
     popBetControl: "popBetControl",
+    popBetControlMaxBetLevel: "popBetControlMaxBetLevel",
+    popBetControlMinBetLevel: "popBetControlMinBetLevel",
+    popBetControlMaxCoinValue: "popBetControlMaxCoinValue",
+    popBetControlMinCoinValue:"popBetControlMinCoinValue",
     btnBetLevelIncrease: "btnBetLevelIncrease",
     btnBetLevelDecrease: "btnBetLevelDecrease",
     imgBetLevel: "imgBetLevel",
@@ -76,67 +85,84 @@ export const CascadingSlotLocatorNames = {
     btnTrialMode: "btnTrialMode",
     popBetControlTrialMode: "popBetControlTrialMode",
     btnHistoryTrialmode: "btnHistoryTrialmode",
-    imgGeneralInfoDefaultTrialMode: "imgGeneralInfoDefaultTrialMode",
+    imgUserBalanceTrialMode: "imgUserBalanceTrialMode",
     imgRoundIdFirstRoundTrialMode: "imgRoundIdFirstRoundTrialMode",
 };
 
 export const CascadingSlotLocators = [
-    new ImageLocator(CascadingSlotLocatorNames.imgGameName, 410, 1, 450, 95),
-    new ImageLocator(CascadingSlotLocatorNames.imgBoard0, 290, 110, 700, 410),
-    new ImageLocator(CascadingSlotLocatorNames.imgBoard1, 290, 110, 700, 410),
-    new ImageLocator(CascadingSlotLocatorNames.imgBoard2, 290, 110, 700, 410),
-    new ImageLocator(CascadingSlotLocatorNames.imgBoard3, 290, 110, 700, 410),
-    new ImageLocator(CascadingSlotLocatorNames.imgBoard4, 290, 110, 700, 410),
-    new ImageLocator(CascadingSlotLocatorNames.lblRoundID, 885, 52, 150, 40),
-    new ImageLocator(CascadingSlotLocatorNames.btnPayline, 130, 622, 90, 46),
-    new ImageLocator(CascadingSlotLocatorNames.cboBetLevel, 305, 620, 80, 50),
-    new ImageLocator(CascadingSlotLocatorNames.imgBetLevel0_1, 305, 620, 80, 50),
-    new ImageLocator(CascadingSlotLocatorNames.imgBetLevel0_2, 305, 620, 80, 50),
-    new ImageLocator(CascadingSlotLocatorNames.imgBetLevel1, 305, 620, 80, 50),
-    new ImageLocator(CascadingSlotLocatorNames.lblBetLevel0_1, 183, 547, 100, 55),
-    new ImageLocator(CascadingSlotLocatorNames.lblBetLevel0_2, 292, 547, 100, 55),
-    new ImageLocator(CascadingSlotLocatorNames.lblBetLevel1, 402, 547, 100, 55),
-    new ImageLocator(CascadingSlotLocatorNames.lblBetLevel5, 292, 547, 100, 55),
-    new ImageLocator(CascadingSlotLocatorNames.lblBetLevel10, 402, 547, 100, 55),
-    new ImageLocator(CascadingSlotLocatorNames.btnPayline1, 240, 186, 100, 70),
-    new ImageLocator(CascadingSlotLocatorNames.lblTotalbet, 456, 583, 147, 88),
-    new ImageLocator(CascadingSlotLocatorNames.imgTotalbet0_1, 456, 583, 147, 88),
-    new ImageLocator(CascadingSlotLocatorNames.imgTotalbet0_2, 456, 583, 147, 88),
-    new ImageLocator(CascadingSlotLocatorNames.imgTotalbet1, 456, 583, 147, 88),
-    new ImageLocator(CascadingSlotLocatorNames.imgTotalbet5, 456, 583, 147, 88),
-    new ImageLocator(CascadingSlotLocatorNames.imgTotalbet10, 456, 583, 147, 88),
+    new ImageLocator(CascadingSlotLocatorNames.imgGameName,  68, 583, 238, 130),
+    new ImageLocator(CascadingSlotLocatorNames.imgBoard0, 338, 65, 600, 500),
+    new ImageLocator(CascadingSlotLocatorNames.imgBoard1, 338, 65, 600, 500),
+    new ImageLocator(CascadingSlotLocatorNames.imgBoard2, 338, 65, 600, 500),
+    new ImageLocator(CascadingSlotLocatorNames.imgBoard3, 338, 65, 600, 500),
+    new ImageLocator(CascadingSlotLocatorNames.imgBoard4, 338, 65, 600, 500),
+    new ImageLocator(CascadingSlotLocatorNames.lblRoundID, 990, 120, 192, 40),
+    new ImageLocator(CascadingSlotLocatorNames.btnPayline, 130, 622, 90, 46),//
+    new ImageLocator(CascadingSlotLocatorNames.cboBetLevel, 305, 620, 80, 50),//
+    new ImageLocator(CascadingSlotLocatorNames.imgBetLevel, 305, 620, 80, 50),//
+    new ImageLocator(CascadingSlotLocatorNames.imgBetLevel0_2, 305, 620, 80, 50),//
+    new ImageLocator(CascadingSlotLocatorNames.imgBetLevel1, 305, 620, 80, 50),//
+    new ImageLocator(CascadingSlotLocatorNames.lblBetLevel0_1, 183, 547, 100, 55),//
+    new ImageLocator(CascadingSlotLocatorNames.lblBetLevel0_2, 292, 547, 100, 55),//
+    new ImageLocator(CascadingSlotLocatorNames.lblBetLevel1, 402, 547, 100, 55),//
+    new ImageLocator(CascadingSlotLocatorNames.lblBetLevel5, 292, 547, 100, 55),//
+    new ImageLocator(CascadingSlotLocatorNames.lblBetLevel10, 402, 547, 100, 55),//
+    new ImageLocator(CascadingSlotLocatorNames.btnPayline1, 240, 186, 100, 70),//
+    new ImageLocator(CascadingSlotLocatorNames.lblTotalbet, 456, 583, 147, 88),//
+    new ImageLocator(CascadingSlotLocatorNames.imgTotalbet0_1, 456, 583, 147, 88),//
+    new ImageLocator(CascadingSlotLocatorNames.imgTotalbet0_2, 456, 583, 147, 88),//
+    new ImageLocator(CascadingSlotLocatorNames.imgTotalbet1, 456, 583, 147, 88),//
+    new ImageLocator(CascadingSlotLocatorNames.imgTotalbet5, 456, 583, 147, 88),//
+    new ImageLocator(CascadingSlotLocatorNames.imgTotalbet10, 456, 583, 147, 88),//
     new ImageLocator(CascadingSlotLocatorNames.lblErrorMsg, 521, 511, 270, 45),
-    new ImageLocator(CascadingSlotLocatorNames.btnAutoSpin, 808, 607, 80, 80),
-    new ImageLocator(CascadingSlotLocatorNames.mnuHamburger, 42, 72, 65, 65),
-    new ImageLocator(CascadingSlotLocatorNames.btnTurbo, 1096, 632, 58, 58),
-    new ImageLocator(CascadingSlotLocatorNames.imgTurboOn, 1096, 632, 58, 58),
-    new ImageLocator(CascadingSlotLocatorNames.imgTurboOFF, 1096, 632, 58, 58),
-    new ImageLocator(CascadingSlotLocatorNames.btnSpin, 927, 555, 120, 120),
-    new ImageLocator(CascadingSlotLocatorNames.imgLeftNumbersColumn, 223, 120, 53, 386),
-    new ImageLocator(CascadingSlotLocatorNames.imgRightNumbersColumn, 1013, 145, 24, 355),
-    new ImageLocator(CascadingSlotLocatorNames.icoHistory, 50, 416, 50, 50),
-    new ImageLocator(CascadingSlotLocatorNames.popHistory, 546, 40, 192, 50),
-    new ImageLocator(CascadingSlotLocatorNames.icoGuide, 45, 495, 65, 65),
-    new ImageLocator(CascadingSlotLocatorNames.popAutoSpin, 392, 145, 513, 373),
-    new ImageLocator(CascadingSlotLocatorNames.btnAutoSpinTurbo, 408, 463, 30, 30),
+    new ImageLocator(CascadingSlotLocatorNames.btnAutoSpin, 823, 637, 63, 54),
+    new ImageLocator(CascadingSlotLocatorNames.mnuHamburger, 45, 62, 55, 55),
+    new ImageLocator(CascadingSlotLocatorNames.mnuHamburgerExpandSoundOn, 35, 65, 80, 470),
+    new ImageLocator(CascadingSlotLocatorNames.mnuHamburgerExpandSoundOff, 35, 65, 80, 470),
+    new ImageLocator(CascadingSlotLocatorNames.mnuHamburgerExpandTrialMode, 35, 65, 80, 470),
+    new ImageLocator(CascadingSlotLocatorNames.icoSound, 56, 327, 35, 35),
+    new ImageLocator(CascadingSlotLocatorNames.icoMusic, 56, 237, 35, 35),
+    new ImageLocator(CascadingSlotLocatorNames.btnTurbo, 1088, 626, 90, 90),
+    new ImageLocator(CascadingSlotLocatorNames.imgTurboOn, 1088, 626, 90, 90),
+    new ImageLocator(CascadingSlotLocatorNames.imgTurboOFF, 1088, 626, 90, 90),
+    new ImageLocator(CascadingSlotLocatorNames.btnSpin, 940, 575, 106, 88),
+    new ImageLocator(CascadingSlotLocatorNames.imgLeftNumbersColumn, 223, 120, 53, 386),//
+    new ImageLocator(CascadingSlotLocatorNames.imgRightNumbersColumn, 1013, 145, 24, 355),//
+    new ImageLocator(CascadingSlotLocatorNames.icoHistory, 56, 408, 40, 40),
+    new ImageLocator(CascadingSlotLocatorNames.popHistory, 166, 28, 940, 122),
+    new ImageLocator(CascadingSlotLocatorNames.icoGuide, 56, 492, 40, 40),
+    new ImageLocator(CascadingSlotLocatorNames.popAutoSpin, 378, 145, 528, 390),
+    new ImageLocator(CascadingSlotLocatorNames.btnAutoSpinTurbo, 410, 466, 25, 25),
     new ImageLocator(CascadingSlotLocatorNames.btnAutoSpinStart, 713, 451, 129, 55),
     new ImageLocator(CascadingSlotLocatorNames.lblHistoryFirstRow, 140, 168, 1000, 30),
-    new ImageLocator(CascadingSlotLocatorNames.locHistoryRoundId, 369, 170, 70, 30),
-    new ImageLocator(CascadingSlotLocatorNames.lblHistoryDetailRoundId, 643, 54, 140, 40),
-    new ImageLocator(CascadingSlotLocatorNames.tblPayline1, 190, 168, 880, 432),
-    new ImageLocator(CascadingSlotLocatorNames.tblAllPayline, 190, 168, 880, 432),
-    new ImageLocator(CascadingSlotLocatorNames.tblEvenPayline, 190, 168, 880, 432),
-    new ImageLocator(CascadingSlotLocatorNames.tblOddPayline, 190, 168, 880, 432),
-    new ImageLocator(CascadingSlotLocatorNames.btnOddPayline, 668, 111, 154, 50),
-    new ImageLocator(CascadingSlotLocatorNames.btnEvenPayline, 460, 111, 154, 50),
-    new ImageLocator(CascadingSlotLocatorNames.btnAllPayline, 257, 111, 154, 50),
-    new ImageLocator(CascadingSlotLocatorNames.btnClearPayline, 875, 111, 154, 50),
-    new ImageLocator(CascadingSlotLocatorNames.btnConfirmPayline, 532, 612, 210, 55),
-    new ImageLocator(CascadingSlotLocatorNames.imgConfirmPaylineDisabled, 532, 612, 210, 55),
+    new ImageLocator(CascadingSlotLocatorNames.locHistoryRoundId, 395, 167, 50, 24),
+    new ImageLocator(CascadingSlotLocatorNames.lblHistoryDetailRoundId, 500, 33, 300, 40),
+    new ImageLocator(CascadingSlotLocatorNames.tblPayline1, 190, 168, 880, 432),//
+    new ImageLocator(CascadingSlotLocatorNames.tblAllPayline, 190, 168, 880, 432),//
+    new ImageLocator(CascadingSlotLocatorNames.tblEvenPayline, 190, 168, 880, 432),//
+    new ImageLocator(CascadingSlotLocatorNames.tblOddPayline, 190, 168, 880, 432),//
+    new ImageLocator(CascadingSlotLocatorNames.btnOddPayline, 668, 111, 154, 50),//
+    new ImageLocator(CascadingSlotLocatorNames.btnEvenPayline, 460, 111, 154, 50),//
+    new ImageLocator(CascadingSlotLocatorNames.btnAllPayline, 257, 111, 154, 50),//
+    new ImageLocator(CascadingSlotLocatorNames.btnClearPayline, 875, 111, 154, 50),//
+    new ImageLocator(CascadingSlotLocatorNames.btnConfirmPayline, 532, 612, 210, 55),//
+    new ImageLocator(CascadingSlotLocatorNames.imgConfirmPaylineDisabled, 532, 612, 210, 55),//
     new ImageLocator(CascadingSlotLocatorNames.btnClosePopup, 5, 5, 10, 10),
-    new ImageLocator(CascadingSlotLocatorNames.btnTotalStake, 318, 632, 148, 50),
-    new ImageLocator(CascadingSlotLocatorNames.popBetControl, 217, 243, 355, 393),
-    new ImageLocator(CascadingSlotLocatorNames.imgBottomArea, 278, 595, 618, 115),
-    new ImageLocator(CascadingSlotLocatorNames.imgGeneralInfoDefaultTrialMode, 1073 , 42, 202, 71),
-    new ImageLocator(CascadingSlotLocatorNames.lblTumbleWinList, 1098, 210, 153, 232),
+    new ImageLocator(CascadingSlotLocatorNames.btnTotalStake, 418, 640, 1000, 50),
+    new ImageLocator(CascadingSlotLocatorNames.popBetControl, 286, 230, 375, 380),
+    new ImageLocator(CascadingSlotLocatorNames.btnBetLevelIncrease, 522, 348, 25, 25),
+    new ImageLocator(CascadingSlotLocatorNames.btnBetLevelDecrease, 378, 348, 25, 25),
+    new ImageLocator(CascadingSlotLocatorNames.btnCoinValueIncrease, 522, 448, 25, 25),
+    new ImageLocator(CascadingSlotLocatorNames.btnCoinValueDecrease, 378, 448, 25, 25),
+    new ImageLocator(CascadingSlotLocatorNames.popBetControlMaxBetLevel, 286, 230, 375, 380),
+    new ImageLocator(CascadingSlotLocatorNames.popBetControlMinBetLevel, 286, 230, 375, 380),
+    new ImageLocator(CascadingSlotLocatorNames.popBetControlMaxCoinValue, 286, 230, 375, 380),
+    new ImageLocator(CascadingSlotLocatorNames.popBetControlMinCoinValue, 286, 230, 375, 380),
+    new ImageLocator(CascadingSlotLocatorNames.imgBottomArea, 358, 607, 552, 98),
+    new ImageLocator(CascadingSlotLocatorNames.lblTumbleWinList, 990, 222, 194, 216),
+    new ImageLocator(CascadingSlotLocatorNames.imgRoundIdFirstRoundTrialMode, 990, 120, 192, 40),
+    new ImageLocator(CascadingSlotLocatorNames.btnTrialMode, 147, 47, 148, 50),
+    
+    new ImageLocator(CascadingSlotLocatorNames.imgUserBalanceTrialMode, 985, 52, 200, 50),
+    
 ];

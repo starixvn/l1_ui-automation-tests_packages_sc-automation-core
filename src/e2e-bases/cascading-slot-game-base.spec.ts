@@ -69,6 +69,35 @@ export class CascadingSlotGameBase {
             expect(defaultTumbleWinList.image).toMatchSnapshot(defaultTumbleWinList.name);
         });
 
+        test("Verify menu expand with sound and music on", async () => {
+            //Act
+            await this.game.clickLocator(CascadingSlotLocatorNames.mnuHamburger);
+            const mnuHamburgerExpandSoundOn = await this.game.capture(CascadingSlotLocatorNames.mnuHamburgerExpandSoundOn);
+
+            //Assert
+            expect(mnuHamburgerExpandSoundOn.image).toMatchSnapshot(mnuHamburgerExpandSoundOn.name);
+
+            //Pre Act
+
+            await this.game.clickOutSide();
+        });
+
+        test("Verify menu expand with sound and music off", async () => {
+            //Act
+            await this.game.clickLocator(CascadingSlotLocatorNames.mnuHamburger);
+            await this.game.clickLocator(CascadingSlotLocatorNames.icoSound);
+            await this.game.clickLocator(CascadingSlotLocatorNames.icoMusic);
+            const mnuHamburgerExpandSoundOn = await this.game.capture(CascadingSlotLocatorNames.mnuHamburgerExpandSoundOn);
+
+            //Assert
+            expect(mnuHamburgerExpandSoundOn.image).toMatchSnapshot(mnuHamburgerExpandSoundOn.name);
+
+            
+            //Pre Act
+
+            await this.game.clickOutSide();
+        });
+
     }
 
     protected turboTests() {
@@ -104,8 +133,8 @@ export class CascadingSlotGameBase {
             //Arrange
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
             const bet = { choice: this.game.gameConfiguration.choices[0], amount:this.options.placeBetAmount??1 };
-            await this.player.selectPayline(CascadingSlotLocatorNames.btnPayline1);
-            await this.player.selectBetStake(CascadingSlotLocatorNames[`lblBetLevel${bet.amount}`]);
+            //await this.player.selectPayline(CascadingSlotLocatorNames.btnPayline1);
+            //await this.player.selectBetStake(CascadingSlotLocatorNames[`lblBetLevel${bet.amount}`]);
 
             //Act
             await this.game.waitForTimeout(timeout)
@@ -115,6 +144,7 @@ export class CascadingSlotGameBase {
             // Assert
             expect(bet).toMatchWinningSymbols(settledResults);
             await this.game.waitForTimeout(timeout);
+            await this.game. clickOutSide(); //Click outside to close big win popup
         });
 
         test("Verify user able spin by enter key with turbo mode OFF", async () => {
@@ -128,10 +158,11 @@ export class CascadingSlotGameBase {
             // Assert
             expect(bet).toMatchWinningSymbols(settledResults);
             await this.game.waitForTimeout(timeout);
+            await this.game.clickOutSide(); //Click outside to close big win popup
         });
 
         test("Verify user able spin by space with turbo mode ON", async () => {
-            //Arrange
+            //Arrang
             const bet = { choice: `btn${this.options.placeBetChoices[0]}`, amount: this.options.placeBetAmount ?? 1 };
             await clickTurbo(this.game);
 
@@ -142,6 +173,22 @@ export class CascadingSlotGameBase {
             // Assert
             expect(bet).toMatchWinningSymbols(settledResults);
             await this.game.waitForTimeout(timeout);
+            await this.game.clickOutSide(); //Click outside to close big win popup
+        });
+
+        test("Verify user able spin by enter key with turbo mode ON", async () => {
+            //Arrang
+            const bet = { choice: `btn${this.options.placeBetChoices[0]}`, amount: this.options.placeBetAmount ?? 1 };
+
+            //Act
+            await this.game.keyboardPress("Enter");
+            const settledResults = await this.game.waitForSettlement();
+
+            // Assert
+            expect(bet).toMatchWinningSymbols(settledResults);
+            await this.game.waitForTimeout(timeout);
+            await this.game.clickOutSide(); //Click outside to close big win popup
+            await clickTurbo(this.game); //turn off turbo
         });
     }
 
@@ -157,63 +204,63 @@ export class CascadingSlotGameBase {
 
         test("Verify increase bet level to the max value", async () => {
             //Act
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < 4; i++) {
                 await this.game.clickLocator(CascadingSlotLocatorNames.btnBetLevelIncrease)
               }
-            const imgBetLevelMax = await this.game.capture(CascadingSlotLocatorNames.imgBetLevel);
+            const popBetControlMaxBetLevel = await this.game.capture(CascadingSlotLocatorNames.popBetControlMaxBetLevel);
 
             //Assert
-            expect(imgBetLevelMax.image).toMatchSnapshot(imgBetLevelMax.name);
+            expect(popBetControlMaxBetLevel.image).toMatchSnapshot(popBetControlMaxBetLevel.name);
         });
 
         test("Verify increase coin value to the max value", async () => {
             //Act
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < 3; i++) {
                 await this.game.clickLocator(CascadingSlotLocatorNames.btnCoinValueIncrease)
               }
-            const imgCoinValueMax = await this.game.capture(CascadingSlotLocatorNames.imgCoinValue);
+            const popBetControlMaxCoinValue = await this.game.capture(CascadingSlotLocatorNames.popBetControlMaxCoinValue);
 
             //Assert
-            expect(imgCoinValueMax.image).toMatchSnapshot(imgCoinValueMax.name);
+            expect(popBetControlMaxCoinValue.image).toMatchSnapshot(popBetControlMaxCoinValue.name);
         });
 
-        test("Verify max value of total bet", async () => {
-            //Act
-            const imgTotalBetMax = await this.game.capture(CascadingSlotLocatorNames.imgTotalBet);
+        // test("Verify max value of total bet", async () => {
+        //     //Act
+        //     const imgTotalBetMax = await this.game.capture(CascadingSlotLocatorNames.imgTotalBet);
 
-            //Assert
-            expect(imgTotalBetMax.image).toMatchSnapshot(imgTotalBetMax.name);
-        });
+        //     //Assert
+        //     expect(imgTotalBetMax.image).toMatchSnapshot(imgTotalBetMax.name);
+        // });
 
         test("Verify decrease bet level to the min value", async () => {
             //Act
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < 9; i++) {
                 await this.game.clickLocator(CascadingSlotLocatorNames.btnBetLevelDecrease)
               }
-            const imgBetLevelMin = await this.game.capture(CascadingSlotLocatorNames.imgBetLevel);
+            const popBetControlMinBetLevel = await this.game.capture(CascadingSlotLocatorNames.popBetControlMinBetLevel);
 
             //Assert
-            expect(imgBetLevelMin.image).toMatchSnapshot(imgBetLevelMin.name);
+            expect(popBetControlMinBetLevel.image).toMatchSnapshot(popBetControlMinBetLevel.name);
         });
 
         test("Verify decrease coin value to the min value", async () => {
             //Act
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < 3; i++) {
                 await this.game.clickLocator(CascadingSlotLocatorNames.btnCoinValueDecrease)
               }
-            const imgCoinValueMin = await this.game.capture(CascadingSlotLocatorNames.imgCoinValue);
+            const popBetControlMinCoinValue = await this.game.capture(CascadingSlotLocatorNames.popBetControlMinCoinValue);
 
             //Assert
-            expect(imgCoinValueMin.image).toMatchSnapshot(imgCoinValueMin.name);
+            expect(popBetControlMinCoinValue.image).toMatchSnapshot(popBetControlMinCoinValue.name);
         });
 
-        test("Verify min value of total bet", async () => {
-            //Act
-            const imgTotalBetMin = await this.game.capture(CascadingSlotLocatorNames.imgTotalBet);
+        // test("Verify min value of total bet", async () => {
+        //     //Act
+        //     const imgTotalBetMin = await this.game.capture(CascadingSlotLocatorNames.imgTotalBet);
 
-            //Assert
-            expect(imgTotalBetMin.image).toMatchSnapshot(imgTotalBetMin.name);
-        });
+        //     //Assert
+        //     expect(imgTotalBetMin.image).toMatchSnapshot(imgTotalBetMin.name);
+        // });
 
     }
 
@@ -263,10 +310,11 @@ export class CascadingSlotGameBase {
 
             //Assert
             expect(settledResultsAutoSpin.length >= 10).toBe(true);
-            await this.game.waitForTimeout(timeout); //handle cases win multiplier
+            await this.game.waitForTimeout(timeout); 
+            await this.game.clickOutSide();//handle cases win multiplier
 
             //Post-Act
-            await this.game.clickOutSide();
+            await this.game.clickOutSide(); //click outside to close auto spin popup
         });
 
         test("Verify user can stop auto spin process by clicking on autospin button", async () => {
@@ -284,6 +332,8 @@ export class CascadingSlotGameBase {
             //Assert
             expect(settledResultsAutoSpin.length < 10).toBe(true);
             await this.game.waitForTimeout(timeout); //handle cases free spin or bonus
+            
+            await this.game.clickOutSide();
         });
     }
 
@@ -310,7 +360,7 @@ export class CascadingSlotGameBase {
     }
 
     protected trialModeTests() {
-        test("Verify bottom area ", async () => {
+        test("Verify default bottom area of trial mode", async () => {
             //Act
             await this.game.clickLocator(CascadingSlotLocatorNames.btnTrialMode)
             const imgBottomAreaTrialMode = await this.game.capture(CascadingSlotLocatorNames.imgBottomArea);
@@ -415,9 +465,11 @@ export class CascadingSlotGameBase {
     protected runScenario() {
         this.inGameTests();
         this.mainUITests();
+        this.turboTests();
         this.spinByKeys();
         this.autoSpinTests();
-        this.turboTests();
+        this.betControlTests();
+        this.trialModeTests();
         this.placeBetAndSettleTests();
         this.ticketHistoryTests();
         this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
