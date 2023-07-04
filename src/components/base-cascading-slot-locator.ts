@@ -8,6 +8,7 @@ export const CascadingSlotLocatorNames = {
     imgBoard3: "imgB3",
     imgBoard4: "imgB4",
     lblRoundID: "lblRoundID",
+    lblRoundIdFirstRoundTrialMode: "lblRoundIdFirstRoundTrialMode",
     btnPayline: "btnPayline",
     cboBetLevel: "cboBetLevel",
     lblBetLevel0_1: "lblBetLevel0_1",
@@ -44,6 +45,7 @@ export const CascadingSlotLocatorNames = {
     icoHistory: "icoHistory", // Menu options
     icoGuide: "icoGuide",
     popAutoSpin: "popAutoSpin", // AutoSPin Popup
+    popAutoSpinTurbo: "popAutoSpinTurbo",
     btnAutoSpin10: "btnAutoSpin10",
     btnAutoSpinTurbo: "btnAutoSpinTurbo",
     btnAutoSpinStart: "btnAutoSpinStart",
@@ -80,7 +82,9 @@ export const CascadingSlotLocatorNames = {
     btnTotalBetDecrease: "btnTotalBetIDecrease",
     imgTotalBet: "imgTotalBet",
     imgBottomArea: "imgBottomArea",
+    imgBottomAreaTrialMode: "imgBottomAreaTrialMode",
     lblTumbleWinList: "lblTumbleWinList",
+    lblTumbleWinListTrialMode: "lblTumbleWinListTrialMode",
     //Trial mode
     btnTrialMode: "btnTrialMode",
     popBetControlTrialMode: "popBetControlTrialMode",
@@ -97,6 +101,7 @@ export const CascadingSlotLocators = [
     new ImageLocator(CascadingSlotLocatorNames.imgBoard3, 338, 65, 600, 500),
     new ImageLocator(CascadingSlotLocatorNames.imgBoard4, 338, 65, 600, 500),
     new ImageLocator(CascadingSlotLocatorNames.lblRoundID, 990, 120, 192, 40),
+    new ImageLocator(CascadingSlotLocatorNames.lblRoundIdFirstRoundTrialMode, 990, 120, 192, 40),
     new ImageLocator(CascadingSlotLocatorNames.btnPayline, 130, 622, 90, 46),//
     new ImageLocator(CascadingSlotLocatorNames.cboBetLevel, 305, 620, 80, 50),//
     new ImageLocator(CascadingSlotLocatorNames.imgBetLevel, 305, 620, 80, 50),//
@@ -132,6 +137,7 @@ export const CascadingSlotLocators = [
     new ImageLocator(CascadingSlotLocatorNames.popHistory, 166, 28, 940, 122),
     new ImageLocator(CascadingSlotLocatorNames.icoGuide, 56, 492, 40, 40),
     new ImageLocator(CascadingSlotLocatorNames.popAutoSpin, 378, 145, 528, 390),
+    new ImageLocator(CascadingSlotLocatorNames.popAutoSpinTurbo, 378, 145, 528, 390),
     new ImageLocator(CascadingSlotLocatorNames.btnAutoSpinTurbo, 410, 466, 25, 25),
     new ImageLocator(CascadingSlotLocatorNames.btnAutoSpinStart, 713, 451, 129, 55),
     new ImageLocator(CascadingSlotLocatorNames.lblHistoryFirstRow, 140, 168, 1000, 30),
@@ -159,7 +165,9 @@ export const CascadingSlotLocators = [
     new ImageLocator(CascadingSlotLocatorNames.popBetControlMaxCoinValue, 286, 230, 375, 380),
     new ImageLocator(CascadingSlotLocatorNames.popBetControlMinCoinValue, 286, 230, 375, 380),
     new ImageLocator(CascadingSlotLocatorNames.imgBottomArea, 358, 607, 552, 98),
+    new ImageLocator(CascadingSlotLocatorNames.imgBottomAreaTrialMode, 358, 607, 552, 98),
     new ImageLocator(CascadingSlotLocatorNames.lblTumbleWinList, 990, 222, 194, 216),
+    new ImageLocator(CascadingSlotLocatorNames.lblTumbleWinListTrialMode, 990, 222, 194, 216),
     new ImageLocator(CascadingSlotLocatorNames.imgRoundIdFirstRoundTrialMode, 990, 120, 192, 40),
     new ImageLocator(CascadingSlotLocatorNames.btnTrialMode, 147, 47, 148, 50),
     

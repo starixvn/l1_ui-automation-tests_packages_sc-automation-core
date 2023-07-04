@@ -182,7 +182,6 @@ export class CascadingSlotGameBase {
             //Arrange
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
             const bet = { choice: this.game.gameConfiguration.choices[0], amount:this.options.placeBetAmount??1 };
-            await clickTurbo(this.game);
  
  
             //Act
@@ -192,15 +191,15 @@ export class CascadingSlotGameBase {
             // Assert
             expect(placeBetResponse.endBet).toBe(bet.amount * parseFloat(bet.choice));
             await waitForTumbling(this.game);
-            await this.game. clickOutSide(); //Click outside to close big win popup
-            await clickTurbo(this.game); //turn off turbo
+            await clickTurbo(this.game) //turn off turbo
+            await this.game.clickOutSide(); //Click outside to close big win popup
         });
     }
 
     protected betControlTests() {
         test("Verify default value of total stake", async () => {
             //Act
-            await this.game.clickLocator(CascadingSlotLocatorNames.btnTotalStake)
+            await this.game.clickLocator(CascadingSlotLocatorNames.btnTotalStake);
             const popBetControl = await this.game.capture(CascadingSlotLocatorNames.popBetControl);
 
             //Assert
@@ -209,7 +208,7 @@ export class CascadingSlotGameBase {
 
         test("Verify increase bet level to the max value", async () => {
             //Act
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < 5; i++) {
                 await this.game.clickLocator(CascadingSlotLocatorNames.btnBetLevelIncrease)
               }
             const popBetControlMaxBetLevel = await this.game.capture(CascadingSlotLocatorNames.popBetControlMaxBetLevel);
@@ -229,13 +228,6 @@ export class CascadingSlotGameBase {
             expect(popBetControlMaxCoinValue.image).toMatchSnapshot(popBetControlMaxCoinValue.name);
         });
 
-        // test("Verify max value of total bet", async () => {
-        //     //Act
-        //     const imgTotalBetMax = await this.game.capture(CascadingSlotLocatorNames.imgTotalBet);
-
-        //     //Assert
-        //     expect(imgTotalBetMax.image).toMatchSnapshot(imgTotalBetMax.name);
-        // });
 
         test("Verify decrease bet level to the min value", async () => {
             //Act
@@ -258,14 +250,6 @@ export class CascadingSlotGameBase {
             //Assert
             expect(popBetControlMinCoinValue.image).toMatchSnapshot(popBetControlMinCoinValue.name);
         });
-
-        // test("Verify min value of total bet", async () => {
-        //     //Act
-        //     const imgTotalBetMin = await this.game.capture(CascadingSlotLocatorNames.imgTotalBet);
-
-        //     //Assert
-        //     expect(imgTotalBetMin.image).toMatchSnapshot(imgTotalBetMin.name);
-        // });
 
     }
 
@@ -292,7 +276,7 @@ export class CascadingSlotGameBase {
             await openAutoSpinBoard(this.game);
 
             // Act
-            const popAutoSpinTurbo = await this.game.capture(CascadingSlotLocatorNames.popAutoSpin);
+            const popAutoSpinTurbo = await this.game.capture(CascadingSlotLocatorNames.popAutoSpinTurbo);
 
             //Assert
             expect(popAutoSpinTurbo.image).toMatchSnapshot(popAutoSpinTurbo.name);
@@ -368,7 +352,7 @@ export class CascadingSlotGameBase {
         test("Verify default bottom area of trial mode", async () => {
             //Act
             await this.game.clickLocator(CascadingSlotLocatorNames.btnTrialMode)
-            const imgBottomAreaTrialMode = await this.game.capture(CascadingSlotLocatorNames.imgBottomArea);
+            const imgBottomAreaTrialMode = await this.game.capture(CascadingSlotLocatorNames.imgBottomAreaTrialMode);
 
             //Assert
             expect(imgBottomAreaTrialMode.image).toMatchSnapshot(imgBottomAreaTrialMode.name);
@@ -377,35 +361,35 @@ export class CascadingSlotGameBase {
         test("Verify bet control popup in trial mode", async () => {
             //Act
             await this.game.clickLocator(CascadingSlotLocatorNames.btnTotalStake)
-            const popBetControl = await this.game.capture(CascadingSlotLocatorNames.popBetControl);
+            const popBetControlTrialMode = await this.game.capture(CascadingSlotLocatorNames.popBetControlTrialMode);
 
             //Assert
-            expect(popBetControl.image).toMatchSnapshot(popBetControl.name);
+            expect(popBetControlTrialMode.image).toMatchSnapshot(popBetControlTrialMode.name);
         });
 
         test("Verify message You are in trial mode", async () => {
             //Act
-            const popBetControl = await this.game.capture(CascadingSlotLocatorNames.popBetControl);
+            const lblTumbleWinListTrialMode = await this.game.capture(CascadingSlotLocatorNames.lblTumbleWinListTrialMode);
 
             //Assert
-            expect(popBetControl.image).toMatchSnapshot(popBetControl.name);
+            expect(lblTumbleWinListTrialMode.image).toMatchSnapshot(lblTumbleWinListTrialMode.name);
         });
 
         test("Verify default user balance trial mode and round id is clear", async () => {
             //Act
-            const imgGeneralInfoDefaultTrialMode = await this.game.capture(CascadingSlotLocatorNames.popBetControl);
+            const imgUserBalanceTrialMode = await this.game.capture(CascadingSlotLocatorNames.imgUserBalanceTrialMode);
 
             //Assert
-            expect(imgGeneralInfoDefaultTrialMode.image).toMatchSnapshot(imgGeneralInfoDefaultTrialMode.name);
+            expect(imgUserBalanceTrialMode.image).toMatchSnapshot(imgUserBalanceTrialMode.name);
         });
 
         test("Verify round id of the first round of trial mode", async () => {
             //Act
             await this.game.clickLocator(CascadingSlotLocatorNames.btnSpin)
-            const roundIdFirstRoundTrialMode = await this.game.capture(CascadingSlotLocatorNames.lblRoundID);
+            const lblRoundIdFirstRoundTrialMode = await this.game.capture(CascadingSlotLocatorNames.lblRoundIdFirstRoundTrialMode);
 
             //Assert
-            expect(roundIdFirstRoundTrialMode.image).toMatchSnapshot(roundIdFirstRoundTrialMode.name);
+            expect(lblRoundIdFirstRoundTrialMode.image).toMatchSnapshot(lblRoundIdFirstRoundTrialMode.name);
 
             //Post-Act
             await this.game.clickLocator(CascadingSlotLocatorNames.btnTrialMode);
@@ -491,7 +475,6 @@ const openAutoSpinBoard = async (game: BaseGame) => {
 const selectAutoSpin = async (game: BaseGame, totalspin: number) => {
     await game.clickLocator(CascadingSlotLocatorNames.btnAutoSpin, 1500);
     await game.clickLocator(CascadingSlotLocatorNames[`btnAutoSpin${totalspin}`]);
-    await game.clickLocator(CascadingSlotLocatorNames.btnAutoSpinTurbo);
     await game.clickLocator(CascadingSlotLocatorNames.btnAutoSpinStart, 100);
 };
 
