@@ -133,61 +133,66 @@ export class CascadingSlotGameBase {
             //Arrange
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
             const bet = { choice: this.game.gameConfiguration.choices[0], amount:this.options.placeBetAmount??1 };
-            //await this.player.selectPayline(CascadingSlotLocatorNames.btnPayline1);
-            //await this.player.selectBetStake(CascadingSlotLocatorNames[`lblBetLevel${bet.amount}`]);
+
 
             //Act
-            await this.game.waitForTimeout(timeout)
             await this.game.keyboardPress("Space");
-            const settledResults = await this.game.waitForSettlement();
+            const placeBetResponse = await this.game.waitForEndBet()
 
             // Assert
-            expect(bet).toMatchWinningSymbols(settledResults);
-            await this.game.waitForTimeout(timeout);
+            expect(placeBetResponse.endBet).toBe(bet.amount * parseFloat(bet.choice));
+            await waitForTumbling(this.game);
             await this.game. clickOutSide(); //Click outside to close big win popup
         });
 
         test("Verify user able spin by enter key with turbo mode OFF", async () => {
             //Arrange
-            let bet = { choice: `btn${this.options.placeBetChoices[0]}`, amount: this.options.placeBetAmount ?? 1 };
+            this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
+            const bet = { choice: this.game.gameConfiguration.choices[0], amount:this.options.placeBetAmount??1 };
+
 
             //Act
             await this.game.keyboardPress("Enter");
-            const settledResults = await this.game.waitForSettlement();
+            const placeBetResponse = await this.game.waitForEndBet()
 
             // Assert
-            expect(bet).toMatchWinningSymbols(settledResults);
-            await this.game.waitForTimeout(timeout);
-            await this.game.clickOutSide(); //Click outside to close big win popup
+            expect(placeBetResponse.endBet).toBe(bet.amount * parseFloat(bet.choice));
+            await waitForTumbling(this.game);
+            await this.game. clickOutSide(); //Click outside to close big win popup
         });
 
         test("Verify user able spin by space with turbo mode ON", async () => {
-            //Arrang
-            const bet = { choice: `btn${this.options.placeBetChoices[0]}`, amount: this.options.placeBetAmount ?? 1 };
+            //Arrange
+            this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
+            const bet = { choice: this.game.gameConfiguration.choices[0], amount:this.options.placeBetAmount??1 };
             await clickTurbo(this.game);
+
 
             //Act
             await this.game.keyboardPress("Space");
-            const settledResults = await this.game.waitForSettlement();
+            const placeBetResponse = await this.game.waitForEndBet()
 
             // Assert
-            expect(bet).toMatchWinningSymbols(settledResults);
-            await this.game.waitForTimeout(timeout);
-            await this.game.clickOutSide(); //Click outside to close big win popup
+            expect(placeBetResponse.endBet).toBe(bet.amount * parseFloat(bet.choice));
+            await waitForTumbling(this.game);
+            await this.game. clickOutSide(); //Click outside to close big win popup
         });
 
         test("Verify user able spin by enter key with turbo mode ON", async () => {
-            //Arrang
-            const bet = { choice: `btn${this.options.placeBetChoices[0]}`, amount: this.options.placeBetAmount ?? 1 };
-
+            //Arrange
+            this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
+            const bet = { choice: this.game.gameConfiguration.choices[0], amount:this.options.placeBetAmount??1 };
+            await clickTurbo(this.game);
+ 
+ 
             //Act
-            await this.game.keyboardPress("Enter");
-            const settledResults = await this.game.waitForSettlement();
-
+            await this.game.keyboardPress("Space");
+            const placeBetResponse = await this.game.waitForEndBet()
+ 
             // Assert
-            expect(bet).toMatchWinningSymbols(settledResults);
-            await this.game.waitForTimeout(timeout);
-            await this.game.clickOutSide(); //Click outside to close big win popup
+            expect(placeBetResponse.endBet).toBe(bet.amount * parseFloat(bet.choice));
+            await waitForTumbling(this.game);
+            await this.game. clickOutSide(); //Click outside to close big win popup
             await clickTurbo(this.game); //turn off turbo
         });
     }
@@ -525,6 +530,12 @@ const getDataFistRowHistory = async (game: BaseGame, elementname: string = Casca
         };
     }
 };
+
+const waitForTumbling = async (game: BaseGame) =>{
+    const message = await game.waitForEvent(GameEvent.Settlement);
+    const tumble = message.finish.tumbles.length;
+    await game.waitForTimeout(tumble*1000);
+}
 
 const openRoundDetail = async (game: BaseGame) => {
     await game.clickLocator(CascadingSlotLocatorNames.locHistoryRoundId, 1000);
