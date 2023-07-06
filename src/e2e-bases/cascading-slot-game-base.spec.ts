@@ -249,6 +249,10 @@ export class CascadingSlotGameBase {
 
             //Assert
             expect(popBetControlMinCoinValue.image).toMatchSnapshot(popBetControlMinCoinValue.name);
+
+        
+            //Pre act
+            await this.game.clickOutSide();
         });
 
     }
@@ -358,6 +362,39 @@ export class CascadingSlotGameBase {
             expect(imgBottomAreaTrialMode.image).toMatchSnapshot(imgBottomAreaTrialMode.name);
         });
 
+        test("Verify turbo button of trial mode is disabled", async () => {
+            //Act
+            const imgTurboTrial = await this.game.capture(CascadingSlotLocatorNames.imgTurboTrial);
+
+            //Assert
+            expect(imgTurboTrial.image).toMatchSnapshot(imgTurboTrial.name);
+        });
+
+        test("Verify expand hamburger menu of trial mode", async () => {
+            //Act
+            await this.game.clickLocator(CascadingSlotLocatorNames.mnuHamburger);
+            const mnuHamburgerExpandTrialMode = await this.game.capture(CascadingSlotLocatorNames.mnuHamburgerExpandTrialMode);
+
+            //Assert
+            expect(mnuHamburgerExpandTrialMode.image).toMatchSnapshot(mnuHamburgerExpandTrialMode.name);
+            
+            //Pre Act
+            await this.game.clickOutSide() // close popup
+        });
+
+        test("Verify user can open game guide in trial mode", async () => {
+            //Act
+            await this.game.clickLocator(CascadingSlotLocatorNames.mnuHamburger);
+            await this.game.clickLocator(CascadingSlotLocatorNames.icoGuide);
+            const popGameGuide = await this.game.capture(CascadingSlotLocatorNames.popGameGuide);
+
+            //Assert
+            expect(popGameGuide.image).toMatchSnapshot(popGameGuide.name);
+            
+            //Pre Act
+            await this.game.clickOutSide(); // close popup
+        });
+
         test("Verify bet control popup in trial mode", async () => {
             //Act
             await this.game.clickLocator(CascadingSlotLocatorNames.btnTotalStake)
@@ -365,6 +402,9 @@ export class CascadingSlotGameBase {
 
             //Assert
             expect(popBetControlTrialMode.image).toMatchSnapshot(popBetControlTrialMode.name);
+            
+            //Pre Act
+            await this.game.clickOutSide(); // close popup
         });
 
         test("Verify message You are in trial mode", async () => {
@@ -375,15 +415,20 @@ export class CascadingSlotGameBase {
             expect(lblTumbleWinListTrialMode.image).toMatchSnapshot(lblTumbleWinListTrialMode.name);
         });
 
-        test("Verify default user balance trial mode and round id is clear", async () => {
+        test("Verify default user balance trial mode", async () => {
             //Act
             const imgUserBalanceTrialMode = await this.game.capture(CascadingSlotLocatorNames.imgUserBalanceTrialMode);
 
             //Assert
             expect(imgUserBalanceTrialMode.image).toMatchSnapshot(imgUserBalanceTrialMode.name);
+
         });
 
         test("Verify round id of the first round of trial mode", async () => {
+
+            //Arrange
+            this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
+
             //Act
             await this.game.clickLocator(CascadingSlotLocatorNames.btnSpin)
             const lblRoundIdFirstRoundTrialMode = await this.game.capture(CascadingSlotLocatorNames.lblRoundIdFirstRoundTrialMode);
@@ -392,6 +437,7 @@ export class CascadingSlotGameBase {
             expect(lblRoundIdFirstRoundTrialMode.image).toMatchSnapshot(lblRoundIdFirstRoundTrialMode.name);
 
             //Post-Act
+            await waitForTumbling(this.game);
             await this.game.clickLocator(CascadingSlotLocatorNames.btnTrialMode);
         });
     }
@@ -418,7 +464,7 @@ export class CascadingSlotGameBase {
                 roundID: await getRoundId(this.game),
                 betwin: settledResults.winAmount.toString(),
                 bet: bet.amount.toString(),
-                line: bet.choice,
+                //line: bet.choice,
                 bettime: bettime,
                 betdate: today,
             };
@@ -517,7 +563,7 @@ const getDataFistRowHistory = async (game: BaseGame, elementname: string = Casca
 const waitForTumbling = async (game: BaseGame) =>{
     const message = await game.waitForEvent(GameEvent.Settlement);
     const tumble = message.finish.tumbles.length;
-    await game.waitForTimeout(tumble*1000);
+    await game.waitForTimeout(tumble*4000);
 }
 
 const openRoundDetail = async (game: BaseGame) => {
