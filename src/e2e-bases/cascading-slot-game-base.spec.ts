@@ -36,9 +36,10 @@ export class CascadingSlotGameBase {
             expect(gamename.image).toMatchSnapshot(gamename.name);
         });
 
-        test("Verify symbols board in first load game", async () => {
+        test("Verify symbols board in first load game and odds popup", async () => {
             //Act
             const boardID = await getBoardID();
+            await this.game.clickLocator(CascadingSlotLocatorNames.btnSymbol,2000);
             const imgBoardId = await this.game.capture(`img${boardID}`);
 
             //Assert
