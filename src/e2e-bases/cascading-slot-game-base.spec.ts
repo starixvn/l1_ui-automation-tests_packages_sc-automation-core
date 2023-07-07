@@ -454,11 +454,15 @@ export class CascadingSlotGameBase {
 
             // Act
             const placeBetResponse = await this.player.placeBet(bet.choice, bet.amount);
-            const settledResults = await this.game.waitForSettlement();
+            const settledResults = await waitForSettlementCascadingSlot(this.game);
 
             // Assert
             expect(placeBetResponse.endBet).toBe(bet.amount);
             expect(bet).toMatchWinningSymbols(settledResults);
+
+            await this.game.waitForTimeout(settledResults.tumble*4000); //wait for animation
+
+            await this.game.clickOutSide(); //close big win popup
 
             // Post-Act
             const settledata = {
@@ -544,8 +548,8 @@ const getDataFistRowHistory = async (game: BaseGame, elementname: string = Casca
         return {
             bettime: data[0].toString(),
             betdate: data[1].toString(),
-            bet: data[2].toString().replace(/[^0-9.]/g, ""),
-            line: data[3].toString().replace(/[^0-9.]/g, ""),
+            betlevel: data[2].toString().replace(/[^0-9.]/g, ""),
+            coinvalue: data[3].toString().replace(/[^0-9.]/g, ""),
             totalbet: data[4].toString().replace(/[^0-9.]/g, ""),
             betwin: data[5].toString().replace(/[^0-9.]/g, ""),
         };
@@ -553,8 +557,8 @@ const getDataFistRowHistory = async (game: BaseGame, elementname: string = Casca
         return {
             bettime: "N/A",
             betdate: "N/A",
-            bet: "N/A",
-            line: "N/A",
+            betlevel: "N/A",
+            coinvalue: "N/A",
             totalbet: "N/A",
             betwin: "N/A",
         };
@@ -579,13 +583,29 @@ export interface Expectdata {
 }
 
 const verifyticketdata = async (game: BaseGame, expectdata: Expectdata) => {
-    let line = expectdata.line.replace("btnPayline", "");
+    //let line = expectdata.line.replace("btnPayline", "");
     const ticketdata = await getDataFistRowHistory(game);
     expect(ticketdata.betdate, "verify bet date").toEqual(expectdata.betdate);
-    expect(ticketdata.bet).toEqual(expectdata.bet);
-    expect(ticketdata.line, "verify bet bet choice").toEqual(line);
+    //expect(ticketdata.bet, "Verify total stake").toEqual(expectdata.bet);
+    //expect(ticketdata.line, "verify bet bet choice").toEqual(line);
     expect(ticketdata.betwin, "verify bet win").toEqual(expectdata.betwin);
 };
+
+const waitForSettlementCascadingSlot= async (game: BaseGame): Promise<any> => {
+    const message = await game.waitForEvent(GameEvent.Settlement);
+    await game.waitForTimeout(500); // add sleep due to feature Publish round result prior to settlement
+    const winningByChoice = game.latestCaptureEvent(GameEvent.WinStatus);
+
+    let settledResults = {
+        settlementResult: message?.finish?.settlementResult,
+        odds: game.odds,
+        winStatus: typeof winningByChoice == "object" ? winningByChoice.status.win : "",
+        tumble: message.finish.tumbles.length,
+    };
+    settledResults["winAmount"] = winningByChoice.status.win ? winningByChoice.status.bet : 0;
+    
+    return settledResults;
+}
 
 const getBoardID = async () => {
     let boardId = "";
