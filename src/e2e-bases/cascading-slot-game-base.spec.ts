@@ -453,6 +453,7 @@ export class CascadingSlotGameBase {
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
 
             // Act
+            await resetTotalStakeToDefault(this.game);
             const placeBetResponse = await this.player.placeBet(bet.choice, bet.amount);
             const settledResults = await waitForSettlementCascadingSlot(this.game);
 
@@ -466,7 +467,7 @@ export class CascadingSlotGameBase {
 
             // Post-Act
             const settledata = {
-                roundID: await getRoundId(this.game),
+                roundID: settledResults.roundID.toString(),
                 betwin: settledResults.winAmount.toString(),
                 bet: bet.amount.toString(),
                 //line: bet.choice,
@@ -509,13 +510,11 @@ export class CascadingSlotGameBase {
         this.spinByKeys();
         this.autoSpinTests();
         this.betControlTests();
-        this.trialModeTests();
         this.placeBetAndSettleTests();
         this.ticketHistoryTests();
         this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
+        this.trialModeTests();
     }
-
-        
 }
 
 const openAutoSpinBoard = async (game: BaseGame) => {
@@ -534,7 +533,7 @@ const clickTurbo = async (game: BaseGame) => {
     await game.clickLocator(CascadingSlotLocatorNames.btnTurbo);
 };
 
-const getRoundId = async (game: BaseGame, elementname: string = CascadingSlotLocatorNames.lblRoundID) => {
+const getRoundId = async (game: BaseGame, elementname: string = CascadingSlotLocatorNames.lblHistoryDetailRoundId) => {
     let roundId = await game.getTextLocator(elementname);
 
     return roundId != null ? roundId.replace(/[^0-9.]/g, "") : roundId;
@@ -551,7 +550,7 @@ const getDataFistRowHistory = async (game: BaseGame, elementname: string = Casca
             betlevel: data[2].toString().replace(/[^0-9.]/g, ""),
             coinvalue: data[3].toString().replace(/[^0-9.]/g, ""),
             totalbet: data[4].toString().replace(/[^0-9.]/g, ""),
-            betwin: data[5].toString().replace(/[^0-9.]/g, ""),
+            betwin: data[5].toString().replace(/[^0-9.]/g, "") !== "" ? data[5].toString().replace(/[^0-9.]/g, ""):"0", //handle case get wrong text 0 -> D
         };
     } else {
         return {
@@ -591,7 +590,7 @@ const verifyticketdata = async (game: BaseGame, expectdata: Expectdata) => {
     expect(ticketdata.betwin, "verify bet win").toEqual(expectdata.betwin);
 };
 
-const waitForSettlementCascadingSlot= async (game: BaseGame): Promise<any> => {
+const waitForSettlementCascadingSlot = async (game: BaseGame): Promise<any> => {
     const message = await game.waitForEvent(GameEvent.Settlement);
     await game.waitForTimeout(500); // add sleep due to feature Publish round result prior to settlement
     const winningByChoice = game.latestCaptureEvent(GameEvent.WinStatus);
@@ -601,10 +600,16 @@ const waitForSettlementCascadingSlot= async (game: BaseGame): Promise<any> => {
         odds: game.odds,
         winStatus: typeof winningByChoice == "object" ? winningByChoice.status.win : "",
         tumble: message.finish.tumbles.length,
+        roundId: message?.finish?.roundId,
     };
-    settledResults["winAmount"] = winningByChoice.status.win ? winningByChoice.status.bet : 0;
+    settledResults["winAmount"] = message?.finish?.win ?? 0;;
     
     return settledResults;
+}
+
+const resetTotalStakeToDefault = async (game: BaseGame): Promise<any> => {
+    game.clickLocator(CascadingSlotLocatorNames.btnTrialMode, 1000);
+    game.clickLocator(CascadingSlotLocatorNames.btnTrialMode, 1500);
 }
 
 const getBoardID = async () => {

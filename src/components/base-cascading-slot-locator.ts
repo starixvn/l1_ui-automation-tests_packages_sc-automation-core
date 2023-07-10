@@ -95,6 +95,7 @@ export const CascadingSlotLocators = [
     new ImageLocator(CascadingSlotLocatorNames.btnAutoSpinStart, 713, 451, 129, 55),
     new ImageLocator(CascadingSlotLocatorNames.lblHistoryFirstRow, 140, 168, 1000, 30),
     new ImageLocator(CascadingSlotLocatorNames.locHistoryRoundId, 395, 167, 50, 24),
+    new ImageLocator(CascadingSlotLocatorNames.lblHistoryDetailRoundId, 512, 30, 247, 46),
     new ImageLocator(CascadingSlotLocatorNames.btnClosePopup, 5, 5, 10, 10),
     new ImageLocator(CascadingSlotLocatorNames.btnTotalStake, 418, 640, 100, 50),
     new ImageLocator(CascadingSlotLocatorNames.popBetControl, 286, 230, 375, 380),
