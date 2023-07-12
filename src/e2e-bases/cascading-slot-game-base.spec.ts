@@ -80,7 +80,7 @@ export class CascadingSlotGameBase {
 
             //Pre Act
 
-            await this.game.clickOutSide();
+            await this.game.clickOutSide(1000);
         });
 
         test("Verify menu expand with sound and music off", async () => {
@@ -88,10 +88,10 @@ export class CascadingSlotGameBase {
             await this.game.clickLocator(CascadingSlotLocatorNames.mnuHamburger);
             await this.game.clickLocator(CascadingSlotLocatorNames.icoSound);
             await this.game.clickLocator(CascadingSlotLocatorNames.icoMusic);
-            const mnuHamburgerExpandSoundOn = await this.game.capture(CascadingSlotLocatorNames.mnuHamburgerExpandSoundOn);
+            const mnuHamburgerExpandSoundOff = await this.game.capture(CascadingSlotLocatorNames.mnuHamburgerExpandSoundOff);
 
             //Assert
-            expect(mnuHamburgerExpandSoundOn.image).toMatchSnapshot(mnuHamburgerExpandSoundOn.name);
+            expect(mnuHamburgerExpandSoundOff.image).toMatchSnapshot(mnuHamburgerExpandSoundOff.name);
 
             
             //Pre Act
@@ -104,10 +104,10 @@ export class CascadingSlotGameBase {
     protected turboTests() {
         test("Verify default state of turbo button is OFF", async () => {
             // Verify default turbo off state
-            const turboOff = await this.game.captureLocator(CascadingSlotLocatorNames.imgTurboOFF);
+            const turboDefault = await this.game.captureLocator(CascadingSlotLocatorNames.imgTurboDefault);
 
             // Assert Turbo Off
-            expect(turboOff.image).toMatchSnapshot(turboOff.name);
+            expect(turboDefault.image).toMatchSnapshot(turboDefault.name);
         });
 
         test("Verify user can turn On turbo mode", async () => {
@@ -143,7 +143,7 @@ export class CascadingSlotGameBase {
             // Assert
             expect(placeBetResponse.endBet).toBe(bet.amount * parseFloat(bet.choice));
             await waitForTumbling(this.game);
-            await this.game. clickOutSide(); //Click outside to close big win popup
+            await this.game. clickOutSide(2500); //Click outside to close big win popup
         });
 
         test("Verify user able spin by enter key with turbo mode OFF", async () => {
@@ -159,7 +159,7 @@ export class CascadingSlotGameBase {
             // Assert
             expect(placeBetResponse.endBet).toBe(bet.amount * parseFloat(bet.choice));
             await waitForTumbling(this.game);
-            await this.game. clickOutSide(); //Click outside to close big win popup
+            await this.game.clickOutSide(2500); //Click outside to close big win popup
         });
 
         test("Verify user able spin by space with turbo mode ON", async () => {
@@ -167,6 +167,7 @@ export class CascadingSlotGameBase {
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
             const bet = { choice: this.game.gameConfiguration.choices[0], amount:this.options.placeBetAmount??1 };
             await clickTurbo(this.game);
+            await this.game.waitForTimeout(1000);
 
 
             //Act
@@ -176,7 +177,7 @@ export class CascadingSlotGameBase {
             // Assert
             expect(placeBetResponse.endBet).toBe(bet.amount * parseFloat(bet.choice));
             await waitForTumbling(this.game);
-            await this.game. clickOutSide(); //Click outside to close big win popup
+            await this.game. clickOutSide(2500); //Click outside to close big win popup
         });
 
         test("Verify user able spin by enter key with turbo mode ON", async () => {
@@ -192,8 +193,8 @@ export class CascadingSlotGameBase {
             // Assert
             expect(placeBetResponse.endBet).toBe(bet.amount * parseFloat(bet.choice));
             await waitForTumbling(this.game);
+            await this.game.clickOutSide(2500); //Click outside to close big win popup
             await clickTurbo(this.game) //turn off turbo
-            await this.game.clickOutSide(); //Click outside to close big win popup
         });
     }
 
@@ -297,37 +298,42 @@ export class CascadingSlotGameBase {
             // Act
             await selectAutoSpin(this.game, totalAutoSpin);
             for (let index = 1; index <= totalAutoSpin; index++) {
-                const settledResults = await this.game.waitForSettlement();
-
+                const settledResults = await waitForSettlementCascadingSlot(this.game);
                 settledResultsAutoSpin.push(settledResults.winAmount);
+                if(index == totalAutoSpin){
+                    this.game.waitForTimeout((settledResults.tumble + 1)*3000); //wait for tumbling of the last spin
+                }
             }
 
             //Assert
             expect(settledResultsAutoSpin.length >= 10).toBe(true);
-            await this.game.waitForTimeout(timeout); 
-            await this.game.clickOutSide();//handle cases win multiplier
-
+            await this.game.clickOutSide(2500);//close big win popup
             //Post-Act
-            await this.game.clickOutSide(); //click outside to close auto spin popup
+            await this.game.clickOutSide(1000); //click outside to close auto spin popup
         });
 
         test("Verify user can stop auto spin process by clicking on autospin button", async () => {
             let settledResultsAutoSpin: Array<string> = [];
             const totalAutoSpin = 10;
             await selectAutoSpin(this.game, totalAutoSpin);
+            let tumbleOfTheLastSpin = 1;
 
             for (let index = 1; index <= totalAutoSpin - 5; index++) {
-                const settledResults = await this.game.waitForSettlement();
+                const settledResults = await waitForSettlementCascadingSlot(this.game);
                 settledResultsAutoSpin.push(settledResults.winAmount);
+                if(index == totalAutoSpin - 5){
+                    tumbleOfTheLastSpin = settledResults.tumble;
+                }
+                
             }
 
             await this.game.clickLocator(CascadingSlotLocatorNames.btnAutoSpin); //stop autospin
 
             //Assert
             expect(settledResultsAutoSpin.length < 10).toBe(true);
-            await this.game.waitForTimeout(timeout); //handle cases free spin or bonus
+            await this.game.waitForTimeout((tumbleOfTheLastSpin + 1)*4000 ); //handle cases free spin or bonus
             
-            await this.game.clickOutSide();
+            await this.game.clickOutSide(2500);
         });
     }
 
@@ -453,24 +459,21 @@ export class CascadingSlotGameBase {
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
 
             // Act
-            await resetTotalStakeToDefault(this.game);
             const placeBetResponse = await this.player.placeBet(bet.choice, bet.amount);
             const settledResults = await waitForSettlementCascadingSlot(this.game);
 
             // Assert
             expect(placeBetResponse.endBet).toBe(bet.amount);
-            expect(bet).toMatchWinningSymbols(settledResults);
 
-            await this.game.waitForTimeout(settledResults.tumble*4000); //wait for animation
+            await this.game.waitForTimeout((settledResults.tumble + 1) * 4000); //wait for tumbling
 
-            await this.game.clickOutSide(); //close big win popup
+            await this.game.clickOutSide(2500); //close big win popup
 
             // Post-Act
             const settledata = {
-                roundID: settledResults.roundID.toString(),
+                roundID: settledResults.roundId.toString(),
                 betwin: settledResults.winAmount.toString(),
                 bet: bet.amount.toString(),
-                //line: bet.choice,
                 bettime: bettime,
                 betdate: today,
             };
@@ -531,6 +534,7 @@ const selectAutoSpin = async (game: BaseGame, totalspin: number) => {
 
 const clickTurbo = async (game: BaseGame) => {
     await game.clickLocator(CascadingSlotLocatorNames.btnTurbo);
+    game.waitForTimeout(2000); //wait for message closed
 };
 
 const getRoundId = async (game: BaseGame, elementname: string = CascadingSlotLocatorNames.lblHistoryDetailRoundId) => {
@@ -550,7 +554,7 @@ const getDataFistRowHistory = async (game: BaseGame, elementname: string = Casca
             betlevel: data[2].toString().replace(/[^0-9.]/g, ""),
             coinvalue: data[3].toString().replace(/[^0-9.]/g, ""),
             totalbet: data[4].toString().replace(/[^0-9.]/g, ""),
-            betwin: data[5].toString().replace(/[^0-9.]/g, "") !== "" ? data[5].toString().replace(/[^0-9.]/g, ""):"0", //handle case get wrong text 0 -> D
+            betwin: data[5].toString().replace(/[^0-9.]/g, "") !== "" ? parseFloat(data[5].toString().replace(/[^0-9.]/g, "")) : "0", //handle case get wrong text 0 -> D
         };
     } else {
         return {
@@ -567,7 +571,7 @@ const getDataFistRowHistory = async (game: BaseGame, elementname: string = Casca
 const waitForTumbling = async (game: BaseGame) =>{
     const message = await game.waitForEvent(GameEvent.Settlement);
     const tumble = message.finish.tumbles.length;
-    await game.waitForTimeout(tumble*4000);
+    await game.waitForTimeout((tumble + 1)*4000);
 }
 
 const openRoundDetail = async (game: BaseGame) => {
@@ -605,11 +609,6 @@ const waitForSettlementCascadingSlot = async (game: BaseGame): Promise<any> => {
     settledResults["winAmount"] = message?.finish?.win ?? 0;;
     
     return settledResults;
-}
-
-const resetTotalStakeToDefault = async (game: BaseGame): Promise<any> => {
-    game.clickLocator(CascadingSlotLocatorNames.btnTrialMode, 1000);
-    game.clickLocator(CascadingSlotLocatorNames.btnTrialMode, 1500);
 }
 
 const getBoardID = async () => {

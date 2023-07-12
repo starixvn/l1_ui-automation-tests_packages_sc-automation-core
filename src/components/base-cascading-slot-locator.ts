@@ -20,6 +20,7 @@ export const CascadingSlotLocatorNames = {
     icoMusic: "icoMusic",
     btnTurbo: "btnTurbo",
     btnSpin: "btnSpin",
+    imgTurboDefault: "imgTurboDefault",
     imgTurboOn: "imgTurboOn",
     imgTurboOFF: "imgTurboOFF",
     imgTurboTrial: "imgTurboTrial",
@@ -63,7 +64,7 @@ export const CascadingSlotLocatorNames = {
 };
 
 export const CascadingSlotLocators = [
-    new ImageLocator(CascadingSlotLocatorNames.imgGameName,  68, 583, 238, 130),
+    new ImageLocator(CascadingSlotLocatorNames.imgGameName,  68, 600, 238, 130),
     new ImageLocator(CascadingSlotLocatorNames.imgBoard0, 338, 65, 600, 500),
     new ImageLocator(CascadingSlotLocatorNames.imgBoard1, 338, 65, 600, 500),
     new ImageLocator(CascadingSlotLocatorNames.imgBoard2, 338, 65, 600, 500),
@@ -81,6 +82,7 @@ export const CascadingSlotLocators = [
     new ImageLocator(CascadingSlotLocatorNames.icoSound, 56, 327, 35, 35),
     new ImageLocator(CascadingSlotLocatorNames.icoMusic, 56, 237, 35, 35),
     new ImageLocator(CascadingSlotLocatorNames.btnTurbo, 1088, 626, 90, 90),
+    new ImageLocator(CascadingSlotLocatorNames.imgTurboDefault, 1088, 626, 90, 90),
     new ImageLocator(CascadingSlotLocatorNames.imgTurboOn, 1088, 626, 90, 90),
     new ImageLocator(CascadingSlotLocatorNames.imgTurboOFF, 1088, 626, 90, 90),
     new ImageLocator(CascadingSlotLocatorNames.imgTurboTrial, 1088, 626, 90, 90),

@@ -265,12 +265,12 @@ export class BaseGame {
         }
     }
 
-    async clickOutSide(): Promise<void> {
+    async clickOutSide(timeout = 500): Promise<void> {
         const locator = this.locator("outside") || this.locator(CSLocatorNames.btnClosePopup);
         if (locator) {
             await locator.click(this.page);
         }
-        await this.waitForTimeout(500);
+        await this.waitForTimeout(timeout);
     }
 
     async mouseDragDrop(from: Pos, to: Pos): Promise<void> {
