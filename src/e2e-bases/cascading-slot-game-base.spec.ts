@@ -5,7 +5,6 @@ import { IBaseOptions } from "./base-options";
 import { CascadingSlotLocatorNames } from "../components/base-cascading-slot-locator";
 import { GameGuides } from "../game-components/guides/guides.spec";
 
-const timeout = 3000;
 export interface SlotGameOptions extends IBaseOptions {
     placeBetChoices: string[];
     placeBetAmount?: number;
