@@ -29,10 +29,12 @@ export class CascadingSlotGameBase {
     protected mainUITests() {
         test("Verify game name", async () => {
             //Act
-            const gamename = await this.game.capture(CascadingSlotLocatorNames.imgGameName);
+            test.step("Capture game name and compare with snapshot", async () => {
+                const gamename = await this.game.capture(CascadingSlotLocatorNames.imgGameName);
 
-            //Assert
-            expect(gamename.image).toMatchSnapshot(gamename.name);
+             //Assert
+                expect(gamename.image).toMatchSnapshot(gamename.name);
+            });
         });
 
         test("Verify symbols board in first load game and odds popup", async () => {
@@ -71,31 +73,43 @@ export class CascadingSlotGameBase {
 
         test("Verify menu expand with sound and music on", async () => {
             //Act
-            await this.game.clickLocator(CascadingSlotLocatorNames.mnuHamburger);
-            const mnuHamburgerExpandSoundOn = await this.game.capture(CascadingSlotLocatorNames.mnuHamburgerExpandSoundOn);
-
+            test.step("Click hamburger menu", async () => {
+                await this.game.clickLocator(CascadingSlotLocatorNames.mnuHamburger);
+            });
+            test.step("Capture expand hamburger menu and compare with the snapshot", async () => {
+                const mnuHamburgerExpandSoundOn = await this.game.capture(CascadingSlotLocatorNames.mnuHamburgerExpandSoundOn);
             //Assert
-            expect(mnuHamburgerExpandSoundOn.image).toMatchSnapshot(mnuHamburgerExpandSoundOn.name);
-
+                expect(mnuHamburgerExpandSoundOn.image).toMatchSnapshot(mnuHamburgerExpandSoundOn.name);
+            });
             //Pre Act
-
-            await this.game.clickOutSide(1000);
+            test.step("Click out side to close the menu", async () => {
+                await this.game.clickOutSide(1000);
+            });
         });
 
         test("Verify menu expand with sound and music off", async () => {
             //Act
-            await this.game.clickLocator(CascadingSlotLocatorNames.mnuHamburger);
-            await this.game.clickLocator(CascadingSlotLocatorNames.icoSound);
-            await this.game.clickLocator(CascadingSlotLocatorNames.icoMusic);
+            test.step("Click on hamburger menu", async () => {
+                await this.game.clickLocator(CascadingSlotLocatorNames.mnuHamburger);
+            });
+            test.step("Click on sound icon", async () => {
+                await this.game.clickLocator(CascadingSlotLocatorNames.icoSound);
+            });
+            test.step("Click on music icon", async () => {
+                await this.game.clickLocator(CascadingSlotLocatorNames.icoMusic);
+            });
+             test.step("Capture expand hamburger menu and compare with snapshot", async () => {
             const mnuHamburgerExpandSoundOff = await this.game.capture(CascadingSlotLocatorNames.mnuHamburgerExpandSoundOff);
+
 
             //Assert
             expect(mnuHamburgerExpandSoundOff.image).toMatchSnapshot(mnuHamburgerExpandSoundOff.name);
 
-            
+            });
             //Pre Act
-
-            await this.game.clickOutSide();
+            test.step("Click outside to close the menu", async () => {
+                await this.game.clickOutSide();
+            });
         });
 
     }
@@ -103,28 +117,36 @@ export class CascadingSlotGameBase {
     protected turboTests() {
         test("Verify default state of turbo button is OFF", async () => {
             // Verify default turbo off state
-            const turboDefault = await this.game.captureLocator(CascadingSlotLocatorNames.imgTurboDefault);
+            test.step("Capture turbo button and compare with snapshot", async () => {
+                const turboDefault = await this.game.captureLocator(CascadingSlotLocatorNames.imgTurboDefault);
 
             // Assert Turbo Off
-            expect(turboDefault.image).toMatchSnapshot(turboDefault.name);
+                expect(turboDefault.image).toMatchSnapshot(turboDefault.name);
+            });
         });
 
         test("Verify user can turn On turbo mode", async () => {
             // Turbo ON
-            await clickTurbo(this.game);
-            const turboOn = await this.game.captureLocator(CascadingSlotLocatorNames.imgTurboOn);
+            test.step("Click on turbo button to turn on turbo mode", async () => {
+                await clickTurbo(this.game);
+            });
 
-            // Assert turbo On
-            expect(turboOn.image).toMatchSnapshot(turboOn.name);
+            test.step("Capture turbo button and compare with snapshot", async () => {
+                const turboOn = await this.game.captureLocator(CascadingSlotLocatorNames.imgTurboOn);
+                expect(turboOn.image).toMatchSnapshot(turboOn.name);
+            });
         });
 
         test("Verify user can turn OFF turbo mode", async () => {
             // Act
-            await clickTurbo(this.game);
-            const imgTurboOFF = await this.game.capture(CascadingSlotLocatorNames.imgTurboOFF);
+            test.step("Click on turbo button to turn on turbo mode", async () => {
+                await clickTurbo(this.game);
+            });
 
-            //Assert
-            expect(imgTurboOFF.image).toMatchSnapshot(imgTurboOFF.name);
+            test.step("Capture turbo button and compare with snapshot", async () => {
+                const imgTurboOFF = await this.game.capture(CascadingSlotLocatorNames.imgTurboOFF);
+                expect(imgTurboOFF.image).toMatchSnapshot(imgTurboOFF.name);
+            });
         });
     }
 
@@ -253,7 +275,7 @@ export class CascadingSlotGameBase {
 
         
             //Pre act
-            await this.game.clickOutSide();
+            await this.game.clickOutSide(1000);
         });
 
     }
@@ -353,8 +375,8 @@ export class CascadingSlotGameBase {
             expect(roundID).toEqual(global.settledata.roundID);
 
             //Post-Act
-            await this.game.clickLocator(CascadingSlotLocatorNames.btnClosePopup);
-            await this.game.clickLocator(CascadingSlotLocatorNames.btnClosePopup);
+            await this.game.clickOutSide(1500);
+            await this.game.clickOutSide(1500);
         });
     }
 
@@ -382,7 +404,7 @@ export class CascadingSlotGameBase {
             const mnuHamburgerExpandTrialMode = await this.game.capture(CascadingSlotLocatorNames.mnuHamburgerExpandTrialMode);
 
             //Assert
-            expect(mnuHamburgerExpandTrialMode.image).toMatchSnapshot(mnuHamburgerExpandTrialMode.name);
+            expect(mnuHamburgerExpandTrialMode.image).toMatchSnapshot(mnuHamburgerExpandTrialMode.name, {maxDiffPixelRatio:0});
             
             //Pre Act
             await this.game.clickOutSide() // close popup
@@ -395,7 +417,7 @@ export class CascadingSlotGameBase {
             const popGameGuide = await this.game.capture(CascadingSlotLocatorNames.popGameGuide);
 
             //Assert
-            expect(popGameGuide.image).toMatchSnapshot(popGameGuide.name);
+            expect(popGameGuide.image).toMatchSnapshot(popGameGuide.name, {maxDiffPixelRatio:0});
             
             //Pre Act
             await this.game.clickOutSide(); // close popup
@@ -407,7 +429,7 @@ export class CascadingSlotGameBase {
             const popBetControlTrialMode = await this.game.capture(CascadingSlotLocatorNames.popBetControlTrialMode);
 
             //Assert
-            expect(popBetControlTrialMode.image).toMatchSnapshot(popBetControlTrialMode.name);
+            expect(popBetControlTrialMode.image).toMatchSnapshot(popBetControlTrialMode.name, {maxDiffPixelRatio:0});
             
             //Pre Act
             await this.game.clickOutSide(); // close popup
@@ -418,7 +440,7 @@ export class CascadingSlotGameBase {
             const lblTumbleWinListTrialMode = await this.game.capture(CascadingSlotLocatorNames.lblTumbleWinListTrialMode);
 
             //Assert
-            expect(lblTumbleWinListTrialMode.image).toMatchSnapshot(lblTumbleWinListTrialMode.name);
+            expect(lblTumbleWinListTrialMode.image).toMatchSnapshot(lblTumbleWinListTrialMode.name, {maxDiffPixelRatio:0});
         });
 
         test("Verify default user balance trial mode", async () => {
@@ -426,7 +448,7 @@ export class CascadingSlotGameBase {
             const imgUserBalanceTrialMode = await this.game.capture(CascadingSlotLocatorNames.imgUserBalanceTrialMode);
 
             //Assert
-            expect(imgUserBalanceTrialMode.image).toMatchSnapshot(imgUserBalanceTrialMode.name);
+            expect(imgUserBalanceTrialMode.image).toMatchSnapshot(imgUserBalanceTrialMode.name, {maxDiffPixelRatio:0});
 
         });
 
@@ -440,11 +462,8 @@ export class CascadingSlotGameBase {
             const lblRoundIdFirstRoundTrialMode = await this.game.capture(CascadingSlotLocatorNames.lblRoundIdFirstRoundTrialMode);
 
             //Assert
-            expect(lblRoundIdFirstRoundTrialMode.image).toMatchSnapshot(lblRoundIdFirstRoundTrialMode.name);
+            expect(lblRoundIdFirstRoundTrialMode.image).toMatchSnapshot(lblRoundIdFirstRoundTrialMode.name, {maxDiffPixelRatio:0});
 
-            //Post-Act
-            await waitForTumbling(this.game);
-            await this.game.clickLocator(CascadingSlotLocatorNames.btnTrialMode);
         });
     }
 
@@ -511,9 +530,9 @@ export class CascadingSlotGameBase {
         this.turboTests();
         this.spinByKeys();
         this.autoSpinTests();
-        this.betControlTests();
         this.placeBetAndSettleTests();
         this.ticketHistoryTests();
+        this.betControlTests();
         this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
         this.trialModeTests();
     }
@@ -533,7 +552,7 @@ const selectAutoSpin = async (game: BaseGame, totalspin: number) => {
 
 const clickTurbo = async (game: BaseGame) => {
     await game.clickLocator(CascadingSlotLocatorNames.btnTurbo);
-    game.waitForTimeout(2000); //wait for message closed
+    await game.waitForTimeout(2000); //wait for message closed
 };
 
 const getRoundId = async (game: BaseGame, elementname: string = CascadingSlotLocatorNames.lblHistoryDetailRoundId) => {

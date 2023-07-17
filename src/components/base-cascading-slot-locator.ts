@@ -64,12 +64,12 @@ export const CascadingSlotLocatorNames = {
 };
 
 export const CascadingSlotLocators = [
-    new ImageLocator(CascadingSlotLocatorNames.imgGameName,  68, 600, 238, 130),
-    new ImageLocator(CascadingSlotLocatorNames.imgBoard0, 338, 65, 600, 500),
+    new ImageLocator(CascadingSlotLocatorNames.imgGameName,  68, 583, 238, 130),
+    new ImageLocator(CascadingSlotLocatorNames.imgBoard0, 338, 65, 600, 400),
     new ImageLocator(CascadingSlotLocatorNames.imgBoard1, 338, 65, 600, 500),
-    new ImageLocator(CascadingSlotLocatorNames.imgBoard2, 338, 65, 600, 500),
-    new ImageLocator(CascadingSlotLocatorNames.imgBoard3, 338, 65, 600, 500),
-    new ImageLocator(CascadingSlotLocatorNames.imgBoard4, 338, 65, 600, 500),
+    new ImageLocator(CascadingSlotLocatorNames.imgBoard2, 338, 65, 600, 200),
+    new ImageLocator(CascadingSlotLocatorNames.imgBoard3, 338, 65, 500, 300),
+    new ImageLocator(CascadingSlotLocatorNames.imgBoard4, 338, 65, 500, 400),
     new ImageLocator(CascadingSlotLocatorNames.btnSymbol, 563, 185, 40, 40),
     new ImageLocator(CascadingSlotLocatorNames.lblRoundID, 990, 120, 192, 40),
     new ImageLocator(CascadingSlotLocatorNames.lblRoundIdFirstRoundTrialMode, 990, 120, 192, 40),
