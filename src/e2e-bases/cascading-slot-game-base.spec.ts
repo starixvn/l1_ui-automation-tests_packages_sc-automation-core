@@ -29,7 +29,7 @@ export class CascadingSlotGameBase {
     protected mainUITests() {
         test("Verify game name", async () => {
             //Act
-            test.step("Capture game name and compare with snapshot", async () => {
+            await test.step("Capture game name and compare with snapshot", async () => {
                 const gamename = await this.game.capture(CascadingSlotLocatorNames.imgGameName);
 
              //Assert
@@ -73,41 +73,39 @@ export class CascadingSlotGameBase {
 
         test("Verify menu expand with sound and music on", async () => {
             //Act
-            test.step("Click hamburger menu", async () => {
+            await test.step("Click hamburger menu", async () => {
                 await this.game.clickLocator(CascadingSlotLocatorNames.mnuHamburger);
             });
-            test.step("Capture expand hamburger menu and compare with the snapshot", async () => {
+            await test.step("Capture expand hamburger menu and compare with the snapshot", async () => {
                 const mnuHamburgerExpandSoundOn = await this.game.capture(CascadingSlotLocatorNames.mnuHamburgerExpandSoundOn);
             //Assert
                 expect(mnuHamburgerExpandSoundOn.image).toMatchSnapshot(mnuHamburgerExpandSoundOn.name);
             });
             //Pre Act
-            test.step("Click out side to close the menu", async () => {
+            await test.step("Click out side to close the menu", async () => {
                 await this.game.clickOutSide(1000);
             });
         });
 
         test("Verify menu expand with sound and music off", async () => {
             //Act
-            test.step("Click on hamburger menu", async () => {
+            await test.step("Click on hamburger menu", async () => {
                 await this.game.clickLocator(CascadingSlotLocatorNames.mnuHamburger);
             });
-            test.step("Click on sound icon", async () => {
+            await test.step("Click on sound icon", async () => {
                 await this.game.clickLocator(CascadingSlotLocatorNames.icoSound);
             });
-            test.step("Click on music icon", async () => {
+            await test.step("Click on music icon", async () => {
                 await this.game.clickLocator(CascadingSlotLocatorNames.icoMusic);
             });
-             test.step("Capture expand hamburger menu and compare with snapshot", async () => {
-            const mnuHamburgerExpandSoundOff = await this.game.capture(CascadingSlotLocatorNames.mnuHamburgerExpandSoundOff);
-
-
-            //Assert
-            expect(mnuHamburgerExpandSoundOff.image).toMatchSnapshot(mnuHamburgerExpandSoundOff.name);
+            await test.step("Capture expand hamburger menu and compare with snapshot", async () => {
+                const mnuHamburgerExpandSoundOff = await this.game.capture(CascadingSlotLocatorNames.mnuHamburgerExpandSoundOff);
+                //Assert
+                expect(mnuHamburgerExpandSoundOff.image).toMatchSnapshot(mnuHamburgerExpandSoundOff.name);
 
             });
             //Pre Act
-            test.step("Click outside to close the menu", async () => {
+            await test.step("Click outside to close the menu", async () => {
                 await this.game.clickOutSide();
             });
         });
@@ -117,7 +115,7 @@ export class CascadingSlotGameBase {
     protected turboTests() {
         test("Verify default state of turbo button is OFF", async () => {
             // Verify default turbo off state
-            test.step("Capture turbo button and compare with snapshot", async () => {
+            await test.step("Capture turbo button and compare with snapshot", async () => {
                 const turboDefault = await this.game.captureLocator(CascadingSlotLocatorNames.imgTurboDefault);
 
             // Assert Turbo Off
@@ -127,11 +125,11 @@ export class CascadingSlotGameBase {
 
         test("Verify user can turn On turbo mode", async () => {
             // Turbo ON
-            test.step("Click on turbo button to turn on turbo mode", async () => {
+            await test.step("Click on turbo button to turn on turbo mode", async () => {
                 await clickTurbo(this.game);
             });
 
-            test.step("Capture turbo button and compare with snapshot", async () => {
+            await test.step("Capture turbo button and compare with snapshot", async () => {
                 const turboOn = await this.game.captureLocator(CascadingSlotLocatorNames.imgTurboOn);
                 expect(turboOn.image).toMatchSnapshot(turboOn.name);
             });
@@ -139,11 +137,11 @@ export class CascadingSlotGameBase {
 
         test("Verify user can turn OFF turbo mode", async () => {
             // Act
-            test.step("Click on turbo button to turn on turbo mode", async () => {
+            await test.step("Click on turbo button to turn on turbo mode", async () => {
                 await clickTurbo(this.game);
             });
 
-            test.step("Capture turbo button and compare with snapshot", async () => {
+            await test.step("Capture turbo button and compare with snapshot", async () => {
                 const imgTurboOFF = await this.game.capture(CascadingSlotLocatorNames.imgTurboOFF);
                 expect(imgTurboOFF.image).toMatchSnapshot(imgTurboOFF.name);
             });
@@ -572,7 +570,7 @@ const getDataFistRowHistory = async (game: BaseGame, elementname: string = Casca
             betlevel: data[2].toString().replace(/[^0-9.]/g, ""),
             coinvalue: data[3].toString().replace(/[^0-9.]/g, ""),
             totalbet: data[4].toString().replace(/[^0-9.]/g, ""),
-            betwin: data[5].toString().replace(/[^0-9.]/g, "") !== "" ? parseFloat(data[5].toString().replace(/[^0-9.]/g, "")) : "0", //handle case get wrong text 0 -> D
+            betwin: data[5].toString().replace(/[^0-9.]/g, "") !== "" ? parseFloat(data[5].toString().replace(/[^0-9.]/g, "")).toString() : "0", //handle case get wrong text 0 -> D
         };
     } else {
         return {

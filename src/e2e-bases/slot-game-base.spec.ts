@@ -40,6 +40,7 @@ export class SlotGameBase {
         test("Verify symbols board in first load game", async () => {
             //Act
             const boardID = await getBoardID();
+            await this.game.clickLocator(CSLocatorNames.btnSymbol);
             const imgBoardId = await this.game.capture(`img${boardID}`);
 
             //Assert

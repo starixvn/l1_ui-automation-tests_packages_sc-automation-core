@@ -58,6 +58,7 @@ export const CSLocatorNames = {
     btnClearPayline: "btnClearPayline",
     btnConfirmPayline: "btnConfirmPayline",
     imgConfirmPaylineDisabled: "imgConfirmPaylineDisabled",
+    btnSymbol: "btnSymbol",
     btnClosePopup: "btnClosePopup", //Others
 };
 
@@ -116,5 +117,6 @@ export const ClassicSlotLocators = [
     new ImageLocator(CSLocatorNames.btnClearPayline, 875, 111, 154, 50),
     new ImageLocator(CSLocatorNames.btnConfirmPayline, 532, 612, 210, 55),
     new ImageLocator(CSLocatorNames.imgConfirmPaylineDisabled, 532, 612, 210, 55),
+    new ImageLocator(CSLocatorNames.btnSymbol, 330, 146, 5, 5),
     new ImageLocator(CSLocatorNames.btnClosePopup, 5, 5, 10, 10),
 ];
