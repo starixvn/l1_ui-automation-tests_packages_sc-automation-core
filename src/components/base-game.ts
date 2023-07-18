@@ -312,10 +312,13 @@ export class BaseGame {
             browserlog.push(msg.text());
         });
         const searchString = "LoadScene";
-        while (browserlog.filter((item) => item.includes(searchString)).length <1) {
+        while (browserlog.filter((item) => item.includes(searchString)).length < 1) {
             await this.page.waitForTimeout(3000);
         }
-        await this.page.waitForTimeout(15000);
+        await this.page.waitForTimeout(5000);
+        this.capturedEvents["signedIn"] = "";
+        this.waitForEvent("signedIn");
+        await this.page.waitForTimeout(2000);
         console.log("LoadScene Success");
     }
 }
