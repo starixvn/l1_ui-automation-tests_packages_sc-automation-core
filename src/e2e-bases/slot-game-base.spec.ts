@@ -40,7 +40,7 @@ export class SlotGameBase {
         test("Verify symbols board in first load game", async () => {
             //Act
             const boardID = await getBoardID();
-            await this.game.clickLocator(CSLocatorNames.btnSymbol);
+            await this.game.clickLocator(CSLocatorNames.btnSymbol, 2000);
             const imgBoardId = await this.game.capture(`img${boardID}`);
 
             //Assert
@@ -248,6 +248,7 @@ export class SlotGameBase {
             // Assert
             expect(bet).toMatchWinningSymbols(settledResults);
             await this.game.waitForTimeout(timeout);
+            await this.game.clickOutSide(1500); //click ouside to close big win popup
         });
 
         test("Verify user able spin by enter key with turbo mode OFF", async () => {
@@ -261,6 +262,7 @@ export class SlotGameBase {
             // Assert
             expect(bet).toMatchWinningSymbols(settledResults);
             await this.game.waitForTimeout(timeout);
+            await this.game.clickOutSide(1500); //click ouside to close big win popup
         });
 
         test("Verify user able spin by space with turbo mode ON", async () => {
@@ -275,6 +277,7 @@ export class SlotGameBase {
             // Assert
             expect(bet).toMatchWinningSymbols(settledResults);
             await this.game.waitForTimeout(timeout);
+            await this.game.clickOutSide(1500); //click ouside to close big win popup
         });
     }
 
@@ -325,8 +328,8 @@ export class SlotGameBase {
             expect(roundID).toEqual(global.settledata.roundID);
 
             //Post-Act
-            await this.game.clickLocator(CSLocatorNames.btnClosePopup);
-            await this.game.clickLocator(CSLocatorNames.btnClosePopup);
+            await this.game.clickOutSide(1500);
+            await this.game.clickOutSide(1500);
         });
     }
 
@@ -358,11 +361,11 @@ export class SlotGameBase {
     protected runScenario() {
         this.inGameTests();
         this.mainUITests();
+        this.turboTests();
         this.paylineTests();
         this.betTotalBetTests();
         this.spinByKeys();
         this.autoSpinTests();
-        this.turboTests();
         this.placeBetAndSettleTests();
         this.ticketHistoryTests();
         this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
@@ -377,7 +380,6 @@ const openAutoSpinBoard = async (game: BaseGame) => {
 const selectAutoSpin = async (game: BaseGame, totalspin: number) => {
     await game.clickLocator(CSLocatorNames.btnAutoSpin, 1500);
     await game.clickLocator(CSLocatorNames[`btnAutoSpin${totalspin}`]);
-    await game.clickLocator(CSLocatorNames.btnAutoSpinTurbo);
     await game.clickLocator(CSLocatorNames.btnAutoSpinStart, 100);
 };
 
@@ -410,12 +412,11 @@ const getDataFistRowHistory = async (game: BaseGame, elementname: string = CSLoc
     if (tempdata != null) {
         let data = tempdata.split(" ");
         return {
-            bettime: data[0].toString(),
-            betdate: data[1].toString(),
-            bet: data[2].toString().replace(/[^0-9.]/g, ""),
-            line: data[3].toString().replace(/[^0-9.]/g, ""),
-            totalbet: data[4].toString().replace(/[^0-9.]/g, ""),
-            betwin: data[5].toString().replace(/[^0-9.]/g, ""),
+            betdate: data[0].toString(),
+            bet: data[1].toString().replace(/[^0-9.]/g, ""),
+            line: data[2].toString().replace(/[^0-9.]/g, ""),
+            totalbet: data[3].toString().replace(/[^0-9.]/g, ""),
+            betwin: data[4].toString().replace(/[^0-9.]/g, ""),
         };
     } else {
         return {

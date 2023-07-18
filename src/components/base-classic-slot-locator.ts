@@ -104,7 +104,7 @@ export const ClassicSlotLocators = [
     new ImageLocator(CSLocatorNames.popAutoSpin, 392, 145, 513, 373),
     new ImageLocator(CSLocatorNames.btnAutoSpinTurbo, 408, 463, 30, 30),
     new ImageLocator(CSLocatorNames.btnAutoSpinStart, 713, 451, 129, 55),
-    new ImageLocator(CSLocatorNames.lblHistoryFirstRow, 140, 168, 1000, 30),
+    new ImageLocator(CSLocatorNames.lblHistoryFirstRow, 203, 168, 950, 30),
     new ImageLocator(CSLocatorNames.locHistoryRoundId, 369, 170, 70, 30),
     new ImageLocator(CSLocatorNames.lblHistoryDetailRoundId, 643, 54, 140, 40),
     new ImageLocator(CSLocatorNames.tblPayline1, 190, 168, 880, 432),
