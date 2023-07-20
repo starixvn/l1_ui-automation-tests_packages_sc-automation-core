@@ -39,28 +39,43 @@ export class CascadingSlotGameBase {
 
         test("Verify symbols board in first load game and odds popup", async () => {
             //Act
-            const boardID = await getBoardID();
-            await this.game.clickLocator(CascadingSlotLocatorNames.btnSymbol,2000);
-            const imgBoardId = await this.game.capture(`img${boardID}`);
-
+            const boardID = await test.step("Get first board id", async() => {
+                return await getBoardID();
+            });
+            await test.step("Click on symbol to show odds popup", async() => {
+                await this.game.clickLocator(CascadingSlotLocatorNames.btnSymbol,2000);
+                const imgBoardId = await this.game.capture(`img${boardID}`);
+                expect(imgBoardId.image).toMatchSnapshot(imgBoardId.name);
+            });
             //Assert
-            expect(imgBoardId.image).toMatchSnapshot(imgBoardId.name);
+            await test.step("Capture board and conpare wiht snapshot", async() => {
+                const imgBoardId = await this.game.capture(`img${boardID}`);
+                expect(imgBoardId.image).toMatchSnapshot(imgBoardId.name);
+            });
+
         });
 
         test("Verify roundID is null in first load game", async () => {
             //Act
-            const defaultRoundID = await this.game.capture(CascadingSlotLocatorNames.lblRoundID);
-
+            const defaultRoundID = await test.step("Capture Round ID", async() => {
+                return await this.game.capture(CascadingSlotLocatorNames.lblRoundID);
+            });
             //Assert
-            expect(defaultRoundID.image).toMatchSnapshot(defaultRoundID.name);
+            await test.step("Compare with snapshot", async() => {
+                expect(defaultRoundID.image).toMatchSnapshot(defaultRoundID.name);
+            });
         });
 
         test("Verify bottom area", async () => {
             //Act
-            const imgBottomArea = await this.game.capture(CascadingSlotLocatorNames.imgBottomArea);
+            const imgBottomArea = await test.step("Capture bottom area", async() => {
+                return await this.game.capture(CascadingSlotLocatorNames.imgBottomArea);
+            });
 
             //Assert
-            expect(imgBottomArea.image).toMatchSnapshot(imgBottomArea.name);
+            await test.step("Compare with snapshot", async() => {
+                expect(imgBottomArea.image).toMatchSnapshot(imgBottomArea.name);
+            });
         });
 
         test("Verify tumble win list is clear", async () => {

@@ -8,6 +8,7 @@ import { Tesseract } from "tesseract.ts";
 import { CSLocatorNames } from "./base-classic-slot-locator";
 
 export class BaseGame {
+    readonly LobbyTimeout: number = 35000;
     readonly BetBoardPostfix: string = "BetBoard";
 
     readonly page: Page;
@@ -59,7 +60,11 @@ export class BaseGame {
         });
         await this.logConsole();
 
-        await this.waitUntilScreenload();
+        if (!env.includes("local")) {
+            await this.page.waitForTimeout(this.LobbyTimeout * 2);
+        } else {
+            await this.page.waitForTimeout(this.LobbyTimeout);
+        }
     }
 
     async getTextLocator(locatorName: string) {
@@ -305,26 +310,9 @@ export class BaseGame {
             console.log(msg.text());
         });
     }
-
-    async waitUntilScreenload() {
-        const browserlog: string[] = [];
-        this.page.on("console", (msg) => {
-            browserlog.push(msg.text());
-        });
-        const searchString = "LoadScene";
-        while (browserlog.filter((item) => item.includes(searchString)).length < 1) {
-            await this.page.waitForTimeout(3000);
-        }
-        await this.page.waitForTimeout(5000);
-        this.capturedEvents["signedIn"] = "";
-        this.waitForEvent("signedIn");
-        await this.page.waitForTimeout(2000);
-        console.log("LoadScene Success");
-    }
 }
 
 export interface Pos {
     xPos: number;
     yPos: number;
 }
-
