@@ -391,12 +391,12 @@ export class CascadingSlotGameBase {
             const totalAutoSpin = 10;
 
             // Act
-            await test.step("Start 10 auto spin", async () => {
+            await test.step("Start 10 auto spins", async () => {
                 await selectAutoSpin(this.game, totalAutoSpin);
             });
 
             //Assert
-            await test.step("Verify number of spins", async () => {
+            await test.step("Wait for finish 10 spins", async () => {
                 for (let index = 1; index <= totalAutoSpin; index++) {
                     const settledResults = await waitForSettlementCascadingSlot(this.game);
                     settledResultsAutoSpin.push(settledResults.winAmount);
@@ -404,10 +404,12 @@ export class CascadingSlotGameBase {
                         this.game.waitForTimeout((settledResults.tumble + 1)*4000); //wait for tumbling of the last spin
                     }
                 }
+            });
+            await test.step("Verify total of spins", async () => {
                 expect(settledResultsAutoSpin.length >= 10).toBe(true);            
             });
             //Post-Act
-            await test.step("click outside to close big win popup", async () => {
+            await test.step("Click outside to close big win popup", async () => {
                 await this.game.clickOutSide(2000);//close big win popup
             });
             await test.step("Click out side to close auto spin popup", async () => {
@@ -422,7 +424,7 @@ export class CascadingSlotGameBase {
                 await selectAutoSpin(this.game, totalAutoSpin);
             });
             let tumbleOfTheLastSpin = 1;
-            const numberAutoSpin = await test.step("Wait for 5 spin", async () => {
+            await test.step("Wait for 5 spin", async () => {
                 for (let index = 1; index <= totalAutoSpin - 5; index++) {
                     const settledResults = await waitForSettlementCascadingSlot(this.game);
                     settledResultsAutoSpin.push(settledResults.winAmount);
@@ -431,15 +433,14 @@ export class CascadingSlotGameBase {
                     }
                     
                 }
-                return settledResultsAutoSpin.length;
             });
             await test.step("Click stop auto spin", async () => {
                 await this.game.clickLocator(CascadingSlotLocatorNames.btnAutoSpin); //stop autospin
             });
 
             //Assert
-            await test.step("Verify number of auto spin < 10", async () => {
-                expect(numberAutoSpin < 10).toBe(true);
+            await test.step("Verify total of auto spin < 10", async () => {
+                expect(settledResultsAutoSpin.length < 10).toBe(true);
             });
 
             await test.step("Wait for animation", async () => {
@@ -469,9 +470,10 @@ export class CascadingSlotGameBase {
             });
 
             // Act 2
-            let roundID = await test.step("Open bet details and get round Id", async () => {
+            let roundID;
+            await test.step("Open bet details and get round Id", async () => {
                 await openRoundDetail(this.game);
-                return await getRoundId(this.game, CascadingSlotLocatorNames.lblHistoryDetailRoundId);
+                roundID = await getRoundId(this.game, CascadingSlotLocatorNames.lblHistoryDetailRoundId);
             });
 
             // Assert 2
@@ -615,12 +617,12 @@ export class CascadingSlotGameBase {
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
 
             // Act
-
-            const placeBetResponse = await test.step("Place bet", async () => {
-                return await this.player.placeBet(bet.choice, bet.amount);
+            let placeBetResponse, settledResults;
+            await test.step("Place bet", async () => {
+                placeBetResponse = await this.player.placeBet(bet.choice, bet.amount);
             });
-            const settledResults = await test.step("Get bet result", async () => {
-                return await waitForSettlementCascadingSlot(this.game);
+            await test.step("Get bet result", async () => {
+                settledResults = await waitForSettlementCascadingSlot(this.game);
             });
 
             // Assert
@@ -715,6 +717,14 @@ const getDataFistRowHistory = async (game: BaseGame, elementname: string = Casca
 
     if (tempdata != null) {
         let data = tempdata.split(" ");
+        //handle case bat date are separated
+        if(data.length > 6){
+            data[1] = data [1] + data [2] + data [3]
+            data[2] = data[4];
+            data[3] = data[5];
+            data[4] = data[6];
+            data[5] = data[7];
+        };
         return {
             bettime: data[0].toString(),
             betdate: data[1].toString(),
@@ -753,11 +763,8 @@ export interface Expectdata {
 }
 
 const verifyticketdata = async (game: BaseGame, expectdata: Expectdata) => {
-    //let line = expectdata.line.replace("btnPayline", "");
     const ticketdata = await getDataFistRowHistory(game);
     expect(ticketdata.betdate, "verify bet date").toEqual(expectdata.betdate);
-    //expect(ticketdata.bet, "Verify total stake").toEqual(expectdata.bet);
-    //expect(ticketdata.line, "verify bet bet choice").toEqual(line);
     expect(ticketdata.betwin, "verify bet win").toEqual(expectdata.betwin);
 };
 
