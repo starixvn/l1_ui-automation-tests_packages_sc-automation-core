@@ -5,7 +5,7 @@ import { IBaseOptions } from "./base-options";
 import { CSLocatorNames } from "../components/base-classic-slot-locator";
 import { GameGuides } from "../game-components/guides/guides.spec";
 
-const timeout = 3000;
+const timeout = 4000;
 export interface SlotGameOptions extends IBaseOptions {
     placeBetChoices: string[];
     placeBetAmount?: number;
@@ -156,7 +156,7 @@ export class SlotGameBase {
             //Assert
             expect(popAutoSpin.image).toMatchSnapshot(popAutoSpin.name);
 
-            await this.game.clickOutSide();
+            await this.game.clickOutSide(1000);
         });
 
         test("Verify case user select 10 auto spins then wait for finishing 10 auto spins", async () => {
@@ -183,7 +183,7 @@ export class SlotGameBase {
             await this.game.waitForTimeout(timeout); //handle cases free spin or bonus
 
             //Post-Act
-            await this.game.clickOutSide();
+            await this.game.clickOutSide(2000); //click outside to close big win popup
         });
 
         test("Verify user can stop auto spin process by clicking on autospin button", async () => {
@@ -200,7 +200,10 @@ export class SlotGameBase {
 
             //Assert
             expect(settledResultsAutoSpin.length < 10).toBe(true);
-            await this.game.waitForTimeout(timeout); //handle cases free spin or bonus
+
+             //Post-Act
+             await this.game.waitForTimeout(timeout); //handle cases free spin or bonus
+             await this.game.clickOutSide(2000); //click outside to close big win popup
         });
     }
 
@@ -248,7 +251,7 @@ export class SlotGameBase {
             // Assert
             expect(bet).toMatchWinningSymbols(settledResults);
             await this.game.waitForTimeout(timeout);
-            await this.game.clickOutSide(1500); //click ouside to close big win popup
+            await this.game.clickOutSide(2000); //click outside to close big win popup
         });
 
         test("Verify user able spin by enter key with turbo mode OFF", async () => {
@@ -262,7 +265,7 @@ export class SlotGameBase {
             // Assert
             expect(bet).toMatchWinningSymbols(settledResults);
             await this.game.waitForTimeout(timeout);
-            await this.game.clickOutSide(1500); //click ouside to close big win popup
+            await this.game.clickOutSide(2000); //click outside to close big win popup
         });
 
         test("Verify user able spin by space with turbo mode ON", async () => {
@@ -277,7 +280,7 @@ export class SlotGameBase {
             // Assert
             expect(bet).toMatchWinningSymbols(settledResults);
             await this.game.waitForTimeout(timeout);
-            await this.game.clickOutSide(1500); //click ouside to close big win popup
+            await this.game.clickOutSide(2000); //click outside to close big win popup
         });
     }
 
@@ -308,6 +311,8 @@ export class SlotGameBase {
                 betdate: today,
             };
             global.settledata = settledata;
+
+            await this.game.clickOutSide(2000); //click outside to close big win
         });
     }
 
