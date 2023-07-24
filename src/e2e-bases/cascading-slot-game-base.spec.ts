@@ -432,8 +432,8 @@ export class CascadingSlotGameBase {
                     if(index == totalAutoSpin - 5){
                         tumbleOfTheLastSpin = settledResults.tumble;
                     }
-                    await this.game.clickLocator(CascadingSlotLocatorNames.btnAutoSpin); //stop autospin
                 }
+                await this.game.clickLocator(CascadingSlotLocatorNames.btnAutoSpin); //stop autospin
             });
 
             //Assert
