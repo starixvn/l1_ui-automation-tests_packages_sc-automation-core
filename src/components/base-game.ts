@@ -8,7 +8,6 @@ import { Tesseract } from "tesseract.ts";
 import { CSLocatorNames } from "./base-classic-slot-locator";
 
 export class BaseGame {
-    readonly LobbyTimeout: number = 38000;
     readonly BetBoardPostfix: string = "BetBoard";
 
     readonly page: Page;
@@ -60,11 +59,28 @@ export class BaseGame {
         });
         await this.logConsole();
 
-        if (!env.includes("local")) {
-            await this.page.waitForTimeout(this.LobbyTimeout * 2);
-        } else {
-            await this.page.waitForTimeout(this.LobbyTimeout);
+        await this.waitUntilGameUiLoad();
+    }
+
+    async waitUntilGameUiLoad() {
+        await this.page.waitForTimeout(1000);
+        let filterA: string[] = [];
+        const searchString = "LoadScene";
+        this.page.on("console", (msg) => {
+            if (
+                msg.text().includes(searchString) &&
+                !msg.text().includes(searchString + " db") &&
+                !msg.text().includes(searchString + " game")
+            ) {
+                filterA.push(msg.text());
+            }
+        });
+
+        while (filterA.length < 2) {
+            await this.page.waitForTimeout(3000);
         }
+        await this.page.waitForTimeout(3000);
+        console.log("Game UI load success");
     }
 
     async getTextLocator(locatorName: string) {
@@ -129,6 +145,7 @@ export class BaseGame {
             settlementResult: message?.finish?.settlementResult,
             odds: this.odds,
             winStatus: typeof winningByChoice == "object" ? winningByChoice.status.win : "",
+            roundId: message.finish.roundId || 0
         };
         if (this.gameConfiguration.slotsgame) {
             settledResults["winAmount"] = message?.finish?.betWin ?? 0;
