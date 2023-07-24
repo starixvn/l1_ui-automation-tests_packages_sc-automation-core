@@ -1,4 +1,4 @@
-import { test, BaseGame, BaseElementLocator, CSLocatorNames, ImageSnapshot } from "../../components";
+import { test, BaseGame, BaseElementLocator, ImageSnapshot } from "../../components";
 import { expect } from "../../expects";
 import { GuideLocator } from "./guides-locators";
 export class GameGuides {
@@ -12,15 +12,26 @@ export class GameGuides {
         test(`AND player could open guide and clarify appropriate content`, async () => {
             // Arrange
             test.setTimeout(timeout);
-            await this.game.clickGuide(3000);
+            await test.step("Open game guide", async () => {
+                await this.game.clickGuide(3000);
+            });
 
             // Act
-            const guideContents = await this.captureGuideContent();
-            await this.game.clickLocator(CSLocatorNames.btnClosePopup);
+            let guideContents;
+            await test.step("Get guide content", async () => {
+                guideContents = await this.captureGuideContent();
+            });
 
             // Assert
-            guideContents.forEach((content) => {
-                expect(content.image).toMatchSnapshot(content.name);
+            await test.step("Verify guide content", async () => {
+                guideContents.forEach((content) => {
+                    expect(content.image).toMatchSnapshot(content.name);
+                });
+            });
+
+            //Post-Act
+            await test.step("Click outside to close game guide", async () => {
+                await this.game.clickOutSide(2000);
             });
         });
     }

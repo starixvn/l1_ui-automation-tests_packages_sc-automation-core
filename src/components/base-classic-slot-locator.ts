@@ -58,6 +58,7 @@ export const CSLocatorNames = {
     btnClearPayline: "btnClearPayline",
     btnConfirmPayline: "btnConfirmPayline",
     imgConfirmPaylineDisabled: "imgConfirmPaylineDisabled",
+    btnSymbol: "btnSymbol",
     btnClosePopup: "btnClosePopup", //Others
 };
 
@@ -103,7 +104,7 @@ export const ClassicSlotLocators = [
     new ImageLocator(CSLocatorNames.popAutoSpin, 392, 145, 513, 373),
     new ImageLocator(CSLocatorNames.btnAutoSpinTurbo, 408, 463, 30, 30),
     new ImageLocator(CSLocatorNames.btnAutoSpinStart, 713, 451, 129, 55),
-    new ImageLocator(CSLocatorNames.lblHistoryFirstRow, 200, 168, 1000, 30),
+    new ImageLocator(CSLocatorNames.lblHistoryFirstRow, 203, 168, 950, 30),
     new ImageLocator(CSLocatorNames.locHistoryRoundId, 369, 170, 70, 30),
     new ImageLocator(CSLocatorNames.lblHistoryDetailRoundId, 475, 45, 335, 40),
     new ImageLocator(CSLocatorNames.tblPayline1, 190, 168, 880, 432),
@@ -116,5 +117,6 @@ export const ClassicSlotLocators = [
     new ImageLocator(CSLocatorNames.btnClearPayline, 875, 111, 154, 50),
     new ImageLocator(CSLocatorNames.btnConfirmPayline, 532, 612, 210, 55),
     new ImageLocator(CSLocatorNames.imgConfirmPaylineDisabled, 532, 612, 210, 55),
+    new ImageLocator(CSLocatorNames.btnSymbol, 330, 146, 5, 5),
     new ImageLocator(CSLocatorNames.btnClosePopup, 5, 5, 10, 10),
 ];

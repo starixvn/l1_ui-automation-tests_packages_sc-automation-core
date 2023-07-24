@@ -145,7 +145,7 @@ export class BaseGame {
             settlementResult: message?.finish?.settlementResult,
             odds: this.odds,
             winStatus: typeof winningByChoice == "object" ? winningByChoice.status.win : "",
-            roundId: message.finish.roundId || 0
+            roundId: message.finish.roundId || 0,
         };
         if (this.gameConfiguration.slotsgame) {
             settledResults["winAmount"] = message?.finish?.betWin ?? 0;
@@ -282,12 +282,12 @@ export class BaseGame {
         }
     }
 
-    async clickOutSide(): Promise<void> {
+    async clickOutSide(timeout = 500): Promise<void> {
         const locator = this.locator("outside") || this.locator(CSLocatorNames.btnClosePopup);
         if (locator) {
             await locator.click(this.page);
         }
-        await this.waitForTimeout(1000);
+        await this.waitForTimeout(timeout);
     }
 
     async mouseDragDrop(from: Pos, to: Pos): Promise<void> {
