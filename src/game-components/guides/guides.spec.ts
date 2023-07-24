@@ -31,7 +31,7 @@ export class GameGuides {
 
             //Post-Act
             await test.step("Click outside to close game guide", async () => {
-                this.game.clickOutSide(1000);
+                await this.game.clickOutSide(2000);
             });
         });
     }

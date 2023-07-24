@@ -59,7 +59,7 @@ export class CascadingSlotGameBase {
             await test.step("Capture Round ID at the first load and compare with snapshot", async() => {
                 const defaultRoundID =  await this.game.capture(CascadingSlotLocatorNames.lblRoundID);
             //Assert
-                expect(defaultRoundID.image).toMatchSnapshot(defaultRoundID.name);
+                expect(defaultRoundID.image).toMatchSnapshot(defaultRoundID.name, {maxDiffPixelRatio : 0});
             });
         });
 
@@ -423,19 +423,17 @@ export class CascadingSlotGameBase {
             await test.step("Start 10 auto spin", async () => {
                 await selectAutoSpin(this.game, totalAutoSpin);
             });
+            //Act
             let tumbleOfTheLastSpin = 1;
-            await test.step("Wait for 5 spin", async () => {
+            await test.step("Wait for 5 spin and stop", async () => {
                 for (let index = 1; index <= totalAutoSpin - 5; index++) {
                     const settledResults = await waitForSettlementCascadingSlot(this.game);
                     settledResultsAutoSpin.push(settledResults.winAmount);
                     if(index == totalAutoSpin - 5){
                         tumbleOfTheLastSpin = settledResults.tumble;
                     }
-                    
+                    await this.game.clickLocator(CascadingSlotLocatorNames.btnAutoSpin); //stop autospin
                 }
-            });
-            await test.step("Click stop auto spin", async () => {
-                await this.game.clickLocator(CascadingSlotLocatorNames.btnAutoSpin); //stop autospin
             });
 
             //Assert
@@ -499,7 +497,7 @@ export class CascadingSlotGameBase {
             //Assert
             await test.step("Capture bottom area and compare with snapshot", async () => {
                 const imgBottomAreaTrialMode = await this.game.capture(CascadingSlotLocatorNames.imgBottomAreaTrialMode);
-                expect(imgBottomAreaTrialMode.image).toMatchSnapshot(imgBottomAreaTrialMode.name);
+                expect(imgBottomAreaTrialMode.image).toMatchSnapshot(imgBottomAreaTrialMode.name, {maxDiffPixelRatio : 0});
             });
         });
 
@@ -510,7 +508,7 @@ export class CascadingSlotGameBase {
                 const imgTurboTrial = await this.game.capture(CascadingSlotLocatorNames.imgTurboTrial);
 
                 //Assert
-                expect(imgTurboTrial.image).toMatchSnapshot(imgTurboTrial.name,{maxDiffPixelRatio:0});
+                expect(imgTurboTrial.image).toMatchSnapshot(imgTurboTrial.name, {maxDiffPixelRatio : 0});
             });
         });
 
@@ -545,7 +543,7 @@ export class CascadingSlotGameBase {
             //Assert
             await test.step("Capture text game guide and compare with snapshot", async () => {
                 const popGameGuide = await this.game.capture(CascadingSlotLocatorNames.popGameGuide);
-                expect(popGameGuide.image).toMatchSnapshot(popGameGuide.name, {maxDiffPixelRatio:0});
+                expect(popGameGuide.image).toMatchSnapshot(popGameGuide.name, {maxDiffPixelRatio : 0});
                 
             });
             //Post-Act
@@ -563,7 +561,7 @@ export class CascadingSlotGameBase {
             //Assert 
             await test.step("Capture bet control popup and compare with snapshot", async () => {
                 const popBetControlTrialMode = await this.game.capture(CascadingSlotLocatorNames.popBetControlTrialMode);
-                expect(popBetControlTrialMode.image).toMatchSnapshot(popBetControlTrialMode.name, {maxDiffPixelRatio:0});
+                expect(popBetControlTrialMode.image).toMatchSnapshot(popBetControlTrialMode.name, {maxDiffPixelRatio : 0});
             });
             
             //Post-Act
@@ -588,7 +586,7 @@ export class CascadingSlotGameBase {
                 const imgUserBalanceTrialMode = await this.game.capture(CascadingSlotLocatorNames.imgUserBalanceTrialMode);
 
                 //Assert
-                expect(imgUserBalanceTrialMode.image).toMatchSnapshot(imgUserBalanceTrialMode.name, {maxDiffPixelRatio:0});
+                expect(imgUserBalanceTrialMode.image).toMatchSnapshot(imgUserBalanceTrialMode.name, {maxDiffPixelRatio : 0});
             });
         });
 
@@ -601,7 +599,7 @@ export class CascadingSlotGameBase {
             //Assert
             await test.step("Capture round id and compare with snapshot", async () => {
                 const lblRoundIdFirstRoundTrialMode = await this.game.capture(CascadingSlotLocatorNames.lblRoundIdFirstRoundTrialMode);
-                expect(lblRoundIdFirstRoundTrialMode.image).toMatchSnapshot(lblRoundIdFirstRoundTrialMode.name, {maxDiffPixelRatio:0});
+                expect(lblRoundIdFirstRoundTrialMode.image).toMatchSnapshot(lblRoundIdFirstRoundTrialMode.name, {maxDiffPixelRatio : 0});
 
             });
         });
@@ -683,8 +681,8 @@ export class CascadingSlotGameBase {
         this.autoSpinTests();
         this.placeBetAndSettleTests();
         this.ticketHistoryTests();
-        this.betControlTests();
         this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
+        this.betControlTests();
         this.trialModeTests();
     }
 }
