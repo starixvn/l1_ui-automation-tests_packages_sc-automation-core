@@ -4,6 +4,7 @@ import { expect } from "../expects";
 import { IBaseOptions } from "./base-options";
 import { CascadingSlotLocatorNames } from "../components/base-cascading-slot-locator";
 import { GameGuides } from "../game-components/guides/guides.spec";
+import { BetHistory } from "../game-components/history/history.spec";
 
 export interface SlotGameOptions extends IBaseOptions {
     placeBetChoices: string[];
@@ -14,6 +15,7 @@ export class CascadingSlotGameBase {
     game: BaseGame;
     player: BasePlayer;
     protected gameGuides: GameGuides = new GameGuides();
+    protected betHistory: BetHistory = new BetHistory();
 
     constructor(protected options: SlotGameOptions) {}
 
@@ -36,10 +38,12 @@ export class CascadingSlotGameBase {
                 expect(gamename.image).toMatchSnapshot(gamename.name);
             });
         });
+        
 
         test("Verify symbols board in first load game and odds popup", async () => {
             //Act
-            const boardID = await test.step("Get first board id", async() => {
+            let boardID; 
+            boardID = await test.step("Get first board id", async() => {
                 return await getBoardID();
             });
             await test.step("Click on symbol to show odds popup", async() => {
@@ -401,7 +405,7 @@ export class CascadingSlotGameBase {
                     const settledResults = await waitForSettlementCascadingSlot(this.game);
                     settledResultsAutoSpin.push(settledResults.winAmount);
                     if(index == totalAutoSpin){
-                        this.game.waitForTimeout((settledResults.tumble + 1)*4000); //wait for tumbling of the last spin
+                        await this.game.waitForTimeout((settledResults.tumble + 1)*4000); //wait for tumbling of the last spin
                     }
                 }
             });
@@ -637,14 +641,13 @@ export class CascadingSlotGameBase {
             });
 
             // Post-Act
-            const settledata = {
-                roundID: settledResults.roundId.toString(),
-                betwin: settledResults.winAmount.toString(),
-                bet: bet.amount.toString(),
-                bettime: bettime,
+            const settleddata = {
                 betdate: today,
+                roundID: settledResults.roundId.toString(),
+                totalstake: bet.amount.toString(),
+                betwin: settledResults.winAmount.toString(),
             };
-            global.settledata = settledata;
+            global.settleddata = settleddata;
         });
     }
 
@@ -680,7 +683,8 @@ export class CascadingSlotGameBase {
         this.spinByKeys();
         this.autoSpinTests();
         this.placeBetAndSettleTests();
-        this.ticketHistoryTests();
+        //this.ticketHistoryTests();
+        this.betHistory.tests(global.settleddata);
         this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
         this.betControlTests();
         this.trialModeTests();
@@ -754,9 +758,9 @@ const openRoundDetail = async (game: BaseGame) => {
 };
 
 export interface Expectdata {
-    line: string;
     betdate: string;
-    bet: string;
+    roundID: string;
+    totalstake: string;
     betwin: string;
 }
 
