@@ -44,7 +44,7 @@ export class CascadingSlotGameBase {
             //Act
             let boardID; 
             boardID = await test.step("Get first board id", async() => {
-                return await getBoardID();
+                boardID = await getBoardID();
             });
             await test.step("Click on symbol to show odds popup", async() => {
                 await this.game.clickLocator(CascadingSlotLocatorNames.btnSymbol,2000);
