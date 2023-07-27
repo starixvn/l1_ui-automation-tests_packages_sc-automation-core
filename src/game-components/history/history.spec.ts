@@ -60,10 +60,10 @@ const getRoundId = async (game: BaseGame, elementname: string = "lblHistoryDetai
 };
 
 const getDataFistRowHistory = async (game: BaseGame) => {
-    let betdate = await game.getTextLocator("historyBetDate");
-    let roundID = await game.getTextLocator("historyRoundID");
-    let totalstake = await game.getTextLocator("historyTotalStake");
-    let betwin = await game.getTextLocator("historyBetWin");
+    let betdate = await game.getTextLocator("locHistoryBetDate");
+    let roundID = await game.getTextLocator("locHistoryRoundId");
+    let totalstake = await game.getTextLocator("locHistoryTotalStake");
+    let betwin = await game.getTextLocator("locHistoryBetWin");
     return {
         betdate: betdate!.toString(),
         roundID: roundID!.toString(),

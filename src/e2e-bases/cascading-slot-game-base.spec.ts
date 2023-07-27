@@ -754,7 +754,7 @@ const waitForTumbling = async (game: BaseGame) =>{
 }
 
 const openRoundDetail = async (game: BaseGame) => {
-    await game.clickLocator(CascadingSlotLocatorNames.locHistoryRoundId, 1000);
+    await game.clickLocator(CascadingSlotLocatorNames.locOpenBetDetails, 1000);
 };
 
 export interface Expectdata {

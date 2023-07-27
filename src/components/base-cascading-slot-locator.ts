@@ -34,7 +34,11 @@ export const CascadingSlotLocatorNames = {
     btnAutoSpinStart: "btnAutoSpinStart",
     popHistory: "popHistory", // History Popup
     lblHistoryFirstRow: "lblHistoryFirstRow",
-    locHistoryRoundId: "locHistoryRoundId",
+    locHistoryBetDate: "locHistoryBetDate",
+    locHistoryRoundID: "locHistoryRoundID",
+    locHistoryTotalStake: "locHistoryTotalStake",
+    locHistoryBetWin: "locHistoryBetWin",
+    locOpenBetDetails: "locOpenBetDetails",
     lblHistoryDetailRoundId: "lblHistoryDetailRoundId",
     btnClosePopup: "btnClosePopup", //Others
     btnTotalStake: "btnTotalStake",
@@ -96,7 +100,12 @@ export const CascadingSlotLocators = [
     new ImageLocator(CascadingSlotLocatorNames.btnAutoSpinTurbo, 410, 466, 25, 25),
     new ImageLocator(CascadingSlotLocatorNames.btnAutoSpinStart, 713, 451, 129, 55),
     new ImageLocator(CascadingSlotLocatorNames.lblHistoryFirstRow, 140, 168, 1000, 30),
-    new ImageLocator(CascadingSlotLocatorNames.locHistoryRoundId, 395, 167, 50, 24),
+    new ImageLocator(CascadingSlotLocatorNames.locHistoryBetDate, 219, 163, 128, 31),
+    new ImageLocator(CascadingSlotLocatorNames.locHistoryRoundID, 352, 163, 139, 31),
+    new ImageLocator(CascadingSlotLocatorNames.locHistoryBetWin, 972, 163, 133, 31),
+
+
+    new ImageLocator(CascadingSlotLocatorNames.locOpenBetDetails, 395, 167, 50, 24),
     new ImageLocator(CascadingSlotLocatorNames.lblHistoryDetailRoundId, 512, 30, 247, 46),
     new ImageLocator(CascadingSlotLocatorNames.btnClosePopup, 5, 5, 10, 10),
     new ImageLocator(CascadingSlotLocatorNames.btnTotalStake, 418, 640, 100, 50),
