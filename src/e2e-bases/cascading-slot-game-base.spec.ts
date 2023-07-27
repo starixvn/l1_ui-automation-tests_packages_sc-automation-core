@@ -670,6 +670,7 @@ export class CascadingSlotGameBase {
                 this.game = baseGame;
                 this.player = new BasePlayer(this.game);
                 this.gameGuides.init(this.game);
+                this.betHistory.init(this.game);
             });
 
             this.runScenario();
@@ -684,7 +685,7 @@ export class CascadingSlotGameBase {
         this.autoSpinTests();
         this.placeBetAndSettleTests();
         //this.ticketHistoryTests();
-        this.betHistory.tests(global.settleddata);
+        this.betHistory.tests();
         this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
         this.betControlTests();
         this.trialModeTests();

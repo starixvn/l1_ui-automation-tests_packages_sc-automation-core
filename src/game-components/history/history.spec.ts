@@ -8,7 +8,7 @@ export class BetHistory {
         this.game = game;
     }
 
-    tests(settleddata: Expectdata) {
+    tests() {
         test(`Verify user can open history and check the content`, async () => {
             // Act 1
             await test.step("Open history", async () => {
@@ -17,7 +17,7 @@ export class BetHistory {
 
             // Assert 1
             await test.step("Verify content", async () => {
-                await verifyticketdata(this.game, settleddata);
+                await verifyticketdata(this.game);
             });
 
             // Act 2
@@ -41,39 +41,32 @@ export class BetHistory {
     }
 
 }
-const verifyticketdata = async (game: BaseGame, expectdata: Expectdata) => {
+const verifyticketdata = async (game: BaseGame) => {
     const ticketdata = await getDataFistRowHistory(game);
-    expect(ticketdata.betdate, "verify bet date").toEqual(expectdata.betdate);
-    expect(ticketdata.roundID, "verify bet win").toEqual(expectdata.roundID);
-    expect(ticketdata.totalstake, "verify bet win").toEqual(expectdata.totalstake);
-    expect(ticketdata.betwin, "verify bet win").toEqual(expectdata.betwin);
+    expect(ticketdata.betdate, "verify bet date").toEqual(global.settleddata.betdate.replace(/[^0-9.]/g, ""));
+    expect(ticketdata.roundID, "verify round id").toEqual(global.settleddata.roundID);
+    expect(ticketdata.totalstake, "verify total stake").toEqual(global.settleddata.totalstake);
+    expect(ticketdata.betwin, "verify bet win").toEqual(global.settleddata.betwin);
 };
 
 const openRoundDetail = async (game: BaseGame) => {
-    await game.clickLocator('locHistoryRoundId', 1000);
+    await game.clickLocator('locOpenBetDetails', 1000);
 };
 
 const getRoundId = async (game: BaseGame, elementname: string = "lblHistoryDetailRoundId") => {
     let roundId = await game.getTextLocator(elementname);
-
     return roundId != null ? roundId.replace(/[^0-9.]/g, "") : roundId;
 };
 
 const getDataFistRowHistory = async (game: BaseGame) => {
     let betdate = await game.getTextLocator("locHistoryBetDate");
-    let roundID = await game.getTextLocator("locHistoryRoundId");
+    let roundID = await game.getTextLocator("locHistoryRoundID");
     let totalstake = await game.getTextLocator("locHistoryTotalStake");
     let betwin = await game.getTextLocator("locHistoryBetWin");
     return {
-        betdate: betdate!.toString(),
-        roundID: roundID!.toString(),
-        totalstake: totalstake!.toString(),
+        betdate: betdate!.toString().replace(/[^0-9.]/g, ""),
+        roundID: roundID!.toString().replace(/[^0-9.]/g, ""),
+        totalstake: totalstake!.toString().replace(/[^0-9.]/g, ""),
         betwin: betwin!.toString().replace(/[^0-9.]/g, "") !== "" ? parseFloat(betwin!.toString().replace(/[^0-9.]/g, "")).toString() : "0",
     };
 };
-export interface Expectdata {
-    betdate: string;
-    roundID: string;
-    totalstake: string;
-    betwin: string;
-}

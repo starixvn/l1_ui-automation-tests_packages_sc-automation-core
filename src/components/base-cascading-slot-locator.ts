@@ -102,6 +102,7 @@ export const CascadingSlotLocators = [
     new ImageLocator(CascadingSlotLocatorNames.lblHistoryFirstRow, 140, 168, 1000, 30),
     new ImageLocator(CascadingSlotLocatorNames.locHistoryBetDate, 219, 163, 128, 31),
     new ImageLocator(CascadingSlotLocatorNames.locHistoryRoundID, 352, 163, 139, 31),
+    new ImageLocator(CascadingSlotLocatorNames.locHistoryTotalStake, 831, 163, 104, 31),
     new ImageLocator(CascadingSlotLocatorNames.locHistoryBetWin, 972, 163, 133, 31),
 
 
