@@ -43,7 +43,7 @@ export class CascadingSlotGameBase {
         test("Verify symbols board in first load game and odds popup", async () => {
             //Act
             let boardID; 
-            boardID = await test.step("Get first board id", async() => {
+            await test.step("Get first board id", async() => {
                 boardID = await getBoardID();
             });
             await test.step("Click on symbol to show odds popup", async() => {
