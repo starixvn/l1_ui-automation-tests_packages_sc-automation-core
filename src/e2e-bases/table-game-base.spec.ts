@@ -28,18 +28,15 @@ export class TableGameBase {
                 expect(choiceSnapshot.image).toMatchSnapshot(choiceSnapshot.name);
             }
         });
-
-        test("Verify default state", async () => {
-            await test.step("Chip bar", async () => {
-                const chipbar = await this.game.capture(TableLocatorNames.defaultChipBar);
-                // Assert
-                expect(chipbar.image).toMatchSnapshot(chipbar.name);
-            });
-            await test.step("Rebet button is disabled", async () => {
-                const btnrebet = await this.game.capture(TableLocatorNames.btnRebet);
-                // Assert
-                expect(btnrebet.image).toMatchSnapshot(btnrebet.name);
-            });
+        test("Verify default state of chip bar", async () => {
+            const chipbar = await this.game.capture(TableLocatorNames.defaultChipBar);
+            // Assert
+            expect(chipbar.image).toMatchSnapshot(chipbar.name);
+        });
+        test("Verify Rebet button is disabled", async () => {
+            const btnrebet = await this.game.capture(TableLocatorNames.btnRebet);
+            // Assert
+            expect(btnrebet.image).toMatchSnapshot(btnrebet.name);
         });
     }
 
@@ -76,11 +73,14 @@ export class TableGameBase {
         test("AND player could open history popup", async () => {
             // Act 1
             await this.game.clickHistory();
-
-            // Assert 1
-
             const ticketdata = await getDataFistRowHistory(this.game);
-            console.log(ticketdata);
+
+            const winamount = ticketdata[ticketdata?.length - 1];
+            const totalbet = ticketdata[ticketdata?.length - 2];
+
+            // Assert
+            expect(winamount).toEqual(global.settledata.betwin);
+            expect(totalbet).toEqual(global.settledata.bet);
 
             // Act 2
             await openRoundDetail(this.game);
@@ -88,10 +88,64 @@ export class TableGameBase {
 
             // Assert 2
             console.log(roundID);
+            expect(roundID).toEqual(global.settledata.roundID);
 
             //Post-Act
             await this.game.clickOutSide(1500);
             await this.game.clickOutSide(1500);
+        });
+    }
+
+    protected multipleBetChoices() {
+        test("THEN player able to place a bet and settle", async () => {
+            // Arrange
+            test.setTimeout(this.options.gameConfiguration.maxTimeout);
+            let betChoices: any = this.options.placeBetChoices;
+            const amount = this.options.placeBetAmount ?? 1;
+            betChoices.splice(1, 1);
+            let placeBetResponse = [];
+            for (const iterator of betChoices) {
+                const responsedata = await this.player.placeBet(iterator, amount);
+                placeBetResponse.push[responsedata];
+            }
+            this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
+
+            // Act
+            const settledResults = await this.game.waitForSettlement();
+
+            // Assert
+
+            for (let i = 0; i < settledResults.length; i++) {
+                const bet = {choice: betChoices[i], amount: this.options.placeBetAmount ?? 1}
+                expect(settledResults[i].endBet).toBe(amount);
+                expect(settledResults[i].settlementResult).toMatchBetOptions(betChoices[i]);
+                expect(bet).toMatchWinning(settledResults);
+            }
+
+            // Post-Act
+            global.rebetChoices = betChoices;
+
+        });
+    }
+
+    protected reBet() {
+        test("THEN player able to place a bet and settle", async () => {
+            // Arrange
+            test.setTimeout(this.options.gameConfiguration.maxTimeout);
+            await this.game.waitUntilPlaceBet();
+            await this.game.clickLocator(TableLocatorNames.btnRebet)
+
+            // Act
+            const settledResults = await this.game.waitForSettlement();
+
+            // Assert
+
+            for (let i = 0; i < global.rebetChoices.length; i++) {
+                const bet = {choice: global.rebetChoices[i], amount: this.options.placeBetAmount ?? 1}
+                expect(settledResults[i].endBet).toBe(bet.amount);
+                expect(settledResults[i].settlementResult).toMatchBetOptions(global.rebetChoices[i]);
+                expect(bet).toMatchWinning(settledResults);
+            }
         });
     }
 
@@ -128,7 +182,7 @@ export class TableGameBase {
 
 const getDataFistRowHistory = async (game: BaseGame, elementname: string = TableLocatorNames.lblHistoryFirstRow) => {
     let tempdata = await game.getTextLocator(elementname);
-    return tempdata;
+    return tempdata?.split(" ") || "";
 };
 
 const openRoundDetail = async (game: BaseGame) => {
