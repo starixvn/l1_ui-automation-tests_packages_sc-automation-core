@@ -455,42 +455,6 @@ export class CascadingSlotGameBase {
         });
     }
 
-    protected ticketHistoryTests() {
-        test("AND player could open history popup", async () => {
-            // Act 1
-            await test.step("Open history", async () => {
-                await this.game.clickHistory(1000);
-            });
-
-            await test.step("Capture first row of history", async () => {
-                await this.game.captureLocator(CascadingSlotLocatorNames.lblHistoryFirstRow);
-            });
-
-            // Assert 1
-            await test.step("Verify content", async () => {
-                await verifyticketdata(this.game, global.settledata);
-            });
-
-            // Act 2
-            let roundID;
-            await test.step("Open bet details and get round Id", async () => {
-                await openRoundDetail(this.game);
-                roundID = await getRoundId(this.game, CascadingSlotLocatorNames.lblHistoryDetailRoundId);
-            });
-
-            // Assert 2
-            await test.step("Verify round Id", async () => {
-                expect(roundID).toEqual(global.settledata.roundID);
-            });
-
-            //Post-Act
-            await test.step("Click outside to close bet detail and history", async () => {
-                await this.game.clickOutSide(1500);
-                await this.game.clickOutSide(1500);
-            });
-        });
-    }
-
     protected trialModeTests() {
         test("Verify default bottom area of trial mode", async () => {
             //Act
@@ -684,7 +648,6 @@ export class CascadingSlotGameBase {
         this.spinByKeys();
         this.autoSpinTests();
         this.placeBetAndSettleTests();
-        //this.ticketHistoryTests();
         this.betHistory.tests();
         this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
         this.betControlTests();
@@ -709,44 +672,6 @@ const clickTurbo = async (game: BaseGame) => {
     await game.waitForTimeout(2000); //wait for message closed
 };
 
-const getRoundId = async (game: BaseGame, elementname: string = CascadingSlotLocatorNames.lblHistoryDetailRoundId) => {
-    let roundId = await game.getTextLocator(elementname);
-
-    return roundId != null ? roundId.replace(/[^0-9.]/g, "") : roundId;
-};
-
-const getDataFistRowHistory = async (game: BaseGame, elementname: string = CascadingSlotLocatorNames.lblHistoryFirstRow) => {
-    let tempdata = await game.getTextLocator(elementname);
-
-    if (tempdata != null) {
-        let data = tempdata.split(" ");
-        //handle case bat date are separated
-        if(data.length > 6){
-            data[1] = data [1] + data [2] + data [3]
-            data[2] = data[4];
-            data[3] = data[5];
-            data[4] = data[6];
-            data[5] = data[7];
-        };
-        return {
-            bettime: data[0].toString(),
-            betdate: data[1].toString(),
-            betlevel: data[2].toString().replace(/[^0-9.]/g, ""),
-            coinvalue: data[3].toString().replace(/[^0-9.]/g, ""),
-            totalbet: data[4].toString().replace(/[^0-9.]/g, ""),
-            betwin: data[5].toString().replace(/[^0-9.]/g, "") !== "" ? parseFloat(data[5].toString().replace(/[^0-9.]/g, "")).toString() : "0", //handle case get wrong text 0 -> D
-        };
-    } else {
-        return {
-            bettime: "N/A",
-            betdate: "N/A",
-            betlevel: "N/A",
-            coinvalue: "N/A",
-            totalbet: "N/A",
-            betwin: "N/A",
-        };
-    }
-};
 
 const waitForTumbling = async (game: BaseGame) =>{
     const message = await game.waitForEvent(GameEvent.Settlement);
@@ -754,22 +679,12 @@ const waitForTumbling = async (game: BaseGame) =>{
     await game.waitForTimeout((tumble + 1)*4000);
 }
 
-const openRoundDetail = async (game: BaseGame) => {
-    await game.clickLocator(CascadingSlotLocatorNames.locOpenBetDetails, 1000);
-};
-
 export interface Expectdata {
     betdate: string;
     roundID: string;
     totalstake: string;
     betwin: string;
 }
-
-const verifyticketdata = async (game: BaseGame, expectdata: Expectdata) => {
-    const ticketdata = await getDataFistRowHistory(game);
-    expect(ticketdata.betdate, "verify bet date").toEqual(expectdata.betdate);
-    expect(ticketdata.betwin, "verify bet win").toEqual(expectdata.betwin);
-};
 
 const waitForSettlementCascadingSlot = async (game: BaseGame): Promise<any> => {
     const message = await game.waitForEvent(GameEvent.Settlement);
