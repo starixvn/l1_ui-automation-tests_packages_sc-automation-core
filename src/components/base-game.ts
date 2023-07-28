@@ -84,7 +84,7 @@ export class BaseGame {
         console.log("Game UI load success");
     }
 
-    async getTextLocator2(locatorName: string) {
+    async getTextLocator(locatorName: string) {
         const worker = await createWorker();
         await worker.load();
         await worker.setParameters({

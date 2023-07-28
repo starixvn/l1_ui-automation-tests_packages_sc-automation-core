@@ -196,7 +196,7 @@ export class TableGameBase {
 }
 
 const getDataFistRowHistory = async (game: BaseGame, elementname: string = TableLocatorNames.lblHistoryFirstRow) => {
-    let tempdata = await game.getTextLocator2(elementname);
+    let tempdata = await game.getTextLocator(elementname);
     return tempdata?.split(" ") || "";
 };
 
@@ -205,7 +205,7 @@ const openRoundDetail = async (game: BaseGame) => {
 };
 
 const getRoundId = async (game: BaseGame, elementname: string = TableLocatorNames.lblHistoryDetailRoundId) => {
-    let roundId = await game.getTextLocator2(elementname);
+    let roundId = await game.getTextLocator(elementname);
 
     return roundId != null ? roundId.replace(/[^0-9.]/g, "") : roundId;
 };
