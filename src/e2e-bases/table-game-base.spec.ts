@@ -102,16 +102,33 @@ export class TableGameBase {
     }
 
     protected reBet() {
+        test("Verify User able place bet other main choice and get data for rebet", async () => {
+            // Arrange
+            test.setTimeout(this.options.gameConfiguration.maxTimeout);
+            const bet = { choice: this.options.placeBetChoices[1], amount: this.options.placeBetAmount ?? 1 };
+            this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
+
+            // Act
+            const placeBetResponse = await this.player.placeBet(bet.choice, bet.amount);
+            const betChoice = await this.game.captureOwnbet(bet.choice);
+            await this.game.waitForSettlement();
+            const settledResults = await this.game.waitForSettlement();
+
+            // Assert
+            expect(betChoice.image).toMatchSnapshot(betChoice.name);
+            expect(placeBetResponse.endBet).toBe(bet.amount);
+            expect(settledResults.settlementResult).toMatchBetOptions(this.options.gameConfiguration.choices);
+
+        });
         test("User can rebet bet choices and amount of previous round", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount ?? 1 };
+            const bet = { choice: this.options.placeBetChoices[1], amount: this.options.placeBetAmount ?? 1 };
             await this.game.waitUntilPlaceBet();
-
             await this.game.clickLocator(TableLocatorNames.btnRebet);
 
             // Act
-            const betChoice = await this.game.captureOwnbet(global.settledata.choice);
+            const betChoice = await this.game.captureOwnbet(bet.choice);
             const settledResults = await this.game.waitForSettlement();
 
             // Assert
@@ -119,7 +136,7 @@ export class TableGameBase {
             expect(settledResults.settlementResult).toMatchBetOptions(this.options.gameConfiguration.choices);
             //handle tie: true
             if (settledResults.tie) {
-                const refundbet = { choice: bet.choice, amount: global.settledata.bet / 2 };
+                const refundbet = { choice: bet.choice, amount: bet.amount / 2 };
                 expect(refundbet).toMatchWinning(settledResults);
             } else {
                 expect(bet).toMatchWinning(settledResults);
@@ -138,7 +155,7 @@ export class TableGameBase {
             await this.game.waitUntilPlaceBet();
             for (const iterator of betChoices) {
                 await this.game.clickToChoice(iterator);
-                await this.game.waitForTimeout(200);
+                await this.game.waitForTimeout(500);
             }
 
             // Act
