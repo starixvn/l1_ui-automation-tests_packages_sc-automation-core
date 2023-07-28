@@ -4,7 +4,6 @@ import { GameEvent, waitForMessage, parseSocketPayload } from "./../_shared";
 import { ssoToGame, getConfig } from "./../auth/auth";
 import { ImageLocator, ImageSnapshot } from "./base-image-locator";
 import { GameConfiguration } from "./game-configuration";
-import { Tesseract } from "tesseract.ts";
 import { createWorker } from 'tesseract.js';
 import { CSLocatorNames } from "./base-classic-slot-locator";
 
@@ -83,12 +82,6 @@ export class BaseGame {
         }
         await this.page.waitForTimeout(3000);
         console.log("Game UI load success");
-    }
-
-    async getTextLocator(locatorName: string) {
-        const buffer = await this.capture(locatorName);
-        const data = await Tesseract.recognize(buffer.image);
-        return data.text.length > 1 ? data.text : null;
     }
 
     async getTextLocator2(locatorName: string) {
