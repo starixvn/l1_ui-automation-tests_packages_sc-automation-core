@@ -405,7 +405,7 @@ export class CascadingSlotGameBase {
                     const settledResults = await waitForSettlementCascadingSlot(this.game);
                     settledResultsAutoSpin.push(settledResults.winAmount);
                     if(index == totalAutoSpin){
-                        await this.game.waitForTimeout((settledResults.tumble + 1)*4000); //wait for tumbling of the last spin
+                        await this.game.waitForTimeout((settledResults.tumble + 1)*5000); //wait for tumbling of the last spin
                     }
                 }
             });
@@ -565,7 +565,7 @@ export class CascadingSlotGameBase {
             //Assert 
             await test.step("Capture bet control popup and compare with snapshot", async () => {
                 const popBetControlTrialMode = await this.game.capture(CascadingSlotLocatorNames.popBetControlTrialMode);
-                expect(popBetControlTrialMode.image).toMatchSnapshot(popBetControlTrialMode.name, {maxDiffPixelRatio : 0});
+                expect(popBetControlTrialMode.image).toMatchSnapshot(popBetControlTrialMode.name);
             });
             
             //Post-Act

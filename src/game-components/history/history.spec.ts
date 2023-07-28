@@ -29,7 +29,7 @@ export class BetHistory {
 
             // Assert 2
             await test.step("Verify round Id", async () => {
-                expect(roundID).toEqual(global.settledata.roundID);
+                expect(roundID).toEqual(global.settleddata.roundID);
             });
 
             //Post-Act
