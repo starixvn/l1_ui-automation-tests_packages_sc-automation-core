@@ -102,7 +102,7 @@ export class TableGameBase {
     }
 
     protected reBet() {
-        test("Verify User able place bet other main choice and get data for rebet", async () => {
+        test("Verify User able to place bet other choice then get data for next rebet", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             const bet = { choice: this.options.placeBetChoices[1], amount: this.options.placeBetAmount ?? 1 };
@@ -111,7 +111,6 @@ export class TableGameBase {
             // Act
             const placeBetResponse = await this.player.placeBet(bet.choice, bet.amount);
             const betChoice = await this.game.captureOwnbet(bet.choice);
-            await this.game.waitForSettlement();
             const settledResults = await this.game.waitForSettlement();
 
             // Assert
@@ -120,7 +119,7 @@ export class TableGameBase {
             expect(settledResults.settlementResult).toMatchBetOptions(this.options.gameConfiguration.choices);
 
         });
-        test("User can rebet bet choices and amount of previous round", async () => {
+        test("User can use rebet function", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             const bet = { choice: this.options.placeBetChoices[1], amount: this.options.placeBetAmount ?? 1 };
