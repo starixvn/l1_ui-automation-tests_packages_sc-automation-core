@@ -58,10 +58,9 @@ export class TableGameBase {
             expect(settledResults.settlementResult).toMatchBetOptions(this.options.gameConfiguration.choices);
             //handle tie: true
             if (settledResults.tie) {
-                const refundbet = { choice: bet.choice, amount: bet.amount/2 };
+                const refundbet = { choice: bet.choice, amount: bet.amount / 2 };
                 expect(refundbet).toMatchWinning(settledResults);
-            }
-            else{
+            } else {
                 expect(bet).toMatchWinning(settledResults);
             }
 
@@ -79,14 +78,14 @@ export class TableGameBase {
     protected ticketHistoryTests() {
         test("Verify history and ticket detail", async () => {
             // Act 1
-            await this.game.clickHistory();
+            await this.game.clickHistory(2000);
             const ticketdata = await getDataFistRowHistory(this.game);
 
             const winamount = ticketdata[ticketdata?.length - 1];
             const totalbet = ticketdata[ticketdata?.length - 2];
 
             // Assert
-            expect(winamount).toEqual(global.settledata.betwin);
+            expect(winamount.trim()).toEqual(global.settledata.betwin);
             expect(totalbet).toEqual(global.settledata.bet);
 
             // Act 2
@@ -109,8 +108,8 @@ export class TableGameBase {
             await this.game.waitUntilPlaceBet();
             const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount ?? 1 };
 
-            await this.game.clickLocator(TableLocatorNames.btnRebet)
-            
+            await this.game.clickLocator(TableLocatorNames.btnRebet);
+
             // Act
             const betChoice = await this.game.captureOwnbet(global.settledata.choice);
             const settledResults = await this.game.waitForSettlement();
@@ -120,13 +119,11 @@ export class TableGameBase {
             expect(settledResults.settlementResult).toMatchBetOptions(this.options.gameConfiguration.choices);
             //handle tie: true
             if (settledResults.tie) {
-                const refundbet = { choice: bet.choice, amount: global.settledata.bet/2 };
+                const refundbet = { choice: bet.choice, amount: global.settledata.bet / 2 };
                 expect(refundbet).toMatchWinning(settledResults);
-            }
-            else{
+            } else {
                 expect(bet).toMatchWinning(settledResults);
             }
-
         });
     }
 
@@ -134,32 +131,34 @@ export class TableGameBase {
         test("User able to placebet multiple choices", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
+            this.game.attachSocketAndCaptureEvent("ownBets");
             let betChoices: any = this.options.placeBetChoices;
             const amount = this.options.placeBetAmount ?? 1;
             betChoices.splice(1, 1);
             await this.game.waitUntilPlaceBet();
             for (const iterator of betChoices) {
                 await this.game.clickToChoice(iterator);
+                await this.game.waitForTimeout(200);
             }
 
             // Act
+            let ownBets = await this.game.latestCaptureEvent("ownBets");
+
             const settledResults = await this.game.waitForSettlement();
-
+            let calWinAmount = 0;
             // Assert
-
-            for (let i = 0; i < settledResults.length; i++) {
-                const bet =(settledResults.tie === true)?{choice: betChoices[i], amount: (this.options.placeBetAmount)as number/2 ?? 0.5} :{choice: betChoices[i], amount: this.options.placeBetAmount ?? 1}
-                expect(settledResults[i].endBet).toBe(amount);
-                expect(settledResults[i].settlementResult).toMatchBetOptions(betChoices[i]);
-                expect(bet).toMatchWinning(settledResults);
+            for (const iterator of betChoices) {
+                const bet =
+                    settledResults.tie === true
+                        ? { choice: iterator, amount: (this.options.placeBetAmount as number) / 2 ?? 0.5 }
+                        : { choice: iterator, amount: this.options.placeBetAmount ?? 1 };
+                expect(ownBets.ownBets[iterator]).toBe(amount);
+                let odds = settledResults.settlementResult[iterator] ? settledResults.odds[iterator] : 0;
+                calWinAmount += bet.amount * odds;
             }
-
-            // Post-Act
-            global.rebetChoices = betChoices;
-
+            expect(calWinAmount).toBe(settledResults.winAmount);
         });
     }
-
 
     start(): void {
         test.beforeEach(async ({}, testInfo) => {
@@ -188,16 +187,16 @@ export class TableGameBase {
 
     protected runScenario(): void {
         this.inGameUiTests();
-        this.placeBetAndSettleTests()
-        this.ticketHistoryTests()
-        this.reBet()
-        this.multipleBetChoices()
+        this.placeBetAndSettleTests();
+        this.ticketHistoryTests();
+        this.reBet();
+        this.multipleBetChoices();
         this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
     }
 }
 
 const getDataFistRowHistory = async (game: BaseGame, elementname: string = TableLocatorNames.lblHistoryFirstRow) => {
-    let tempdata = await game.getTextLocator(elementname);
+    let tempdata = await game.getTextLocator2(elementname);
     return tempdata?.split(" ") || "";
 };
 
@@ -206,7 +205,7 @@ const openRoundDetail = async (game: BaseGame) => {
 };
 
 const getRoundId = async (game: BaseGame, elementname: string = TableLocatorNames.lblHistoryDetailRoundId) => {
-    let roundId = await game.getTextLocator(elementname);
+    let roundId = await game.getTextLocator2(elementname);
 
     return roundId != null ? roundId.replace(/[^0-9.]/g, "") : roundId;
 };
