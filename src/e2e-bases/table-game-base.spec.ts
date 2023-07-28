@@ -96,8 +96,8 @@ export class TableGameBase {
             expect(roundID).toEqual(global.settledata.roundID);
 
             //Post-Act
-            await this.game.clickOutSide(1500);
-            await this.game.clickOutSide(1500);
+            await this.game.clickOutSide();
+            await this.game.clickOutSide();
         });
     }
 
@@ -105,8 +105,8 @@ export class TableGameBase {
         test("User can rebet bet choices and amount of previous round", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
-            await this.game.waitUntilPlaceBet();
             const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount ?? 1 };
+            await this.game.waitUntilPlaceBet();
 
             await this.game.clickLocator(TableLocatorNames.btnRebet);
 

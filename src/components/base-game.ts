@@ -86,11 +86,11 @@ export class BaseGame {
 
     async getTextLocator(locatorName: string) {
         const worker = await createWorker();
-        await worker.load();
+        await worker.loadLanguage('eng');
+        await worker.initialize('eng');
         await worker.setParameters({
-            tessedit_char_whitelist: "0123456789/:",
-            preserve_interword_spaces: "0",
-          });
+            tessedit_char_whitelist: "0123456789/:."
+        });
       
         const buffer = await this.capture(locatorName);
         const { data: { text } }  = await worker.recognize(buffer.image);
