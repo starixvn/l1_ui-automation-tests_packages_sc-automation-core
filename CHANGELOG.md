@@ -1,3 +1,22 @@
+# [1.7.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.6.0...v1.7.0) (2023-07-28)
+
+
+### Bug Fixes
+
+* base-table game locator ([1d27ac7](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/1d27ac722716399657f1d580adf2209933b501b1))
+* bug e2e table game ([53bf5bd](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/53bf5bdd1c53056fe48e2bd6b9095a0909e22593))
+* e2e table game ([a855ef0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/a855ef074e0fd995d6c8e346baf0a2be71b8206c))
+* get text from image ([6114cdf](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/6114cdf70d0564c87451ed208b07530192ee0b21))
+* remove tesseract.ts ([da0842e](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/da0842e56531aad3206d850fe6f9af4b198328bb))
+* table game ([3369b67](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/3369b67906b96187043230bf15810a487512f67a))
+* test ([0a6582f](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/0a6582fd2173c096b69c14b117484c1b12e88e69))
+
+
+### Features
+
+* base-table-locator ([47a8bf8](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/47a8bf8b5a415f51c91c9cfde8be08532887761f))
+* test ([8df8603](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/8df86039367b3f47c317e0d48b7d592fc56f3227))
+
 # [1.6.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.5.13...v1.6.0) (2023-07-24)
 
 
