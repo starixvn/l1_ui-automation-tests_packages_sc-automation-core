@@ -23,7 +23,7 @@ export class TableGameBase {
         test("Verify all bet choices display correctly", async () => {
             for (const iterator of this.options.placeBetChoices) {
                 // Act
-                const choiceSnapshot = await this.game.capture(iterator);
+                const choiceSnapshot = await this.game.capture(iterator+'Choice');
                 // Assert
                 expect(choiceSnapshot.image).toMatchSnapshot(choiceSnapshot.name);
             }
@@ -85,8 +85,8 @@ export class TableGameBase {
             const totalbet = ticketdata[ticketdata?.length - 2];
 
             // Assert
-            expect(winamount.trim()).toEqual(global.settledata.betwin);
-            expect(totalbet).toEqual(global.settledata.bet);
+            expect.soft(winamount.trim()).toEqual(global.settledata.betwin);
+            expect.soft(totalbet).toEqual(global.settledata.bet);
 
             // Act 2
             await openRoundDetail(this.game);
