@@ -1,3 +1,12 @@
+## [1.7.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.7.0...v1.7.1) (2023-07-31)
+
+
+### Bug Fixes
+
+* e2e table game ([6463723](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/646372361fe5f06bb830c97ddd3bfd5c4e6df4f3))
+* push lock file ([d6e1f31](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/d6e1f31b6935098c31e38a84b6282193abef1019))
+* remove package-lock.json ([9780ebd](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/9780ebddad9ce6868f145766042a75edd540c322))
+
 # [1.7.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.6.0...v1.7.0) (2023-07-28)
 
 
