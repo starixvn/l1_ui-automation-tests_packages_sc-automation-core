@@ -9,7 +9,7 @@ export class GameGuides {
     }
 
     tests(timeout: number) {
-        test(`AND player could open guide and clarify appropriate content`, async () => {
+        test(`Verify that player could open guide and clarify appropriate content`, async () => {
             // Arrange
             test.setTimeout(timeout);
             await test.step("Open game guide", async () => {

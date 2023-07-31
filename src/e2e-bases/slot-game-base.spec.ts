@@ -4,6 +4,7 @@ import { expect } from "../expects";
 import { IBaseOptions } from "./base-options";
 import { CSLocatorNames } from "../components/base-classic-slot-locator";
 import { GameGuides } from "../game-components/guides/guides.spec";
+import { BetHistory } from "../game-components/history/history.spec";
 
 const timeout = 4000;
 export interface SlotGameOptions extends IBaseOptions {
@@ -15,6 +16,7 @@ export class SlotGameBase {
     game: BaseGame;
     player: BasePlayer;
     protected gameGuides: GameGuides = new GameGuides();
+    protected betHistory: BetHistory = new BetHistory();
 
 
     constructor(protected options: SlotGameOptions) {}
@@ -31,39 +33,56 @@ export class SlotGameBase {
     protected mainUITests() {
         test("Verify game name", async () => {
             //Act
-            const gamename = await this.game.capture(CSLocatorNames.imgGameName);
+            let gamename;
+            await test.step(`Capture game name`, async () => {
+                gamename = await this.game.capture(CSLocatorNames.imgGameName);
+            });
 
             //Assert
-            expect(gamename.image).toMatchSnapshot(gamename.name);
+            await test.step(`Compare with snapshot`, async () => {
+                expect(gamename.image).toMatchSnapshot(gamename.name);
+            });
         });
 
         test("Verify symbols board in first load game", async () => {
             //Act
             const boardID = await getBoardID();
-            await this.game.clickLocator(CSLocatorNames.btnSymbol, 2000);
-            const imgBoardId = await this.game.capture(`img${boardID}`);
+            await test.step(`Click on symbol`, async () => {
+                await this.game.clickLocator(CSLocatorNames.btnSymbol, 2000);
+            });
+            let imgBoardId;
+            await test.step(`Capture board`, async () => {
+                imgBoardId = await this.game.capture(`img${boardID}`);
+            });
 
             //Assert
-            expect(imgBoardId.image).toMatchSnapshot(imgBoardId.name);
+            await test.step(`Compare with snapshot`, async () => {
+                expect(imgBoardId.image).toMatchSnapshot(imgBoardId.name);
+            });
         });
 
         test("Verify roundID is null in first load game", async () => {
             //Act
-            const defaultRoundID = await this.game.capture(CSLocatorNames.lblRoundID);
+            let defaultRoundID;
+            await test.step(`Capture round ID`, async () => {
+                defaultRoundID = await this.game.capture(CSLocatorNames.lblRoundID);
+            });
 
             //Assert
-            expect(defaultRoundID.image).toMatchSnapshot(defaultRoundID.name);
+            await test.step(`Compare with snapshot`, async () => {
+                expect(defaultRoundID.image).toMatchSnapshot(defaultRoundID.name);
+            });
         });
 
         test("Verify payline number in right & left column", async () => {
-            await test.step("The numbers are shows in the following order: 20, 8, 2, 14, 17, 7, 1, 10, 23, 15, 9, 3, 21", async () => {
+            await test.step("Capture left payline column and compare with snapshot", async () => {
                 //Act
                 const imgLeftNumbersColumn = await this.game.capture(CSLocatorNames.imgLeftNumbersColumn);
 
                 //Assert
                 expect(imgLeftNumbersColumn.image).toMatchSnapshot(imgLeftNumbersColumn.name);
             });
-            await test.step("The numbers are shows in the following order: 18, 5, 12, 24, 6, 22, 16, 11, 19, 13, 4, 25", async () => {
+            await test.step("Capture right payline column and compare with snapshot", async () => {
                 //Act
                 const imgRightNumbersColumn = await this.game.capture(CSLocatorNames.imgRightNumbersColumn);
 
@@ -76,15 +95,22 @@ export class SlotGameBase {
     protected paylineTests() {
         test("Verify default paylines (25 lines) in first load game", async () => {
             //Act
-            const btnPayline = await this.game.capture(CSLocatorNames.btnPayline);
+            let btnPayline;
+            await test.step(`Capture default paylines`, async () => {
+                btnPayline = await this.game.capture(CSLocatorNames.btnPayline);
+            });
 
             //Assert
-            expect(btnPayline.image).toMatchSnapshot(btnPayline.name);
+            await test.step(`Compare with snapshot`, async () => {
+                expect(btnPayline.image).toMatchSnapshot(btnPayline.name);
+            });
         });
 
         test("Verify Payline Popup", async () => {
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
-            await openPayLineBoard(this.game);
+            await test.step(`Open payline popup`, async () => {
+                await openPayLineBoard(this.game);
+            });
             for (const placeBetChoice of this.options.placeBetChoices) {
                 //Act 1
                 await selectBetChoice(this.game, `btn${placeBetChoice}`);
@@ -291,7 +317,6 @@ export class SlotGameBase {
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             const today = new Date().toLocaleDateString("en-GB", { day: "numeric", month: "numeric", year: "numeric" });
             const bet = { choice: `btn${this.options.placeBetChoices[0]}`, amount: this.options.placeBetAmount ?? 1 };
-            let bettime = new Date().toLocaleTimeString("en-US", { hour12: false, hour: "numeric", minute: "numeric" });
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
 
             // Act
@@ -306,9 +331,7 @@ export class SlotGameBase {
             const settledata = {
                 roundID: await getRoundId(this.game),
                 betwin: settledResults.winAmount.toString(),
-                bet: bet.amount.toString(),
-                line: bet.choice,
-                bettime: bettime,
+                totalstake: bet.amount.toString(),
                 betdate: today,
             };
             global.settledata = settledata;
@@ -358,6 +381,7 @@ export class SlotGameBase {
                 this.game = baseGame;
                 this.player = new BasePlayer(this.game);
                 this.gameGuides.init(this.game);
+                this.betHistory.init(this.game);
             });
 
             this.runScenario();
@@ -373,7 +397,7 @@ export class SlotGameBase {
         this.spinByKeys();
         this.autoSpinTests();
         this.placeBetAndSettleTests();
-        this.ticketHistoryTests();
+        this.betHistory.tests();
         this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
     }
 }

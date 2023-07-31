@@ -6,6 +6,7 @@ import { CascadingSlotLocatorNames } from "../components/base-cascading-slot-loc
 import { GameGuides } from "../game-components/guides/guides.spec";
 import { BetHistory } from "../game-components/history/history.spec";
 
+
 export interface SlotGameOptions extends IBaseOptions {
     placeBetChoices: string[];
     placeBetAmount?: number;
@@ -265,7 +266,7 @@ export class CascadingSlotGameBase {
         });
     }
 
-    protected betControlTests() {
+    protected betControlTests(projectCode= "l1") {
         test("Verify default value of total stake", async () => {
             //Act
             await test.step("Click on total stake", async () => {
@@ -274,7 +275,7 @@ export class CascadingSlotGameBase {
             });
             //Assert
             await test.step("Capture bet control popup and compare with snapshot", async () => {
-                const popBetControl = await this.game.capture(CascadingSlotLocatorNames.popBetControl);
+                const popBetControl = await this.game.capture(`popBetControl${projectCode}`);
                 expect(popBetControl.image).toMatchSnapshot(popBetControl.name);
             });
             
@@ -290,7 +291,7 @@ export class CascadingSlotGameBase {
             });
             //Assert
             await test.step("Capture bet control popup and compare with snapshot", async () => {
-                const popBetControlMaxBetLevel = await this.game.capture(CascadingSlotLocatorNames.popBetControlMaxBetLevel);
+                const popBetControlMaxBetLevel = await this.game.capture(`popBetControlMaxBetLevel${projectCode}`);
                 expect(popBetControlMaxBetLevel.image).toMatchSnapshot(popBetControlMaxBetLevel.name);
             });
         });
@@ -298,13 +299,13 @@ export class CascadingSlotGameBase {
         test("Verify increase coin value to the max value", async () => {
             //Act
             await test.step("Click on coin value increase button multiple times", async () => {
-                for (let i = 0; i < 3; i++) {
+                for (let i = 0; i < 4; i++) {
                     await this.game.clickLocator(CascadingSlotLocatorNames.btnCoinValueIncrease)
                 }
             });
             //Assert
             await test.step("Capture bet control popup and compare with snapshot", async () => {
-                const popBetControlMaxCoinValue = await this.game.capture(CascadingSlotLocatorNames.popBetControlMaxCoinValue);
+                const popBetControlMaxCoinValue = await this.game.capture(`popBetControlMaxCoinValue${projectCode}`);
                 expect(popBetControlMaxCoinValue.image).toMatchSnapshot(popBetControlMaxCoinValue.name);
             });
         });
@@ -319,7 +320,7 @@ export class CascadingSlotGameBase {
             });
             //Assert
             await test.step("Capture bet control popup and compare with snapshot", async () => {
-                const popBetControlMinBetLevel = await this.game.capture(CascadingSlotLocatorNames.popBetControlMinBetLevel);
+                const popBetControlMinBetLevel = await this.game.capture(`popBetControlMinBetLevel${projectCode}`);
                 expect(popBetControlMinBetLevel.image).toMatchSnapshot(popBetControlMinBetLevel.name);
             });
         });
@@ -327,14 +328,14 @@ export class CascadingSlotGameBase {
         test("Verify decrease coin value to the min value", async () => {
             //Act
             await test.step("Click on coin value decrease button multiple times", async () => {
-                for (let i = 0; i < 3; i++) {
+                for (let i = 0; i < 4; i++) {
                     await this.game.clickLocator(CascadingSlotLocatorNames.btnCoinValueDecrease)
                 }
             });
 
             //Assert
             await test.step("Capture bet control popup and compare with snapshot", async () => {
-                const popBetControlMinCoinValue = await this.game.capture(CascadingSlotLocatorNames.popBetControlMinCoinValue);
+                const popBetControlMinCoinValue = await this.game.capture(`popBetControlMinCoinValue${projectCode}`);
                 expect(popBetControlMinCoinValue.image).toMatchSnapshot(popBetControlMinCoinValue.name);
             });
 
@@ -574,7 +575,7 @@ export class CascadingSlotGameBase {
     }
 
     protected placeBetAndSettleTests() {
-        test("THEN player able to place a bet and settle", async () => {
+        test("Verify that player be able to place a bet and settle", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             const today = new Date().toLocaleDateString("en-GB", { day: "numeric", month: "numeric", year: "numeric" });
@@ -605,13 +606,13 @@ export class CascadingSlotGameBase {
             });
 
             // Post-Act
-            const settleddata = {
+            const settledata = {
                 betdate: today,
                 roundID: settledResults.roundId.toString(),
                 totalstake: bet.amount.toString(),
                 betwin: settledResults.winAmount.toString(),
             };
-            global.settleddata = settleddata;
+            global.settledata = settledata;
         });
     }
 
@@ -650,7 +651,7 @@ export class CascadingSlotGameBase {
         this.placeBetAndSettleTests();
         this.betHistory.tests();
         this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
-        this.betControlTests();
+        this.betControlTests(process.env.npm_config_project);
         this.trialModeTests();
     }
 }

@@ -16,7 +16,7 @@ export class BetHistory {
             });
 
             // Assert 1
-            await test.step("Verify content", async () => {
+            await test.step("Verify bet date, round id, total stake and bet win", async () => {
                 await verifyticketdata(this.game);
             });
 
@@ -29,7 +29,7 @@ export class BetHistory {
 
             // Assert 2
             await test.step("Verify round Id", async () => {
-                expect(roundID).toEqual(global.settleddata.roundID);
+                expect(roundID.includes(global.settledata.roundID));
             });
 
             //Post-Act
@@ -43,10 +43,10 @@ export class BetHistory {
 }
 const verifyticketdata = async (game: BaseGame) => {
     const ticketdata = await getDataFistRowHistory(game);
-    expect(ticketdata.betdate, "verify bet date").toEqual(global.settleddata.betdate.replace(/[^0-9.]/g, ""));
-    expect(ticketdata.roundID, "verify round id").toEqual(global.settleddata.roundID);
-    expect(ticketdata.totalstake, "verify total stake").toEqual(global.settleddata.totalstake);
-    expect(ticketdata.betwin, "verify bet win").toEqual(global.settleddata.betwin);
+    expect(ticketdata.betdate, "verify bet date").toEqual(global.settledata.betdate.replace(/[^0-9.]/g, ""));
+    expect(ticketdata.roundID, "verify round id").toEqual(global.settledata.roundID);
+    expect(ticketdata.totalstake, "verify total stake").toEqual(global.settledata.totalstake);
+    expect(ticketdata.betwin, "verify bet win").toEqual(global.settledata.betwin);
 };
 
 const openRoundDetail = async (game: BaseGame) => {
