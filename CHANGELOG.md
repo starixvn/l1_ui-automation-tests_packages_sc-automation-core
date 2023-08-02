@@ -1,3 +1,29 @@
+# [1.8.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.7.1...v1.8.0) (2023-08-02)
+
+
+### Bug Fixes
+
+* e2e table game ([b81192d](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/b81192ddbfe63d4589ac1069b16253d857aa72ba))
+* history tests enhancement ([c585a70](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/c585a7034b099d6c1f1363fbff2d878659ca1716))
+* update cascading slot base ([5a24c83](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/5a24c83b57d3fed51375defecd6d6f435fe299ae))
+* update cascading slot base and locators ([70e6688](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/70e6688153d5b8b150d393baf9dba34ec2cdb4db))
+* update cassading slot base ([84cb017](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/84cb017b3799aff382da89343d892b4b397edf11))
+* update cassading slot base ([bb89a82](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/bb89a82ff7b29a6b9eca7ec685dbb08049690b77))
+* update cassading slot base ([ee8d8e0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/ee8d8e03acd89efd7d0ce4549715ca2255eeef03))
+* update e2e classic slot locators ([fcfcd04](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/fcfcd045f497a9807a3db22162bef2e3a070749c))
+* update e2e slot game base ([c4a2cb2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/c4a2cb2aba4aa6cdea6e6ae494e123b98989fa0d))
+* update e2e slot game base ([afe3f13](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/afe3f1376741481b8f5204999944b992a6a5dc65))
+* update e2e slot game base ([670c93b](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/670c93b42472991f5531ec96ca34350d45e225a4))
+* update e2e slot game base and locators ([471dcd3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/471dcd3c2a5298bb3638f55f4c6d9f42e093cb4d))
+* update history base ([5017ac1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/5017ac1727b8f2dfd2b3e2f2ee1ed2fcf9bf7b4c))
+* update locators ([4a46af6](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/4a46af6e9b729457c01dc065f51927fb0096e995))
+* update slot base locators ([ea1f4af](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/ea1f4afcb66f3e0b4463ac483837625ac0b80007))
+
+
+### Features
+
+* history tests enhancement ([12d3f5a](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/12d3f5a459d8f49b6e209f151c51b040704929bd))
+
 ## [1.7.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.7.0...v1.7.1) (2023-07-31)
 
 
