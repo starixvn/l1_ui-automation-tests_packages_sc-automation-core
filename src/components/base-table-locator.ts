@@ -17,7 +17,8 @@ export const TableLocatorNames = {
     blackTigerChoice: "blackTigerChoice",
     blackTigerOwnbet: "blackTigerOwnbet",
     btnRebet: "btnRebet",
-    defaultChipBar: "defaultChipBar",
+    defaultChipBarl1: "defaultChipBarl1",
+    defaultChipBarl2: "defaultChipBarl2",
     btnHome: "btnHome",
     hamburgerMenu: "hamburgerMenu",
     historyMenu: "historyMenu",
@@ -31,7 +32,8 @@ export const TableLocatorNames = {
     locHistoryRoundId: "locHistoryRoundId",
     lblHistoryDetailRoundId: "lblHistoryDetailRoundId",
     btnClosePopup: "btnClosePopup",
-    imgGameLobby: "imgGameLobby",
+    imgGameLobbyl1: "imgGameLobbyl1",
+    imgGameLobbyl2: "imgGameLobbyl2",
     tabGames: "tabGames",
     icoGame: "icoGame"
 };
@@ -53,7 +55,8 @@ export const TableLocators = [
     new ImageLocator(TableLocatorNames.blackTigerChoice, 911, 492, 70, 30),
     new ImageLocator(TableLocatorNames.blackTigerOwnbet, 967, 533, 25, 25),
     new ImageLocator(TableLocatorNames.btnRebet, 1122, 605, 70, 80),
-    new ImageLocator(TableLocatorNames.defaultChipBar, 340, 600, 630, 100),
+    new ImageLocator(TableLocatorNames.defaultChipBarl1, 340, 600, 630, 100),
+    new ImageLocator(TableLocatorNames.defaultChipBarl2, 340, 600, 630, 100),
     new ImageLocator(TableLocatorNames.btnHome, 60, 80, 35, 35),
     new ImageLocator(TableLocatorNames.hamburgerMenu, 60, 152, 20, 20),
     new ImageLocator(TableLocatorNames.historyMenu, 54, 363, 20, 20),
@@ -67,7 +70,8 @@ export const TableLocators = [
     new ImageLocator(TableLocatorNames.locHistoryRoundId, 400, 206, 50, 25),
     new ImageLocator(TableLocatorNames.lblHistoryDetailRoundId, 200, 190, 70, 40),
     new ImageLocator(TableLocatorNames.btnClosePopup, 5, 5, 10, 10),
-    new ImageLocator(TableLocatorNames.imgGameLobby, 800, 600, 350, 90),
+    new ImageLocator(TableLocatorNames.imgGameLobbyl1, 800, 600, 350, 90),
+    new ImageLocator(TableLocatorNames.imgGameLobbyl2, 800, 600, 350, 90),
     new ImageLocator(TableLocatorNames.tabGames, 340, 86, 85, 30),
     new ImageLocator(TableLocatorNames.icoGame, 300, 430, 150, 120)
 ];

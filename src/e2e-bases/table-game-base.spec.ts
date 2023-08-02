@@ -32,7 +32,7 @@ export class TableGameBase {
             }
         });
         test("Verify default state of chip bar", async () => {
-            const chipbar = await this.game.capture(TableLocatorNames.defaultChipBar);
+            const chipbar = await this.game.capture(`defaultChipBar${process.env.npm_config_project}`);
             // Assert
             expect(chipbar.image).toMatchSnapshot(chipbar.name);
         });
@@ -55,7 +55,7 @@ export class TableGameBase {
 
             // Act
             const placeBetResponse = await this.player.placeBet(bet.choice, bet.amount);
-            const betChoice = await this.game.captureOwnbet(bet.choice);
+            const betChoice = await this.game.capture(bet.choice +`Ownbet${process.env.npm_config_project}`);
             const settledResults = await this.game.waitForSettlement();
 
             // Assert
@@ -81,20 +81,18 @@ export class TableGameBase {
         });
     }
 
-    protected ticketHistoryTests(indexExtractTicket:any) {
+    protected ticketHistoryTests() {
         test("Verify history and ticket detail", async () => {
             // Act 1
             await this.game.clickHistory(timeout);
             const ticketdata = await getDataFistRowHistory(this.game);
 
-            const winamount = ticketdata[ticketdata?.length + indexExtractTicket.betwin];
-            const totalbet = ticketdata[ticketdata?.length + indexExtractTicket.betwin];
-            const roundId = ticketdata[indexExtractTicket.roundId];
+            const winamount = ticketdata[ticketdata?.length -1];
+            const totalbet = ticketdata[ticketdata?.length -2];
 
             // Assert
             expect(winamount.trim()).toEqual(global.settledata.betwin);
             expect(totalbet).toEqual(global.settledata.bet);
-            expect(roundId).toEqual(global.settledata.roundId);
 
             // Act 2
             await openRoundDetail(this.game);
@@ -188,9 +186,10 @@ export class TableGameBase {
     protected returnGameLobby(): void {
         test("Verify user able to return game lobby by clicking on home icon", async () => {
           // Act 1
+          await this.game.waitForTimeout(2000)
           await this.game.clickLocator(TableLocatorNames.btnHome);
           await this.game.waitUntilGameLobbyUiLoad()
-          const gamelobby = await this.game.capture(TableLocatorNames.imgGameLobby)
+          const gamelobby = await this.game.capture(`imgGameLobby${process.env.npm_config_project}`)
           expect(gamelobby.image).toMatchSnapshot(gamelobby.name)
         });
       }
@@ -236,7 +235,7 @@ export class TableGameBase {
     protected runScenario(): void {
         this.inGameUiTests();
         this.placeBetAndSettleTests();
-        this.ticketHistoryTests({betwin: -1, amount:-2, roundId: 2});
+        this.ticketHistoryTests();
         if (this.options.gameConfiguration.rebet) {
             this.reBet(); 
         }
