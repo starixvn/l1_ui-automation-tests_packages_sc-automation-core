@@ -451,7 +451,7 @@ export class SlotGameBase {
 
             // Post-Act
             const settledata = {
-                roundID: settledResults.RoundId.toString(),
+                roundID: settledResults.roundId.toString(),
                 betwin: settledResults.winAmount.toString(),
                 totalstake: bet.amount.toString(),
                 betdate: today,
