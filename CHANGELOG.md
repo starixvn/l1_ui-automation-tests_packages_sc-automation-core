@@ -1,3 +1,10 @@
+## [1.8.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.8.0...v1.8.1) (2023-08-02)
+
+
+### Bug Fixes
+
+* vg e2e table game ([77792c7](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/77792c70db2e47f36f7f820cbd61bf70fe3c0ced))
+
 # [1.8.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.7.1...v1.8.0) (2023-08-02)
 
 
