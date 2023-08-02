@@ -30,7 +30,10 @@ export const TableLocatorNames = {
     lblHistoryFirstRow: "lblHistoryFirstRow",
     locHistoryRoundId: "locHistoryRoundId",
     lblHistoryDetailRoundId: "lblHistoryDetailRoundId",
-    btnClosePopup: "btnClosePopup"
+    btnClosePopup: "btnClosePopup",
+    imgGameLobby: "imgGameLobby",
+    tabGames: "tabGames",
+    icoGame: "icoGame"
 };
 
 export const TableLocators = [
@@ -64,5 +67,7 @@ export const TableLocators = [
     new ImageLocator(TableLocatorNames.locHistoryRoundId, 400, 206, 50, 25),
     new ImageLocator(TableLocatorNames.lblHistoryDetailRoundId, 200, 190, 70, 40),
     new ImageLocator(TableLocatorNames.btnClosePopup, 5, 5, 10, 10),
-
+    new ImageLocator(TableLocatorNames.imgGameLobby, 800, 600, 350, 90),
+    new ImageLocator(TableLocatorNames.tabGames, 340, 86, 85, 30),
+    new ImageLocator(TableLocatorNames.icoGame, 300, 430, 150, 120)
 ];

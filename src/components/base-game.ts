@@ -81,7 +81,25 @@ export class BaseGame {
             await this.page.waitForTimeout(3000);
         }
         await this.page.waitForTimeout(3000);
-        console.log("Game UI load success");
+        console.log("Game UI ready for testing");
+    }
+
+    async waitUntilGameLobbyUiLoad() {
+        let filterA: string[] = [];
+        const searchString = "LoadScene Lobby";
+        this.page.on("console", (msg) => {
+            if (
+                msg.text().includes(searchString)
+            ) {
+                filterA.push(msg.text());
+            }
+        });
+
+        while (filterA.length < 1) {
+            await this.page.waitForTimeout(3000);
+        }
+        await this.page.waitForTimeout(3000);
+        console.log("GameLobby UI load success");
     }
 
     async getTextLocator(locatorName: string) {
