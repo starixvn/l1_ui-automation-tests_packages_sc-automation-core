@@ -44,7 +44,11 @@ export const CSLocatorNames = {
     btnAutoSpinStart: "btnAutoSpinStart",
     popHistory: "popHistory", // History Popup
     lblHistoryFirstRow: "lblHistoryFirstRow",
-    locHistoryRoundId: "locHistoryRoundId",
+    locHistoryBetDate: "locHistoryBetDate",
+    locHistoryRoundID: "locHistoryRoundID",
+    locHistoryTotalStake: "locHistoryTotalStake",
+    locHistoryBetWin: "locHistoryBetWin",
+    locOpenBetDetails: "locOpenBetDetails",
     lblHistoryDetailRoundId: "lblHistoryDetailRoundId",
     popGuide: "popGuide", // Guide Popup
     btnPayline1: "btnPayline1", // Payline Popup
@@ -105,7 +109,11 @@ export const ClassicSlotLocators = [
     new ImageLocator(CSLocatorNames.btnAutoSpinTurbo, 408, 463, 30, 30),
     new ImageLocator(CSLocatorNames.btnAutoSpinStart, 713, 451, 129, 55),
     new ImageLocator(CSLocatorNames.lblHistoryFirstRow, 203, 168, 950, 30),
-    new ImageLocator(CSLocatorNames.locHistoryRoundId, 369, 170, 70, 30),
+    new ImageLocator(CSLocatorNames.locHistoryBetDate, 197, 163, 128, 31),
+    new ImageLocator(CSLocatorNames.locHistoryRoundID, 334, 163, 139, 31),
+    new ImageLocator(CSLocatorNames.locHistoryTotalStake, 813, 163, 104, 31),
+    new ImageLocator(CSLocatorNames.locHistoryBetWin, 954, 163, 133, 31),
+    new ImageLocator(CSLocatorNames.locOpenBetDetails, 378, 176, 20, 10),
     new ImageLocator(CSLocatorNames.lblHistoryDetailRoundId, 475, 45, 335, 40),
     new ImageLocator(CSLocatorNames.tblPayline1, 190, 168, 880, 432),
     new ImageLocator(CSLocatorNames.tblAllPayline, 190, 168, 880, 432),

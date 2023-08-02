@@ -4,6 +4,7 @@ import { expect } from "../expects";
 import { IBaseOptions } from "./base-options";
 import { CSLocatorNames } from "../components/base-classic-slot-locator";
 import { GameGuides } from "../game-components/guides/guides.spec";
+import { BetHistory } from "../game-components/history/history.spec";
 
 const timeout = 4000;
 export interface SlotGameOptions extends IBaseOptions {
@@ -15,14 +16,14 @@ export class SlotGameBase {
     game: BaseGame;
     player: BasePlayer;
     protected gameGuides: GameGuides = new GameGuides();
-
+    protected betHistory: BetHistory = new BetHistory();
 
     constructor(protected options: SlotGameOptions) {}
 
     protected inGameTests() {
         test("Verify received websocket Odds of game should be the same with game's config ", async () => {
             // Assert
-            await test.step(`Verify ODD should be correct`, async () => {
+            await test.step(`Verify ODDs should be correct`, async () => {
                 expect(this.game.odds).toStrictEqual(this.options.gameConfiguration.odds);
             });
         });
@@ -31,39 +32,56 @@ export class SlotGameBase {
     protected mainUITests() {
         test("Verify game name", async () => {
             //Act
-            const gamename = await this.game.capture(CSLocatorNames.imgGameName);
+            let gamename;
+            await test.step(`Capture game name`, async () => {
+                gamename = await this.game.capture(CSLocatorNames.imgGameName);
+            });
 
             //Assert
-            expect(gamename.image).toMatchSnapshot(gamename.name);
+            await test.step(`Compare with snapshot`, async () => {
+                expect(gamename.image).toMatchSnapshot(gamename.name);
+            });
         });
 
         test("Verify symbols board in first load game", async () => {
             //Act
             const boardID = await getBoardID();
-            await this.game.clickLocator(CSLocatorNames.btnSymbol, 2000);
-            const imgBoardId = await this.game.capture(`img${boardID}`);
+            await test.step(`Click on symbol`, async () => {
+                await this.game.clickLocator(CSLocatorNames.btnSymbol, 2000);
+            });
+            let imgBoardId;
+            await test.step(`Capture board`, async () => {
+                imgBoardId = await this.game.capture(`img${boardID}`);
+            });
 
             //Assert
-            expect(imgBoardId.image).toMatchSnapshot(imgBoardId.name);
+            await test.step(`Compare with snapshot`, async () => {
+                expect(imgBoardId.image).toMatchSnapshot(imgBoardId.name);
+            });
         });
 
         test("Verify roundID is null in first load game", async () => {
             //Act
-            const defaultRoundID = await this.game.capture(CSLocatorNames.lblRoundID);
+            let defaultRoundID;
+            await test.step(`Capture round ID`, async () => {
+                defaultRoundID = await this.game.capture(CSLocatorNames.lblRoundID);
+            });
 
             //Assert
-            expect(defaultRoundID.image).toMatchSnapshot(defaultRoundID.name);
+            await test.step(`Compare with snapshot`, async () => {
+                expect(defaultRoundID.image).toMatchSnapshot(defaultRoundID.name);
+            });
         });
 
         test("Verify payline number in right & left column", async () => {
-            await test.step("The numbers are shows in the following order: 20, 8, 2, 14, 17, 7, 1, 10, 23, 15, 9, 3, 21", async () => {
+            await test.step("Capture left payline column and compare with snapshot", async () => {
                 //Act
                 const imgLeftNumbersColumn = await this.game.capture(CSLocatorNames.imgLeftNumbersColumn);
 
                 //Assert
                 expect(imgLeftNumbersColumn.image).toMatchSnapshot(imgLeftNumbersColumn.name);
             });
-            await test.step("The numbers are shows in the following order: 18, 5, 12, 24, 6, 22, 16, 11, 19, 13, 4, 25", async () => {
+            await test.step("Capture right payline column and compare with snapshot", async () => {
                 //Act
                 const imgRightNumbersColumn = await this.game.capture(CSLocatorNames.imgRightNumbersColumn);
 
@@ -76,70 +94,101 @@ export class SlotGameBase {
     protected paylineTests() {
         test("Verify default paylines (25 lines) in first load game", async () => {
             //Act
-            const btnPayline = await this.game.capture(CSLocatorNames.btnPayline);
+            let btnPayline;
+            await test.step(`Capture default paylines`, async () => {
+                btnPayline = await this.game.capture(CSLocatorNames.btnPayline);
+            });
 
             //Assert
-            expect(btnPayline.image).toMatchSnapshot(btnPayline.name);
+            await test.step(`Compare with snapshot`, async () => {
+                expect(btnPayline.image).toMatchSnapshot(btnPayline.name);
+            });
         });
 
         test("Verify Payline Popup", async () => {
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
-            await openPayLineBoard(this.game);
-            for (const placeBetChoice of this.options.placeBetChoices) {
-                //Act 1
-                await selectBetChoice(this.game, `btn${placeBetChoice}`);
-
-                let betChoice = await this.game.captureLocator(`tbl${placeBetChoice}`);
-                // Assert
-                expect(betChoice.image).toMatchSnapshot(betChoice.name);
-
-                //Act 2
-                await closePayLineBoard(this.game);
+            await test.step(`Open payline popup`, async () => {
                 await openPayLineBoard(this.game);
-                // Assert2
-                expect(betChoice.image).toMatchSnapshot(betChoice.name);
-            }
+            });
+            await test.step(`Select payline and compare with snapshot`, async () => {
+                for (const placeBetChoice of this.options.placeBetChoices) {
+                    //Act 1
+                    await selectBetChoice(this.game, `btn${placeBetChoice}`);
+
+                    let betChoice = await this.game.captureLocator(`tbl${placeBetChoice}`);
+                    // Assert
+                    expect(betChoice.image).toMatchSnapshot(betChoice.name);
+
+                    //Act 2
+                    await closePayLineBoard(this.game);
+                    await openPayLineBoard(this.game);
+                    // Assert2
+                    expect(betChoice.image).toMatchSnapshot(betChoice.name);
+                }
+            });
         });
 
         test("Verify submit bet button is disabled when no choice is selected", async () => {
             // Act
-            await this.game.clickLocator(CSLocatorNames.btnClearPayline,timeout);
-            const imgConfirmPaylineDisabled = await this.game.capture(CSLocatorNames.imgConfirmPaylineDisabled);
+            await test.step(`Click button clear payline`, async () => {
+                await this.game.clickLocator(CSLocatorNames.btnClearPayline, timeout);
+            });
+            let imgConfirmPaylineDisabled;
+            await test.step(`Captrue confirm payline button`, async () => {
+                imgConfirmPaylineDisabled = await this.game.capture(CSLocatorNames.imgConfirmPaylineDisabled);
+            });
 
             //Assert
-            expect(imgConfirmPaylineDisabled.image).toMatchSnapshot(imgConfirmPaylineDisabled.name);
+            await test.step(`Compare with snapshot`, async () => {
+                expect(imgConfirmPaylineDisabled.image).toMatchSnapshot(imgConfirmPaylineDisabled.name);
+            });
 
             //Post-Act
-            await closePayLineBoard(this.game);
+            await test.step(`Close the popup`, async () => {
+                await closePayLineBoard(this.game);
+            });
         });
     }
 
     protected betTotalBetTests() {
         test("Verify list bet stake", async () => {
             // Act
-            const cboBetLevel = await this.game.capture(CSLocatorNames.cboBetLevel);
+            let cboBetLevel;
+            await test.step(`Capture bet level`, async () => {
+                cboBetLevel = await this.game.capture(CSLocatorNames.cboBetLevel);
+            });
 
             //Assert
-            expect(cboBetLevel.image).toMatchSnapshot(cboBetLevel.name);
+            await test.step(`Compare with snapshot`, async () => {
+                expect(cboBetLevel.image).toMatchSnapshot(cboBetLevel.name);
+            });
 
             //Post-Act
-            await this.game.clickOutSide();
+            await test.step(`Click outside`, async () => {
+                await this.game.clickOutSide();
+            });
         });
 
         test("Verify selected bet stake value and total bet amount", async () => {
-            const betStake = process.env.npm_config_project === "l2"? ["BetLevel5", "BetLevel10"] : ["BetLevel0_1", "BetLevel0_2"]
-            const totalStake = process.env.npm_config_project === "l2"? ["Totalbet5", "Totalbet10"] : ["Totalbet0_1", "Totalbet0_2"]
+            const betStake = process.env.npm_config_project === "l2" ? ["BetLevel5", "BetLevel10"] : ["BetLevel0_1", "BetLevel0_2"];
+            const totalStake = process.env.npm_config_project === "l2" ? ["Totalbet5", "Totalbet10"] : ["Totalbet0_1", "Totalbet0_2"];
             let imgBetStake, imgTotalStake;
             for (let index = 0; index < betStake.length; index++) {
-                await this.player.selectBetStake(`lbl${betStake[index]}`);
+                await test.step(`Select ${betStake[index]}`, async () => {
+                    await this.player.selectBetStake(`lbl${betStake[index]}`);
+                });
 
                 // Act
-                imgBetStake = await this.game.capture(`img${betStake[index]}`);
-                imgTotalStake = await this.game.capture(`img${totalStake[index]}`);
+                await test.step(`Capture ${betStake[index]} and total stake`, async () => {
+                    imgBetStake = await this.game.capture(`img${betStake[index]}`);
+                    imgTotalStake = await this.game.capture(`img${totalStake[index]}`);
+                });
 
                 //Assert
-                expect(imgBetStake.image).toMatchSnapshot(imgBetStake.name);
-                expect(imgTotalStake.image).toMatchSnapshot(imgTotalStake.name);
+                await test.step(`Compare with snapshot`, async () => {
+                    expect(imgBetStake.image).toMatchSnapshot(imgBetStake.name);
+                    expect(imgTotalStake.image).toMatchSnapshot(imgTotalStake.name);
+                });
             }
         });
     }
@@ -148,15 +197,24 @@ export class SlotGameBase {
         test("Verify default UI of AutoSpin popup", async () => {
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             // Arrange
-            await openAutoSpinBoard(this.game);
+            await test.step(`Open autospin popup`, async () => {
+                await openAutoSpinBoard(this.game);
+            });
 
             // Act
-            const popAutoSpin = await this.game.capture(CSLocatorNames.popAutoSpin);
+            let popAutoSpin;
+            await test.step(`Capture default autospin popup`, async () => {
+                popAutoSpin = await this.game.capture(CSLocatorNames.popAutoSpin);
+            });
 
             //Assert
-            expect(popAutoSpin.image).toMatchSnapshot(popAutoSpin.name);
+            await test.step(`Compare with snapshot`, async () => {
+                expect(popAutoSpin.image).toMatchSnapshot(popAutoSpin.name);
+            });
 
-            await this.game.clickOutSide(1000);
+            await test.step(`Close popup`, async () => {
+                await this.game.clickOutSide(1000);
+            });
         });
 
         test("Verify case user select 10 auto spins then wait for finishing 10 auto spins", async () => {
@@ -165,94 +223,150 @@ export class SlotGameBase {
             const totalAutoSpin = 10;
 
             const bet = { choice: `btn${this.options.placeBetChoices[0]}`, amount: CSLocatorNames.lblBetLevel0_1 };
-            await clickTurbo(this.game);
-            await this.player.selectPayline(CSLocatorNames.btnPayline1);
-            await this.game.waitForTimeout(timeout);
-            await this.player.selectBetStake(bet.amount);
+            await test.step(`Click turbo button`, async () => {
+                await clickTurbo(this.game);
+            });
+            await test.step(`Select payline`, async () => {
+                await this.player.selectPayline(CSLocatorNames.btnPayline1);
+                await this.game.waitForTimeout(timeout);
+            });
+
+            await test.step(`Select bet stake`, async () => {
+                await this.player.selectBetStake(bet.amount);
+            });
 
             // Act
-            await selectAutoSpin(this.game, totalAutoSpin);
-            for (let index = 1; index <= totalAutoSpin; index++) {
-                const settledResults = await this.game.waitForSettlement();
+            await test.step(`Wait for 10 spins finished`, async () => {
+                await selectAutoSpin(this.game, totalAutoSpin);
+                for (let index = 1; index <= totalAutoSpin; index++) {
+                    const settledResults = await this.game.waitForSettlement();
 
-                settledResultsAutoSpin.push(settledResults.winAmount);
-            }
+                    settledResultsAutoSpin.push(settledResults.winAmount);
+                }
+            });
 
             //Assert
-            expect(settledResultsAutoSpin.length >= 10).toBe(true);
-            await this.game.waitForTimeout(timeout); //handle cases free spin or bonus
+            await test.step(`Verify number of spins`, async () => {
+                expect(settledResultsAutoSpin.length >= 10).toBe(true);
+                await this.game.waitForTimeout(timeout); //handle cases free spin or bonus
+            });
 
             //Post-Act
-            await this.game.clickOutSide(2000); //click outside to close big win popup
+            await test.step(`Click out side to close big win`, async () => {
+                await this.game.clickOutSide(2000); //click outside to close big win popup
+            });
         });
 
         test("Verify user can stop auto spin process by clicking on autospin button", async () => {
             let settledResultsAutoSpin: Array<string> = [];
             const totalAutoSpin = 10;
-            await selectAutoSpin(this.game, totalAutoSpin);
+            await test.step(`Start 10 auto spin`, async () => {
+                await selectAutoSpin(this.game, totalAutoSpin);
+            });
 
-            for (let index = 1; index <= totalAutoSpin - 5; index++) {
-                const settledResults = await this.game.waitForSettlement();
-                settledResultsAutoSpin.push(settledResults.winAmount);
-            }
+            await test.step(`Wait for 5 spins and stop`, async () => {
+                for (let index = 1; index <= totalAutoSpin - 5; index++) {
+                    const settledResults = await this.game.waitForSettlement();
+                    settledResultsAutoSpin.push(settledResults.winAmount);
+                }
 
-            await this.game.clickLocator(CSLocatorNames.btnAutoSpin); //stop autospin
+                await this.game.clickLocator(CSLocatorNames.btnAutoSpin); //stop autospin
+            });
 
             //Assert
-            expect(settledResultsAutoSpin.length < 10).toBe(true);
+            await test.step(`Verify number of auto spin`, async () => {
+                expect(settledResultsAutoSpin.length < 10).toBe(true);
+            });
 
-             //Post-Act
-             await this.game.waitForTimeout(timeout); //handle cases free spin or bonus
-             await this.game.clickOutSide(2000); //click outside to close big win popup
+            //Post-Act
+            await test.step(`Click outside`, async () => {
+                await this.game.waitForTimeout(timeout); //handle cases free spin or bonus
+                await this.game.clickOutSide(2000); //click outside to close big win popup
+            });
         });
     }
 
     protected turboTests() {
         test("Verify default state of turbo button is OFF", async () => {
             // Verify default turbo off state
-            const turboOff = await this.game.captureLocator(CSLocatorNames.imgTurboOFF);
+            let turboOff;
+            await test.step(`Capture default turbo mode`, async () => {
+                turboOff = await this.game.captureLocator(CSLocatorNames.imgTurboOFF);
+            });
 
             // Assert Turbo Off
-            expect(turboOff.image).toMatchSnapshot(turboOff.name);
+            await test.step(`Compare with snapshot`, async () => {
+                expect(turboOff.image).toMatchSnapshot(turboOff.name);
+            });
         });
 
         test("Verify user can turn On turbo mode", async () => {
             // Turbo ON
-            await clickTurbo(this.game);
-            const turboOn = await this.game.captureLocator(CSLocatorNames.imgTurboOn);
+            await test.step(`Click turbo button`, async () => {
+                await clickTurbo(this.game);
+            });
+            let turboOn;
+            await test.step(`Capture turbo button on`, async () => {
+                turboOn = await this.game.captureLocator(CSLocatorNames.imgTurboOn);
+            });
 
             // Assert turbo On
-            expect(turboOn.image).toMatchSnapshot(turboOn.name);
+            await test.step(`Compare with snapshot`, async () => {
+                expect(turboOn.image).toMatchSnapshot(turboOn.name);
+            });
         });
 
         test("Verify user can turn OFF turbo mode", async () => {
             // Act
-            await clickTurbo(this.game);
-            const imgTurboOFF = await this.game.capture(CSLocatorNames.imgTurboOFF);
+            await test.step(`Click turbo button`, async () => {
+                await clickTurbo(this.game);
+            });
+
+            let imgTurboOFF;
+            await test.step(`Capture turbo off`, async () => {
+                imgTurboOFF = await this.game.capture(CSLocatorNames.imgTurboOFF);
+            });
 
             //Assert
-            expect(imgTurboOFF.image).toMatchSnapshot(imgTurboOFF.name);
+            await test.step(`Compare with snapshot`, async () => {
+                expect(imgTurboOFF.image).toMatchSnapshot(imgTurboOFF.name);
+            });
         });
     }
 
     protected spinByKeys() {
         test("Verify user able spin by space with turbo mode OFF", async () => {
             //Arrange
-            this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
+            await test.step(`Attach web socket and capture event`, async () => {
+                this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
+            });
             const bet = { choice: `btn${this.options.placeBetChoices[0]}`, amount: this.options.placeBetAmount ?? 1 };
-            await this.game.clickOutSide();
-            await this.player.selectPayline(CSLocatorNames.btnPayline1);
-            await this.player.selectBetStake(CSLocatorNames[`lblBetLevel${bet.amount}`]);
-            await this.game.waitForTimeout(timeout)
+            await test.step(`Select payline and bet stake`, async () => {
+                await this.game.clickOutSide();
+                await this.player.selectPayline(CSLocatorNames.btnPayline1);
+                await this.player.selectBetStake(CSLocatorNames[`lblBetLevel${bet.amount}`]);
+                await this.game.waitForTimeout(timeout);
+            });
 
             //Act
-            await this.game.keyboardPress("Space");
-            const settledResults = await this.game.waitForSettlement();
+            await test.step(`Press space`, async () => {
+                await this.game.keyboardPress("Space");
+            });
+
+            let settledResults;
+            await test.step(`Wait for settlement`, async () => {
+                settledResults = await this.game.waitForSettlement();
+            });
 
             // Assert
-            expect(bet).toMatchWinningSymbols(settledResults);
-            await this.game.waitForTimeout(timeout);
-            await this.game.clickOutSide(2000); //click outside to close big win popup
+            await test.step(`Verify settlement result`, async () => {
+                expect(bet).toMatchWinningSymbols(settledResults);
+            });
+
+            await test.step(`Click outside`, async () => {
+                await this.game.waitForTimeout(timeout);
+                await this.game.clickOutSide(2000); //click outside to close big win popup
+            });
         });
 
         test("Verify user able spin by enter key with turbo mode OFF", async () => {
@@ -260,82 +374,91 @@ export class SlotGameBase {
             let bet = { choice: `btn${this.options.placeBetChoices[0]}`, amount: this.options.placeBetAmount ?? 1 };
 
             //Act
-            await this.game.keyboardPress("Enter");
-            const settledResults = await this.game.waitForSettlement();
+            await test.step(`Press enter`, async () => {
+                await this.game.keyboardPress("Enter");
+            });
+
+            let settledResults;
+            await test.step(`Wait for settlement`, async () => {
+                settledResults = await this.game.waitForSettlement();
+            });
 
             // Assert
-            expect(bet).toMatchWinningSymbols(settledResults);
-            await this.game.waitForTimeout(timeout);
-            await this.game.clickOutSide(2000); //click outside to close big win popup
+            await test.step(`Verify settlement result`, async () => {
+                expect(bet).toMatchWinningSymbols(settledResults);
+            });
+
+            await test.step(`Click outside`, async () => {
+                await this.game.waitForTimeout(timeout);
+                await this.game.clickOutSide(2000); //click outside to close big win popup
+            });
         });
 
         test("Verify user able spin by space with turbo mode ON", async () => {
             //Arrange
             const bet = { choice: `btn${this.options.placeBetChoices[0]}`, amount: this.options.placeBetAmount ?? 1 };
-            await clickTurbo(this.game);
+            await test.step(`Click turbo`, async () => {
+                await clickTurbo(this.game);
+            });
 
             //Act
-            await this.game.keyboardPress("Space");
-            const settledResults = await this.game.waitForSettlement();
+            await test.step(`Press space`, async () => {
+                await this.game.keyboardPress("Space");
+            });
+
+            let settledResults;
+            await test.step(`Wait for settlement`, async () => {
+                settledResults = await this.game.waitForSettlement();
+            });
 
             // Assert
-            expect(bet).toMatchWinningSymbols(settledResults);
-            await this.game.waitForTimeout(timeout);
-            await this.game.clickOutSide(2000); //click outside to close big win popup
+            await test.step(`Verify settlement result`, async () => {
+                expect(bet).toMatchWinningSymbols(settledResults);
+            });
+
+            await test.step(`Click outside`, async () => {
+                await this.game.waitForTimeout(timeout);
+                await this.game.clickOutSide(2000); //click outside to close big win popup
+            });
         });
     }
 
     protected placeBetAndSettleTests() {
-        test("THEN player able to place a bet and settle", async () => {
+        test("Verify that player be able to place a bet and settle", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             const today = new Date().toLocaleDateString("en-GB", { day: "numeric", month: "numeric", year: "numeric" });
             const bet = { choice: `btn${this.options.placeBetChoices[0]}`, amount: this.options.placeBetAmount ?? 1 };
-            let bettime = new Date().toLocaleTimeString("en-US", { hour12: false, hour: "numeric", minute: "numeric" });
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
 
             // Act
-            const placeBetResponse = await this.player.placeBetClassicSlot(bet.choice, CSLocatorNames.lblBetLevel1);
-            const settledResults = await this.game.waitForSettlement();
+            let placeBetResponse, settledResults;
+            await test.step(`Place bet`, async () => {
+                placeBetResponse = await this.player.placeBetClassicSlot(bet.choice, CSLocatorNames.lblBetLevel1);
+            });
+
+            await test.step(`Wait for settlement`, async () => {
+                settledResults = await this.game.waitForSettlement();
+            });
 
             // Assert
-            expect(placeBetResponse.endBet).toBe(bet.amount);
-            expect(bet).toMatchWinningSymbols(settledResults);
+            await test.step(`Verify settlement result`, async () => {
+                expect(placeBetResponse.endBet).toBe(bet.amount);
+                expect(bet).toMatchWinningSymbols(settledResults);
+            });
 
             // Post-Act
             const settledata = {
-                roundID: await getRoundId(this.game),
+                roundID: settledResults.roundId.toString(),
                 betwin: settledResults.winAmount.toString(),
-                bet: bet.amount.toString(),
-                line: bet.choice,
-                bettime: bettime,
+                totalstake: bet.amount.toString(),
                 betdate: today,
             };
             global.settledata = settledata;
 
-            await this.game.clickOutSide(2000); //click outside to close big win
-        });
-    }
-
-    protected ticketHistoryTests() {
-        test("AND player could open history popup", async () => {
-            // Act 1
-            await this.game.clickHistory(timeout);
-            await this.game.captureLocator(CSLocatorNames.lblHistoryFirstRow);
-
-            // Assert 1
-            await verifyticketdata(this.game, global.settledata);
-
-            // Act 2
-            await openRoundDetail(this.game);
-            let roundID = await getRoundId(this.game, CSLocatorNames.lblHistoryDetailRoundId);
-
-            // Assert 2
-            expect(roundID).toEqual(global.settledata.roundID);
-
-            //Post-Act
-            await this.game.clickOutSide(1500);
-            await this.game.clickOutSide(1500);
+            await test.step(`Click outside`, async () => {
+                await this.game.clickOutSide(2000); //click outside to close big win
+            });
         });
     }
 
@@ -358,6 +481,7 @@ export class SlotGameBase {
                 this.game = baseGame;
                 this.player = new BasePlayer(this.game);
                 this.gameGuides.init(this.game);
+                this.betHistory.init(this.game);
             });
 
             this.runScenario();
@@ -373,7 +497,7 @@ export class SlotGameBase {
         this.spinByKeys();
         this.autoSpinTests();
         this.placeBetAndSettleTests();
-        this.ticketHistoryTests();
+        this.betHistory.tests();
         this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
     }
 }
@@ -406,55 +530,12 @@ const clickTurbo = async (game: BaseGame) => {
     await game.clickLocator(CSLocatorNames.btnTurbo);
 };
 
-const getRoundId = async (game: BaseGame, elementname: string = CSLocatorNames.lblRoundID) => {
-    let roundId = await game.getTextLocator(elementname);
-
-    return roundId != null ? roundId.replace(/[^0-9.]/g, "") : roundId;
-};
-
-const getDataFistRowHistory = async (game: BaseGame, elementname: string = CSLocatorNames.lblHistoryFirstRow) => {
-    let tempdata = await game.getTextLocator(elementname);
-
-    if (tempdata != null) {
-        let data = tempdata.split(" ");
-        return {
-            betdate: data[0].toString(),
-            bet: data[1].toString().replace(/[^0-9.]/g, ""),
-            line: data[2].toString().replace(/[^0-9.]/g, ""),
-            totalbet: data[3].toString().replace(/[^0-9.]/g, ""),
-            betwin: data[4].toString().replace(/[^0-9.]/g, ""),
-        };
-    } else {
-        return {
-            betdate: "N/A",
-            bet: "N/A",
-            line: "N/A",
-            totalbet: "N/A",
-            betwin: "N/A",
-        };
-    }
-};
-
-const openRoundDetail = async (game: BaseGame) => {
-    await game.clickLocator(CSLocatorNames.locHistoryRoundId, 1500);
-};
-
 export interface Expectdata {
     line: string;
     betdate: string;
     bet: string;
     betwin: string;
 }
-
-const verifyticketdata = async (game: BaseGame, expectdata: Expectdata) => {
-    let line = expectdata.line.replace("btnPayline", "");
-    const ticketdata = await getDataFistRowHistory(game);
-    const betdate = expectdata.betdate.toString().replace(/[^0-9.]/g, "");
-    expect(betdate.includes(ticketdata.betdate), "verify bet date").toEqual(true);
-    expect(ticketdata.bet).toEqual(expectdata.bet);
-    expect(ticketdata.line, "verify bet bet choice").toEqual(line);
-    expect(ticketdata.betwin, "verify bet win").toEqual(expectdata.betwin);
-};
 
 const getBoardID = async () => {
     let boardId = "";
