@@ -532,12 +532,6 @@ const clickTurbo = async (game: BaseGame) => {
     await game.clickLocator(CSLocatorNames.btnTurbo);
 };
 
-const getRoundId = async (game: BaseGame, elementname: string = CSLocatorNames.lblRoundID) => {
-    let roundId = await game.getTextLocator(elementname);
-
-    return roundId != null ? roundId.replace(/[^0-9.]/g, "") : roundId;
-};
-
 export interface Expectdata {
     line: string;
     betdate: string;
