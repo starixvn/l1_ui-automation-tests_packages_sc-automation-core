@@ -10,4 +10,5 @@ export enum GameEvent {
     HitCard = "hit",
     Stand = "stand",
     Deal = "deal",
+    OwnBets = "ownBets"
 }

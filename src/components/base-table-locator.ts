@@ -3,7 +3,8 @@ import { ImageLocator } from "./base-image-locator";
 export const TableLocatorNames = {
     imgdealer: "imgdealer",
     dragonChoice: "dragonChoice",
-    dragonOwnbet: "dragonOwnbet",
+    dragonOwnbetl1: "dragonOwnbetl1",
+    dragonOwnbetl2: "dragonOwnbetl2",
     tigerChoice: "tigerChoice",
     tigerOwnbet: "tigerOwnbet",
     blackDragonChoice: "blackDragonChoice",
@@ -41,7 +42,8 @@ export const TableLocatorNames = {
 export const TableLocators = [
     new ImageLocator(TableLocatorNames.imgdealer, 543, 5, 164, 100),
     new ImageLocator(TableLocatorNames.dragonChoice, 226, 368, 170, 40),
-    new ImageLocator(TableLocatorNames.dragonOwnbet, 388, 419, 30, 30),
+    new ImageLocator(TableLocatorNames.dragonOwnbetl1, 388, 419, 30, 30),
+    new ImageLocator(TableLocatorNames.dragonOwnbetl2, 388, 419, 30, 30),
     new ImageLocator(TableLocatorNames.tigerChoice, 650, 354, 120, 60),
     new ImageLocator(TableLocatorNames.tigerOwnbet, 844, 415, 30, 30),
     new ImageLocator(TableLocatorNames.blackDragonChoice, 208, 492, 70, 30),
@@ -70,8 +72,8 @@ export const TableLocators = [
     new ImageLocator(TableLocatorNames.locHistoryRoundId, 400, 206, 50, 25),
     new ImageLocator(TableLocatorNames.lblHistoryDetailRoundId, 200, 190, 70, 40),
     new ImageLocator(TableLocatorNames.btnClosePopup, 5, 5, 10, 10),
-    new ImageLocator(TableLocatorNames.imgGameLobbyl1, 800, 600, 350, 90),
-    new ImageLocator(TableLocatorNames.imgGameLobbyl2, 800, 600, 350, 90),
+    new ImageLocator(TableLocatorNames.imgGameLobbyl1, 460, 640, 200, 60),
+    new ImageLocator(TableLocatorNames.imgGameLobbyl2, 460, 640, 200, 60),
     new ImageLocator(TableLocatorNames.tabGames, 340, 86, 85, 30),
     new ImageLocator(TableLocatorNames.icoGame, 300, 430, 150, 120)
 ];

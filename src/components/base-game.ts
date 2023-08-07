@@ -4,7 +4,7 @@ import { GameEvent, waitForMessage, parseSocketPayload } from "./../_shared";
 import { ssoToGame, getConfig } from "./../auth/auth";
 import { ImageLocator, ImageSnapshot } from "./base-image-locator";
 import { GameConfiguration } from "./game-configuration";
-import { createWorker } from 'tesseract.js';
+import { createWorker } from "tesseract.js";
 import { CSLocatorNames } from "./base-classic-slot-locator";
 
 export class BaseGame {
@@ -18,7 +18,6 @@ export class BaseGame {
     gameSocket: PlaywrightWs;
     capturedEvents: any;
     odds: any = null;
-    
 
     constructor(page: Page, locators: Array<ImageLocator>, gameConfiguration: GameConfiguration) {
         this.page = page;
@@ -68,11 +67,7 @@ export class BaseGame {
         let filterA: string[] = [];
         const searchString = "LoadScene";
         this.page.on("console", (msg) => {
-            if (
-                msg.text().includes(searchString) &&
-                !msg.text().includes(searchString + " db") &&
-                !msg.text().includes(searchString + " game")
-            ) {
+            if (msg.text().includes(searchString) && !msg.text().includes(searchString + " db")) {
                 filterA.push(msg.text());
             }
         });
@@ -88,9 +83,7 @@ export class BaseGame {
         let filterA: string[] = [];
         const searchString = "LoadScene Lobby";
         this.page.on("console", (msg) => {
-            if (
-                msg.text().includes(searchString)
-            ) {
+            if (msg.text().includes(searchString)) {
                 filterA.push(msg.text());
             }
         });
@@ -104,16 +97,18 @@ export class BaseGame {
 
     async getTextLocator(locatorName: string) {
         const worker = await createWorker();
-        await worker.loadLanguage('eng');
-        await worker.initialize('eng');
+        await worker.loadLanguage("eng");
+        await worker.initialize("eng");
         await worker.setParameters({
-            tessedit_char_whitelist: "0123456789/:."
+            tessedit_char_whitelist: "0123456789/:.",
         });
-      
+
         const buffer = await this.capture(locatorName);
-        const { data: { text } }  = await worker.recognize(buffer.image);
+        const {
+            data: { text },
+        } = await worker.recognize(buffer.image);
         await worker.terminate();
-        return text
+        return text;
     }
 
     attachSocketAndCaptureEvent(event: string) {

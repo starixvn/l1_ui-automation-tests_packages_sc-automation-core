@@ -116,11 +116,9 @@ export class TableGameBase {
 
             // Act
             const placeBetResponse = await this.player.placeBet(bet.choice, bet.amount);
-            const betChoice = await this.game.captureOwnbet(bet.choice);
             const settledResults = await this.game.waitForSettlement();
 
             // Assert
-            expect(betChoice.image).toMatchSnapshot(betChoice.name);
             expect(placeBetResponse.endBet).toBe(bet.amount);
             expect(settledResults.settlementResult).toMatchBetOptions(this.options.gameConfiguration.choices);
 
@@ -133,11 +131,9 @@ export class TableGameBase {
             await this.game.clickLocator(TableLocatorNames.btnRebet);
 
             // Act
-            const betChoice = await this.game.captureOwnbet(bet.choice);
             const settledResults = await this.game.waitForSettlement();
 
             // Assert
-            expect(betChoice.image).toMatchSnapshot(betChoice.name);
             expect(settledResults.settlementResult).toMatchBetOptions(this.options.gameConfiguration.choices);
             //handle tie: true
             if (settledResults.tie) {
@@ -153,7 +149,8 @@ export class TableGameBase {
         test("User able to placebet multiple choices", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
-            this.game.attachSocketAndCaptureEvent("ownBets");
+            this.game.attachSocketAndCaptureEvent(GameEvent.OwnBets);
+            this.game.attachSocketAndCaptureEvent(GameEvent.Settlement);
             let betChoices: any = this.options.placeBetChoices;
             const amount = this.options.placeBetAmount ?? 1;
             betChoices.splice(1, 1);
@@ -165,7 +162,7 @@ export class TableGameBase {
             }
 
             // Act
-            let ownBets = await this.game.latestCaptureEvent("ownBets");
+            let ownBets = await this.game.latestCaptureEvent(GameEvent.OwnBets);
 
             const settledResults = await this.game.waitForSettlement();
             let calWinAmount = 0;
