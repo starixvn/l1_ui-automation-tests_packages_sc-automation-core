@@ -1,3 +1,10 @@
+## [1.8.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.8.1...v1.8.2) (2023-08-07)
+
+
+### Bug Fixes
+
+* add Ownbets even ([e716efc](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/e716efc3b3da47d3f7ff3c908f9452908bfceccb))
+
 ## [1.8.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.8.0...v1.8.1) (2023-08-02)
 
 
