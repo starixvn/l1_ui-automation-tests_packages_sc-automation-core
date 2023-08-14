@@ -1,3 +1,10 @@
+## [1.8.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.8.2...v1.8.3) (2023-08-14)
+
+
+### Bug Fixes
+
+* max diff pixel ratio ([d28e9a6](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/d28e9a66ddf9c310f40a99f4939ca54f741ec06a))
+
 ## [1.8.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.8.1...v1.8.2) (2023-08-07)
 
 
