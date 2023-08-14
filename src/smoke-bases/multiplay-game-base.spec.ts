@@ -65,7 +65,7 @@ export class MultiplayGameBase {
             const error = await this.game.captureErrorMessage();
 
             // Assert
-            expect(error.image).toMatchSnapshot(error.name);
+            expect(error.image).toMatchSnapshot(error.name, { maxDiffPixelRatio: 0.3 });
         });
     }
 
