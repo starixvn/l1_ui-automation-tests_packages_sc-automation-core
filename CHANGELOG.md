@@ -1,3 +1,10 @@
+## [1.8.4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.8.3...v1.8.4) (2023-08-14)
+
+
+### Bug Fixes
+
+* increase max diff pixel ratio in multiplay game base ([efb3ec2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/efb3ec2755e8123ee1bbdbb99718f92d41f4a452))
+
 ## [1.8.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.8.2...v1.8.3) (2023-08-14)
 
 
