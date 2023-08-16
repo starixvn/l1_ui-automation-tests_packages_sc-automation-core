@@ -5,7 +5,7 @@ import { ssoToGame, getConfig } from "./../auth/auth";
 import { ImageLocator, ImageSnapshot } from "./base-image-locator";
 import { GameConfiguration } from "./game-configuration";
 import { createWorker } from "tesseract.js";
-import { CSLocatorNames } from "./base-classic-slot-locator";
+import { CSLocatorNames } from "../components";
 
 export class BaseGame {
     readonly BetBoardPostfix: string = "BetBoard";
@@ -241,6 +241,20 @@ export class BaseGame {
         }
         if (historyMenu) {
             await historyMenu.click(this.page);
+            await this.waitForTimeout(waitTime);
+        }
+    }
+
+    async clickHome(waitTime: number = 1000, btnhome: string): Promise<void> {
+        const hamburgerMenu = this.locator("hamburgerMenu") || this.locator(CSLocatorNames.mnuHamburger);
+        const btnHome = this.locator("btnHome") || this.locator(btnhome);
+
+        if (hamburgerMenu) {
+            await hamburgerMenu.click(this.page);
+            await this.waitForTimeout(waitTime);
+        }
+        if (btnHome) {
+            await btnHome.click(this.page);
             await this.waitForTimeout(waitTime);
         }
     }

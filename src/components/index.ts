@@ -7,6 +7,8 @@ import { CSLocatorNames, ClassicSlotLocators } from "./base-classic-slot-locator
 import { CascadingSlotLocatorNames, CascadingSlotLocators } from "./base-cascading-slot-locator";
 import { BaseElementLocator } from "./base-element-locator";
 import * as TableLocator from "./base-table-locator";
+import * as GameLobbyLocator from "./base-game-lobby-locator";
+
 
 
 export {
@@ -21,5 +23,6 @@ export {
     ImageSnapshot,
     CascadingSlotLocatorNames,
     CascadingSlotLocators,
-    TableLocator
+    TableLocator,
+    GameLobbyLocator
 };
