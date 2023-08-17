@@ -1,7 +1,7 @@
 import { ImageLocator } from "./base-image-locator";
 
 export const GameLobbyLocatorNames = {
-    imgGameLobby: "imgGameLobbyl",
+    imgGameLobby: "imgGameLobby",
     tabAll: "tabAll",
     tabSedie: "tabSedie",
     tabBigSmall: "tabBigSmall",

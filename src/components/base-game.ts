@@ -255,7 +255,6 @@ export class BaseGame {
         }
         if (btnHome) {
             await btnHome.click(this.page);
-            await this.waitForTimeout(waitTime);
         }
     }
 

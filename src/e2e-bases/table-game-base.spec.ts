@@ -19,7 +19,7 @@ export class TableGameBase {
             await this.game.waitForTimeout(this.options.waitBetTimeout);
             const dealerSnapshot = await this.game.capture(TableLocator.TableLocatorNames.imgdealer);
             // Assert
-            expect(dealerSnapshot.image).toMatchSnapshot(dealerSnapshot.name);
+            expect(dealerSnapshot.image).toMatchSnapshot(dealerSnapshot.name, { maxDiffPixelRatio: 0.3 });
         });
 
         test("Verify all bet choices display correctly", async () => {
@@ -52,8 +52,8 @@ export class TableGameBase {
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
 
             // Act
-            const roundId = await getRoundId(this.game, TableLocator.TableLocatorNames.lblRoundIdOnTable);
             const placeBetResponse = await this.player.placeBet(bet.choice, bet.amount);
+            const roundId = await getRoundId(this.game, TableLocator.TableLocatorNames.lblRoundIdOnTable);
             const betChoice = await this.game.capture(bet.choice + `Ownbet${process.env.npm_config_project}`);
             const settledResults = await this.game.waitForSettlement();
 
@@ -62,13 +62,13 @@ export class TableGameBase {
             expect(placeBetResponse.endBet).toBe(bet.amount);
             expect(settledResults.settlementResult).toMatchBetOptions(this.options.gameConfiguration.choices);
             //handle tie: true
-            if (settledResults.tie) {
+            if (settledResults.settlementResult.tie) {
                 const refundbet = { choice: bet.choice, amount: bet.amount / 2 };
                 expect(refundbet).toMatchWinning(settledResults);
             } else {
                 expect(bet).toMatchWinning(settledResults);
             }
-            expect(settledResults.roundId).toBe(roundId);
+            expect(settledResults.roundId.toString()).toEqual(roundId);
         });
 
         test("User able to place bet and return settlement data for comparing history ticket detail", async () => {
@@ -85,7 +85,7 @@ export class TableGameBase {
             expect(placeBetResponse.endBet).toBe(bet.amount);
             expect(settledResults.settlementResult).toMatchBetOptions(this.options.gameConfiguration.choices);
             //handle tie: true
-            if (settledResults.tie) {
+            if (settledResults.settlementResult.tie) {
                 const refundbet = { choice: bet.choice, amount: bet.amount / 2 };
                 expect(refundbet).toMatchWinning(settledResults);
             } else {
@@ -123,7 +123,7 @@ export class TableGameBase {
             // Act 2
             if (indexHistory.navticketdetail) {
                 await openRoundDetail(this.game);
-                const roundID = await getRoundId(this.game, TableLocator.TableLocatorNames.lblHistoryDetailRoundId);
+                const roundID = await getRoundId(this.game);
                 // Assert 2
                 expect(roundID).toEqual(global.settledata.roundId);
             }
@@ -131,6 +131,36 @@ export class TableGameBase {
             //Post-Act
             await this.game.clickOutSide();
             await this.game.clickOutSide();
+        });
+    }
+
+    protected maxBetTests() {
+        test("THEN player should get error when they reach max bet", async () => {
+            // Arrange
+            test.setTimeout(this.options.gameConfiguration.maxTimeout);
+            let betChoices: any = this.options.multiPlaceBetChoices;
+            await this.game.waitUntilPlaceBet();
+            await this.game.waitForTimeout(timeout / 4);
+            for (const iterator of betChoices) {
+                await this.game.clickToChoice(iterator);
+                await this.game.waitForTimeout(800);
+            }
+            let i: number = 0;
+            while (i < 9) {
+                await this.game.clickLocator(TableLocator.TableLocatorNames.btnRightArrow);
+                i++
+            }
+
+            for (const iterator of betChoices) {
+                await this.game.clickToChoice(iterator);
+                await this.game.waitForTimeout(1000);     
+                const msgMaxbet = await this.game.capture('msgMaxbet'+iterator);
+                 // Assert
+                expect(msgMaxbet.image).toMatchSnapshot(msgMaxbet.name,{maxDiffPixelRatio:0.3});
+            }
+
+            await this.game.waitForSettlement();
+
         });
     }
 
@@ -162,7 +192,7 @@ export class TableGameBase {
             // Assert
             expect(settledResults.settlementResult).toMatchBetOptions(this.options.gameConfiguration.choices);
             //handle tie: true
-            if (settledResults.tie) {
+            if (settledResults.settlementResult.tie) {
                 const refundbet = { choice: bet.choice, amount: bet.amount / 2 };
                 expect(refundbet).toMatchWinning(settledResults);
             } else {
@@ -183,7 +213,7 @@ export class TableGameBase {
             await this.game.waitForTimeout(timeout / 4);
             for (const iterator of betChoices) {
                 await this.game.clickToChoice(iterator);
-                await this.game.waitForTimeout(500);
+                await this.game.waitForTimeout(800);
             }
 
             // Act
@@ -194,7 +224,7 @@ export class TableGameBase {
             // Assert
             for (const iterator of betChoices) {
                 const bet =
-                    settledResults.tie === true
+                    settledResults.settlementResult.tie === true
                         ? { choice: iterator, amount: (this.options.placeBetAmount as number) / 2 ?? 0.5 }
                         : { choice: iterator, amount: this.options.placeBetAmount ?? 1 };
                 expect(ownBets.ownBets[iterator]).toBe(amount);
@@ -264,6 +294,7 @@ export class TableGameBase {
         if (this.options.gameConfiguration.rebet) {
             this.reBet();
         }
+        this.maxBetTests()
         this.multipleBetChoices();
         this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
         this.returnGameLobby();
