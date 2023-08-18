@@ -10,4 +10,5 @@ export interface IBaseOptions {
     multiPlaceBetChoices?: string[];
     indexTicketHistory?: {totalbet: number, isIdLink: boolean};
     gameLobbyNavigaion?: string[];
+    barItems?: string[];
 }
