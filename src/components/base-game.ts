@@ -95,12 +95,12 @@ export class BaseGame {
         console.log("GameLobby UI load success");
     }
 
-    async getTextLocator(locatorName: string) {
+    async getTextLocator(locatorName: string, whitelist:string = "0123456789/:.") {
         const worker = await createWorker();
         await worker.loadLanguage("eng");
         await worker.initialize("eng");
         await worker.setParameters({
-            tessedit_char_whitelist: "0123456789/:.",
+            tessedit_char_whitelist: whitelist,
         });
 
         const buffer = await this.capture(locatorName);

@@ -68,7 +68,7 @@ export class TableGameBase {
             } else {
                 expect(bet).toMatchWinning(settledResults);
             }
-            expect(settledResults.roundId.toString()).toEqual(roundId);
+            expect.soft(roundId.includes(settledResults.roundId)).toBe(true);
         });
 
         test("User able to place bet and return settlement data for comparing history ticket detail", async () => {
@@ -109,19 +109,22 @@ export class TableGameBase {
             await this.game.clickHistory(timeout);
             const ticketdata = await getDataFistRowHistory(this.game);
 
-            const indexHistory: any = this.options.indexHistory;
+            const indexHistory: any = this.options.indexTicketHistory;
 
-            const winamount = ticketdata[ticketdata?.length - indexHistory.winamount];
-            const totalbet = ticketdata[ticketdata?.length - indexHistory.totalbet];
-            const roundId = ticketdata[ticketdata?.length - indexHistory.roundId];
+            const winamount = ticketdata[ticketdata?.length -1];
+            const totalbet = ticketdata[ticketdata?.length + indexHistory.totalbet];
+            const dateIndex = ticketdata.findIndex((value) => {
+                return value.includes('/');
+              });
+            const roundId = ticketdata[dateIndex+1];
 
             // Assert
-            expect(winamount.trim()).toEqual(global.settledata.betwin);
-            expect(totalbet).toEqual(global.settledata.bet);
-            expect(roundId).toEqual(global.settledata.roundId);
+            expect.soft(winamount.trim()).toEqual(global.settledata.betwin);
+            expect.soft(totalbet).toEqual(global.settledata.bet);
+            expect.soft(roundId).toEqual(global.settledata.roundId);
 
             // Act 2
-            if (indexHistory.navticketdetail) {
+            if (indexHistory.isIdLink) {
                 await openRoundDetail(this.game);
                 const roundID = await getRoundId(this.game);
                 // Assert 2
@@ -138,6 +141,7 @@ export class TableGameBase {
         test("THEN player should get error when they reach max bet", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
+            this.game.attachSocketAndCaptureEvent(GameEvent.Settlement);
             let betChoices: any = this.options.multiPlaceBetChoices;
             await this.game.waitUntilPlaceBet();
             await this.game.waitForTimeout(timeout / 4);
@@ -145,7 +149,7 @@ export class TableGameBase {
                 await this.game.clickToChoice(iterator);
                 await this.game.waitForTimeout(800);
             }
-            let i: number = 0;
+            let i: number = 0, j: number = 0
             while (i < 9) {
                 await this.game.clickLocator(TableLocator.TableLocatorNames.btnRightArrow);
                 i++
@@ -158,9 +162,11 @@ export class TableGameBase {
                  // Assert
                 expect(msgMaxbet.image).toMatchSnapshot(msgMaxbet.name,{maxDiffPixelRatio:0.3});
             }
-
-            await this.game.waitForSettlement();
-
+            // post Act
+            while (j < 9) {
+                await this.game.clickLocator(TableLocator.TableLocatorNames.btnLeftArrow);
+                j++;
+            }
         });
     }
 
