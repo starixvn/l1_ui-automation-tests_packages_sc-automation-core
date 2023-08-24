@@ -5,6 +5,7 @@ import local3 from "./config.local3";
 import sit from "./config.sit";
 import uat from "./config.uat";
 import prod from "./config.prod";
+import gameguide from "./config.gameguide"
 
 export const configs = {
     local: { ...local },
@@ -14,4 +15,5 @@ export const configs = {
     sit: { ...sit },
     uat: { ...uat },
     prod: { ...prod },
+    gameguide: { ...gameguide },
 };
