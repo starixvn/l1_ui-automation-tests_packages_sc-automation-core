@@ -53,7 +53,7 @@ export class TableGameBase {
 
             // Act
             const placeBetResponse = await this.player.placeBet(bet.choice, bet.amount);
-            const roundId = await this.game.getTextLocator(TableLocator.TableLocatorNames.lblRoundIdOnTable);
+            const roundId = await this.game.getTextLocator(TableLocator.TableLocatorNames.lblRoundIdOnTable,"#0123456789");
             const betChoice = await this.game.capture(bet.choice + `Ownbet${process.env.npm_config_project}`);
             const settledResults = await this.game.waitForSettlement();
 
@@ -121,14 +121,14 @@ export class TableGameBase {
             const roundId = ticketdata[dateIndex + 1];
 
             // Assert
-            expect(winamount.trim()).toEqual(global.settledata.betwin);
+            expect(parseFloat(winamount.trim())).toBeCloseTo(global.settledata.betwin);
             expect(totalbet).toEqual(global.settledata.bet);
             expect(roundId).toEqual(global.settledata.roundId);
 
             // Act 2
             if (indexHistory.isIdLink) {
                 await this.game.clickLocator(TableLocator.TableLocatorNames.locHistoryRoundId, 1500);
-                const roundID = await this.game.getTextLocator(TableLocator.TableLocatorNames.lblHistoryDetailRoundId);
+                const roundID = await this.game.getTextLocator(TableLocator.TableLocatorNames.lblHistoryDetailRoundId,"0123456789");
                 // Assert 2
                 expect(roundID).toEqual(global.settledata.roundId);
             }

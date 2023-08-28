@@ -95,7 +95,7 @@ export class BaseGame {
         console.log("GameLobby UI load success");
     }
 
-    async getTextLocator(locatorName: string, whitelist:string = "0123456789/:.") {
+    async getTextLocator(locatorName: string, whitelist: string = "0123456789/:.") {
         const worker = await createWorker();
         await worker.loadLanguage("eng");
         await worker.initialize("eng");
@@ -343,11 +343,12 @@ export class BaseGame {
     }
 
     async getCountFrameLocator(locator: string) {
-        return this.page.frameLocator("iframe").locator(locator).count();
-    }
-
-    async captureFrameLocator(locator: string, path: string) {
-        return this.page.frameLocator("iframe").locator(locator).screenshot({ path: path });
+        const countframecocos2 = await this.page.frameLocator("iframe").locator(locator).count();
+        const returnvalue =
+            countframecocos2 == 0
+                ? await this.page.frameLocator("iframe").frameLocator("#webview").locator(locator).count()
+                : countframecocos2;
+        return returnvalue;
     }
 
     async keyboardPress(key: string) {
