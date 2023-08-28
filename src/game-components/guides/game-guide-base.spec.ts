@@ -53,7 +53,7 @@ export class GameGuideBase {
 
             await page.goto(gameGuideURL);
             await page.setViewportSize({
-                width: 1084,
+                width: 759,
                 height: 2000,
             });
 
@@ -67,7 +67,7 @@ export class GameGuideBase {
             }, inItRequest);
 
             await page.waitForTimeout(5000)
-            expect(await page.screenshot({path: `imgGuide-${langCode}.png`, fullPage: true})).toMatchSnapshot(`imgGuide${langCode}.png`,{maxDiffPixelRatio:0});
+            expect(await page.screenshot({path: `imgGuide-${langCode}.png`, fullPage: true})).toMatchSnapshot(`imgGuide-${langCode}.png`,{maxDiffPixelRatio:0});
             
         });
     }
