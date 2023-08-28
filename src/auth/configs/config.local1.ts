@@ -5,4 +5,5 @@ export default {
     enabledMsgPack: false,
     l2memberSite: "https://l2-glbs1.lumigame.com/signin",
     l2lobbyDomain: "https://l2-games1.lumigame.com",
+    guideLink: "https://l1-guide-1.luminetsoft.com"
 };

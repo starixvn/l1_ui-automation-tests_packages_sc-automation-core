@@ -9,4 +9,5 @@ export default {
     l2pwd: "1234aa",
     groupCurrencyId: "61a5a48b7864f80001d3cb59",
     getbalance: "https://l1uatproxy.sgamesuat.com/uat/user/auth/balance",
+    guideLink: "https://l1guidesuat.sgamesuat.com"
 };

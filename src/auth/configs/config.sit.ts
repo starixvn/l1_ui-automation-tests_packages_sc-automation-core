@@ -5,4 +5,5 @@ export default {
     enabledMsgPack: true,
     pwd: "1234aaAA",
     getbalance: "https://l1sit.sgamesuat.com/sit/user/auth/balance",
+    guideLink: "https://l1guidessit.sgamesuat.com",
 };
