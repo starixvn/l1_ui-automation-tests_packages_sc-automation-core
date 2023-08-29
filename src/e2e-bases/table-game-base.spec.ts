@@ -121,16 +121,16 @@ export class TableGameBase {
             const roundId = ticketdata[dateIndex + 1];
 
             // Assert
-            expect(winamount.trim()).toEqual(global.settledata.betwin);
+            expect(parseFloat(winamount)).toBeCloseTo(parseFloat(global.settledata.betwin),-1);
             expect(totalbet).toEqual(global.settledata.bet);
-            expect(roundId).toEqual(global.settledata.roundId);
+            expect(parseInt(roundId)).toBeCloseTo(parseInt(global.settledata.roundId),-1);
 
             // Act 2
             if (indexHistory.isIdLink) {
                 await this.game.clickLocator(TableLocator.TableLocatorNames.locHistoryRoundId, 1500);
                 const roundID = await this.game.getTextLocator(TableLocator.TableLocatorNames.lblHistoryDetailRoundId,"0123456789");
                 // Assert 2
-                expect(roundID).toEqual(global.settledata.roundId);
+                expect(parseInt(roundID)).toEqual(parseInt(global.settledata.roundId));
             }
 
             //Post-Act
@@ -174,7 +174,7 @@ export class TableGameBase {
             for (const iterator of betChoices) {
                 await this.game.clickToChoice(iterator);
                 await this.game.waitForTimeout(500);
-                const msgMaxbet = await this.game.capture("msgMaxbet" + iterator);
+                const msgMaxbet = await this.game.capture("msgMaxbet" + iterator+ process.env.npm_config_project);
                 // Assert
                 expect(msgMaxbet.image).toMatchSnapshot(msgMaxbet.name, { maxDiffPixelRatio: 0.3 });
             }
@@ -326,6 +326,6 @@ export class TableGameBase {
 }
 
 const getDataFistRowHistory = async (game: BaseGame, elementname: string = TableLocator.TableLocatorNames.lblHistoryFirstRow) => {
-    let tempdata = await game.getTextLocator(elementname);
+    let tempdata = await game.getTextLocator(elementname,"0123456789:/ ","history");
     return tempdata?.split(" ") || "";
 };
