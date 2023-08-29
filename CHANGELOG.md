@@ -1,3 +1,14 @@
+## [1.8.5](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.8.4...v1.8.5) (2023-08-29)
+
+
+### Bug Fixes
+
+* e2e table ledbar check ([9610336](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/9610336ddab46b0ca587302929e217f434c71f66))
+* handle multiple iframes in gameguide cocos ver2&3 ([cce0dd4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/cce0dd483a6597321f202b720fc5727f11c365ae))
+* iframe guide ([f5e0e20](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/f5e0e20512b1fc74a4a243c19f2f7f8f68ec1a56))
+* new dictionary for extract data from image ([f7d8190](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/f7d819079001f7a1ba60a87364aa9bbe16829089))
+* table locator ([1ec36ed](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/1ec36edbacc85ca28e2136324f3670f291b1541a))
+
 ## [1.8.4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.8.3...v1.8.4) (2023-08-14)
 
 
