@@ -14,7 +14,12 @@ export class BaseElementLocator {
     async snapshot(page: Page, isFrame = true): Promise<ImageSnapshot> {
         const imageName = formatName(this.name);
 
-        const root = isFrame ? page.frameLocator("iframe") : page;
+        let root:any = page;
+        if (isFrame) {
+            const subiframe = await page.frameLocator("iframe").locator("id=webview-wrapper").count()
+            root = subiframe > 0 ? page.frameLocator("iframe").frameLocator("#webview") : page.frameLocator("iframe")
+        }
+
         const image = await root.locator(this.element).screenshot({ path: formatScreenshotFile(this.name) });
 
         return { name: imageName, image };

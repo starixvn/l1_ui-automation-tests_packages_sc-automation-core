@@ -121,7 +121,7 @@ export class TableGameBase {
             const roundId = ticketdata[dateIndex + 1];
 
             // Assert
-            expect(parseFloat(winamount.trim())).toBeCloseTo(global.settledata.betwin);
+            expect(winamount.trim()).toEqual(global.settledata.betwin);
             expect(totalbet).toEqual(global.settledata.bet);
             expect(roundId).toEqual(global.settledata.roundId);
 
