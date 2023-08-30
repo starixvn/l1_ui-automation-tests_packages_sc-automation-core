@@ -9,4 +9,6 @@ export default {
     l2pwd: "1q2w3e4r",
     groupCurrencyId: "61b048be7e6d8f000145357d",
     getbalance: "https://proxy.sabagame.com/user/auth/balance",
+    guideLinkL1: "https://guides.sabagame.com",
+    guideLinkL2: "https://guides.vgaming.win",
 };
