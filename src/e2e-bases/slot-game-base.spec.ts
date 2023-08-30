@@ -49,15 +49,23 @@ export class SlotGameBase {
             await test.step(`Click on symbol`, async () => {
                 await this.game.clickLocator(CSLocatorNames.btnSymbol, 2000);
             });
-            let imgBoardId;
-            await test.step(`Capture board`, async () => {
-                imgBoardId = await this.game.capture(`img${boardID}`);
-            });
-
+            let imgBoardId = await this.game.capture(`img${boardID}`);
+            if (process.env.npm_config_jackpot) {
+                await test.step(`Capture JackPot board`, async () => {
+                    imgBoardId = await this.game.capture(`img${boardID}JP`);
+                });
+    
+                //Assert
+                await test.step(`Compare with snapshot`, async () => {
+                    expect(imgBoardId.image).toMatchSnapshot(imgBoardId.name);
+                });
+            }
+            else
             //Assert
             await test.step(`Compare with snapshot`, async () => {
                 expect(imgBoardId.image).toMatchSnapshot(imgBoardId.name);
             });
+          
         });
 
         test("Verify roundID is null in first load game", async () => {

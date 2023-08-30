@@ -41,7 +41,8 @@ export class GameGuides {
         const guidepages = await this.game.getCountFrameLocator(GuideLocator.xpathItem);
 
         for (let index = 1; index <= guidepages; index++) {
-            const contentFrame = new BaseElementLocator(`guide-${index}`, `${GuideLocator.xpathItem}[${index}]`);
+            const filename = process.env.npm_config_jackpot ? `guide-JP-${index}` : `guide-${index}`
+            const contentFrame = new BaseElementLocator(filename, `${GuideLocator.xpathItem}[${index}]`);
             const contentImage = await contentFrame.snapshot(this.game.page);
 
             images.push(contentImage);
