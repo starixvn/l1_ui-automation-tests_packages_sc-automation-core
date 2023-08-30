@@ -258,11 +258,11 @@ export class BaseGame {
         }
     }
 
-    async clickGuide(waitTime: number = 500, icoGuideJP: boolean = false): Promise<void> {
+    async clickGuide(waitTime: number = 500, isJP: boolean = false): Promise<void> {
         const hamburgerMenu = this.locator("hamburgerMenu") || this.locator(CSLocatorNames.mnuHamburger);
         let guideMenu = this.locator("guideMenu") || this.locator(CSLocatorNames.icoGuide);
-        if (icoGuideJP) {
-            guideMenu = this.locator(CSLocatorNames.icoGuideJP)
+        if (isJP) {
+            guideMenu = this.locator(CSLocatorNames.icoGuide+'JP');
         }
         if (hamburgerMenu) {
             await hamburgerMenu.click(this.page);
