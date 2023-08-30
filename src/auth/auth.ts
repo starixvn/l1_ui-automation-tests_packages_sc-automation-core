@@ -41,6 +41,10 @@ export const ssoToGame = async (
         const ssoLink = (await page.locator(LobbyLocator.ssoLink).textContent()) ?? "";
 
         await page.goto(`${ssoLink.replace("gameId=0", `gameId=${gameId}`)}`);
+        const isCurrencyForm = await page.$$('id=currency')
+        if (isCurrencyForm) {
+            await page.click("text=Submit");
+        }
     } else {
         await loginMemberSite(page, config, env, playerId, productId, langCode, projectCode);
     }

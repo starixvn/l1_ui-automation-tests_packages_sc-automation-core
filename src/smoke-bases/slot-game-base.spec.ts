@@ -28,6 +28,16 @@ export class SlotGameBase {
         });
     }
 
+    protected isJackpotTests() {
+        test("AND Jackpot banner should be dispalyed in game ", async () => {
+            // Act
+            const jackpotbanner = await this.game.capture(`imgJackpot`);
+
+            // Assert
+            expect(jackpotbanner.image).toMatchSnapshot(jackpotbanner.name);
+        });
+    }
+
     protected betStakeLevelTests(projectCode= "l1") {
         test("AND stake level should be correct", async () => {
             // Arrange
@@ -100,6 +110,9 @@ export class SlotGameBase {
 
     protected runScenario() {
         this.inGameOddsTests();
+        if (process.env.npm_config_jackpot) {
+            this.isJackpotTests()
+        }
         this.betStakeLevelTests(process.env.npm_config_project)
         this.placeBetAndSettleTests();
         this.ticketHistoryTests();
