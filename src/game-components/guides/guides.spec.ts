@@ -1,6 +1,8 @@
 import { test, BaseGame, BaseElementLocator, ImageSnapshot } from "../../components";
 import { expect } from "../../expects";
 import { GuideLocator } from "./guides-locators";
+const isJackpot = process.env.npm_config_jackpot ? true : false
+
 export class GameGuides {
     protected game: BaseGame;
 
@@ -13,7 +15,7 @@ export class GameGuides {
             // Arrange
             test.setTimeout(timeout);
             await test.step("Open game guide", async () => {
-                await this.game.clickGuide(3000);
+                await this.game.clickGuide(3000, isJackpot);
             });
 
             // Act
@@ -41,7 +43,7 @@ export class GameGuides {
         const guidepages = await this.game.getCountFrameLocator(GuideLocator.xpathItem);
 
         for (let index = 1; index <= guidepages; index++) {
-            const filename = process.env.npm_config_jackpot ? `guide-JP-${index}` : `guide-${index}`
+            const filename = isJackpot == true ? `guide-JP-${index}` : `guide-${index}`
             const contentFrame = new BaseElementLocator(filename, `${GuideLocator.xpathItem}[${index}]`);
             const contentImage = await contentFrame.snapshot(this.game.page);
 
