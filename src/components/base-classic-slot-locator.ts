@@ -43,6 +43,7 @@ export const CSLocatorNames = {
     imgRightNumbersColumn: "imgRightNumbersColumn",
     icoHistory: "icoHistory", // Menu options
     icoGuide: "icoGuide",
+    icoGuideJP: "icoGuideJP",
     popAutoSpin: "popAutoSpin", // AutoSPin Popup
     btnAutoSpin10: "btnAutoSpin10",
     btnAutoSpinTurbo: "btnAutoSpinTurbo",
@@ -77,6 +78,7 @@ export const ClassicSlotLocators = [
     new ImageLocator(CSLocatorNames.imgBoard1, 290, 110, 700, 410),
     new ImageLocator(CSLocatorNames.imgBoard2, 290, 110, 700, 410),
     new ImageLocator(CSLocatorNames.imgBoard3, 290, 110, 700, 410),
+    new ImageLocator(CSLocatorNames.imgBoard4, 290, 110, 700, 410),
     new ImageLocator(CSLocatorNames.imgBoardJP0, 290, 110, 700, 410),
     new ImageLocator(CSLocatorNames.imgBoardJP1, 290, 110, 700, 410),
     new ImageLocator(CSLocatorNames.imgBoardJP2, 290, 110, 700, 410),
@@ -114,6 +116,7 @@ export const ClassicSlotLocators = [
     new ImageLocator(CSLocatorNames.icoHistory, 50, 416, 50, 50),
     new ImageLocator(CSLocatorNames.popHistory, 546, 40, 192, 50),
     new ImageLocator(CSLocatorNames.icoGuide, 45, 495, 65, 65),
+    new ImageLocator(CSLocatorNames.icoGuideJP, 45, 540, 65, 65),
     new ImageLocator(CSLocatorNames.popAutoSpin, 392, 145, 513, 373),
     new ImageLocator(CSLocatorNames.btnAutoSpinTurbo, 408, 463, 30, 30),
     new ImageLocator(CSLocatorNames.btnAutoSpinStart, 713, 451, 129, 55),

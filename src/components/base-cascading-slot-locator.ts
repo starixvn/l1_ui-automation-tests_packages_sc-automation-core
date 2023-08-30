@@ -26,7 +26,6 @@ export const CascadingSlotLocatorNames = {
     imgTurboTrial: "imgTurboTrial",
     icoHistory: "icoHistory", // Menu options
     icoGuide: "icoGuide",
-    icoGuideJP: "icoGuideJP",
     popGameGuide: "popGameGuide",
     popAutoSpin: "popAutoSpin", // AutoSPin Popup
     popAutoSpinTurbo: "popAutoSpinTurbo",
@@ -100,7 +99,6 @@ export const CascadingSlotLocators = [
     new ImageLocator(CascadingSlotLocatorNames.icoHistory, 56, 408, 40, 40),
     new ImageLocator(CascadingSlotLocatorNames.popHistory, 166, 28, 940, 122),
     new ImageLocator(CascadingSlotLocatorNames.icoGuide, 56, 492, 40, 40),
-    new ImageLocator(CascadingSlotLocatorNames.icoGuideJP, 56, 540, 40, 40),
     new ImageLocator(CascadingSlotLocatorNames.popGameGuide, 512, 38, 268, 60),
     new ImageLocator(CascadingSlotLocatorNames.popAutoSpin, 378, 145, 528, 390),
     new ImageLocator(CascadingSlotLocatorNames.popAutoSpinTurbo, 378, 145, 528, 390),

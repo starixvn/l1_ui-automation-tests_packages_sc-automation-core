@@ -262,7 +262,7 @@ export class BaseGame {
         const hamburgerMenu = this.locator("hamburgerMenu") || this.locator(CSLocatorNames.mnuHamburger);
         let guideMenu = this.locator("guideMenu") || this.locator(CSLocatorNames.icoGuide);
         if (isJP) {
-            guideMenu = this.locator(CSLocatorNames.icoGuide+'JP');
+            guideMenu = this.locator(CSLocatorNames.icoGuideJP);
         }
         if (hamburgerMenu) {
             await hamburgerMenu.click(this.page);
