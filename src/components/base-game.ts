@@ -245,6 +245,20 @@ export class BaseGame {
         }
     }
 
+    async clickJackpot(waitTime: number = 500): Promise<void> {
+        const hamburgerMenu = this.locator("hamburgerMenu") || this.locator(CSLocatorNames.mnuHamburger);
+        const jackpotMenu = this.locator("jackpotMenu") ||this.locator(CSLocatorNames.icoJackpot);
+
+        if (hamburgerMenu) {
+            await hamburgerMenu.click(this.page);
+            await this.waitForTimeout(waitTime);
+        }
+        if (jackpotMenu) {
+            await jackpotMenu.click(this.page);
+            await this.waitForTimeout(waitTime);
+        }
+    }
+
     async clickHome(waitTime: number = 1000, btnhome: string): Promise<void> {
         const hamburgerMenu = this.locator("hamburgerMenu") || this.locator(CSLocatorNames.mnuHamburger);
         const btnHome = this.locator("btnHome") || this.locator(btnhome);

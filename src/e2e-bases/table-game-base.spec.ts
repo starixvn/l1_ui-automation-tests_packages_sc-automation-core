@@ -53,7 +53,7 @@ export class TableGameBase {
 
             // Act
             const placeBetResponse = await this.player.placeBet(bet.choice, bet.amount);
-            const roundId = await this.game.getTextLocator(TableLocator.TableLocatorNames.lblRoundIdOnTable,"#0123456789");
+            const roundId = await this.game.getTextLocator(TableLocator.TableLocatorNames.lblRoundIdOnTable, "#0123456789");
             const betChoice = await this.game.capture(bet.choice + `Ownbet${process.env.npm_config_project}`);
             const settledResults = await this.game.waitForSettlement();
 
@@ -121,14 +121,14 @@ export class TableGameBase {
             const roundId = ticketdata[dateIndex + 1];
 
             // Assert
-            expect(parseFloat(winamount)).toBeCloseTo(parseFloat(global.settledata.betwin),-1);
+            expect(parseFloat(winamount)).toBeCloseTo(parseFloat(global.settledata.betwin), -1);
             expect(totalbet).toEqual(global.settledata.bet);
-            expect(parseInt(roundId)).toBeCloseTo(parseInt(global.settledata.roundId),-1);
+            expect(parseInt(roundId)).toBeCloseTo(parseInt(global.settledata.roundId), -1);
 
             // Act 2
             if (indexHistory.isIdLink) {
                 await this.game.clickLocator(TableLocator.TableLocatorNames.locHistoryRoundId, 1500);
-                const roundID = await this.game.getTextLocator(TableLocator.TableLocatorNames.lblHistoryDetailRoundId,"0123456789");
+                const roundID = await this.game.getTextLocator(TableLocator.TableLocatorNames.lblHistoryDetailRoundId, "0123456789");
                 // Assert 2
                 expect(parseInt(roundID)).toEqual(parseInt(global.settledata.roundId));
             }
@@ -174,7 +174,7 @@ export class TableGameBase {
             for (const iterator of betChoices) {
                 await this.game.clickToChoice(iterator);
                 await this.game.waitForTimeout(500);
-                const msgMaxbet = await this.game.capture("msgMaxbet" + iterator+ process.env.npm_config_project);
+                const msgMaxbet = await this.game.capture("msgMaxbet" + iterator + process.env.npm_config_project);
                 // Assert
                 expect(msgMaxbet.image).toMatchSnapshot(msgMaxbet.name, { maxDiffPixelRatio: 0.3 });
             }
@@ -245,8 +245,9 @@ export class TableGameBase {
             let calWinAmount = 0;
             // Assert
             for (const iterator of betChoices) {
+                //tie refund rule only apply for main choices
                 const bet =
-                    settledResults.settlementResult.tie === true
+                    (settledResults.settlementResult.tie === true  && !this.options.gameConfiguration.hedgeBetGroups.includes(iterator))
                         ? { choice: iterator, amount: (this.options.placeBetAmount as number) / 2 ?? 0.5 }
                         : { choice: iterator, amount: this.options.placeBetAmount ?? 1 };
                 expect(ownBets.ownBets[iterator]).toBe(amount);
@@ -276,7 +277,7 @@ export class TableGameBase {
             const gameNavigate: any = this.options.gameLobbyNavigaion;
 
             await this.game.clickLocator(gameNavigate[0], timeout);
-            await this.game.clickLocator(gameNavigate[1], timeout);
+            await this.game.clickLocator(gameNavigate[1], timeout * 2);
 
             const dealerSnapshot = await this.game.capture(TableLocator.TableLocatorNames.imgdealer);
             // Assert
@@ -326,6 +327,6 @@ export class TableGameBase {
 }
 
 const getDataFistRowHistory = async (game: BaseGame, elementname: string = TableLocator.TableLocatorNames.lblHistoryFirstRow) => {
-    let tempdata = await game.getTextLocator(elementname,"0123456789:/ ","history");
+    let tempdata = await game.getTextLocator(elementname, "0123456789:/ ", "history");
     return tempdata?.split(" ") || "";
 };

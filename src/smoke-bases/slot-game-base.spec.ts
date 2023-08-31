@@ -5,9 +5,8 @@ import { IBaseOptions } from "./base-options";
 const stakeLevel = {
     stakemenu: "stakeMenu",
     imgStakeLevell1: "imgStakeLevell1",
-    imgStakeLevell2: "imgStakeLevell2"
-}
-
+    imgStakeLevell2: "imgStakeLevell2",
+};
 
 export interface SlotGameOptions extends IBaseOptions {
     placeBetChoices: string[];
@@ -28,20 +27,33 @@ export class SlotGameBase {
         });
     }
 
-    protected isJackpotTests() {
-        test("AND Jackpot banner should be dispalyed in game ", async () => {
+    protected jackpotTests() {
+        test("AND Jackpot banner should be displayed in game ", async () => {
             // Act
             const jackpotbanner = await this.game.capture(`imgJackpot`);
 
             // Assert
             expect(jackpotbanner.image).toMatchSnapshot(jackpotbanner.name);
         });
+
+        test("AND Hall of Fame popup should be displayed after clickking on icon in menu list", async () => {
+            await this.game.clickJackpot(1000);
+
+            // Act
+            const jackpotPopup = await this.game.capture(`jackpotPopup`);
+
+            // Assert
+            expect(jackpotPopup.image).toMatchSnapshot(jackpotPopup.name);
+
+            //Post-Act
+            await this.game.clickOutSide();
+        });
     }
 
-    protected betStakeLevelTests(projectCode= "l1") {
+    protected betStakeLevelTests(projectCode = "l1") {
         test("AND stake level should be correct", async () => {
             // Arrange
-            await this.game.clickLocator(stakeLevel.stakemenu)
+            await this.game.clickLocator(stakeLevel.stakemenu);
 
             // Act
             const stakelevelSnapshot = await this.game.capture(stakeLevel[`imgStakeLevel${projectCode}`]);
@@ -49,7 +61,7 @@ export class SlotGameBase {
             // Assert
             expect(stakelevelSnapshot.image).toMatchSnapshot(stakelevelSnapshot.name);
             //Post Act
-            await this.game.clickLocator(stakeLevel.stakemenu)
+            await this.game.clickLocator(stakeLevel.stakemenu);
         });
     }
 
@@ -82,7 +94,7 @@ export class SlotGameBase {
             expect(historyPayload.history.betLogs.length).toBeGreaterThan(0);
             expect(historySnapshot.image).toMatchSnapshot(historySnapshot.name);
             //Close history
-            await this.game.clickOutSide()
+            await this.game.clickOutSide();
         });
     }
 
@@ -111,9 +123,9 @@ export class SlotGameBase {
     protected runScenario() {
         this.inGameOddsTests();
         if (process.env.npm_config_jackpot) {
-            this.isJackpotTests()
+            this.jackpotTests();
         }
-        this.betStakeLevelTests(process.env.npm_config_project)
+        this.betStakeLevelTests(process.env.npm_config_project);
         this.placeBetAndSettleTests();
         this.ticketHistoryTests();
     }
