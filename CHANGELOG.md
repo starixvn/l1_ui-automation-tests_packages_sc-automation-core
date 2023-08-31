@@ -1,3 +1,20 @@
+# [1.9.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.8.5...v1.9.0) (2023-08-31)
+
+
+### Bug Fixes
+
+* get element name ([8b43c94](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/8b43c9434c759778ea53fd0c57d940631beb7469))
+* guide jp ([1d89730](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/1d8973074f18a29d5e0f64165fafc14dd0410dc9))
+* jackpot ([d33cfd3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/d33cfd3f7f8bbf88e70505f3f2e0cb44f331e351))
+* locator classic slot ([052ced9](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/052ced99f0c4e12f0105610a8cd2cf4fa07a2b47))
+
+
+### Features
+
+* extend test case for jackpot ([da2b7a6](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/da2b7a6b58d91c9b15d871c1c3039639fa87f72b))
+* jackpot slot games ([6b5d6b3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/6b5d6b3c520b0c4d358855439f37a1ff3da9229c))
+* slot jackpot ([04c8b95](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/04c8b95d8265feda5451ba18b9e2f3d07ab84db0))
+
 ## [1.8.5](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.8.4...v1.8.5) (2023-08-29)
 
 
