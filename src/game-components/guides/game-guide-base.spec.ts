@@ -29,7 +29,7 @@ export class GameGuideBase {
             };
         });
 
-        test.describe.serial(`${this.gameName} Game Guide Testing`, () => {
+        test.describe.parallel(`${this.gameName["en"]} Game Guide Testing`, () => {
             this.runScenario();
         });
 
@@ -67,7 +67,7 @@ export class GameGuideBase {
             }, inItRequest);
 
             await page.waitForTimeout(5000)
-            expect.soft(await page.screenshot({path: `imgGuide-${projectCode}-${langCode}.png`, fullPage: true})).toMatchSnapshot(`imgGuide-${projectCode}-${langCode}.png`,{maxDiffPixelRatio:0});
+            expect.soft(await page.screenshot({path: `screenshots/imgGuide-${projectCode}-${langCode}.png`, fullPage: true})).toMatchSnapshot(`imgGuide-${projectCode}-${langCode}.png`,{maxDiffPixelRatio:0});
             
         });
     }
