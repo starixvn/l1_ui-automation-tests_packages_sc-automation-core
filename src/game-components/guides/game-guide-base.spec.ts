@@ -45,12 +45,12 @@ export class GameGuideBase {
                     ? `${config.guideLinkL2}/${langCode}?gId=${this.gameId}&t=dark&displayName=${this.gameName[langCode]}&f=sc&p=false&fof=false&`
                     : `${config.guideLinkL1}/${langCode}?gId=${this.gameId}&t=dark&displayName=${this.gameName[langCode]}&f=sc&p=false&fof=false&`;
 
+            await page.goto(gameGuideURL);
             await page.setViewportSize({
                 width: 1084,
                 height: 2000,
             });
-            await page.goto(gameGuideURL);
-
+            
             const inItRequest = {
                 url: projectCode === "l2" ? config.guideLinkL2 : config.guideLinkL1,
                 body: JSON.stringify(this.gameConfig),
