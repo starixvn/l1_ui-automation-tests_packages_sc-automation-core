@@ -60,7 +60,7 @@ export class GameGuideBase {
                 window.postMessage(inItRequest.body, inItRequest.url);
             }, inItRequest);
 
-            await page.waitForLoadState();
+            await page.waitForTimeout(5000);
             expect
                 .soft(await page.screenshot({ path: `screenshots/imgGuide-${projectCode}-${langCode}.png`, fullPage: true }))
                 .toMatchSnapshot(`imgGuide-${projectCode}-${langCode}.png`, { maxDiffPixelRatio: 0 });
