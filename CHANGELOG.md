@@ -1,3 +1,10 @@
+## [1.10.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.10.1...v1.10.2) (2023-09-07)
+
+
+### Bug Fixes
+
+* gameguide set viewport ([4aa8df6](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/4aa8df669ea60eb89e7429107c409e6929751c4b))
+
 ## [1.10.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.10.0...v1.10.1) (2023-09-07)
 
 
