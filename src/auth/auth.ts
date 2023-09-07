@@ -42,7 +42,7 @@ export const ssoToGame = async (
 
         await page.goto(`${ssoLink.replace("gameId=0", `gameId=${gameId}`)}`);
         const isCurrencyForm = await page.$$('id=currency')
-        if (isCurrencyForm) {
+        if (isCurrencyForm.length>0) {
             await page.click("text=Submit");
         }
     } else {

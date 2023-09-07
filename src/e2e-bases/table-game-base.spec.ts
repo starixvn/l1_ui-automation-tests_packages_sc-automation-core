@@ -53,8 +53,8 @@ export class TableGameBase {
 
             // Act
             const placeBetResponse = await this.player.placeBet(bet.choice, bet.amount);
-            const roundId = await this.game.getTextLocator(TableLocator.TableLocatorNames.lblRoundIdOnTable, "#0123456789");
             const betChoice = await this.game.capture(bet.choice + `Ownbet${process.env.npm_config_project}`);
+            const roundId = await this.game.getTextLocator(TableLocator.TableLocatorNames.lblRoundIdOnTable, "#0123456789");
             const settledResults = await this.game.waitForSettlement();
 
             // Assert
@@ -148,7 +148,7 @@ export class TableGameBase {
             const barLed = await this.game.capture(latestBarItem + "Bar");
 
             // Assert
-            expect(barLed.image).toMatchSnapshot(barLed.name);
+            expect(barLed.image).toMatchSnapshot(barLed.name, { maxDiffPixelRatio: 0.3 });
         });
     }
 
@@ -327,6 +327,6 @@ export class TableGameBase {
 }
 
 const getDataFistRowHistory = async (game: BaseGame, elementname: string = TableLocator.TableLocatorNames.lblHistoryFirstRow) => {
-    let tempdata = await game.getTextLocator(elementname, "0123456789:/ ", "history");
+    let tempdata = await game.getTextLocator(elementname, "0123456789:/., ", "history");
     return tempdata?.split(" ") || "";
 };

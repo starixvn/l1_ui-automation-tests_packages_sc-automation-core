@@ -40,7 +40,6 @@ export const TableLocators = [
     new ImageLocator(TableLocatorNames.lblRoundIdOnTable, 306, 212, 100, 25),
     new ImageLocator(TableLocatorNames.locHistoryRoundId, 400, 206, 50, 25),
     new ImageLocator(TableLocatorNames.lblHistoryDetailRoundId, 200, 190, 70, 40),
-    new ImageLocator(TableLocatorNames.btnClosePopup, 5, 5, 10, 10),
     new ImageLocator(TableLocatorNames.btnRightArrow, 937, 614, 40, 40),
     new ImageLocator(TableLocatorNames.btnLeftArrow, 332, 614, 40, 40),
 
