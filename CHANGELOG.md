@@ -1,3 +1,10 @@
+## [1.10.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.10.0...v1.10.1) (2023-09-07)
+
+
+### Bug Fixes
+
+* hard sleep wait for open gameguide ([0724cb1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/0724cb190593de828b2120e8683412c3aa423626))
+
 # [1.10.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.9.0...v1.10.0) (2023-09-07)
 
 
