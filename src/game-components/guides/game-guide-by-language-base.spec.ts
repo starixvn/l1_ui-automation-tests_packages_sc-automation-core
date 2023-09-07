@@ -40,10 +40,10 @@ start(): void {
         this.runScenario();
     });}
 
-    protected guideTest(inputLang:string) {
+    protected guideTest(inputLang:string, isTestAllLang:boolean) {
         test("AND player could open guide and clarify appropriate content in " + LobbyLocator[`${inputLang}LangOption`], async () => {
         // Relogin with the next languague
-        if (inputLang != "all" && inputLang != "vn"){  //do test for Vietnamese first so don't need to relogin
+        if (isTestAllLang && inputLang != "vn"){  //do test for Vietnamese first so don't need to relogin
             langPath = inputLang;
             process.env.npm_config_langCode = inputLang;
             await this.game.login();
@@ -68,10 +68,10 @@ start(): void {
         if (langCode === "all") {
             const langCodes = isLocalEnv ? lstLocalLangCode : lstProdLangCode;
             langCodes.forEach(lang => {
-                this.guideTest(lang);
+                this.guideTest(lang, true);
             });
         } else {
-            this.guideTest(langCode);
+            this.guideTest(langCode, false);
         }
     }
 
