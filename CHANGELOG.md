@@ -1,3 +1,22 @@
+# [1.10.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.9.0...v1.10.0) (2023-09-07)
+
+
+### Bug Fixes
+
+* login local VG ([17b7302](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/17b7302288f49593561be1506cb39069fa5952b7))
+* update auth config ([65a862b](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/65a862b7ad9110fe384f553112be85a460a8b731))
+* update game guide base ([22c744e](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/22c744ef59a2cea896a6d50de948d27d93e86b71))
+* update game guide base ([6cfae09](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/6cfae096f5794f2641c32b7b51f5916e88895343))
+* update game guide base ([61fc591](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/61fc59137d854303bf9c97c34da1dbb6d8b64ee7))
+* update game guide base ([4d97f41](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/4d97f41c6d725f2139520cdb79d1b495535cc7b2))
+* update game guide base ([e7110dd](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/e7110dd0ce49ff9e7ba5f93ebc061d881c8d6afb))
+* update game guide base ([e864bed](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/e864bed2d1749a1214cc98eced5f6a0f61c5a07d))
+
+
+### Features
+
+* new game guide test ([5410e83](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/5410e83aaf756ef170ad3df7a64742b933179920))
+
 # [1.9.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.8.5...v1.9.0) (2023-08-31)
 
 
