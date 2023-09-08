@@ -1,5 +1,5 @@
 export default {
-    memberSite: "http://qawer.viva88.com:5171",
+    memberSite: "http://casinoqavm2.viva88.com:6202/",
     lobbyDomain: "#ThirdPartyGame/vid=42&gid=",
     l2memberSite: "http://qasb3.athena000.com:50006/",
     l2lobbyDomain: "#ThirdPartyGame/vid=66&gid=",

@@ -72,7 +72,7 @@ const loginMemberSite = async (
 
     await page.goto(memberSiteLink);
     console.log("Login Member Site: ", memberSiteLink);
-    await page.waitForLoadState("domcontentloaded", { timeout });
+    await page.waitForLoadState("networkidle", { timeout });
 
     switch (env) {
         case Environment.UAT:
@@ -97,7 +97,7 @@ const loginMemberSite = async (
 const selectCurrencyGroup = async (page: Page, timeout: number = 15000) => {
     await page.click(GroupCurrencyLocator.submitButton);
 
-    await page.waitForLoadState("domcontentloaded", { timeout });
+    await page.waitForLoadState("networkidle", { timeout });
 };
 
 const loginUAT = async (page: Page, accountId: string, pwd: string, langCode: string, projectCode: string, timeout: number = 15000) => {
@@ -107,7 +107,7 @@ const loginUAT = async (page: Page, accountId: string, pwd: string, langCode: st
         await page.fill(UATLocator.memberIdInput, accountId);
         await page.fill(UATLocator.pwdInput, pwd);
         await page.click(UATLocator.loginButton);
-        await page.waitForLoadState("domcontentloaded", { timeout });
+        await page.waitForLoadState("networkidle", { timeout });
     } else {
         await page.setViewportSize({
             width: 340,
@@ -117,7 +117,7 @@ const loginUAT = async (page: Page, accountId: string, pwd: string, langCode: st
         await page.fill(PRODLocator.l2memberIdInput, accountId);
         await page.fill(PRODLocator.l2pwdInput, pwd);
         await page.click(PRODLocator.l2loginButton);
-        await page.waitForLoadState("domcontentloaded", { timeout: timeout });
+        await page.waitForLoadState("networkidle", { timeout: timeout });
         const isCloseExist = await page.$$(PRODLocator.l2iconClose);
         if (isCloseExist.length > 0) {
             await page.click(PRODLocator.l2iconClose);
@@ -137,7 +137,7 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
         await page.fill(PRODLocator.memberIdInput, accountId);
         await page.fill(PRODLocator.pwdInput, pwd);
         await page.click(PRODLocator.loginButton);
-        await page.waitForLoadState("domcontentloaded", { timeout: timeout });
+        await page.waitForLoadState("networkidle", { timeout: timeout });
         await page.click(PRODLocator.langDropdown);
         await page.click(PRODLocator[`${langCode}LangOption`]);
     } else {
@@ -148,10 +148,10 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
         await page.fill(PRODLocator.l2memberIdInput, accountId);
         await page.fill(PRODLocator.l2pwdInput, pwd);
         await page.click(PRODLocator.l2loginButton);
-        await page.waitForLoadState("domcontentloaded", { timeout: timeout });
+        await page.waitForLoadState("networkidle", { timeout: timeout });
         await page.waitForTimeout(5000)
         const iconSurvey = await page.$$(PRODLocator.l2iconClose);
-        if (iconSurvey.length) {
+        if (iconSurvey.length>0) {
             await page.click(PRODLocator.l2iconClose)
         }
         await page.setViewportSize({
@@ -165,19 +165,19 @@ const loginSIT = async (page: Page, accountId: string, pwd: string, timeout: num
     await page.fill(SITLocator.memberIdInput, accountId);
     await page.fill(SITLocator.pwdInput, pwd);
     await page.click(SITLocator.loginButton);
-    await page.waitForLoadState("domcontentloaded", { timeout });
+    await page.waitForLoadState("networkidle", { timeout });
     await page.click(SITLocator.langDropdown);
     await page.click(SITLocator.vnLangOption);
 };
 
 const goToGameLobby = async (page: Page, lobbyDomain: string, productId: string, timeout: number = 15000) => {
     await page.goto(formatGameLobbyUrl(page.url(), lobbyDomain, productId));
-    await page.waitForLoadState("domcontentloaded", { timeout });
+    await page.waitForLoadState("networkidle", { timeout });
 };
 
 const formatGameLobbyUrl = (url: string, lobbyDomain: string, productId: string): string => {
     const domain = url.split("/");
-    if (url.includes("athena") || url.includes("qawer")) {
+    if (url.includes("athena") || url.includes("qa")) {
         return `http://${domain[2]}/${lobbyDomain}${productId}`;
     } else return `https://${domain[2]}/${lobbyDomain}${productId}`;
 };

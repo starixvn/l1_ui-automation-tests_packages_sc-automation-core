@@ -285,7 +285,7 @@ export class BaseGame {
 
         if (guideMenu) {
             await guideMenu.click(this.page);
-            await this.page.waitForLoadState("domcontentloaded");
+            await this.page.waitForLoadState("networkidle");
             await this.waitForTimeout(waitTime);
         }
     }

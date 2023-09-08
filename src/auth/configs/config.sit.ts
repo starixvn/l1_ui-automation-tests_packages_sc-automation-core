@@ -1,5 +1,5 @@
 export default {
-    memberSite: `http://demo:one23@qawer.playthefun.com:5068/login`,
+    memberSite: `http://demo:one23@qawer.playthefun.com:5088/login`,
     lobbyDomain: "/VendorGame/OpenSabaClub?GameID=",
     lobbyTimeout: 15000, // 15s
     enabledMsgPack: true,
