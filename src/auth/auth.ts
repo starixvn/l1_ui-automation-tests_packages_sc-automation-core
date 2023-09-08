@@ -97,7 +97,7 @@ const loginMemberSite = async (
 const selectCurrencyGroup = async (page: Page, timeout: number = 15000) => {
     await page.click(GroupCurrencyLocator.submitButton);
 
-    await page.waitForLoadState("networkidle", { timeout });
+    await page.waitForLoadState("domcontentloaded", { timeout });
 };
 
 const loginUAT = async (page: Page, accountId: string, pwd: string, langCode: string, projectCode: string, timeout: number = 15000) => {
