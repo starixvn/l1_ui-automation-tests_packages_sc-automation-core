@@ -1,3 +1,10 @@
+## [1.10.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.10.2...v1.10.3) (2023-09-08)
+
+
+### Bug Fixes
+
+* waitForTimeout with option= networkidle ([6d5398b](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/6d5398b698e3969ab38e6cbc9c32c23463402887))
+
 ## [1.10.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.10.1...v1.10.2) (2023-09-07)
 
 
