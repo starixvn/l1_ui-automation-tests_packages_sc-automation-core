@@ -1,3 +1,10 @@
+## [1.10.4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.10.3...v1.10.4) (2023-09-08)
+
+
+### Bug Fixes
+
+* waitForLoadState ([70977f1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/70977f1a5d2b517ea3bbf60f070b866987116666))
+
 ## [1.10.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.10.2...v1.10.3) (2023-09-08)
 
 
