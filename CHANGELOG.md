@@ -1,3 +1,10 @@
+# [1.11.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.10.4...v1.11.0) (2023-09-14)
+
+
+### Features
+
+* upgrade domain uat VG ([9962e5b](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/9962e5bed933be6f85a8b79c200bc661c3457c33))
+
 ## [1.10.4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.10.3...v1.10.4) (2023-09-08)
 
 
