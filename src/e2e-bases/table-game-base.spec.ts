@@ -1,8 +1,10 @@
-import { test, BasePlayer, BaseGame, GameLobbyLocator, TableLocator } from "../components";
+import { test, BasePlayer, BaseGame } from "../components";
 import { expect } from "../expects";
 import { IBaseOptions } from "./base-options";
 import { GameEvent } from "../_shared";
 import { GameGuides } from "../game-components/guides/guides.spec";
+import { baseLocatorNames } from "../components/base-locator";
+
 const timeout = 4000;
 
 export class TableGameBase {
@@ -17,7 +19,7 @@ export class TableGameBase {
             // Act
             await this.game.waitUntilNextRound();
             await this.game.waitForTimeout(this.options.waitBetTimeout);
-            const dealerSnapshot = await this.game.capture(TableLocator.TableLocatorNames.imgdealer);
+            const dealerSnapshot = await this.game.capture(baseLocatorNames.imgdealer);
             // Assert
             expect(dealerSnapshot.image).toMatchSnapshot(dealerSnapshot.name, { maxDiffPixelRatio: 0.3 });
         });
@@ -37,7 +39,7 @@ export class TableGameBase {
         });
         if (this.options.gameConfiguration.rebet) {
             test("Verify Rebet button is disabled", async () => {
-                const btnrebet = await this.game.capture(TableLocator.TableLocatorNames.btnRebet);
+                const btnrebet = await this.game.capture(baseLocatorNames.btnRebet);
                 // Assert
                 expect(btnrebet.image).toMatchSnapshot(btnrebet.name);
             });
@@ -54,7 +56,7 @@ export class TableGameBase {
             // Act
             const placeBetResponse = await this.player.placeBet(bet.choice, bet.amount);
             const betChoice = await this.game.capture(bet.choice + `Ownbet${process.env.npm_config_project}`);
-            const roundId = await this.game.getTextLocator(TableLocator.TableLocatorNames.lblRoundIdOnTable, "#0123456789");
+            const roundId = await this.game.getTextLocator(baseLocatorNames.lblRoundIdOnTable, "#0123456789");
             const settledResults = await this.game.waitForSettlement();
 
             // Assert
@@ -127,8 +129,8 @@ export class TableGameBase {
 
             // Act 2
             if (indexHistory.isIdLink) {
-                await this.game.clickLocator(TableLocator.TableLocatorNames.locHistoryRoundId, 1500);
-                const roundID = await this.game.getTextLocator(TableLocator.TableLocatorNames.lblHistoryDetailRoundId, "0123456789");
+                await this.game.clickLocator(baseLocatorNames.locHistoryRoundId, 1500);
+                const roundID = await this.game.getTextLocator(baseLocatorNames.lblHistoryDetailRoundId, "0123456789");
                 // Assert 2
                 expect(parseInt(roundID)).toEqual(parseInt(global.settledata.roundId));
             }
@@ -167,7 +169,7 @@ export class TableGameBase {
             let i: number = 0,
                 j: number = 0;
             while (i < 9) {
-                await this.game.clickLocator(TableLocator.TableLocatorNames.btnRightArrow);
+                await this.game.clickLocator(baseLocatorNames.btnRightArrow);
                 i++;
             }
 
@@ -180,7 +182,7 @@ export class TableGameBase {
             }
             // post Act
             while (j < 9) {
-                await this.game.clickLocator(TableLocator.TableLocatorNames.btnLeftArrow);
+                await this.game.clickLocator(baseLocatorNames.btnLeftArrow);
                 j++;
             }
         });
@@ -206,7 +208,7 @@ export class TableGameBase {
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             const bet = { choice: this.options.placeBetChoices[1], amount: this.options.placeBetAmount ?? 1 };
             await this.game.waitUntilPlaceBet();
-            await this.game.clickLocator(TableLocator.TableLocatorNames.btnRebet);
+            await this.game.clickLocator(baseLocatorNames.btnRebet);
 
             // Act
             const settledResults = await this.game.waitForSettlement();
@@ -262,9 +264,9 @@ export class TableGameBase {
         test("Verify player redirect to gamelooby after clicking home icon", async () => {
             // Act 1
             await this.game.waitForTimeout(2000);
-            await this.game.clickHome(timeout / 2, TableLocator.TableLocatorNames.btnHome);
+            await this.game.clickHome(timeout / 2, baseLocatorNames.btnHome);
             await this.game.waitUntilGameLobbyUiLoad();
-            const gamelobby = await this.game.capture(GameLobbyLocator.GameLobbyLocatorNames.imgGameLobby);
+            const gamelobby = await this.game.capture(baseLocatorNames.imgGameLobby);
             expect(gamelobby.image).toMatchSnapshot(gamelobby.name);
         });
     }
@@ -279,7 +281,7 @@ export class TableGameBase {
             await this.game.clickLocator(gameNavigate[0], timeout);
             await this.game.clickLocator(gameNavigate[1], timeout * 2);
 
-            const dealerSnapshot = await this.game.capture(TableLocator.TableLocatorNames.imgdealer);
+            const dealerSnapshot = await this.game.capture(baseLocatorNames.imgdealer);
             // Assert
             expect(dealerSnapshot.image).toMatchSnapshot(dealerSnapshot.name);
         });
@@ -326,7 +328,7 @@ export class TableGameBase {
     }
 }
 
-const getDataFistRowHistory = async (game: BaseGame, elementname: string = TableLocator.TableLocatorNames.lblHistoryFirstRow) => {
+const getDataFistRowHistory = async (game: BaseGame, elementname: string = baseLocatorNames.lblHistoryFirstRow) => {
     let tempdata = await game.getTextLocator(elementname, "0123456789:/., ", "history");
     return tempdata?.split(" ") || "";
 };

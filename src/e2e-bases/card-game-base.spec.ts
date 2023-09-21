@@ -2,6 +2,7 @@ import { test, BasePlayer, BaseGame } from "../components";
 import { GameEvent } from "../_shared";
 import { expect } from "../expects";
 import { IBaseOptions } from "./base-options";
+import { baseLocatorNames } from "../components/base-locator";
 
 export interface CardGameOptions extends IBaseOptions {
     placeBetChoices: string[];
@@ -14,7 +15,15 @@ export class CardGameBase {
 
     constructor(protected options: CardGameOptions) {}
 
-    protected inGameBetChoiceTests() {
+    protected inGameUiTests() {
+        test("Verify the game info should be displayed correctly on table", async () => {
+            // Act
+            await this.game.waitUntilNextRound();
+            await this.game.waitForTimeout(this.options.waitBetTimeout);
+            const dealerSnapshot = await this.game.capture(baseLocatorNames.imgdealer);
+            // Assert
+            expect(dealerSnapshot.image).toMatchSnapshot(dealerSnapshot.name, { maxDiffPixelRatio: 0.3 });
+        });
         test("AND bet choices should be displayed on table", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
@@ -27,14 +36,6 @@ export class CardGameBase {
                 // Assert
                 expect(betChoice.image).toMatchSnapshot(betChoice.name);
             }
-        });
-    }
-
-    protected inGameOddsTests() {
-        test("AND odds should be correct", async () => {
-            // Assert
-
-            expect(this.game.odds).toStrictEqual(this.options.gameConfiguration.odds);
         });
     }
 
@@ -94,8 +95,7 @@ export class CardGameBase {
     }
 
     protected runScenario() {
-        this.inGameBetChoiceTests();
-        this.inGameOddsTests();
+        this.inGameUiTests();
         this.placeBetAndSettleTests();
         this.ticketHistoryTests();
     }

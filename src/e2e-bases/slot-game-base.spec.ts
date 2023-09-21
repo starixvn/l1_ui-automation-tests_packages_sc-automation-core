@@ -2,7 +2,7 @@ import { GameEvent } from "../_shared";
 import { test, BasePlayer, BaseGame } from "../components";
 import { expect } from "../expects";
 import { IBaseOptions } from "./base-options";
-import { CSLocatorNames } from "../components/base-classic-slot-locator";
+import { baseLocatorNames } from "../components/base-locator";
 import { GameGuides } from "../game-components/guides/guides.spec";
 import { BetHistory } from "../game-components/history/history.spec";
 
@@ -34,7 +34,7 @@ export class SlotGameBase {
             //Act
             let gamename;
             await test.step(`Capture game name`, async () => {
-                gamename = await this.game.capture(CSLocatorNames.imgGameName);
+                gamename = await this.game.capture(baseLocatorNames.imgGameName);
             });
 
             //Assert
@@ -47,7 +47,7 @@ export class SlotGameBase {
             //Act
             const boardID = await getBoardID();
             await test.step(`Click on symbol`, async () => {
-                await this.game.clickLocator(CSLocatorNames.btnSymbol, 2000);
+                await this.game.clickLocator(baseLocatorNames.btnSymbol, 2000);
             });
             let imgBoardId = await this.game.capture(`img${boardID}`);
             if (process.env.npm_config_jackpot) {
@@ -72,7 +72,7 @@ export class SlotGameBase {
             //Act
             let defaultRoundID;
             await test.step(`Capture round ID`, async () => {
-                defaultRoundID = await this.game.capture(CSLocatorNames.lblRoundID);
+                defaultRoundID = await this.game.capture(baseLocatorNames.lblRoundID);
             });
 
             //Assert
@@ -84,14 +84,14 @@ export class SlotGameBase {
         test("Verify payline number in right & left column", async () => {
             await test.step("Capture left payline column and compare with snapshot", async () => {
                 //Act
-                const imgLeftNumbersColumn = await this.game.capture(CSLocatorNames.imgLeftNumbersColumn);
+                const imgLeftNumbersColumn = await this.game.capture(baseLocatorNames.imgLeftNumbersColumn);
 
                 //Assert
                 expect(imgLeftNumbersColumn.image).toMatchSnapshot(imgLeftNumbersColumn.name);
             });
             await test.step("Capture right payline column and compare with snapshot", async () => {
                 //Act
-                const imgRightNumbersColumn = await this.game.capture(CSLocatorNames.imgRightNumbersColumn);
+                const imgRightNumbersColumn = await this.game.capture(baseLocatorNames.imgRightNumbersColumn);
 
                 //Assert
                 expect(imgRightNumbersColumn.image).toMatchSnapshot(imgRightNumbersColumn.name);
@@ -104,7 +104,7 @@ export class SlotGameBase {
             //Act
             let btnPayline;
             await test.step(`Capture default paylines`, async () => {
-                btnPayline = await this.game.capture(CSLocatorNames.btnPayline);
+                btnPayline = await this.game.capture(baseLocatorNames.btnPayline);
             });
 
             //Assert
@@ -139,11 +139,11 @@ export class SlotGameBase {
         test("Verify submit bet button is disabled when no choice is selected", async () => {
             // Act
             await test.step(`Click button clear payline`, async () => {
-                await this.game.clickLocator(CSLocatorNames.btnClearPayline, timeout);
+                await this.game.clickLocator(baseLocatorNames.btnClearPayline, timeout);
             });
             let imgConfirmPaylineDisabled;
             await test.step(`Captrue confirm payline button`, async () => {
-                imgConfirmPaylineDisabled = await this.game.capture(CSLocatorNames.imgConfirmPaylineDisabled);
+                imgConfirmPaylineDisabled = await this.game.capture(baseLocatorNames.imgConfirmPaylineDisabled);
             });
 
             //Assert
@@ -163,7 +163,7 @@ export class SlotGameBase {
             // Act
             let cboBetLevel;
             await test.step(`Capture bet level`, async () => {
-                cboBetLevel = await this.game.capture(CSLocatorNames.cboBetLevel);
+                cboBetLevel = await this.game.capture(baseLocatorNames.cboBetLevel);
             });
 
             //Assert
@@ -212,7 +212,7 @@ export class SlotGameBase {
             // Act
             let popAutoSpin;
             await test.step(`Capture default autospin popup`, async () => {
-                popAutoSpin = await this.game.capture(CSLocatorNames.popAutoSpin);
+                popAutoSpin = await this.game.capture(baseLocatorNames.popAutoSpin);
             });
 
             //Assert
@@ -230,12 +230,12 @@ export class SlotGameBase {
             let settledResultsAutoSpin: Array<string> = [];
             const totalAutoSpin = 10;
 
-            const bet = { choice: `btn${this.options.placeBetChoices[0]}`, amount: CSLocatorNames.lblBetLevel0_1 };
+            const bet = { choice: `btn${this.options.placeBetChoices[0]}`, amount: baseLocatorNames.lblBetLevel0_1 };
             await test.step(`Click turbo button`, async () => {
                 await clickTurbo(this.game);
             });
             await test.step(`Select payline`, async () => {
-                await this.player.selectPayline(CSLocatorNames.btnPayline1);
+                await this.player.selectPayline(baseLocatorNames.btnPayline1);
                 await this.game.waitForTimeout(timeout);
             });
 
@@ -278,7 +278,7 @@ export class SlotGameBase {
                     settledResultsAutoSpin.push(settledResults.winAmount);
                 }
 
-                await this.game.clickLocator(CSLocatorNames.btnAutoSpin); //stop autospin
+                await this.game.clickLocator(baseLocatorNames.btnAutoSpin); //stop autospin
             });
 
             //Assert
@@ -299,7 +299,7 @@ export class SlotGameBase {
             // Verify default turbo off state
             let turboOff;
             await test.step(`Capture default turbo mode`, async () => {
-                turboOff = await this.game.captureLocator(CSLocatorNames.imgTurboOFF);
+                turboOff = await this.game.captureLocator(baseLocatorNames.imgTurboOFF);
             });
 
             // Assert Turbo Off
@@ -315,7 +315,7 @@ export class SlotGameBase {
             });
             let turboOn;
             await test.step(`Capture turbo button on`, async () => {
-                turboOn = await this.game.captureLocator(CSLocatorNames.imgTurboOn);
+                turboOn = await this.game.captureLocator(baseLocatorNames.imgTurboOn);
             });
 
             // Assert turbo On
@@ -332,7 +332,7 @@ export class SlotGameBase {
 
             let imgTurboOFF;
             await test.step(`Capture turbo off`, async () => {
-                imgTurboOFF = await this.game.capture(CSLocatorNames.imgTurboOFF);
+                imgTurboOFF = await this.game.capture(baseLocatorNames.imgTurboOFF);
             });
 
             //Assert
@@ -351,8 +351,8 @@ export class SlotGameBase {
             const bet = { choice: `btn${this.options.placeBetChoices[0]}`, amount: this.options.placeBetAmount ?? 1 };
             await test.step(`Select payline and bet stake`, async () => {
                 await this.game.clickOutSide();
-                await this.player.selectPayline(CSLocatorNames.btnPayline1);
-                await this.player.selectBetStake(CSLocatorNames[`lblBetLevel${bet.amount}`]);
+                await this.player.selectPayline(baseLocatorNames.btnPayline1);
+                await this.player.selectBetStake(baseLocatorNames[`lblBetLevel${bet.amount}`]);
                 await this.game.waitForTimeout(timeout);
             });
 
@@ -442,7 +442,7 @@ export class SlotGameBase {
             // Act
             let placeBetResponse, settledResults;
             await test.step(`Place bet`, async () => {
-                placeBetResponse = await this.player.placeBetClassicSlot(bet.choice, CSLocatorNames.lblBetLevel1);
+                placeBetResponse = await this.player.placeBetClassicSlot(bet.choice, baseLocatorNames.lblBetLevel1);
             });
 
             await test.step(`Wait for settlement`, async () => {
@@ -512,30 +512,30 @@ export class SlotGameBase {
 
 const openAutoSpinBoard = async (game: BaseGame) => {
     await game.clickOutSide();
-    await game.clickLocator(CSLocatorNames.btnAutoSpin);
+    await game.clickLocator(baseLocatorNames.btnAutoSpin);
 };
 
 const selectAutoSpin = async (game: BaseGame, totalspin: number) => {
-    await game.clickLocator(CSLocatorNames.btnAutoSpin, 1500);
-    await game.clickLocator(CSLocatorNames[`btnAutoSpin${totalspin}`]);
-    await game.clickLocator(CSLocatorNames.btnAutoSpinStart, 100);
+    await game.clickLocator(baseLocatorNames.btnAutoSpin, 1500);
+    await game.clickLocator(baseLocatorNames[`btnAutoSpin${totalspin}`]);
+    await game.clickLocator(baseLocatorNames.btnAutoSpinStart, 100);
 };
 
 const openPayLineBoard = async (game: BaseGame) => {
-    await game.clickLocator(CSLocatorNames.btnPayline, 1000);
+    await game.clickLocator(baseLocatorNames.btnPayline, 1000);
 };
 
 const selectBetChoice = async (game: BaseGame, choice: string) => {
-    await game.clickLocator(CSLocatorNames.btnClearPayline, 1000);
+    await game.clickLocator(baseLocatorNames.btnClearPayline, 1000);
     await game.clickLocator(choice);
 };
 
 const closePayLineBoard = async (game: BaseGame) => {
-    await game.clickLocator(CSLocatorNames.btnClosePopup, 1000);
+    await game.clickLocator(baseLocatorNames.btnClosePopup, 1000);
 };
 
 const clickTurbo = async (game: BaseGame) => {
-    await game.clickLocator(CSLocatorNames.btnTurbo);
+    await game.clickLocator(baseLocatorNames.btnTurbo);
 };
 
 export interface Expectdata {

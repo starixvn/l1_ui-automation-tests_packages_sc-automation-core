@@ -5,7 +5,7 @@ import { ssoToGame, getConfig } from "./../auth/auth";
 import { ImageLocator, ImageSnapshot } from "./base-image-locator";
 import { GameConfiguration } from "./game-configuration";
 import { createWorker } from "tesseract.js";
-import { CSLocatorNames } from "../components";
+import { baseLocatorNames } from "./base-locator";
 
 export class BaseGame {
     readonly BetBoardPostfix: string = "BetBoard";
@@ -232,8 +232,8 @@ export class BaseGame {
     }
 
     async clickHistory(waitTime: number = 500): Promise<void> {
-        const hamburgerMenu = this.locator("hamburgerMenu") || this.locator(CSLocatorNames.mnuHamburger);
-        const historyMenu = this.locator("historyMenu") || this.locator(CSLocatorNames.icoHistory);
+        const hamburgerMenu = this.locator("hamburgerMenu") || this.locator(baseLocatorNames.mnuHamburger);
+        const historyMenu = this.locator("historyMenu") || this.locator(baseLocatorNames.icoHistory);
 
         if (hamburgerMenu) {
             await hamburgerMenu.click(this.page);
@@ -246,8 +246,8 @@ export class BaseGame {
     }
 
     async clickJackpot(waitTime: number = 500): Promise<void> {
-        const hamburgerMenu = this.locator("hamburgerMenu") || this.locator(CSLocatorNames.mnuHamburger);
-        const jackpotMenu = this.locator("jackpotMenu") ||this.locator(CSLocatorNames.icoJackpot);
+        const hamburgerMenu = this.locator("hamburgerMenu") || this.locator(baseLocatorNames.mnuHamburger);
+        const jackpotMenu = this.locator("jackpotMenu") ||this.locator(baseLocatorNames.icoJackpot);
 
         if (hamburgerMenu) {
             await hamburgerMenu.click(this.page);
@@ -260,7 +260,7 @@ export class BaseGame {
     }
 
     async clickHome(waitTime: number = 1000, btnhome: string): Promise<void> {
-        const hamburgerMenu = this.locator("hamburgerMenu") || this.locator(CSLocatorNames.mnuHamburger);
+        const hamburgerMenu = this.locator("hamburgerMenu") || this.locator(baseLocatorNames.mnuHamburger);
         const btnHome = this.locator("btnHome") || this.locator(btnhome);
 
         if (hamburgerMenu) {
@@ -273,10 +273,10 @@ export class BaseGame {
     }
 
     async clickGuide(waitTime: number = 500, isJP: boolean = false): Promise<void> {
-        const hamburgerMenu = this.locator("hamburgerMenu") || this.locator(CSLocatorNames.mnuHamburger);
-        let guideMenu = this.locator("guideMenu") || this.locator(CSLocatorNames.icoGuide);
+        const hamburgerMenu = this.locator("hamburgerMenu") || this.locator(baseLocatorNames.mnuHamburger);
+        let guideMenu = this.locator("guideMenu") || this.locator(baseLocatorNames.icoGuide);
         if (isJP) {
-            guideMenu = this.locator(CSLocatorNames.icoGuideJP);
+            guideMenu = this.locator(baseLocatorNames.icoGuideJP);
         }
         if (hamburgerMenu) {
             await hamburgerMenu.click(this.page);
@@ -322,7 +322,7 @@ export class BaseGame {
         await this.waitForTimeout(500);
 
         let submitButton = this.locator(`submit${this.BetBoardPostfix}`);
-        let spinButton = this.locator("spin") || this.locator(CSLocatorNames.btnSpin);
+        let spinButton = this.locator("spin") || this.locator(baseLocatorNames.btnSpin);
 
         if (submitButton) {
             await submitButton.click(this.page);
@@ -334,7 +334,7 @@ export class BaseGame {
     }
 
     async clickOutSide(timeout = 500): Promise<void> {
-        const locator = this.locator("outside") || this.locator(CSLocatorNames.btnClosePopup);
+        const locator = this.locator("outside") || this.locator(baseLocatorNames.btnClosePopup);
         if (locator) {
             await locator.click(this.page);
         }
