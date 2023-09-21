@@ -72,7 +72,7 @@ const loginMemberSite = async (
 
     await page.goto(memberSiteLink);
     console.log("Login Member Site: ", memberSiteLink);
-    await page.waitForLoadState("networkidle", { timeout });
+    await page.waitForLoadState("domcontentloaded", { timeout });
 
     switch (env) {
         case Environment.UAT:
