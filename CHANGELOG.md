@@ -1,3 +1,16 @@
+# [1.12.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.11.0...v1.12.0) (2023-09-21)
+
+
+### Bug Fixes
+
+* auth uat ([5578070](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/5578070caa4eb7dfd0d61dfe049f5af965f9b604))
+* update locator name ([3367920](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/336792034bb7bcf7af0e6fe9fe0ad422e6ff6f22))
+
+
+### Features
+
+* combine base locator ([4bb5afc](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/4bb5afc21d7467898c31a9d1651e3f45e75bd464))
+
 # [1.11.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.10.4...v1.11.0) (2023-09-14)
 
 
