@@ -5,7 +5,7 @@ import { ssoToGame, getConfig } from "./../auth/auth";
 import { ImageLocator, ImageSnapshot } from "./base-image-locator";
 import { GameConfiguration } from "./game-configuration";
 import { createWorker } from "tesseract.js";
-import { baseLocatorNames } from "./base-locator";
+import { baseLocatorNames } from "./base-game-locator";
 
 export class BaseGame {
     readonly BetBoardPostfix: string = "BetBoard";
@@ -247,7 +247,7 @@ export class BaseGame {
 
     async clickJackpot(waitTime: number = 500): Promise<void> {
         const hamburgerMenu = this.locator("hamburgerMenu") || this.locator(baseLocatorNames.mnuHamburger);
-        const jackpotMenu = this.locator("jackpotMenu") ||this.locator(baseLocatorNames.icoJackpot);
+        const jackpotMenu = this.locator("jackpotMenu") || this.locator(baseLocatorNames.icoJackpot);
 
         if (hamburgerMenu) {
             await hamburgerMenu.click(this.page);

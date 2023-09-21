@@ -2,10 +2,9 @@ import { GameEvent } from "../_shared";
 import { test, BasePlayer, BaseGame } from "../components";
 import { expect } from "../expects";
 import { IBaseOptions } from "./base-options";
-import { baseLocatorNames } from "../components/base-locator";
+import { baseLocatorNames } from "../components/base-game-locator";
 import { GameGuides } from "../game-components/guides/guides.spec";
 import { BetHistory } from "../game-components/history/history.spec";
-
 
 export interface SlotGameOptions extends IBaseOptions {
     placeBetChoices: string[];
@@ -35,44 +34,41 @@ export class CascadingSlotGameBase {
             await test.step("Capture game name and compare with snapshot", async () => {
                 const gamename = await this.game.capture(baseLocatorNames.imgGameName);
 
-             //Assert
+                //Assert
                 expect(gamename.image).toMatchSnapshot(gamename.name);
             });
         });
-        
 
         test("Verify symbols board in first load game and odds popup", async () => {
             //Act
-            let boardID; 
-            await test.step("Get first board id", async() => {
+            let boardID;
+            await test.step("Get first board id", async () => {
                 boardID = await getBoardID();
             });
-            await test.step("Click on symbol to show odds popup", async() => {
-                await this.game.clickLocator(baseLocatorNames.btnSymbol,2000);
-
+            await test.step("Click on symbol to show odds popup", async () => {
+                await this.game.clickLocator(baseLocatorNames.btnSymbol, 2000);
             });
             //Assert
-            await test.step("Capture board and compare with snapshot", async() => {
+            await test.step("Capture board and compare with snapshot", async () => {
                 const imgBoardId = await this.game.capture(`img${boardID}`);
                 expect(imgBoardId.image).toMatchSnapshot(imgBoardId.name);
             });
-
         });
 
         test("Verify roundID is null in first load game", async () => {
             //Act
-            await test.step("Capture Round ID at the first load and compare with snapshot", async() => {
-                const defaultRoundID =  await this.game.capture(baseLocatorNames.lblRoundID);
-            //Assert
-                expect(defaultRoundID.image).toMatchSnapshot(defaultRoundID.name, {maxDiffPixelRatio : 0});
+            await test.step("Capture Round ID at the first load and compare with snapshot", async () => {
+                const defaultRoundID = await this.game.capture(baseLocatorNames.lblRoundID);
+                //Assert
+                expect(defaultRoundID.image).toMatchSnapshot(defaultRoundID.name, { maxDiffPixelRatio: 0 });
             });
         });
 
         test("Verify bottom area", async () => {
             //Act
-            await test.step("Capture bottom area at the first load and compare with snapshot", async() => {
-                const imgBottomArea =  await this.game.capture(baseLocatorNames.imgBottomArea);
-            //Assert
+            await test.step("Capture bottom area at the first load and compare with snapshot", async () => {
+                const imgBottomArea = await this.game.capture(baseLocatorNames.imgBottomArea);
+                //Assert
                 expect(imgBottomArea.image).toMatchSnapshot(imgBottomArea.name);
             });
         });
@@ -81,7 +77,7 @@ export class CascadingSlotGameBase {
             //Act
             await test.step("Capture tumble win list at the first load and compare with snapshot", async () => {
                 const defaultTumbleWinList = await this.game.capture(baseLocatorNames.lblTumbleWinList);
-            //Assert
+                //Assert
                 expect(defaultTumbleWinList.image).toMatchSnapshot(defaultTumbleWinList.name);
             });
         });
@@ -93,7 +89,7 @@ export class CascadingSlotGameBase {
             });
             await test.step("Capture expand hamburger menu and compare with the snapshot", async () => {
                 const mnuHamburgerExpandSoundOn = await this.game.capture(baseLocatorNames.mnuHamburgerExpandSoundOn);
-            //Assert
+                //Assert
                 expect(mnuHamburgerExpandSoundOn.image).toMatchSnapshot(mnuHamburgerExpandSoundOn.name);
             });
             //Post-Act
@@ -117,14 +113,12 @@ export class CascadingSlotGameBase {
                 const mnuHamburgerExpandSoundOff = await this.game.capture(baseLocatorNames.mnuHamburgerExpandSoundOff);
                 //Assert
                 expect(mnuHamburgerExpandSoundOff.image).toMatchSnapshot(mnuHamburgerExpandSoundOff.name);
-
             });
             //Post-Act
             await test.step("Click outside to close the menu", async () => {
                 await this.game.clickOutSide();
             });
         });
-
     }
 
     protected turboTests() {
@@ -133,7 +127,7 @@ export class CascadingSlotGameBase {
             await test.step("Capture default turbo button and compare with snapshot", async () => {
                 const turboDefault = await this.game.captureLocator(baseLocatorNames.imgTurboDefault);
 
-            // Assert
+                // Assert
                 expect(turboDefault.image).toMatchSnapshot(turboDefault.name);
             });
         });
@@ -169,21 +163,21 @@ export class CascadingSlotGameBase {
             await test.step("Attach web socket and capture event", async () => {
                 this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
             });
-            const bet = { choice: this.game.gameConfiguration.choices[0], amount:this.options.placeBetAmount??1 };
+            const bet = { choice: this.game.gameConfiguration.choices[0], amount: this.options.placeBetAmount ?? 1 };
             //Act
             await test.step("Press space", async () => {
                 await this.game.keyboardPress("Space");
             });
             // Assert
             await test.step("Wait for end bet and compare bet amount", async () => {
-                const placeBetResponse = await this.game.waitForEndBet()
+                const placeBetResponse = await this.game.waitForEndBet();
                 expect(placeBetResponse.endBet).toBe(bet.amount * parseFloat(bet.choice));
             });
             await test.step("Wait for animation", async () => {
                 await waitForTumbling(this.game);
             });
             await test.step("Click outside to close big win popup", async () => {
-                await this.game. clickOutSide(2500); //Click outside to close big win popup
+                await this.game.clickOutSide(2500); //Click outside to close big win popup
             });
         });
 
@@ -192,21 +186,21 @@ export class CascadingSlotGameBase {
             await test.step("Attach web socket and capture event", async () => {
                 this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
             });
-            const bet = { choice: this.game.gameConfiguration.choices[0], amount:this.options.placeBetAmount??1 };
+            const bet = { choice: this.game.gameConfiguration.choices[0], amount: this.options.placeBetAmount ?? 1 };
             //Act
             await test.step("Press Enter", async () => {
                 await this.game.keyboardPress("Enter");
             });
             // Assert
             await test.step("Wait for end bet and compare bet amount", async () => {
-                const placeBetResponse = await this.game.waitForEndBet()
+                const placeBetResponse = await this.game.waitForEndBet();
                 expect(placeBetResponse.endBet).toBe(bet.amount * parseFloat(bet.choice));
             });
             await test.step("Wait for animation", async () => {
                 await waitForTumbling(this.game);
             });
             await test.step("Click outside to close big win popup", async () => {
-                await this.game. clickOutSide(2500); //Click outside to close big win popup
+                await this.game.clickOutSide(2500); //Click outside to close big win popup
             });
         });
 
@@ -215,7 +209,7 @@ export class CascadingSlotGameBase {
             await test.step("Attach web socket and capture event", async () => {
                 this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
             });
-            const bet = { choice: this.game.gameConfiguration.choices[0], amount:this.options.placeBetAmount??1 };
+            const bet = { choice: this.game.gameConfiguration.choices[0], amount: this.options.placeBetAmount ?? 1 };
             //Act
             await test.step("Click Turbo button", async () => {
                 await clickTurbo(this.game);
@@ -226,68 +220,65 @@ export class CascadingSlotGameBase {
             });
             // Assert
             await test.step("Wait for end bet and compare bet amount", async () => {
-                const placeBetResponse = await this.game.waitForEndBet()
+                const placeBetResponse = await this.game.waitForEndBet();
                 expect(placeBetResponse.endBet).toBe(bet.amount * parseFloat(bet.choice));
             });
 
             await test.step("Wait for animation", async () => {
                 await waitForTumbling(this.game);
             });
-            
+
             await test.step("Click outside to close big win popup", async () => {
-                await this.game. clickOutSide(2500); //Click outside to close big win popup
+                await this.game.clickOutSide(2500); //Click outside to close big win popup
             });
         });
 
         test("Verify user able spin by enter key with turbo mode ON", async () => {
-           //Arrange
+            //Arrange
             await test.step("Attach web socket and capture event", async () => {
                 this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
             });
-        const bet = { choice: this.game.gameConfiguration.choices[0], amount:this.options.placeBetAmount??1 };
+            const bet = { choice: this.game.gameConfiguration.choices[0], amount: this.options.placeBetAmount ?? 1 };
             //Act
             await test.step("Press space", async () => {
                 await this.game.keyboardPress("Space");
             });
             // Assert
             await test.step("Wait for end bet and compare bet amount", async () => {
-                const placeBetResponse = await this.game.waitForEndBet()
+                const placeBetResponse = await this.game.waitForEndBet();
                 expect(placeBetResponse.endBet).toBe(bet.amount * parseFloat(bet.choice));
             });
             await test.step("Wait for animation", async () => {
                 await waitForTumbling(this.game);
             });
             await test.step("Click outside to close big win popup", async () => {
-                await this.game. clickOutSide(2500); //Click outside to close big win popup
+                await this.game.clickOutSide(2500); //Click outside to close big win popup
             });
             await test.step("Click Turbo button", async () => {
-                await clickTurbo(this.game) //turn off turbo
+                await clickTurbo(this.game); //turn off turbo
             });
         });
     }
 
-    protected betControlTests(projectCode= "l1") {
+    protected betControlTests(projectCode = "l1") {
         test("Verify default value of total stake", async () => {
             //Act
             await test.step("Click on total stake", async () => {
                 await this.game.clickLocator(baseLocatorNames.btnTotalStake);
-
             });
             //Assert
             await test.step("Capture bet control popup and compare with snapshot", async () => {
                 const popBetControl = await this.game.capture(`popBetControl${projectCode}`);
                 expect(popBetControl.image).toMatchSnapshot(popBetControl.name);
             });
-            
         });
 
         test("Verify increase bet level to the max value", async () => {
             //Act
             await test.step("Click on bet level increase button multiple times", async () => {
                 for (let i = 0; i < 5; i++) {
-                    await this.game.clickLocator(baseLocatorNames.btnBetLevelIncrease)
+                    await this.game.clickLocator(baseLocatorNames.btnBetLevelIncrease);
                 }
-
             });
             //Assert
             await test.step("Capture bet control popup and compare with snapshot", async () => {
@@ -300,7 +291,7 @@ export class CascadingSlotGameBase {
             //Act
             await test.step("Click on coin value increase button multiple times", async () => {
                 for (let i = 0; i < 4; i++) {
-                    await this.game.clickLocator(baseLocatorNames.btnCoinValueIncrease)
+                    await this.game.clickLocator(baseLocatorNames.btnCoinValueIncrease);
                 }
             });
             //Assert
@@ -310,12 +301,11 @@ export class CascadingSlotGameBase {
             });
         });
 
-
         test("Verify decrease bet level to the min value", async () => {
             //Act
             await test.step("Click on bet level decrease button multiple times", async () => {
                 for (let i = 0; i < 9; i++) {
-                    await this.game.clickLocator(baseLocatorNames.btnBetLevelDecrease)
+                    await this.game.clickLocator(baseLocatorNames.btnBetLevelDecrease);
                 }
             });
             //Assert
@@ -329,7 +319,7 @@ export class CascadingSlotGameBase {
             //Act
             await test.step("Click on coin value decrease button multiple times", async () => {
                 for (let i = 0; i < 4; i++) {
-                    await this.game.clickLocator(baseLocatorNames.btnCoinValueDecrease)
+                    await this.game.clickLocator(baseLocatorNames.btnCoinValueDecrease);
                 }
             });
 
@@ -344,9 +334,7 @@ export class CascadingSlotGameBase {
                 await this.game.clickOutSide(2000);
             });
         });
-
     }
-
 
     protected autoSpinTests() {
         test("Verify default UI of AutoSpin popup", async () => {
@@ -371,7 +359,7 @@ export class CascadingSlotGameBase {
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             // Arrange
             await test.step("Click on turbo button", async () => {
-                await clickTurbo(this.game)
+                await clickTurbo(this.game);
             });
 
             await test.step("Open auto spin popup ", async () => {
@@ -405,17 +393,17 @@ export class CascadingSlotGameBase {
                 for (let index = 1; index <= totalAutoSpin; index++) {
                     const settledResults = await waitForSettlementCascadingSlot(this.game);
                     settledResultsAutoSpin.push(settledResults.winAmount);
-                    if(index == totalAutoSpin){
-                        await this.game.waitForTimeout((settledResults.tumble + 1)*5000); //wait for tumbling of the last spin
+                    if (index == totalAutoSpin) {
+                        await this.game.waitForTimeout((settledResults.tumble + 1) * 5000); //wait for tumbling of the last spin
                     }
                 }
             });
             await test.step("Verify total of spins", async () => {
-                expect(settledResultsAutoSpin.length >= 10).toBe(true);            
+                expect(settledResultsAutoSpin.length >= 10).toBe(true);
             });
             //Post-Act
             await test.step("Click outside to close big win popup", async () => {
-                await this.game.clickOutSide(2000);//close big win popup
+                await this.game.clickOutSide(2000); //close big win popup
             });
             await test.step("Click out side to close auto spin popup", async () => {
                 await this.game.clickOutSide(1000); //click outside to close auto spin popup
@@ -434,7 +422,7 @@ export class CascadingSlotGameBase {
                 for (let index = 1; index <= totalAutoSpin - 5; index++) {
                     const settledResults = await waitForSettlementCascadingSlot(this.game);
                     settledResultsAutoSpin.push(settledResults.winAmount);
-                    if(index == totalAutoSpin - 5){
+                    if (index == totalAutoSpin - 5) {
                         tumbleOfTheLastSpin = settledResults.tumble;
                     }
                 }
@@ -447,9 +435,9 @@ export class CascadingSlotGameBase {
             });
 
             await test.step("Wait for animation", async () => {
-                await this.game.waitForTimeout((tumbleOfTheLastSpin + 1)*4000 ); //handle cases free spin or bonus
+                await this.game.waitForTimeout((tumbleOfTheLastSpin + 1) * 4000); //handle cases free spin or bonus
             });
-            
+
             await test.step("Click outside to close big win popup", async () => {
                 await this.game.clickOutSide(2500);
             });
@@ -460,24 +448,23 @@ export class CascadingSlotGameBase {
         test("Verify default bottom area of trial mode", async () => {
             //Act
             await test.step("Click trial mode button", async () => {
-                await this.game.clickLocator(baseLocatorNames.btnTrialMode)
+                await this.game.clickLocator(baseLocatorNames.btnTrialMode);
             });
 
             //Assert
             await test.step("Capture bottom area and compare with snapshot", async () => {
                 const imgBottomAreaTrialMode = await this.game.capture(baseLocatorNames.imgBottomAreaTrialMode);
-                expect(imgBottomAreaTrialMode.image).toMatchSnapshot(imgBottomAreaTrialMode.name, {maxDiffPixelRatio : 0});
+                expect(imgBottomAreaTrialMode.image).toMatchSnapshot(imgBottomAreaTrialMode.name, { maxDiffPixelRatio: 0 });
             });
         });
 
         test("Verify turbo button of trial mode is disabled", async () => {
-
             await test.step("Capture turbo mode button and compare with snapshot", async () => {
                 //Act
                 const imgTurboTrial = await this.game.capture(baseLocatorNames.imgTurboTrial);
 
                 //Assert
-                expect(imgTurboTrial.image).toMatchSnapshot(imgTurboTrial.name, {maxDiffPixelRatio : 0});
+                expect(imgTurboTrial.image).toMatchSnapshot(imgTurboTrial.name, { maxDiffPixelRatio: 0 });
             });
         });
 
@@ -490,12 +477,12 @@ export class CascadingSlotGameBase {
             //Assert
             await test.step("Capture hamburger menu and compare with snapshot", async () => {
                 const mnuHamburgerExpandTrialMode = await this.game.capture(baseLocatorNames.mnuHamburgerExpandTrialMode);
-                expect(mnuHamburgerExpandTrialMode.image).toMatchSnapshot(mnuHamburgerExpandTrialMode.name, {maxDiffPixelRatio:0});
+                expect(mnuHamburgerExpandTrialMode.image).toMatchSnapshot(mnuHamburgerExpandTrialMode.name, { maxDiffPixelRatio: 0 });
             });
-            
+
             //Post-Act
             await test.step("Click outside to close the menu", async () => {
-                await this.game.clickOutSide(500) // close popup
+                await this.game.clickOutSide(500); // close popup
             });
         });
 
@@ -504,7 +491,7 @@ export class CascadingSlotGameBase {
             await test.step("Click on hamburger menu", async () => {
                 await this.game.clickLocator(baseLocatorNames.mnuHamburger);
             });
-            
+
             await test.step("Click on game guide icon", async () => {
                 await this.game.clickLocator(baseLocatorNames.icoGuide);
             });
@@ -512,8 +499,7 @@ export class CascadingSlotGameBase {
             //Assert
             await test.step("Capture text game guide and compare with snapshot", async () => {
                 const popGameGuide = await this.game.capture(baseLocatorNames.popGameGuide);
-                expect(popGameGuide.image).toMatchSnapshot(popGameGuide.name, {maxDiffPixelRatio : 0});
-                
+                expect(popGameGuide.image).toMatchSnapshot(popGameGuide.name, { maxDiffPixelRatio: 0 });
             });
             //Post-Act
             await test.step("Click outside to close game guide", async () => {
@@ -524,15 +510,15 @@ export class CascadingSlotGameBase {
         test("Verify bet control popup in trial mode", async () => {
             //Act
             await test.step("Click on total stake", async () => {
-                await this.game.clickLocator(baseLocatorNames.btnTotalStake)
+                await this.game.clickLocator(baseLocatorNames.btnTotalStake);
             });
 
-            //Assert 
+            //Assert
             await test.step("Capture bet control popup and compare with snapshot", async () => {
                 const popBetControlTrialMode = await this.game.capture(baseLocatorNames.popBetControlTrialMode);
                 expect(popBetControlTrialMode.image).toMatchSnapshot(popBetControlTrialMode.name);
             });
-            
+
             //Post-Act
             await test.step("Click outside to close the popup", async () => {
                 await this.game.clickOutSide(500); // close popup
@@ -545,7 +531,7 @@ export class CascadingSlotGameBase {
                 const lblTumbleWinListTrialMode = await this.game.capture(baseLocatorNames.lblTumbleWinListTrialMode);
 
                 //Assert
-                expect(lblTumbleWinListTrialMode.image).toMatchSnapshot(lblTumbleWinListTrialMode.name, {maxDiffPixelRatio:0});
+                expect(lblTumbleWinListTrialMode.image).toMatchSnapshot(lblTumbleWinListTrialMode.name, { maxDiffPixelRatio: 0 });
             });
         });
 
@@ -555,21 +541,20 @@ export class CascadingSlotGameBase {
                 const imgUserBalanceTrialMode = await this.game.capture(baseLocatorNames.imgUserBalanceTrialMode);
 
                 //Assert
-                expect(imgUserBalanceTrialMode.image).toMatchSnapshot(imgUserBalanceTrialMode.name, {maxDiffPixelRatio : 0});
+                expect(imgUserBalanceTrialMode.image).toMatchSnapshot(imgUserBalanceTrialMode.name, { maxDiffPixelRatio: 0 });
             });
         });
 
         test("Verify round id of the first round of trial mode", async () => {
             //Act
             await test.step("", async () => {
-                await this.game.clickLocator(baseLocatorNames.btnSpin)
+                await this.game.clickLocator(baseLocatorNames.btnSpin);
             });
-            
+
             //Assert
             await test.step("Capture round id and compare with snapshot", async () => {
                 const lblRoundIdFirstRoundTrialMode = await this.game.capture(baseLocatorNames.lblRoundIdFirstRoundTrialMode);
-                expect(lblRoundIdFirstRoundTrialMode.image).toMatchSnapshot(lblRoundIdFirstRoundTrialMode.name, {maxDiffPixelRatio : 0});
-
+                expect(lblRoundIdFirstRoundTrialMode.image).toMatchSnapshot(lblRoundIdFirstRoundTrialMode.name, { maxDiffPixelRatio: 0 });
             });
         });
     }
@@ -667,18 +652,16 @@ const selectAutoSpin = async (game: BaseGame, totalspin: number) => {
     await game.clickLocator(baseLocatorNames.btnAutoSpinStart, 100);
 };
 
-
 const clickTurbo = async (game: BaseGame) => {
     await game.clickLocator(baseLocatorNames.btnTurbo);
     await game.waitForTimeout(2000); //wait for message closed
 };
 
-
-const waitForTumbling = async (game: BaseGame) =>{
+const waitForTumbling = async (game: BaseGame) => {
     const message = await game.waitForEvent(GameEvent.Settlement);
     const tumble = message.finish.tumbles.length;
-    await game.waitForTimeout((tumble + 1)*4000);
-}
+    await game.waitForTimeout((tumble + 1) * 4000);
+};
 
 export interface Expectdata {
     betdate: string;
@@ -699,10 +682,10 @@ const waitForSettlementCascadingSlot = async (game: BaseGame): Promise<any> => {
         tumble: message.finish.tumbles.length,
         roundId: message?.finish?.roundId,
     };
-    settledResults["winAmount"] = message?.finish?.win ?? 0;;
-    
+    settledResults["winAmount"] = message?.finish?.win ?? 0;
+
     return settledResults;
-}
+};
 
 const getBoardID = async () => {
     let boardId = "";
@@ -712,6 +695,5 @@ const getBoardID = async () => {
             break;
         }
     }
-    return boardId;}
-
-
+    return boardId;
+};

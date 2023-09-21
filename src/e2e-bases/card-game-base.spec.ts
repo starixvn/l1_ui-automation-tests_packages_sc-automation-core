@@ -2,7 +2,7 @@ import { test, BasePlayer, BaseGame } from "../components";
 import { GameEvent } from "../_shared";
 import { expect } from "../expects";
 import { IBaseOptions } from "./base-options";
-import { baseLocatorNames } from "../components/base-locator";
+import { baseLocatorNames } from "../components/base-game-locator";
 
 export interface CardGameOptions extends IBaseOptions {
     placeBetChoices: string[];

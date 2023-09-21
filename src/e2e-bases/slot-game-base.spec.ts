@@ -2,7 +2,7 @@ import { GameEvent } from "../_shared";
 import { test, BasePlayer, BaseGame } from "../components";
 import { expect } from "../expects";
 import { IBaseOptions } from "./base-options";
-import { baseLocatorNames } from "../components/base-locator";
+import { baseLocatorNames } from "../components/base-game-locator";
 import { GameGuides } from "../game-components/guides/guides.spec";
 import { BetHistory } from "../game-components/history/history.spec";
 
@@ -54,18 +54,17 @@ export class SlotGameBase {
                 await test.step(`Capture JackPot board`, async () => {
                     imgBoardId = await this.game.capture(`img${boardID}JP`);
                 });
-    
+
                 //Assert
                 await test.step(`Compare with snapshot`, async () => {
                     expect(imgBoardId.image).toMatchSnapshot(imgBoardId.name);
                 });
             }
-            else
             //Assert
-            await test.step(`Compare with snapshot`, async () => {
-                expect(imgBoardId.image).toMatchSnapshot(imgBoardId.name);
-            });
-          
+            else
+                await test.step(`Compare with snapshot`, async () => {
+                    expect(imgBoardId.image).toMatchSnapshot(imgBoardId.name);
+                });
         });
 
         test("Verify roundID is null in first load game", async () => {

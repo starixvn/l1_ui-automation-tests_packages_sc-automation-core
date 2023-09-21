@@ -1,6 +1,6 @@
 import { GameEvent } from "../_shared";
 import { BaseGame } from "./base-game";
-import { baseLocatorNames } from "./base-locator";
+import { baseLocatorNames } from "./base-game-locator";
 
 export class BasePlayer {
     readonly game: BaseGame;
@@ -59,15 +59,15 @@ export class BasePlayer {
     }
 
     async selectPayline(choice: string): Promise<void> {
-        await this.game.clickLocator(baseLocatorNames.btnPayline,1000);
-        await this.game.clickLocator(baseLocatorNames.btnClearPayline,2000);
-        await this.game.clickLocator(choice,1500);
-        await this.game.clickLocator(baseLocatorNames.btnConfirmPayline,1000);
+        await this.game.clickLocator(baseLocatorNames.btnPayline, 1000);
+        await this.game.clickLocator(baseLocatorNames.btnClearPayline, 2000);
+        await this.game.clickLocator(choice, 1500);
+        await this.game.clickLocator(baseLocatorNames.btnConfirmPayline, 1000);
     }
 
     async selectBetStake(stake: string): Promise<void> {
         await this.game.clickLocator(baseLocatorNames.cboBetLevel);
-        await this.game.clickLocator(stake,1000);
+        await this.game.clickLocator(stake, 1000);
     }
 
     async placeBetClassicSlot(choice: string, stake: string): Promise<any> {

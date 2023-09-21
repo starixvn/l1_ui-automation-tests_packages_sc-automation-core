@@ -3,7 +3,7 @@ import { expect } from "../expects";
 import { IBaseOptions } from "./base-options";
 import { GameEvent } from "../_shared";
 import { GameGuides } from "../game-components/guides/guides.spec";
-import { baseLocatorNames } from "../components/base-locator";
+import { baseLocatorNames } from "../components/base-game-locator";
 
 const timeout = 4000;
 
@@ -249,7 +249,7 @@ export class TableGameBase {
             for (const iterator of betChoices) {
                 //tie refund rule only apply for main choices
                 const bet =
-                    (settledResults.settlementResult.tie === true  && !this.options.gameConfiguration.hedgeBetGroups.includes(iterator))
+                    settledResults.settlementResult.tie === true && !this.options.gameConfiguration.hedgeBetGroups.includes(iterator)
                         ? { choice: iterator, amount: (this.options.placeBetAmount as number) / 2 ?? 0.5 }
                         : { choice: iterator, amount: this.options.placeBetAmount ?? 1 };
                 expect(ownBets.ownBets[iterator]).toBe(amount);

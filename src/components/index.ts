@@ -4,17 +4,6 @@ import { test } from "./base-fixture";
 import { GameConfiguration } from "./game-configuration";
 import { ImageLocator, ImageSnapshot } from "./base-image-locator";
 import { BaseElementLocator } from "./base-element-locator";
-import * as BaseLocator from "./base-locator";
+import * as BaseLocator from "./base-game-locator";
 
-
-
-export {
-    BaseGame,
-    BasePlayer,
-    GameConfiguration,
-    ImageLocator,
-    BaseElementLocator,
-    ImageSnapshot,
-    test,
-    BaseLocator,
-};
+export { BaseGame, BasePlayer, GameConfiguration, ImageLocator, BaseElementLocator, ImageSnapshot, test, BaseLocator };
