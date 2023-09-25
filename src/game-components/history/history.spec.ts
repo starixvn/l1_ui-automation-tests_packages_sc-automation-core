@@ -1,5 +1,6 @@
 import { test, BaseGame } from "../../components";
 import { expect } from "../../expects";
+import {baseLocatorNames} from "../../components/base-game-locator"
 
 export class BetHistory {
     protected game: BaseGame;
@@ -59,10 +60,10 @@ const getRoundId = async (game: BaseGame, elementname: string = "lblHistoryDetai
 };
 
 const getDataFistRowHistory = async (game: BaseGame) => {
-    let betdate = await game.getTextLocator("locHistoryBetDate");
-    let roundID = await game.getTextLocator("locHistoryRoundID");
-    let totalstake = await game.getTextLocator("locHistoryTotalStake");
-    let betwin = await game.getTextLocator("locHistoryBetWin");
+    let betdate = await game.getTextLocator(baseLocatorNames.locHistoryBetDate);
+    let roundID = await game.getTextLocator(baseLocatorNames.locHistoryRoundId);
+    let totalstake = await game.getTextLocator(baseLocatorNames.locHistoryTotalStake);
+    let betwin = await game.getTextLocator(baseLocatorNames.locHistoryBetWin);
     return {
         betdate: betdate!.toString().replace(/[^0-9.]/g, ""),
         roundID: roundID!.toString().replace(/[^0-9.]/g, ""),

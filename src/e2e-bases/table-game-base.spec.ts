@@ -74,7 +74,7 @@ export class TableGameBase {
             expect(roundId.includes(settledResults.roundId)).toBe(true);
         });
 
-        test("player able to place bet and return settlement data for comparing history ticket detail", async () => {
+        test("Verify that player able to place bet and return settlement data for comparing history ticket detail", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             const bet = { choice: this.options.placeBetChoices[1], amount: this.options.placeBetAmount ?? 1 };
@@ -203,7 +203,7 @@ export class TableGameBase {
             expect(placeBetResponse.endBet).toBe(bet.amount);
             expect(settledResults.settlementResult).toMatchBetOptions(this.options.gameConfiguration.choices);
         });
-        test("Player can rebet all bet choice and amount of previous placebet", async () => {
+        test("Verify player can rebet all bet choice and amount of previous placebet", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             const bet = { choice: this.options.placeBetChoices[1], amount: this.options.placeBetAmount ?? 1 };
@@ -226,7 +226,7 @@ export class TableGameBase {
     }
 
     protected multipleBetChoices() {
-        test("Player able to placebet multiple choices in 1 round", async () => {
+        test("Verify player able to placebet multiple choices in 1 round", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             this.game.attachSocketAndCaptureEvent(GameEvent.OwnBets);

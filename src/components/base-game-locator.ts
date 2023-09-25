@@ -1,32 +1,38 @@
 import { ImageLocator } from "./base-image-locator";
 
+const imgLocatorNames = ["imgdealer","imgGameName","imgB0","imgB1",  "imgB2","imgB3",  "imgB4","imgB0JP",  "imgB1JP","imgB2JP", "imgB3JP","imgB4JP",
+    "imgBetLevel0_1","imgBetLevel0_2","imgBetLevel1", "imgBetLevel5", "imgBetLevel10",
+     "imgTotalbet0_1", "imgTotalbet0_2", "imgTotalbet1", "imgTotalbet5","imgTotalbet10","imgLeftNumbersColumn", "imgRightNumbersColumn",
+    "imgConfirmPaylineDisabled","imgTurboTrial","imgTurboDefault","imgBetLevel","imgCoinValue","imgTotalBet", "imgBottomArea", "imgBottomAreaTrialMode",
+    "imgUserBalanceTrialMode", "imgRoundIdFirstRoundTrialMode","imgGameLobby", "imgTurboOn", "imgTurboOFF",]
 
-const listLocatorNames = [
-    "imgdealer","imgGameName","btnRebet","defaultChipBarl1", "defaultChipBarl2","btnHome","hamburgerMenu","historyMenu",
-    "guideMenu","historyPopup","stake1",  "stake10","errorMessage", "btnClosePopup", "lblRoundIdOnTable",  "btnRightArrow",
-    "btnLeftArrow","btnHitCard", "btnCancel","btnSplit","btnDouble","lblTotalBet","lblChoice1",  "lblChoice2",
-    "lblChoice3",   "lblRoundIdChoice1","lblRoundIdChoice2","lblRoundIdChoice3","btnNewbet",
-    "imgB0",  "imgB1",  "imgB2","imgB3",  "imgB4","imgB0JP",  "imgB1JP","imgB2JP", "imgB3JP","imgB4JP",
-    "lblRoundID","btnPayline","cboBetLevel",  "lblBetLevel0_1",   "imgBetLevel0_1","lblBetLevel0_2","imgBetLevel0_2",
-    "lblBetLevel1", "imgBetLevel1",  "lblBetLevel5", "imgBetLevel5", "lblBetLevel10", "imgBetLevel10",
-    "lblTotalbet", "imgTotalbet0_1", "imgTotalbet0_2", "imgTotalbet1", "imgTotalbet5",
-    "imgTotalbet10", "lblWin", "btnAutoSpin", "lblErrorMsg", "mnuHamburger", "btnTurbo", "btnSpin", "imgTurboOn", "imgTurboOFF", 
-    "imgLeftNumbersColumn", "imgRightNumbersColumn", "icoHistory","icoGuide", "icoGuideJP", "icoJackpot", "popAutoSpin",
-    "btnAutoSpin10", "btnAutoSpinTurbo", "btnAutoSpinStart","popHistory", "lblHistoryFirstRow", "locHistoryBetDate", 
-    "locHistoryRoundID", "locHistoryTotalStake", "locHistoryBetWin", "locOpenBetDetails","lblHistoryDetailRoundId", "tblEvenPayline", 
-    "popGuide", "btnPayline1", "tblPayline1", "btnAllPayline", "tblAllPayline", "btnEvenPayline","btnOddPayline", "tblOddPayline",
-    "btnClearPayline", "btnConfirmPayline", "imgConfirmPaylineDisabled", "btnSymbol","lblRoundIdFirstRoundTrialMode", 
-    "mnuHamburgerExpandSoundOn","mnuHamburgerExpandSoundOff", "mnuHamburgerExpandTrialMode", "icoSound", "icoMusic", "imgTurboDefault",
-    "imgTurboTrial", "popGameGuide", "popAutoSpinTurbo", "btnTotalStake", "popBetControll1", "popBetControlMaxBetLevell1",
+const btnLocatorNames = ["btnRebet","btnHome","btnClosePopup","btnRightArrow","btnLeftArrow","btnHitCard", "btnCancel","btnSplit","btnDouble","btnNewbet",
+    "btnPayline","btnAutoSpin","btnTurbo", "btnSpin", "btnAutoSpin10", "btnAutoSpinTurbo", "btnAutoSpinStart","btnPayline1", "btnAllPayline", "btnEvenPayline",
+    "btnOddPayline","btnClearPayline", "btnConfirmPayline",  "btnSymbol","btnTotalStake","btnBetLevelIncrease", "btnBetLevelDecrease","btnCoinValueIncrease", 
+    "btnCoinValueDecrease", "btnTotalBetIncrease", "btnTotalBetDecrease","btnTrialMode", "popBetControlTrialMode", "btnHistoryTrialmode", ]
+
+const popLocatorNames = ["popAutoSpin","popHistory", "popGuide","popGameGuide", "popAutoSpinTurbo",  "popBetControll1", "popBetControlMaxBetLevell1",
     "popBetControlMinBetLevell1", "popBetControlMaxCoinValuel1", "popBetControlMinCoinValuel1", "popBetControll2", "popBetControlMaxBetLevell2", 
-    "popBetControlMinBetLevell2", "popBetControlMaxCoinValuel2","popBetControlMinCoinValuel2", "btnBetLevelIncrease", "btnBetLevelDecrease",
-    "imgBetLevel", "btnCoinValueIncrease", "btnCoinValueDecrease", "imgCoinValue","btnTotalBetIncrease", "btnTotalBetDecrease",
-    "imgTotalBet", "imgBottomArea", "imgBottomAreaTrialMode", "lblTumbleWinList", "lblTumbleWinListTrialMode",
-    "btnTrialMode", "popBetControlTrialMode", "btnHistoryTrialmode", "imgUserBalanceTrialMode", "imgRoundIdFirstRoundTrialMode",
-    "imgGameLobby", "tabAll", "tabSedie","tabBigSmall","tabCardGames","tabSlots","tabKenoLottery","tabOthers",
+    "popBetControlMinBetLevell2", "popBetControlMaxCoinValuel2","popBetControlMinCoinValuel2",];
+
+const lblLocatorNames = ["lblRoundIdOnTable",  "lblTotalBet","lblChoice1",  "lblChoice2","lblChoice3", "lblRoundIdChoice1","lblRoundIdChoice2",
+    "lblRoundIdChoice3", "lblRoundID", "lblBetLevel0_1", "lblWin", "lblErrorMsg", "lblHistoryFirstRow","lblHistoryDetailRoundId","lblRoundIdFirstRoundTrialMode", 
+    "lblTumbleWinList", "lblTumbleWinListTrialMode","lblBetLevel0_2","lblBetLevel1",  "lblBetLevel5", "lblBetLevel10", "lblTotalbet", ];
+
+const commonLocatorNames = [
+    "defaultChipBarl1", "defaultChipBarl2","hamburgerMenu","historyMenu",
+    "guideMenu","historyPopup","stake1",  "stake10","errorMessage", 
+    "cboBetLevel","mnuHamburger", 
+    "icoHistory","icoGuide", "icoGuideJP", "icoJackpot", 
+    "locHistoryBetDate", "locHistoryRoundId", "locHistoryTotalStake", "locHistoryBetWin", "locOpenBetDetails", 
+    "tblEvenPayline", "tblPayline1", "tblAllPayline",  "tblOddPayline",
+    "mnuHamburgerExpandSoundOn","mnuHamburgerExpandSoundOff", "mnuHamburgerExpandTrialMode", "icoSound", "icoMusic", 
+    "tabAll", "tabSedie","tabBigSmall","tabCardGames","tabSlots","tabKenoLottery","tabOthers",
     "icoGame1","icoGame2","icoGame3","icoGame4","icoGame5","icoGame6","icoGame7","icoGame8","icoGame9","icoGame10",
 
 ];
+
+const listLocatorNames = imgLocatorNames.concat(popLocatorNames, commonLocatorNames, btnLocatorNames,lblLocatorNames)
 export const baseLocatorNames = Object.fromEntries(listLocatorNames.map((item) => [item, item]));
 
 export const CardLocators = [
@@ -111,7 +117,7 @@ export const ClassicSlotLocators = [
     new ImageLocator(baseLocatorNames.btnAutoSpinStart, 713, 451, 129, 55),
     new ImageLocator(baseLocatorNames.lblHistoryFirstRow, 203, 168, 950, 30),
     new ImageLocator(baseLocatorNames.locHistoryBetDate, 197, 163, 128, 31),
-    new ImageLocator(baseLocatorNames.locHistoryRoundID, 334, 163, 139, 31),
+    new ImageLocator(baseLocatorNames.locHistoryRoundId, 334, 163, 139, 31),
     new ImageLocator(baseLocatorNames.locHistoryTotalStake, 813, 163, 104, 31),
     new ImageLocator(baseLocatorNames.locHistoryBetWin, 954, 163, 133, 31),
     new ImageLocator(baseLocatorNames.locOpenBetDetails, 378, 176, 20, 10),
@@ -164,7 +170,7 @@ export const CascadingSlotLocators = [
     new ImageLocator(baseLocatorNames.btnAutoSpinStart, 713, 451, 129, 55),
     new ImageLocator(baseLocatorNames.lblHistoryFirstRow, 140, 168, 1000, 30),
     new ImageLocator(baseLocatorNames.locHistoryBetDate, 219, 163, 128, 31),
-    new ImageLocator(baseLocatorNames.locHistoryRoundID, 352, 163, 139, 31),
+    new ImageLocator(baseLocatorNames.locHistoryRoundId, 352, 163, 139, 31),
     new ImageLocator(baseLocatorNames.locHistoryTotalStake, 831, 163, 104, 31),
     new ImageLocator(baseLocatorNames.locHistoryBetWin, 972, 163, 133, 31),
     new ImageLocator(baseLocatorNames.locOpenBetDetails, 395, 167, 50, 24),
