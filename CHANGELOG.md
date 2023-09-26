@@ -1,3 +1,11 @@
+## [1.12.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.12.0...v1.12.1) (2023-09-26)
+
+
+### Bug Fixes
+
+* card game base ([b68d678](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/b68d6787b3db4239ba5ce3d3b599dd96579ddc37))
+* restucturing locator names ([5904d86](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/5904d864bc28b401a6a7696288d53bb9620cfaab))
+
 # [1.12.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.11.0...v1.12.0) (2023-09-21)
 
 
