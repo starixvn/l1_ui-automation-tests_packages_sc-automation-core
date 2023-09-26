@@ -1,72 +1,82 @@
 import { test, BasePlayer, BaseGame } from "../components";
-import { GameEvent } from "../_shared";
 import { expect } from "../expects";
 import { IBaseOptions } from "./base-options";
 import { baseLocatorNames } from "../components/base-game-locator";
-
-export interface CardGameOptions extends IBaseOptions {
-    placeBetChoices: string[];
-    placeBetAmount?: number;
-}
+import { GameGuides } from "../game-components/guides/guides.spec";
 
 export class CardGameBase {
     game: BaseGame;
     player: BasePlayer;
+    protected gameGuides: GameGuides = new GameGuides();
 
-    constructor(protected options: CardGameOptions) {}
+    constructor(protected options: IBaseOptions) {}
 
     protected inGameUiTests() {
-        test("Verify the game info should be displayed correctly on table", async () => {
+        test("Verify the in-game UI should be displayed correctly on table: game name, buttons, hands, chips,Stake: 0 and no button display", async () => {
             // Act
-            await this.game.waitUntilNextRound();
-            await this.game.waitForTimeout(this.options.waitBetTimeout);
-            const dealerSnapshot = await this.game.capture(baseLocatorNames.imgdealer);
+            const gameUi = await this.game.capture(baseLocatorNames.imgGameName);
             // Assert
-            expect(dealerSnapshot.image).toMatchSnapshot(dealerSnapshot.name, { maxDiffPixelRatio: 0.3 });
+            expect(gameUi.image).toMatchSnapshot(gameUi.name);
         });
-        test("AND bet choices should be displayed on table", async () => {
+
+        test("Verify default state of chip bar", async () => {
+            const chipbar = await this.game.capture(`defaultChipBar${process.env.npm_config_project}`);
+            // Assert
+            expect(chipbar.image).toMatchSnapshot(chipbar.name);
+        });
+
+        test("Verify list items after clicking on hambuger menu", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
-            await this.game.waitForTimeout(this.options.waitBetTimeout);
+            await this.game.clickLocator(baseLocatorNames.hamburgerMenu);
 
-            for (const placeBetChoice of this.options.placeBetChoices) {
-                // Act
-                const betChoice = await this.game.captureChoice(placeBetChoice);
+            // Act
+            const lstMenuItems = await this.game.captureChoice(baseLocatorNames.lstMenuItems);
 
-                // Assert
-                expect(betChoice.image).toMatchSnapshot(betChoice.name);
-            }
+            // Assert
+            expect(lstMenuItems.image).toMatchSnapshot(lstMenuItems.name);
+            await this.game.clickOutSide();
         });
     }
 
-    protected placeBetAndSettleTests() {
-        test("THEN player able to place a bet and settle", async () => {
-            // Arrange
-            test.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount ?? 1 };
-            this.game.attachSocketAndCaptureEvent(GameEvent.Deal);
+    protected placebetandCancelBehavious() {
+        test("Verify user can place bet and cancel bet on one hand", async () => {
+            const betchoices = this.options.placeBetChoices[0];
+            // Act
+            await selectChoices(this.game, betchoices);
 
             // Act
-            const placebetdeal = await this.player.placeBet(bet.choice, bet.amount);
-            await this.player.standCard();
+            const btnCancel = await this.game.capture(baseLocatorNames.btnCancelChoice1);
+            const lblTotalBet = await this.game.capture(baseLocatorNames.lblTotalBet);
 
             // Assert
-            expect(placebetdeal.deal.hands[0].bet).toBe(bet.amount);
-            expect(placebetdeal.deal.hands[0].pos).toBe(parseInt(bet.choice));
+            expect(btnCancel.image).toMatchSnapshot(btnCancel.name);
+            expect(lblTotalBet.image).toMatchSnapshot(lblTotalBet.name);
+            await cancelbet(this.game);
         });
-    }
 
-    protected ticketHistoryTests() {
-        test("AND player could open history popup", async () => {
-            // Arrange
-            const historyPayload = await this.player.openHistory();
+        test("Verify user can place bet and cancel bet on multiple hands", async () => {
+            // Act
+            const lblDefaultTotalBet = await this.game.capture(baseLocatorNames.lblDefaultTotalBet);
+            const betchoices = this.options.multiPlaceBetChoices;
+
+            await selectChoices(this.game, betchoices);
 
             // Act
-            const historySnapshot = await this.game.captureHistory();
+            const btnCancel1 = await this.game.capture(baseLocatorNames.btnCancelChoice1);
+            const btnCancel2 = await this.game.capture(baseLocatorNames.btnCancelChoice2);
+            const btnCancel3 = await this.game.capture(baseLocatorNames.btnCancelChoice3);
+
+            const lblTotalBet = await this.game.capture(baseLocatorNames.lblTotalBet);
 
             // Assert
-            expect(historyPayload.history.betLogs.length).toBeGreaterThan(0);
-            expect(historySnapshot.image).toMatchSnapshot(historySnapshot.name);
+            expect(btnCancel1.image).toMatchSnapshot(btnCancel1.name);
+            expect(btnCancel2.image).toMatchSnapshot(btnCancel2.name);
+            expect(btnCancel3.image).toMatchSnapshot(btnCancel3.name);
+            expect(lblTotalBet.image).toMatchSnapshot(lblTotalBet.name);
+            await cancelbet(this.game);
+            await this.game.clickLocator(baseLocatorNames.cancelbet, 1000);
+            expect(lblDefaultTotalBet.image).toMatchSnapshot(lblDefaultTotalBet.name);
         });
     }
 
@@ -96,7 +106,17 @@ export class CardGameBase {
 
     protected runScenario() {
         this.inGameUiTests();
-        this.placeBetAndSettleTests();
-        this.ticketHistoryTests();
+        this.placebetandCancelBehavious()
+        this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
     }
 }
+
+const selectChoices = async (game: BaseGame, choices: any) => {
+    for (let index = 0; index < choices.length; index++) {
+        await game.clickLocator(choices[index]);
+    }
+};
+
+const cancelbet = async (game: BaseGame) => {
+    await game.clickLocator(baseLocatorNames.btnCancel, 1000);
+};

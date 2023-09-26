@@ -9,7 +9,9 @@ const imgLocatorNames = ["imgdealer","imgGameName","imgB0","imgB1",  "imgB2","im
 const btnLocatorNames = ["btnRebet","btnHome","btnClosePopup","btnRightArrow","btnLeftArrow","btnHitCard", "btnCancel","btnSplit","btnDouble","btnNewbet",
     "btnPayline","btnAutoSpin","btnTurbo", "btnSpin", "btnAutoSpin10", "btnAutoSpinTurbo", "btnAutoSpinStart","btnPayline1", "btnAllPayline", "btnEvenPayline",
     "btnOddPayline","btnClearPayline", "btnConfirmPayline",  "btnSymbol","btnTotalStake","btnBetLevelIncrease", "btnBetLevelDecrease","btnCoinValueIncrease", 
-    "btnCoinValueDecrease", "btnTotalBetIncrease", "btnTotalBetDecrease","btnTrialMode", "popBetControlTrialMode", "btnHistoryTrialmode", ]
+    "btnCoinValueDecrease", "btnTotalBetIncrease", "btnTotalBetDecrease","btnTrialMode", "popBetControlTrialMode", "btnHistoryTrialmode","btnCancelChoice1",
+    "btnCancelChoice1", "btnCancelChoice3"
+]
 
 const popLocatorNames = ["popAutoSpin","popHistory", "popGuide","popGameGuide", "popAutoSpinTurbo",  "popBetControll1", "popBetControlMaxBetLevell1",
     "popBetControlMinBetLevell1", "popBetControlMaxCoinValuel1", "popBetControlMinCoinValuel1", "popBetControll2", "popBetControlMaxBetLevell2", 
@@ -17,7 +19,7 @@ const popLocatorNames = ["popAutoSpin","popHistory", "popGuide","popGameGuide", 
 
 const lblLocatorNames = ["lblRoundIdOnTable",  "lblTotalBet","lblChoice1",  "lblChoice2","lblChoice3", "lblRoundIdChoice1","lblRoundIdChoice2",
     "lblRoundIdChoice3", "lblRoundID", "lblBetLevel0_1", "lblWin", "lblErrorMsg", "lblHistoryFirstRow","lblHistoryDetailRoundId","lblRoundIdFirstRoundTrialMode", 
-    "lblTumbleWinList", "lblTumbleWinListTrialMode","lblBetLevel0_2","lblBetLevel1",  "lblBetLevel5", "lblBetLevel10", "lblTotalbet", ];
+    "lblTumbleWinList", "lblTumbleWinListTrialMode","lblBetLevel0_2","lblBetLevel1",  "lblBetLevel5", "lblBetLevel10", "lblTotalbet","lblDefaultTotalBet" ];
 
 const commonLocatorNames = [
     "defaultChipBarl1", "defaultChipBarl2","hamburgerMenu","historyMenu",
@@ -47,10 +49,14 @@ export const CardLocators = [
     new ImageLocator(baseLocatorNames.btnCancel, 1184, 514, 40, 40),
     new ImageLocator(baseLocatorNames.btnSplit, 832, 585, 40, 40),
     new ImageLocator(baseLocatorNames.btnDouble, 373, 585, 40, 40),
+    new ImageLocator(baseLocatorNames.lblDefaultTotalBet, 90, 40, 45, 45),
     new ImageLocator(baseLocatorNames.lblTotalBet, 90, 40, 45, 45),
     new ImageLocator(baseLocatorNames.lblChoice1, 608, 485, 40, 40),
     new ImageLocator(baseLocatorNames.lblChoice2, 927, 434, 40, 40),
     new ImageLocator(baseLocatorNames.lblChoice3, 281, 434, 40, 40),
+    new ImageLocator(baseLocatorNames.btnCancelChoice1, 709, 483, 40, 40),
+    new ImageLocator(baseLocatorNames.btnCancelChoice2, 1021, 438, 40, 40),
+    new ImageLocator(baseLocatorNames.btnCancelChoice3, 385, 439, 40, 40),
     new ImageLocator(baseLocatorNames.lblRoundIdChoice1, 600, 545, 75, 22),
     new ImageLocator(baseLocatorNames.lblRoundIdChoice2, 917, 497, 75, 22),
     new ImageLocator(baseLocatorNames.lblRoundIdChoice3, 285, 502, 75, 22),
