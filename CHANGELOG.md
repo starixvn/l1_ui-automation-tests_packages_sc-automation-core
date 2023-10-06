@@ -1,3 +1,10 @@
+## [1.12.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.12.1...v1.12.2) (2023-10-06)
+
+
+### Bug Fixes
+
+* config yml ([a8c86a6](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/a8c86a601398165a595274bd65cafc3c51ceac94))
+
 ## [1.12.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.12.0...v1.12.1) (2023-09-26)
 
 
