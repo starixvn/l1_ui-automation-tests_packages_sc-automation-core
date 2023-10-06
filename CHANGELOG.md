@@ -1,3 +1,10 @@
+# [1.13.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.12.3...v1.13.0) (2023-10-06)
+
+
+### Features
+
+* update card game base ([f3e91e9](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/f3e91e93d9751c55bcf713b7bb5bcd3aa91b67ca))
+
 ## [1.12.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.12.2...v1.12.3) (2023-10-06)
 
 
