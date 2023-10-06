@@ -66,7 +66,7 @@ export const CardLocators = [
     new ImageLocator(baseLocatorNames.btnRightArrow, 922, 607, 40, 40),
     new ImageLocator(baseLocatorNames.btnLeftArrow, 324, 607, 40, 40),
     new ImageLocator(baseLocatorNames.defaultChipBarl1, 315, 576, 630, 95),
-    new ImageLocator(baseLocatorNames.defaultChipBarl2, 3315, 576, 630, 95),
+    new ImageLocator(baseLocatorNames.defaultChipBarl2, 315, 576, 630, 95),
     new ImageLocator(baseLocatorNames.stake1, 380, 584, 30, 30),
     new ImageLocator(baseLocatorNames.stake10, 380, 584, 30, 30),
     new ImageLocator(baseLocatorNames.errorMessage, 456, 531, 380, 30),
