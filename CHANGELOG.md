@@ -1,3 +1,10 @@
+## [1.12.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.12.2...v1.12.3) (2023-10-06)
+
+
+### Bug Fixes
+
+* base card locator ([69d405a](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/69d405a365ba194c36336dcb0b8776c6d6d70d94))
+
 ## [1.12.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.12.1...v1.12.2) (2023-10-06)
 
 
