@@ -1,3 +1,15 @@
+# [1.14.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.13.0...v1.14.0) (2023-10-12)
+
+
+### Bug Fixes
+
+* waitForFreeSpin slots games ([2e30017](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/2e3001733b9d67d9f886e7fced4d781aa159b62d))
+
+
+### Features
+
+* handle case get free spins ([c90bda5](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/c90bda5924d6942c10caa18015787f95e1cfb012))
+
 # [1.13.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.12.3...v1.13.0) (2023-10-06)
 
 
