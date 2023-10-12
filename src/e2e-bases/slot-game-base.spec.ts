@@ -250,7 +250,7 @@ export class SlotGameBase {
 
                     settledResultsAutoSpin.push(settledResults.winAmount);
 
-                    await waitForFreeSpin(settledResults.settlementResult.freeSpins.count, this.game)
+                    await this.game.waitForFreeSpin(settledResults)
                 }
             });
 
@@ -277,7 +277,7 @@ export class SlotGameBase {
                 for (let index = 1; index <= totalAutoSpin - 5; index++) {
                     const settledResults = await this.game.waitForSettlement();
                     settledResultsAutoSpin.push(settledResults.winAmount);
-                    await waitForFreeSpin(settledResults.settlementResult.freeSpins.count, this.game);
+                    await this.game.waitForFreeSpin(settledResults)
                 }
 
                 await this.game.clickLocator(baseLocatorNames.btnAutoSpin); //stop autospin
@@ -374,7 +374,7 @@ export class SlotGameBase {
             });
 
             await test.step(`Wait for free spins`, async () => {
-                await waitForFreeSpin(settledResults.settlementResult.freeSpins.count, this.game)
+                await this.game.waitForFreeSpin(settledResults)
             });
 
             await test.step(`Click outside`, async () => {
@@ -403,7 +403,7 @@ export class SlotGameBase {
             });
 
             await test.step(`Wait for free spins`, async () => {
-                await waitForFreeSpin(settledResults.settlementResult.freeSpins.count, this.game)
+                await this.game.waitForFreeSpin(settledResults)
             });
 
             await test.step(`Click outside`, async () => {
@@ -436,7 +436,7 @@ export class SlotGameBase {
             });
 
             await test.step(`Wait for free spins`, async () => {
-                await waitForFreeSpin(settledResults.settlementResult.freeSpins.count, this.game)
+                await this.game.waitForFreeSpin(settledResults)
             });
 
             await test.step(`Click outside`, async () => {
@@ -465,7 +465,7 @@ export class SlotGameBase {
             });
 
             await test.step(`Wait for free spins`, async () => {
-                await waitForFreeSpin(settledResults.settlementResult.freeSpins.count, this.game)
+                await this.game.waitForFreeSpin(settledResults)
             });
 
             // Assert
@@ -573,12 +573,4 @@ const getBoardID = async () => {
         }
     }
     return boardId;
-};
-
-const waitForFreeSpin = async (numberOfFreeSpins: number, game: BaseGame) => {
-    for(let index = 0; index < numberOfFreeSpins; index++)
-    {
-        let settledResults = await game.waitForSettlement();
-        await waitForFreeSpin(settledResults.settlementResult.freeSpins.count, game);
-    }
 };

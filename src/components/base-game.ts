@@ -379,6 +379,17 @@ export class BaseGame {
             console.log(msg.text());
         });
     }
+
+    async waitForFreeSpin(settledResults: any) {
+        const totalFreeSpin = settledResults.settlementResult?.freeSpins?.count ?? 0;
+
+        for(let index = 0; index < totalFreeSpin; index++)
+        {
+            const newSettledResults  = await this.waitForSettlement();
+            await this.waitForFreeSpin(newSettledResults);
+        }
+    };
+    
 }
 
 export interface Pos {
