@@ -79,6 +79,8 @@ export class SlotGameBase {
             // Assert
             expect(placeBetResponse.endBet).toBe(bet.amount * parseInt(bet.choice));
             expect(bet).toMatchWinningSymbols(settledResults);
+
+            await waitForFreeSpin(settledResults.settlementResult.freeSpins.count, this.game);
         });
     }
 
@@ -130,3 +132,10 @@ export class SlotGameBase {
         this.ticketHistoryTests();
     }
 }
+const waitForFreeSpin = async (numberOfFreeSpins: number, game: BaseGame) => {
+    for(let index = 0; index < numberOfFreeSpins; index++)
+    {
+        let settledResults = await game.waitForSettlement();
+        await waitForFreeSpin(settledResults.settlementResult.freeSpins.count, game);
+    }
+};

@@ -162,7 +162,7 @@ export class SlotGameBase {
             // Act
             let cboBetLevel;
             await test.step(`Capture bet level`, async () => {
-                cboBetLevel = await this.game.capture(baseLocatorNames.cboBetLevel);
+                cboBetLevel = await this.game.capture(`cboBetLevel${process.env.npm_config_project}`);
             });
 
             //Assert
@@ -249,6 +249,8 @@ export class SlotGameBase {
                     const settledResults = await this.game.waitForSettlement();
 
                     settledResultsAutoSpin.push(settledResults.winAmount);
+
+                    await waitForFreeSpin(settledResults.settlementResult.freeSpins.count, this.game)
                 }
             });
 
@@ -275,6 +277,7 @@ export class SlotGameBase {
                 for (let index = 1; index <= totalAutoSpin - 5; index++) {
                     const settledResults = await this.game.waitForSettlement();
                     settledResultsAutoSpin.push(settledResults.winAmount);
+                    await waitForFreeSpin(settledResults.settlementResult.freeSpins.count, this.game);
                 }
 
                 await this.game.clickLocator(baseLocatorNames.btnAutoSpin); //stop autospin
@@ -370,8 +373,12 @@ export class SlotGameBase {
                 expect(bet).toMatchWinningSymbols(settledResults);
             });
 
+            await test.step(`Wait for free spins`, async () => {
+                await waitForFreeSpin(settledResults.settlementResult.freeSpins.count, this.game)
+            });
+
             await test.step(`Click outside`, async () => {
-                await this.game.waitForTimeout(timeout);
+                await this.game.waitForTimeout(6000);
                 await this.game.clickOutSide(2000); //click outside to close big win popup
             });
         });
@@ -395,8 +402,12 @@ export class SlotGameBase {
                 expect(bet).toMatchWinningSymbols(settledResults);
             });
 
+            await test.step(`Wait for free spins`, async () => {
+                await waitForFreeSpin(settledResults.settlementResult.freeSpins.count, this.game)
+            });
+
             await test.step(`Click outside`, async () => {
-                await this.game.waitForTimeout(timeout);
+                await this.game.waitForTimeout(6000);
                 await this.game.clickOutSide(2000); //click outside to close big win popup
             });
         });
@@ -417,14 +428,19 @@ export class SlotGameBase {
             await test.step(`Wait for settlement`, async () => {
                 settledResults = await this.game.waitForSettlement();
             });
+            
 
             // Assert
             await test.step(`Verify settlement result`, async () => {
                 expect(bet).toMatchWinningSymbols(settledResults);
             });
 
+            await test.step(`Wait for free spins`, async () => {
+                await waitForFreeSpin(settledResults.settlementResult.freeSpins.count, this.game)
+            });
+
             await test.step(`Click outside`, async () => {
-                await this.game.waitForTimeout(timeout);
+                await this.game.waitForTimeout(6000);
                 await this.game.clickOutSide(2000); //click outside to close big win popup
             });
         });
@@ -446,6 +462,10 @@ export class SlotGameBase {
 
             await test.step(`Wait for settlement`, async () => {
                 settledResults = await this.game.waitForSettlement();
+            });
+
+            await test.step(`Wait for free spins`, async () => {
+                await waitForFreeSpin(settledResults.settlementResult.freeSpins.count, this.game)
             });
 
             // Assert
@@ -553,4 +573,12 @@ const getBoardID = async () => {
         }
     }
     return boardId;
+};
+
+const waitForFreeSpin = async (numberOfFreeSpins: number, game: BaseGame) => {
+    for(let index = 0; index < numberOfFreeSpins; index++)
+    {
+        let settledResults = await game.waitForSettlement();
+        await waitForFreeSpin(settledResults.settlementResult.freeSpins.count, game);
+    }
 };

@@ -448,7 +448,7 @@ export class CascadingSlotGameBase {
         test("Verify default bottom area of trial mode", async () => {
             //Act
             await test.step("Click trial mode button", async () => {
-                await this.game.clickLocator(baseLocatorNames.btnTrialMode);
+                await this.game.clickLocator(baseLocatorNames.btnTrialMode, 1000);
             });
 
             //Assert
