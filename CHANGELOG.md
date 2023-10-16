@@ -1,3 +1,10 @@
+## [1.14.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.14.1...v1.14.2) (2023-10-16)
+
+
+### Bug Fixes
+
+* error map domain ([f9a8e3b](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/f9a8e3b93dc6f880a6f0a925981a845c61ee2676))
+
 ## [1.14.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.14.0...v1.14.1) (2023-10-16)
 
 
