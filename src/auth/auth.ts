@@ -66,7 +66,7 @@ const loginMemberSite = async (
     projectCode: string
 ) => {
     const timeout = config.lobbyTimeout;
-    const memberSiteLink = projectCode === "l1" ? config.memberSite : config.l2memberSite;
+    const memberSiteLink = process.env.npm_config_memberSite ||(projectCode === "l1" ? config.memberSite : config.l2memberSite);
     const pwd = projectCode === "l1" ? config.pwd : config.l2pwd;
     const lobbyDomain = projectCode === "l1" ? config.lobbyDomain : config.l2lobbyDomain;
 
@@ -84,7 +84,7 @@ const loginMemberSite = async (
             break;
 
         default:
-            await loginSIT(page, playerId, pwd, timeout);
+            await loginSIT(page, playerId, pwd, projectCode, timeout);
     }
 
     await goToGameLobby(page, lobbyDomain, productId);
@@ -161,13 +161,24 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
     }
 };
 
-const loginSIT = async (page: Page, accountId: string, pwd: string, timeout: number = 15000) => {
-    await page.fill(SITLocator.memberIdInput, accountId);
-    await page.fill(SITLocator.pwdInput, pwd);
-    await page.click(SITLocator.loginButton);
-    await page.waitForLoadState("networkidle", { timeout });
-    await page.click(SITLocator.langDropdown);
-    await page.click(SITLocator.vnLangOption);
+const loginSIT = async (page: Page, accountId: string, pwd: string, projectCode: string, timeout: number = 15000) => {
+    await page.setViewportSize({width: 340, height: 667,});
+    if (projectCode === "l1") {
+        await page.click(UATLocator.loginDiv);
+    }
+        await page.selectOption(UATLocator.langDropdown, { value: UATLocator.vnLangOption });
+        await page.fill(UATLocator.memberIdInput, accountId);
+        await page.fill(UATLocator.pwdInput, pwd);
+        await page.click(UATLocator.loginButton);
+        await page.waitForLoadState("networkidle", { timeout: timeout });
+        const isCloseExist = await page.$$(PRODLocator.l2iconClose);
+        if (isCloseExist.length > 0) {
+            await page.click(PRODLocator.l2iconClose);
+        }
+    await page.setViewportSize({
+        width: 1280,
+        height: 720,
+    });
 };
 
 const goToGameLobby = async (page: Page, lobbyDomain: string, productId: string, timeout: number = 15000) => {

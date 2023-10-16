@@ -168,7 +168,7 @@ export class TableGameBase {
             }
             let i: number = 0,
                 j: number = 0;
-            while (i < 9) {
+            while (i < 10) {
                 await this.game.clickLocator(baseLocatorNames.btnRightArrow);
                 i++;
             }
@@ -181,7 +181,7 @@ export class TableGameBase {
                 expect(msgMaxbet.image).toMatchSnapshot(msgMaxbet.name, { maxDiffPixelRatio: 0.3 });
             }
             // post Act
-            while (j < 9) {
+            while (j < 10) {
                 await this.game.clickLocator(baseLocatorNames.btnLeftArrow);
                 j++;
             }
