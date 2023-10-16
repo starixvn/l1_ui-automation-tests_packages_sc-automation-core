@@ -1,3 +1,11 @@
+## [1.14.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.14.0...v1.14.1) (2023-10-16)
+
+
+### Bug Fixes
+
+* dynamic member site link and increase total loop maxbet e2e table game ([51f2f42](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/51f2f42ade9f8f36a0466e8b925e0170a17cd49e))
+* remove SITLocator ([30d3163](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/30d3163d3d5379786f7d2e92264fd86c6a74315b))
+
 # [1.14.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.13.0...v1.14.0) (2023-10-12)
 
 
