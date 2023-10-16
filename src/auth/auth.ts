@@ -188,7 +188,7 @@ const goToGameLobby = async (page: Page, lobbyDomain: string, productId: string,
 
 const formatGameLobbyUrl = (url: string, lobbyDomain: string, productId: string): string => {
     const domain = url.split("/");
-    if (url.includes("athena") || url.includes("qa")) {
+    if (url.includes("athena") || url.includes("qa")|| url.includes("/m.")) {
         return `http://${domain[2]}/${lobbyDomain}${productId}`;
     } else return `https://${domain[2]}/${lobbyDomain}${productId}`;
 };
