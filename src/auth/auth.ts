@@ -1,4 +1,4 @@
-import { LobbyLocator, SITLocator, UATLocator, PRODLocator, GroupCurrencyLocator } from "./locators/index";
+import { LobbyLocator, UATLocator, PRODLocator, GroupCurrencyLocator } from "./locators/index";
 import { configs } from "./configs/config";
 import { Page } from "@playwright/test";
 
