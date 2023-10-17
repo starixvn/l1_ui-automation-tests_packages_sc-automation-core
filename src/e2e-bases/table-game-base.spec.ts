@@ -276,7 +276,7 @@ export class TableGameBase {
             // Act 1.
             await this.game.waitForTimeout(timeout / 2);
 
-            const gameNavigate: any = this.options.gameLobbyNavigaion;
+            const gameNavigate: any = this.options.gameLobbyNavigation;
 
             await this.game.clickLocator(gameNavigate[0], timeout);
             await this.game.clickLocator(gameNavigate[1], timeout * 2);

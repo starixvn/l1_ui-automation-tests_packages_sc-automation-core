@@ -216,7 +216,7 @@ export const GameLobbyLocator = [
     new ImageLocator(baseLocatorNames.imgGameLobby, 388, 629, 300, 80),
     new ImageLocator(baseLocatorNames.tabAll, 207, 86, 70, 30),
     new ImageLocator(baseLocatorNames.tabSedie, 300, 86, 70, 30),
-    new ImageLocator(baseLocatorNames.tabBigSmall, 400, 86, 70, 30),
+    new ImageLocator(baseLocatorNames.tabBigSmall, 407, 86, 70, 30),
     new ImageLocator(baseLocatorNames.tabCardGames, 500, 86, 70, 30),
     new ImageLocator(baseLocatorNames.tabSlots, 615, 86, 70, 30),
     new ImageLocator(baseLocatorNames.tabKenoLottery, 710, 86, 70, 30),
