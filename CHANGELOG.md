@@ -1,3 +1,10 @@
+## [1.14.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.14.2...v1.14.3) (2023-10-17)
+
+
+### Bug Fixes
+
+* misspell e2e options card and table game base ([6ea9edc](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/6ea9edcd8e61879a12efe965f657f36771bce203))
+
 ## [1.14.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.14.1...v1.14.2) (2023-10-16)
 
 
