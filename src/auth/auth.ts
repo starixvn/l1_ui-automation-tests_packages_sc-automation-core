@@ -46,7 +46,7 @@ export const ssoToGame = async (
             await page.click("text=Submit");
         }
     } else {
-        await loginMemberSite(page, config, env, playerId, productId, langCode, projectCode);
+        await loginMemberSite(page, config, env, playerId, productId, langCode, projectCode,gameId);
     }
 };
 
@@ -63,12 +63,13 @@ const loginMemberSite = async (
     playerId: string,
     productId: string,
     langCode: string,
-    projectCode: string
+    projectCode: string,
+    gameId: number
 ) => {
     const timeout = config.lobbyTimeout;
     const memberSiteLink = process.env.npm_config_memberSite ||(projectCode === "l1" ? config.memberSite : config[`${projectCode}memberSite`]);
     const pwd = projectCode === "l1" ? config.pwd : config[`${projectCode}pwd`];
-    const lobbyDomain = projectCode === "l1" ? config.lobbyDomain : config[`${projectCode}pwd`];
+    const lobbyDomain = projectCode === "l1" ? config.lobbyDomain : config[`${projectCode}lobbyDomain`];
 
     await page.goto(memberSiteLink);
     console.log("Login Member Site: ", memberSiteLink);
@@ -88,7 +89,7 @@ const loginMemberSite = async (
     }
 
     if (projectCode === "ultra888") {
-        await goToUltra888GameLobby(page, process.env.npm_config_gameId) 
+        await goToUltra888GameLobby(page,gameId) 
     }
     else{
         await goToGameLobby(page, lobbyDomain, productId);
@@ -220,6 +221,7 @@ const goToUltra888GameLobby = async (page: Page, productId:any  , timeout = 1500
     await page.click(`//*/div[contains(@class,"table")]`)
     await page.waitForTimeout(3000)
     await page.waitForLoadState("networkidle", { timeout });
+    console.log('productId',productId,ultra888MapGameIds[productId]);
     await page.click(ultra888MapGameIds[productId])
     await page.waitForLoadState("networkidle", { timeout });
 };
