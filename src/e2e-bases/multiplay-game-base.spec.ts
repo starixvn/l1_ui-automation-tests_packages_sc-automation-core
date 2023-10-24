@@ -96,7 +96,7 @@ export class MultiplayGameBase {
 
         this.useTestFixtures();
 
-        test.describe.serial(`${this.options.gameConfiguration.name} Smoke Tests`, () => {
+        test.describe.serial(`${this.options.gameConfiguration.name} E2E Tests`, () => {
             test.beforeAll(async ({ baseGame }) => {
                 this.game = baseGame;
                 this.player = new BasePlayer(this.game);

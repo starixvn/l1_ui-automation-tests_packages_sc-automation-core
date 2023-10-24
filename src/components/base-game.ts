@@ -63,6 +63,7 @@ export class BaseGame {
     }
 
     async waitUntilGameUiLoad() {
+        const waitRange = process.env.npm_config_project === "ultra888" ? 1 :2 
         await this.page.waitForTimeout(1000);
         let filterA: string[] = [];
         const searchString = "LoadScene";
@@ -72,7 +73,7 @@ export class BaseGame {
             }
         });
 
-        while (filterA.length < 2) {
+        while (filterA.length < waitRange) {
             await this.page.waitForTimeout(3000);
         }
         await this.page.waitForTimeout(3000);

@@ -66,9 +66,9 @@ const loginMemberSite = async (
     projectCode: string
 ) => {
     const timeout = config.lobbyTimeout;
-    const memberSiteLink = process.env.npm_config_memberSite ||(projectCode === "l1" ? config.memberSite : config.l2memberSite);
-    const pwd = projectCode === "l1" ? config.pwd : config.l2pwd;
-    const lobbyDomain = projectCode === "l1" ? config.lobbyDomain : config.l2lobbyDomain;
+    const memberSiteLink = process.env.npm_config_memberSite ||(projectCode === "l1" ? config.memberSite : config[`${projectCode}memberSite`]);
+    const pwd = projectCode === "l1" ? config.pwd : config[`${projectCode}pwd`];
+    const lobbyDomain = projectCode === "l1" ? config.lobbyDomain : config[`${projectCode}pwd`];
 
     await page.goto(memberSiteLink);
     console.log("Login Member Site: ", memberSiteLink);
@@ -87,7 +87,12 @@ const loginMemberSite = async (
             await loginSIT(page, playerId, pwd, projectCode, timeout);
     }
 
-    await goToGameLobby(page, lobbyDomain, productId);
+    if (projectCode === "ultra888") {
+        await goToUltra888GameLobby(page, process.env.npm_config_gameId) 
+    }
+    else{
+        await goToGameLobby(page, lobbyDomain, productId);
+    }
 
     if (mustSelectCurrencyGroup(env)) {
         await selectCurrencyGroup(page, timeout);
@@ -140,7 +145,8 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
         await page.waitForLoadState("networkidle", { timeout: timeout });
         await page.click(PRODLocator.langDropdown);
         await page.click(PRODLocator[`${langCode}LangOption`]);
-    } else {
+    } 
+    if (projectCode === "l2") {
         await page.setViewportSize({
             width: 340,
             height: 667,
@@ -159,6 +165,17 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
             height: 720,
         });
     }
+    if (projectCode === "ultra888") {
+        const isConfirm = await page.$$(PRODLocator.ultra888popupconfirm);
+        if (isConfirm.length > 0) {
+            await page.click(PRODLocator.ultra888popupconfirm);
+        }
+        await page.selectOption(PRODLocator.ultra888langDropdown, { value: "vn" });
+        await page.fill(PRODLocator.ultra888memberIdInput, "01862081667");
+        await page.fill(PRODLocator.ultra888pwdInput, "Bb1111");
+        await page.click(PRODLocator.ultra888loginButton);
+        await page.waitForLoadState("networkidle", { timeout });
+    } 
 };
 
 const loginSIT = async (page: Page, accountId: string, pwd: string, projectCode: string, timeout: number = 15000) => {
@@ -179,6 +196,30 @@ const loginSIT = async (page: Page, accountId: string, pwd: string, projectCode:
         width: 1280,
         height: 720,
     });
+};
+
+const goToUltra888GameLobby = async (page: Page, productId:any  , timeout = 15000) => {
+    const ultra888MapGameIds = {
+        2: `//*/div[contains(@style,"Vgaming_SeDie.")]/parent::div`,
+        10: `//*/div[contains(@style,"Vgaming_Baccarat")]/parent::div`,
+        21: `//*/div[contains(@style,"Vgaming_Roulette")]/parent::div`,
+        23: `//*/div[contains(@style,"Vgaming_Blackjack")]/parent::div`,
+        25: `//*/div[contains(@style,"Vgaming_SicBo")]/parent::div`,
+        26: `//*/div[contains(@style,"Vgaming_VIPFishPrawnCrab")]/parent::div`,
+        28: `//*/div[contains(@style,"Vgaming_SeDieWar")]/parent::div`,
+        31: `//*/div[contains(@style,"Vgaming_RNGLottery")]/parent::div`,
+        35: `//*/div[contains(@style,"Vgaming_ThreeCards")]/parent::div`,
+        39: `//*/div[contains(@style,"Vgaming_CasinoHold'emPoker")]/parent::div`,
+        42: `//*/div[contains(@style,"Vgaming_TexasHold'emPoker")]/parent::div`,
+        52: `//*/div[contains(@style,"Vgaming_MegaKeno")]/parent::div`,
+        59: `//*/div[contains(@style,"Vgaming_FruitSlot")]/parent::div`,
+        60: `//*/div[contains(@style,"Vgaming_FanTan")]/parent::div`,
+        61: `//*/div[contains(@style,"Vgaming_WinThreeCards")]/parent::div`,
+    }
+    await page.click(`//*/div[contains(@class,"table")]`)
+    await page.waitForLoadState("networkidle", { timeout });
+    await page.click(ultra888MapGameIds[productId])
+    await page.waitForLoadState("networkidle", { timeout });
 };
 
 const goToGameLobby = async (page: Page, lobbyDomain: string, productId: string, timeout: number = 15000) => {

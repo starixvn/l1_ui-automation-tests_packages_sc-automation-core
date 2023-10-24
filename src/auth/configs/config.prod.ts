@@ -11,4 +11,6 @@ export default {
     getbalance: "https://proxy.sabagame.com/user/auth/balance",
     guideLinkL1: "https://guides.sabagame.com",
     guideLinkL2: "https://guides.vgaming.win",
+    ultra888memberSite: "https://www.ultra888-lobby.com/",
+    ultra888lobbyDomain: "#ThirdPartyGame/vid=66&gid=",
 };

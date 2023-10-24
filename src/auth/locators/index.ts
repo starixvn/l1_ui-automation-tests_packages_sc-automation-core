@@ -50,6 +50,12 @@ export enum PRODLocator {
     enLangOption = "//span[text()='English']",
     twLangOption = "//span[text()='繁體中文']",
     jaLangOption = "//span[text()='日本語']",
+    ultra888memberIdInput = "//*/div[contains(@class,'form')]/div[1]/input",
+    ultra888pwdInput = "//*/div[contains(@class,'form')]/div[3]/input",
+    ultra888loginButton = "//*/div[contains(@class,'button')]",
+    ultra888langDropdown = "//*/select[contains(@class,'dropdown')]",
+    ultra888vnLangOption = "text=Tiếng Việt",
+    ultra888popupconfirm = "//*/div[contains(@class,'popup')]/div/div/div/div",
 }
 
 export enum GroupCurrencyLocator {
@@ -57,3 +63,4 @@ export enum GroupCurrencyLocator {
     submitButton = '//input[@value="Submit"]',
     specificCheckbox = "id=groupTypeSpecific",
 }
+
