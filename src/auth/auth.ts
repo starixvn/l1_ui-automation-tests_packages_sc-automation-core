@@ -175,6 +175,7 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
         await page.fill(PRODLocator.ultra888pwdInput, "Bb1111");
         await page.click(PRODLocator.ultra888loginButton);
         await page.waitForLoadState("networkidle", { timeout });
+        await page.waitForTimeout(8000)
     } 
 };
 
@@ -217,6 +218,7 @@ const goToUltra888GameLobby = async (page: Page, productId:any  , timeout = 1500
         61: `//*/div[contains(@style,"Vgaming_WinThreeCards")]/parent::div`,
     }
     await page.click(`//*/div[contains(@class,"table")]`)
+    await page.waitForTimeout(3000)
     await page.waitForLoadState("networkidle", { timeout });
     await page.click(ultra888MapGameIds[productId])
     await page.waitForLoadState("networkidle", { timeout });
