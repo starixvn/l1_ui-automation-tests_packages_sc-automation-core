@@ -1,3 +1,10 @@
+## [1.15.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.15.1...v1.15.2) (2023-10-24)
+
+
+### Bug Fixes
+
+* gameId ([69f8b58](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/69f8b58f42f020a2536d745112752593c4d65f41))
+
 ## [1.15.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.15.0...v1.15.1) (2023-10-24)
 
 
