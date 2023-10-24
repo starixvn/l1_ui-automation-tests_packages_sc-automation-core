@@ -1,3 +1,10 @@
+# [1.15.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.14.3...v1.15.0) (2023-10-24)
+
+
+### Features
+
+* smoketest ultra888 ([f09c405](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/f09c405d7044502497ab7dd9677756b5eb556de7))
+
 ## [1.14.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.14.2...v1.14.3) (2023-10-17)
 
 
