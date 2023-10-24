@@ -1,3 +1,10 @@
+## [1.15.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.15.0...v1.15.1) (2023-10-24)
+
+
+### Bug Fixes
+
+* ultra888 increase wait time after login membersite ([0281589](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/028158963f263826f8368482db5a5526606232fe))
+
 # [1.15.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.14.3...v1.15.0) (2023-10-24)
 
 
