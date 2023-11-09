@@ -29,9 +29,8 @@ const commonLocatorNames = [
     "locHistoryBetDate", "locHistoryRoundId", "locHistoryTotalStake", "locHistoryBetWin", "locOpenBetDetails", 
     "tblEvenPayline", "tblPayline1", "tblAllPayline",  "tblOddPayline",
     "mnuHamburgerExpandSoundOn","mnuHamburgerExpandSoundOff", "mnuHamburgerExpandTrialMode", "icoSound", "icoMusic", 
-    "tabAll", "tabSedie","tabBigSmall","tabCardGames","tabSlots","tabKenoLottery","tabOthers",
+    "tabAll", "tabSedie","tabBigSmall","tabCardGames","tabSlots","tabKenoLottery","tabOthers","jackPotbanner",
     "icoGame1","icoGame2","icoGame3","icoGame4","icoGame5","icoGame6","icoGame7","icoGame8","icoGame9","icoGame10",
-
 ];
 
 const listLocatorNames = imgLocatorNames.concat(popLocatorNames, commonLocatorNames, btnLocatorNames,lblLocatorNames)
@@ -214,6 +213,7 @@ export const CascadingSlotLocators = [
 
 export const GameLobbyLocator = [
     new ImageLocator(baseLocatorNames.imgGameLobby, 388, 629, 300, 80),
+    new ImageLocator(baseLocatorNames.jackPotbanner, 44, 138, 190, 34),
     new ImageLocator(baseLocatorNames.tabAll, 207, 86, 70, 30),
     new ImageLocator(baseLocatorNames.tabSedie, 300, 86, 70, 30),
     new ImageLocator(baseLocatorNames.tabBigSmall, 407, 86, 70, 30),

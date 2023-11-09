@@ -287,6 +287,17 @@ export class TableGameBase {
         });
     }
 
+    protected jackPotBanner(): void {
+        test("Verify JackPot banner still displayed when user return game lobby", async () => {
+            // Act 1
+            await this.game.waitForTimeout(2000);
+            await this.game.clickHome(timeout / 2, baseLocatorNames.btnHome);
+            await this.game.waitUntilGameLobbyUiLoad();
+            const jackPotBanner = await this.game.capture(baseLocatorNames.jackPotbanner);
+            expect(jackPotBanner.image).toMatchSnapshot(jackPotBanner.name);
+        });
+    }
+
     start(): void {
         test.beforeEach(async ({}, testInfo) => {
             testInfo.snapshotPath = (name: string) => {
@@ -325,6 +336,9 @@ export class TableGameBase {
         this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
         this.returnGameLobby();
         this.turnbackGame();
+        if (process.env.npm_config_project === "l2") {
+            this.jackPotBanner()
+        }
     }
 }
 
