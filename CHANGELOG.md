@@ -1,3 +1,10 @@
+# [1.16.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.15.2...v1.16.0) (2023-11-09)
+
+
+### Features
+
+* tc for VG only, check JackPot banner add lobby game ([85af42e](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/85af42e17a461ef87157c785c7924fcd5ce7043e))
+
 ## [1.15.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.15.1...v1.15.2) (2023-10-24)
 
 
