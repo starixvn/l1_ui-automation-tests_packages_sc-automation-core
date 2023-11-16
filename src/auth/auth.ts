@@ -72,7 +72,7 @@ const loginMemberSite = async (
     const lobbyDomain = projectCode === "l1" ? config.lobbyDomain : config[`${projectCode}lobbyDomain`];
 
     await page.goto(memberSiteLink);
-    console.log("Login Member Site: ", memberSiteLink);
+    console.log(`Login ${playerId} - ${gameId} Member Site: ${memberSiteLink}`);
     await page.waitForLoadState("domcontentloaded", { timeout });
 
     switch (env) {

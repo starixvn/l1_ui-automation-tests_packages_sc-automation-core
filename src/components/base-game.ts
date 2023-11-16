@@ -6,6 +6,8 @@ import { ImageLocator, ImageSnapshot } from "./base-image-locator";
 import { GameConfiguration } from "./game-configuration";
 import { createWorker } from "tesseract.js";
 import { baseLocatorNames } from "./base-game-locator";
+import fs from "fs";
+const PNG = require("pngjs").PNG;
 
 export class BaseGame {
     readonly BetBoardPostfix: string = "BetBoard";
@@ -63,7 +65,7 @@ export class BaseGame {
     }
 
     async waitUntilGameUiLoad() {
-        const waitRange = process.env.npm_config_project === "ultra888" ? 1 :2 
+        const waitRange = process.env.npm_config_project === "ultra888" ? 1 : 2;
         await this.page.waitForTimeout(1000);
         let filterA: string[] = [];
         const searchString = "LoadScene";
@@ -384,13 +386,93 @@ export class BaseGame {
     async waitForFreeSpin(settledResults: any) {
         const totalFreeSpin = settledResults.settlementResult?.freeSpins?.count ?? 0;
 
-        for(let index = 0; index < totalFreeSpin; index++)
-        {
-            const newSettledResults  = await this.waitForSettlement();
+        for (let index = 0; index < totalFreeSpin; index++) {
+            const newSettledResults = await this.waitForSettlement();
             await this.waitForFreeSpin(newSettledResults);
         }
-    };
-    
+    }
+
+    async detectImageLocation(bigImagePath: string, smallImagePath: string, threshold: number = 10) {
+        try {
+            const [bigImage, smallImage] = await Promise.all([loadImage(bigImagePath) as any, loadImage(smallImagePath) as any]);
+
+            const bigWidth = bigImage.width;
+            const bigHeight = bigImage.height;
+            const smallWidth = smallImage.width;
+            const smallHeight = smallImage.height;
+
+            // Iterate over the big image to find differences with the small image
+            for (let y = 0; y < bigHeight - smallHeight; y++) {
+                for (let x = 0; x < bigWidth - smallWidth; x++) {
+                    let match = true;
+
+                    // Compare the pixels of the small image with the corresponding region of the big image
+                    for (let j = 0; j < smallHeight; j++) {
+                        for (let i = 0; i < smallWidth; i++) {
+                            const bigIndex = (bigWidth * (y + j) + (x + i)) << 2;
+                            const smallIndex = (smallWidth * j + i) << 2;
+
+                            // Compare RGBA values with the threshold
+                            if (
+                                !comparePixels(
+                                    [
+                                        bigImage.data[bigIndex],
+                                        bigImage.data[bigIndex + 1],
+                                        bigImage.data[bigIndex + 2],
+                                        bigImage.data[bigIndex + 3],
+                                    ],
+                                    [
+                                        smallImage.data[smallIndex],
+                                        smallImage.data[smallIndex + 1],
+                                        smallImage.data[smallIndex + 2],
+                                        smallImage.data[smallIndex + 3],
+                                    ],
+                                    threshold
+                                )
+                            ) {
+                                match = false;
+                            }
+                        }
+                    }
+
+                    if (match) {
+                        return { x, y, w: smallWidth, h: smallHeight };
+                    }
+                }
+            }
+
+            console.log("Small image not found in the big image.");
+            return null;
+        } catch (error) {
+            console.error("Error occurred while loading images:", error);
+            return null;
+        }
+    }
+}
+
+function loadImage(path: string) {
+    return new Promise((resolve, reject) => {
+        fs.createReadStream(path)
+            .pipe(new PNG())
+            .on("error", reject)
+            .on("parsed", function (this: any) {
+                resolve(this); // Pass the PNG instance to resolve
+            });
+    });
+}
+
+function comparePixels(pixel1: number[], pixel2: number[], threshold: number): boolean {
+    const [r1, g1, b1, a1] = pixel1;
+    const [r2, g2, b2, a2] = pixel2;
+
+    // Calculate the difference between RGBA values
+    const diffR = Math.abs(r1 - r2);
+    const diffG = Math.abs(g1 - g2);
+    const diffB = Math.abs(b1 - b2);
+    const diffA = Math.abs(a1 - a2);
+
+    // Compare the differences with the threshold
+    return diffR <= threshold && diffG <= threshold && diffB <= threshold && diffA <= threshold;
 }
 
 export interface Pos {
