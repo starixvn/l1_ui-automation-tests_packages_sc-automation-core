@@ -1,3 +1,10 @@
+# [1.17.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.16.0...v1.17.0) (2023-11-16)
+
+
+### Features
+
+* add new funtion dectect image location ([dba8d38](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/dba8d38a174920e9c0fe6a29a47cdbf997d694d2))
+
 # [1.16.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.15.2...v1.16.0) (2023-11-09)
 
 
