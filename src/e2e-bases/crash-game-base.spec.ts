@@ -695,6 +695,6 @@ const getBoardID = async () => {
     return boardId;
 };
 
-const cashOut = async (game: BaseGame) => {
-    await game.clickLocator(baseLocatorNames.btnCashOut);
-};
+// const cashOut = async (game: BaseGame) => {
+//     await game.clickLocator(baseLocatorNames.btnCashOut);
+// };
