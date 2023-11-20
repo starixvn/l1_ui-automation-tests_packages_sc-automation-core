@@ -33,11 +33,11 @@ export class CrashGameBase {
             // Act
             const placeBetResponse = await this.player.placeBet(bet.choice, bet.amount);
             this.game.attachSocketAndCaptureEvent(GameEvent.Settlement);
-            await this.game.waitForEvent(`"t":0`); //Wait for start fly
+            await this.game.waitForEvent(GameEvent.StartFly); //Wait for start fly
             let settledResults = await this.game.latestCaptureEvent(GameEvent.Settlement)
             if(settledResults === "") //Have not crash yet
             {
-                await this.game.waitForEvent(`"m":1,`); //wait for start cash out
+                await this.game.waitForEvent(GameEvent.StartCashOut); //wait for start cash out
                 await cashOut(this.game); //click cash out
                 settledResults = await this.game.waitForSettlement();
 
