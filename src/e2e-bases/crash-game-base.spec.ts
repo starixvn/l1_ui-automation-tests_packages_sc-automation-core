@@ -29,13 +29,16 @@ export class CascadingSlotGameBase {
     }
 
     protected mainUITests() {
-        test("Verify game name", async () => {
+        test("Verify default control area", async () => {
             //Act
-            await test.step("Capture game name and compare with snapshot", async () => {
-                const gamename = await this.game.capture(baseLocatorNames.imgGameName);
+            let imgControlArea;
+            await test.step("Capture default control area", async () => {
+                imgControlArea = await this.game.capture(baseLocatorNames.imgGameName);
+            });
 
+            await test.step("Compare with snapshot", async () => {
                 //Assert
-                expect(gamename.image).toMatchSnapshot(gamename.name);
+                expect(imgControlArea.image).toMatchSnapshot(imgControlArea.name);
             });
         });
 

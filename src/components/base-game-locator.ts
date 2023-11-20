@@ -255,3 +255,26 @@ export const TableLocators = [
     new ImageLocator(baseLocatorNames.btnLeftArrow, 332, 614, 40, 40),
 
 ];
+
+export const CrashGameLocators = [
+    new ImageLocator(baseLocatorNames.imgControlArea, 239, 542, 478, 139),
+    new ImageLocator(baseLocatorNames.btnRebet, 1156, 620, 40, 40),
+    new ImageLocator(baseLocatorNames.defaultChipBarl1, 340, 600, 630, 100),
+    new ImageLocator(baseLocatorNames.defaultChipBarl2, 340, 600, 630, 100),
+    new ImageLocator(baseLocatorNames.btnHome, 60, 80, 35, 35),
+    new ImageLocator(baseLocatorNames.hamburgerMenu, 54, 152, 20, 20),
+    new ImageLocator(baseLocatorNames.historyMenu, 54, 347, 20, 20),
+    new ImageLocator(baseLocatorNames.guideMenu, 54, 408, 20, 20),
+    new ImageLocator(baseLocatorNames.historyPopup, 550, 75, 150, 25),
+    new ImageLocator(baseLocatorNames.stake1, 437, 625, 30, 30),
+    new ImageLocator(baseLocatorNames.stake10, 437, 625, 30, 30),
+    new ImageLocator(baseLocatorNames.errorMessage, 440, 548, 300, 20),
+    new ImageLocator(baseLocatorNames.btnClosePopup, 5, 5, 10, 10),
+    new ImageLocator(baseLocatorNames.lblHistoryFirstRow, 180, 195, 945, 44),
+    new ImageLocator(baseLocatorNames.lblRoundIdOnTable, 306, 212, 100, 25),
+    new ImageLocator(baseLocatorNames.locHistoryRoundId, 400, 206, 50, 25),
+    new ImageLocator(baseLocatorNames.lblHistoryDetailRoundId, 200, 190, 70, 40),
+    new ImageLocator(baseLocatorNames.btnRightArrow, 937, 614, 40, 40),
+    new ImageLocator(baseLocatorNames.btnLeftArrow, 332, 614, 40, 40),
+
+];
