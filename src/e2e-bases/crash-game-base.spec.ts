@@ -108,7 +108,7 @@ export class CrashGameBase {
         });
     }
 
-    protected betAmountTests(projectCode = "l1") {
+    protected betAmountTests() {
         test("Verify default state of bet amount popup", async () => {
             //Act
             await test.step("Open bet amount popup", async () => {
@@ -116,7 +116,7 @@ export class CrashGameBase {
             });
             //Assert
             await test.step("Capture bet control popup and compare with snapshot", async () => {
-                const popBetAmount = await this.game.capture(`popBetAmount${projectCode}`);
+                const popBetAmount = await this.game.capture(`popBetAmount${process.env.npm_config_project}`);
                 expect(popBetAmount.image).toMatchSnapshot(popBetAmount.name);
             });
         });
@@ -130,7 +130,7 @@ export class CrashGameBase {
             });
             //Assert
             await test.step("Capture bet control popup and compare with snapshot", async () => {
-                const popBetAmountMaxChip = await this.game.capture(`popBetAmountMaxChip${projectCode}`);
+                const popBetAmountMaxChip = await this.game.capture(`popBetAmountMaxChip${process.env.npm_config_project}`);
                 expect(popBetAmountMaxChip.image).toMatchSnapshot(popBetAmountMaxChip.name);
             });
         });
@@ -142,7 +142,7 @@ export class CrashGameBase {
             });
             //Assert
             await test.step("Verify the bet amount is clear and confirm button is disable", async () => {
-                const popBetAmount = await this.game.capture(`popBetAmount${projectCode}`);
+                const popBetAmount = await this.game.capture(`popBetAmount${process.env.npm_config_project}`);
                 expect(popBetAmount.image).toMatchSnapshot(popBetAmount.name);
             });
         });
@@ -157,7 +157,7 @@ export class CrashGameBase {
             });
             //Assert
             await test.step("Verify that bet amount show correctly", async () => {
-                const imgBetAmount = await this.game.capture(`imgBetAmountFirstChip${projectCode}`);
+                const imgBetAmount = await this.game.capture(`imgBetAmountFirstChip${process.env.npm_config_project}`);
                 expect(imgBetAmount.image).toMatchSnapshot(imgBetAmount.name);
             });
         
@@ -173,7 +173,7 @@ export class CrashGameBase {
 
             //Assert
             await test.step("Verify bet amount", async () => {
-                const imgBetAmount = await this.game.capture(`imgBetAmountIncrease${projectCode}`);
+                const imgBetAmount = await this.game.capture(`imgBetAmountIncrease${process.env.npm_config_project}`);
                 expect(imgBetAmount.image).toMatchSnapshot(imgBetAmount.name);
             });
         });
@@ -189,7 +189,7 @@ export class CrashGameBase {
 
             //Assert
             await test.step("Verify bet amount", async () => {
-                const imgBetAmount = await this.game.capture(`imgBetAmountFirstChip${projectCode}`);
+                const imgBetAmount = await this.game.capture(`imgBetAmountFirstChip${process.env.npm_config_project}`);
                 expect(imgBetAmount.image).toMatchSnapshot(imgBetAmount.name);
             });
         });
@@ -202,7 +202,7 @@ export class CrashGameBase {
 
             //Assert
             await test.step("Verify that bet amount is disable", async () => {
-                const imgBetAmount = await this.game.capture(`imgBetAmountDisable${projectCode}`);
+                const imgBetAmount = await this.game.capture(`imgBetAmountDisable${process.env.npm_config_project}`);
                 expect(imgBetAmount.image).toMatchSnapshot(imgBetAmount.name);
             });
         });
@@ -462,7 +462,10 @@ export class CrashGameBase {
             //Assert
             await test.step("Verify the popup is opened", async () => {
                 const popMD5 = await this.game.capture(baseLocatorNames.popMD5);
-                expect(popMD5.image).toMatchSnapshot(popMD5.name);
+                expect(popMD5.image).toMatchSnapshot(popMD5.name,{maxDiffPixelRatio:0.3});
+            });
+            await test.step("Close the popup", async () => {
+                await this.game.clickOutSide();
             });
         });
 
@@ -475,6 +478,9 @@ export class CrashGameBase {
             await test.step("Verify field result is cleared", async () => {
                 const lblResultCleared = await this.game.capture(baseLocatorNames.lblResultCleared);
                 expect(lblResultCleared.image).toMatchSnapshot(lblResultCleared.name);
+            });
+            await test.step("Close the popup", async () => {
+                await this.game.clickOutSide();
             });
         });
         

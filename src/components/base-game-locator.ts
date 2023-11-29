@@ -261,7 +261,7 @@ export const TableLocators = [
 ];
 
 export const CrashGameLocators = [
-    new ImageLocator(baseLocatorNames.imgControlArea, 239, 542, 478, 139),
+    new ImageLocator(baseLocatorNames.imgControlArea, 275, 543, 478, 135),
     new ImageLocator(baseLocatorNames.imgRocket, 105, 398, 22, 68),
     new ImageLocator(baseLocatorNames.lblRoundIdOnTable, 238, 38, 95, 23),
     new ImageLocator(baseLocatorNames.mnuHamburger, 41, 117, 24, 24),    
@@ -275,7 +275,7 @@ export const CrashGameLocators = [
     new ImageLocator(baseLocatorNames.btnMaxChip, 843, 302, 82, 29),
     new ImageLocator(baseLocatorNames.popBetAmountMaxChipl1, 470, 110, 497, 283),
     new ImageLocator(baseLocatorNames.popBetAmountMaxChipl2, 470, 110, 497, 283),
-    new ImageLocator(baseLocatorNames.btnClearBetAmount, 825, 177, 81, 24),
+    //new ImageLocator(baseLocatorNames.btnClearBetAmount, 825, 177, 81, 24),
     new ImageLocator(baseLocatorNames.btnFirstChip, 502, 241, 84, 35),
     new ImageLocator(baseLocatorNames.btnConfirm, 651, 383, 132, 32),
     new ImageLocator(baseLocatorNames.imgBetAmountFirstChipl1, 276, 555, 419, 42),
