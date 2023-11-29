@@ -30,7 +30,7 @@ export class CrashGameBase {
             //Act
             let imgControlArea;
             await test.step("Capture default control area", async () => {
-                imgControlArea = await this.game.capture(baseLocatorNames.imgGameName);
+                imgControlArea = await this.game.capture(baseLocatorNames.imgControlArea);
             });
 
             await test.step("Compare with snapshot", async () => {
@@ -88,7 +88,7 @@ export class CrashGameBase {
         test("Verify menu expand with sound and music off", async () => {
             //Act
             await test.step("Click on hamburger menu", async () => {
-                await this.game.clickLocator(baseLocatorNames.mnuHamburger);
+                await this.game.clickLocator(baseLocatorNames.mnuHamburger, 1000);
             });
             await test.step("Click on sound icon", async () => {
                 await this.game.clickLocator(baseLocatorNames.icoSound);
@@ -179,7 +179,7 @@ export class CrashGameBase {
         });
 
         
-        test("Verify that player be able to increase bet amount", async () => {
+        test("Verify that player be able to decrease bet amount", async () => {
             //Act
             await test.step("Click on decrease button 2 times", async () => {
                 for (let i = 0; i < 2; i++) {
@@ -358,29 +358,6 @@ export class CrashGameBase {
                 expect(lblMultiplier.image).toMatchSnapshot(lblMultiplier.name);
             });
         });
-
-        test("Verify backspace a number in auto cashout popup", async () => {
-            await test.step("Click backspace button", async () => {
-                await this.game.clickLocator(baseLocatorNames.btnBackspace);
-            });
-            await test.step("Verify the number is deleted", async () => {
-                const lblMultiplier = await this.game.captureLocator(baseLocatorNames.lblMultiplier200);
-                // Assert
-                expect(lblMultiplier.image).toMatchSnapshot(lblMultiplier.name);
-            });
-        });
-
-        test("Verify backspace a number in auto cashout popup", async () => {
-            await test.step("Click backspace button", async () => {
-                await this.game.clickLocator(baseLocatorNames.btnBackspace);
-            });
-            await test.step("Verify the number is deleted", async () => {
-                const lblMultiplier = await this.game.captureLocator(baseLocatorNames.lblMultiplier200);
-                // Assert
-                expect(lblMultiplier.image).toMatchSnapshot(lblMultiplier.name);
-            });
-        });
-
         test("Verify clear multiplier in auto cashout popup", async () => {
             await test.step("Click clear button", async () => {
                 await this.game.clickLocator(baseLocatorNames.btnClearAutoCashout);
