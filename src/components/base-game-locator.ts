@@ -17,7 +17,7 @@ const btnLocatorNames = ["btnRebet","btnHome","btnClosePopup","btnRightArrow","b
 
 const popLocatorNames = ["popAutoSpin","popHistory", "popGuide","popGameGuide", "popAutoSpinTurbo",  "popBetControll1", "popBetControlMaxBetLevell1",
     "popBetControlMinBetLevell1", "popBetControlMaxCoinValuel1", "popBetControlMinCoinValuel1", "popBetControll2", "popBetControlMaxBetLevell2", 
-    "popBetControlMinBetLevell2", "popBetControlMaxCoinValuel2","popBetControlMinCoinValuel2","popBetAmout", "popBetControlTrialMode", "popBetAmountMaxChipl1","popBetAmountMaxChipl2", 
+    "popBetControlMinBetLevell2", "popBetControlMaxCoinValuel2","popBetControlMinCoinValuel2","popBetAmountl1", "popBetAmountl2","popBetControlTrialMode", "popBetAmountMaxChipl1","popBetAmountMaxChipl2", 
     "popAutoPlay", "popAutoCashout", "popMD5"];
 
 const lblLocatorNames = ["lblRoundIdOnTable",   "lblTotalBetl1", "lblTotalBetl2","lblChoice1",  "lblChoice2","lblChoice3", "lblRoundIdChoice1","lblRoundIdChoice2",
@@ -280,14 +280,14 @@ export const CrashGameLocators = [
     new ImageLocator(baseLocatorNames.btnConfirm, 651, 383, 132, 32),
     new ImageLocator(baseLocatorNames.imgBetAmountFirstChipl1, 276, 555, 419, 42),
     new ImageLocator(baseLocatorNames.imgBetAmountFirstChipl2, 276, 555, 419, 42),
-    new ImageLocator(baseLocatorNames.btnIncreaseBetAmount, 661, 570, 16, 16),
-    new ImageLocator(baseLocatorNames.btnDecreaseBetAmount, 462, 570, 16, 16),
+    new ImageLocator(baseLocatorNames.btnIncreaseBetAmount, 680, 561, 41, 31),
+    new ImageLocator(baseLocatorNames.btnDecreaseBetAmount, 480, 561, 41, 31),
     new ImageLocator(baseLocatorNames.btnPlaceBet, 770, 565, 150, 43),
     new ImageLocator(baseLocatorNames.btnPlaceEarlyBet, 770, 565, 150, 43),
     new ImageLocator(baseLocatorNames.btnPlaceEarlyBetWaiting, 770, 565, 150, 43),
     new ImageLocator(baseLocatorNames.imgBetAmountDisablel1, 276, 555, 419, 42),
     new ImageLocator(baseLocatorNames.imgBetAmountDisablel2, 276, 555, 419, 42),
-    new ImageLocator(baseLocatorNames.btnAutoPlay, 997, 565, 84, 102),
+    new ImageLocator(baseLocatorNames.btnAutoPlay, 1068, 568, 92, 99),
     new ImageLocator(baseLocatorNames.popAutoPlay, 460, 111, 503, 294),
     new ImageLocator(baseLocatorNames.btnAutoPlayStart, 650, 380, 145, 43),
     new ImageLocator(baseLocatorNames.btnAutoPlay10, 497, 232, 94, 35),

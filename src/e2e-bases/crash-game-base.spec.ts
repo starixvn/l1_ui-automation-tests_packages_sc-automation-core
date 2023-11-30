@@ -81,7 +81,7 @@ export class CrashGameBase {
             });
             //Post-Act
             await test.step("Click out side to close the menu", async () => {
-                await this.game.clickOutSide(1000);
+                await this.game.clickOutSide(2000);
             });
         });
 
