@@ -5,7 +5,7 @@ const imgLocatorNames = ["imgdealer","imgGameName","imgB0","imgB1",  "imgB2","im
      "imgTotalbet0_1", "imgTotalbet0_2", "imgTotalbet1", "imgTotalbet5","imgTotalbet10","imgLeftNumbersColumn", "imgRightNumbersColumn",
     "imgConfirmPaylineDisabled","imgTurboTrial","imgTurboDefault","imgBetLevel","imgCoinValue","imgTotalBet", "imgBottomArea", "imgBottomAreaTrialMode",
     "imgUserBalanceTrialMode", "imgRoundIdFirstRoundTrialMode","imgGameLobby", "imgTurboOn", "imgTurboOFF", "imgControlArea", "imgRocket", "imgBetAmountFirstChipl1", "imgBetAmountFirstChipl2",
-    "imgBetAmountDisablel1", "imgBetAmountDisablel2"]
+    "imgBetAmountDisablel1", "imgBetAmountDisablel2", "imgBetAmountIncreasel1", "imgBetAmountIncreasel2"]
 
 const btnLocatorNames = ["btnRebet","btnHome","btnClosePopup","btnRightArrow","btnLeftArrow","btnHitCard", "btnCancel","btnSplit","btnDouble","btnNewbet",
     "btnPayline","btnAutoSpin","btnTurbo", "btnSpin", "btnAutoSpin10", "btnAutoSpinTurbo", "btnAutoSpinStart","btnPayline1", "btnAllPayline", "btnEvenPayline",
@@ -279,7 +279,9 @@ export const CrashGameLocators = [
     new ImageLocator(baseLocatorNames.btnFirstChip, 502, 241, 84, 35),
     new ImageLocator(baseLocatorNames.btnConfirm, 651, 383, 132, 32),
     new ImageLocator(baseLocatorNames.imgBetAmountFirstChipl1, 276, 555, 419, 42),
-    new ImageLocator(baseLocatorNames.imgBetAmountFirstChipl2, 276, 555, 419, 42),
+    new ImageLocator(baseLocatorNames.imgBetAmountFirstChipl2, 276, 555, 419, 42),    
+    new ImageLocator(baseLocatorNames.imgBetAmountIncreasel1, 276, 555, 419, 42),
+    new ImageLocator(baseLocatorNames.imgBetAmountIncreasel2, 276, 555, 419, 42),
     new ImageLocator(baseLocatorNames.btnIncreaseBetAmount, 680, 561, 41, 31),
     new ImageLocator(baseLocatorNames.btnDecreaseBetAmount, 480, 561, 41, 31),
     new ImageLocator(baseLocatorNames.btnPlaceBet, 770, 565, 150, 43),
