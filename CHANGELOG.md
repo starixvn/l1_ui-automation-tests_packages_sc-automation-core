@@ -1,3 +1,10 @@
+# [1.18.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.17.0...v1.18.0) (2023-12-01)
+
+
+### Features
+
+* increase prod waiting timeout and enhance function detectImageLocation ([adf570e](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/adf570e4aca55c72dc6a5c6660147894590c6cc7))
+
 # [1.17.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.16.0...v1.17.0) (2023-11-16)
 
 
