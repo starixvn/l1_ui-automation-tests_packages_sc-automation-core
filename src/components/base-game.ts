@@ -436,7 +436,7 @@ export class BaseGame {
                     }
 
                     if (match) {
-                        return { x, y, w: smallWidth, h: smallHeight };
+                        return { x: x+smallWidth/2, y: y+smallHeight/2};
                     }
                 }
             }
