@@ -13,7 +13,8 @@ const btnLocatorNames = ["btnRebet","btnHome","btnClosePopup","btnRightArrow","b
     "btnCoinValueDecrease", "btnTotalBetIncrease", "btnTotalBetDecrease","btnTrialMode", "btnHistoryTrialmode","btnCancelChoice1",
     "btnCancelChoice2", "btnCancelChoice3", "btnCashOut", "btnCashOutHalf", "btnBetAmount", "btnMaxChip", "btnClearBetamount", "btnFirstChip", "btnConfirm",
      "btnIncreaseBetAmount", "btnDecreaseBetAmount", "btnPlaceBet","btnAutoPlay", "btnAutoPlayStart", "btnAutoPlay10", "btnAutoCashOut", "btnNumber1AutoCashout", "btnDotAutoCashout", 
-     "btnNumber2AutoCashout", "btnNumber0AutoCashout", "btnBackspace", "btnClearAutoCashout", "btnPlaceEarlyBet", "btnPlaceEarlyBetWaiting", "btnStatisticLastRound", "btnStatisticRunningRound"]
+     "btnNumber2AutoCashout", "btnNumber0AutoCashout", "btnBackspace", "btnClearAutoCashout", "btnPlaceEarlyBet", "btnPlaceEarlyBetWaiting", "btnStatisticLastRound", "btnStatisticRunningRound",
+     "btnEnableAutoCashOut"]
 
 const popLocatorNames = ["popAutoSpin","popHistory", "popGuide","popGameGuide", "popAutoSpinTurbo",  "popBetControll1", "popBetControlMaxBetLevell1",
     "popBetControlMinBetLevell1", "popBetControlMaxCoinValuel1", "popBetControlMinCoinValuel1", "popBetControll2", "popBetControlMaxBetLevell2", 
@@ -262,7 +263,7 @@ export const TableLocators = [
 
 export const CrashGameLocators = [
     new ImageLocator(baseLocatorNames.imgControlArea, 275, 543, 478, 135),
-    new ImageLocator(baseLocatorNames.imgRocket, 105, 398, 22, 68),
+    new ImageLocator(baseLocatorNames.imgRocket, 113, 415, 88, 45),
     new ImageLocator(baseLocatorNames.lblRoundIdOnTable, 238, 38, 95, 23),
     new ImageLocator(baseLocatorNames.mnuHamburger, 41, 117, 24, 24),    
     new ImageLocator(baseLocatorNames.icoSound, 45, 248, 18, 18),    
@@ -275,7 +276,6 @@ export const CrashGameLocators = [
     new ImageLocator(baseLocatorNames.btnMaxChip, 843, 302, 82, 29),
     new ImageLocator(baseLocatorNames.popBetAmountMaxChipl1, 470, 110, 497, 283),
     new ImageLocator(baseLocatorNames.popBetAmountMaxChipl2, 470, 110, 497, 283),
-    //new ImageLocator(baseLocatorNames.btnClearBetAmount, 825, 177, 81, 24),
     new ImageLocator(baseLocatorNames.btnFirstChip, 502, 241, 84, 35),
     new ImageLocator(baseLocatorNames.btnConfirm, 651, 383, 132, 32),
     new ImageLocator(baseLocatorNames.imgBetAmountFirstChipl1, 297, 555, 439, 52),
@@ -294,6 +294,7 @@ export const CrashGameLocators = [
     new ImageLocator(baseLocatorNames.btnAutoPlayStart, 650, 380, 145, 43),
     new ImageLocator(baseLocatorNames.btnAutoPlay10, 497, 232, 94, 35),
     new ImageLocator(baseLocatorNames.popAutoCashout, 458, 111, 514, 286),
+    new ImageLocator(baseLocatorNames.btnEnableAutoCashOut, 410, 631, 31, 31),
     new ImageLocator(baseLocatorNames.lblAutoCashoutMultiplierMaxLength, 650, 163, 131, 39),
     new ImageLocator(baseLocatorNames.btnAutoCashOut, 538, 628, 129, 39),
     new ImageLocator(baseLocatorNames.btnNumber1AutoCashout, 498, 227, 57, 39),

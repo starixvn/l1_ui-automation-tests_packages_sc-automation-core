@@ -44,6 +44,7 @@ export class CrashGameBase {
             let imgRocket;
             await test.step("Wait for start new round", async () => {
                 await waitUntilPlaceBet(this.game)
+                await this.game.waitForTimeout(4000);
             });
 
             await test.step("Get rocket image", async () => {
@@ -237,7 +238,7 @@ export class CrashGameBase {
             let settledResultsAutoPlay: Array<string> = [];
 
             await test.step("Wait until place bet", async () => {
-                await this.game.waitUntilPlaceBet();
+                await waitUntilPlaceBet(this.game);
             });
 
             await test.step("Enable auto cash out", async () => {
@@ -262,7 +263,7 @@ export class CrashGameBase {
         test("Verify that player can stop auto play", async () => {
             // Act
             await test.step("Wait until place bet", async () => {
-                await this.game.waitUntilPlaceBet();
+                await waitUntilPlaceBet(this.game);
             });
 
             await test.step("Start 10 auto play", async () => {
@@ -580,9 +581,9 @@ const openAutoPlayBoard = async (game: BaseGame) => {
     await game.clickLocator(baseLocatorNames.btnAutoPlay);
 };
 
-const selectAutoPlay = async (game: BaseGame, totalspin: number) => {
+const selectAutoPlay = async (game: BaseGame, totalPlay: number) => {
     await game.clickLocator(baseLocatorNames.btnAutoPlay, 1500);
-    await game.clickLocator(baseLocatorNames[`btnAutoPlay${totalspin}`]);
+    await game.clickLocator(baseLocatorNames[`btnAutoPlay${totalPlay}`]);
     await game.clickLocator(baseLocatorNames.btnAutoPlayStart, 100);
 };
 
@@ -594,7 +595,7 @@ export interface Expectdata {
 }
 
 const enableAutoCashOut = async (game: BaseGame) => {
-    game.clickLocator(baseLocatorNames.btnBetAmount, 1000)
+    game.clickLocator(baseLocatorNames.btnEnableAutoCashOut, 1000)
 };
 
 const openAutoCashoutPopup = async (game: BaseGame) => {
