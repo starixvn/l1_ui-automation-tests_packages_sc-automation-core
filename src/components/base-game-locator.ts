@@ -5,7 +5,7 @@ const imgLocatorNames = ["imgdealer","imgGameName","imgB0","imgB1",  "imgB2","im
      "imgTotalbet0_1", "imgTotalbet0_2", "imgTotalbet1", "imgTotalbet5","imgTotalbet10","imgLeftNumbersColumn", "imgRightNumbersColumn",
     "imgConfirmPaylineDisabled","imgTurboTrial","imgTurboDefault","imgBetLevel","imgCoinValue","imgTotalBet", "imgBottomArea", "imgBottomAreaTrialMode",
     "imgUserBalanceTrialMode", "imgRoundIdFirstRoundTrialMode","imgGameLobby", "imgTurboOn", "imgTurboOFF", "imgControlArea", "imgRocket", "imgBetAmountFirstChipl1", "imgBetAmountFirstChipl2",
-    "imgBetAmountDisablel1", "imgBetAmountDisablel2", "imgBetAmountIncreasel1", "imgBetAmountIncreasel2"]
+    "imgBetAmountDisablel1", "imgBetAmountDisablel2", "imgBetAmountIncreasel1", "imgBetAmountIncreasel2","imgAutoCashoutIncrease", "imgAutoCashoutDecrease"]
 
 const btnLocatorNames = ["btnRebet","btnHome","btnClosePopup","btnRightArrow","btnLeftArrow","btnHitCard", "btnCancel","btnSplit","btnDouble","btnNewbet",
     "btnPayline","btnAutoSpin","btnTurbo", "btnSpin", "btnAutoSpin10", "btnAutoSpinTurbo", "btnAutoSpinStart","btnPayline1", "btnAllPayline", "btnEvenPayline",
@@ -14,7 +14,7 @@ const btnLocatorNames = ["btnRebet","btnHome","btnClosePopup","btnRightArrow","b
     "btnCancelChoice2", "btnCancelChoice3", "btnCashOut", "btnCashOutHalf", "btnBetAmount", "btnMaxChip", "btnClearBetamount", "btnFirstChip", "btnConfirm",
      "btnIncreaseBetAmount", "btnDecreaseBetAmount", "btnPlaceBet","btnAutoPlay", "btnAutoPlayStart", "btnAutoPlay10", "btnAutoCashOut", "btnNumber1AutoCashout", "btnDotAutoCashout", 
      "btnNumber2AutoCashout", "btnNumber0AutoCashout", "btnBackspace", "btnClearAutoCashout", "btnPlaceEarlyBet", "btnPlaceEarlyBetWaiting", "btnStatisticLastRound", "btnStatisticRunningRound",
-     "btnEnableAutoCashOut"]
+     "btnEnableAutoCashOut", "btnConfirmAutoCashoutDisabled", "btnIncreaseAutoCashout", "btnDecreaseAutoCashout"]
 
 const popLocatorNames = ["popAutoSpin","popHistory", "popGuide","popGameGuide", "popAutoSpinTurbo",  "popBetControll1", "popBetControlMaxBetLevell1",
     "popBetControlMinBetLevell1", "popBetControlMaxCoinValuel1", "popBetControlMinCoinValuel1", "popBetControll2", "popBetControlMaxBetLevell2", 
@@ -24,7 +24,7 @@ const popLocatorNames = ["popAutoSpin","popHistory", "popGuide","popGameGuide", 
 const lblLocatorNames = ["lblRoundIdOnTable",   "lblTotalBetl1", "lblTotalBetl2","lblChoice1",  "lblChoice2","lblChoice3", "lblRoundIdChoice1","lblRoundIdChoice2",
     "lblRoundIdChoice3", "lblRoundID", "lblBetLevel0_1", "lblWin", "lblErrorMsg", "lblHistoryFirstRow","lblHistoryDetailRoundId","lblRoundIdFirstRoundTrialMode", 
     "lblTumbleWinList", "lblTumbleWinListTrialMode","lblBetLevel0_2","lblBetLevel1",  "lblBetLevel5", "lblBetLevel10", "lblTotalbet","lblDefaultTotalBet", "lblAutoCashoutMultiplierMaxLength", 
-    "lblAutoCashoutMultiplierMaxLengthApplied", "lblMultiplier2001", "lblMultiplier200", "lblMultiplierCleared", "lblResultCleared"];
+    "lblAutoCashoutMultiplierMaxLengthApplied", "lblMultiplier2001", "lblMultiplier200", "lblMultiplierCleared", "lblResultCleared", "lblAutoCashoutEnable", "lblAutoCashoutDisable"];
 
 const commonLocatorNames = [
     "defaultChipBarl1", "defaultChipBarl2","hamburgerMenu","historyMenu",
@@ -298,15 +298,23 @@ export const CrashGameLocators = [
     new ImageLocator(baseLocatorNames.lblAutoCashoutMultiplierMaxLength, 650, 163, 131, 39),
     new ImageLocator(baseLocatorNames.btnAutoCashOut, 538, 628, 129, 39),
     new ImageLocator(baseLocatorNames.btnNumber1AutoCashout, 498, 227, 57, 39),
+    new ImageLocator(baseLocatorNames.btnNumber2AutoCashout, 573, 227, 57, 39),
     new ImageLocator(baseLocatorNames.btnDotAutoCashout, 872, 292, 61, 39),
     new ImageLocator(baseLocatorNames.btnClearBetAmount, 812, 173, 101, 34),
     new ImageLocator(baseLocatorNames.btnConfirmAutoCashout, 647, 378, 131, 43),
+    new ImageLocator(baseLocatorNames.btnConfirmAutoCashoutDisabled, 638, 372, 154, 38),
     new ImageLocator(baseLocatorNames.lblAutoCashoutMultiplierMaxLengthApplied, 286, 621, 457, 55),
     new ImageLocator(baseLocatorNames.lblMultiplier2001, 488, 163, 299, 40),
     new ImageLocator(baseLocatorNames.btnNumber0AutoCashout, 802, 293, 50, 35),
-    new ImageLocator(baseLocatorNames.btnBackspace, 871, 232, 57, 36),
+    new ImageLocator(baseLocatorNames.btnBackspace, 871, 232, 57, 36),    
+    new ImageLocator(baseLocatorNames.btnDecreaseAutoCashout, 481, 631, 35, 31),
+    new ImageLocator(baseLocatorNames.btnIncreaseAutoCashout, 683, 631, 35, 31),
     new ImageLocator(baseLocatorNames.lblMultiplier200, 488, 163, 299, 40),
     new ImageLocator(baseLocatorNames.lblMultiplierCleared, 488, 163, 299, 40),
+    new ImageLocator(baseLocatorNames.lblAutoCashoutEnable, 293, 625, 447, 46),
+    new ImageLocator(baseLocatorNames.lblAutoCashoutDisable, 293, 625, 447, 46),
+    new ImageLocator(baseLocatorNames.imgAutoCashoutIncrease, 293, 625, 447, 46),
+    new ImageLocator(baseLocatorNames.imgAutoCashoutDecrease, 293, 625, 447, 46),
     new ImageLocator(baseLocatorNames.btnClearAutoCashout, 813, 173, 98, 39),
     new ImageLocator(baseLocatorNames.btnStatisticLastRound, 977, 493, 83, 23),
     new ImageLocator(baseLocatorNames.btnStatisticRunningRound, 1071, 493, 83, 23),

@@ -231,9 +231,15 @@ export class CrashGameBase {
             // Assert
                 expect(popAutoPlay.image).toMatchSnapshot(popAutoPlay.name);
             });
+
+            await test.step("Click outside to close the popup", async () => {
+                await this.game.clickOutSide(1000);
+            });
         });
 
         test("Verify player can start 10 auto play", async () => {
+
+            test.setTimeout(this.options.gameConfiguration.maxTimeout);
 
             let settledResultsAutoPlay: Array<string> = [];
 
@@ -367,6 +373,61 @@ export class CrashGameBase {
                 const lblMultiplier = await this.game.captureLocator(baseLocatorNames.lblMultiplierCleared);
                 // Assert
                 expect(lblMultiplier.image).toMatchSnapshot(lblMultiplier.name);
+            });
+            await test.step("Set auto cash out to 1.01", async () => {
+                await this.game.clickLocator(baseLocatorNames.btnNumber1AutoCashout);
+                await this.game.clickLocator(baseLocatorNames.btnDotAutoCashout);
+                await this.game.clickLocator(baseLocatorNames.btnNumber0AutoCashout);
+                await this.game.clickLocator(baseLocatorNames.btnNumber1AutoCashout, 1000);
+                await this.game.clickLocator(baseLocatorNames.btnConfirmAutoCashout);
+            });
+        });
+        test("Verify player can enable auto cash out", async () => {
+            await test.step("Click enable auto cash out", async () => {
+                await this.game.clickLocator(baseLocatorNames.btnEnableAutoCashOut);
+            });
+            await test.step("Verify the auto cashout icon is enable", async () => {
+                const lblAutoCashout = await this.game.captureLocator(baseLocatorNames.lblAutoCashoutEnable);
+                // Assert
+                expect(lblAutoCashout.image).toMatchSnapshot(lblAutoCashout.name);
+            });
+        });
+        test("Verify player can disable auto cash out", async () => {
+            await test.step("Click disable auto cash out", async () => {
+                await this.game.clickLocator(baseLocatorNames.btnEnableAutoCashOut);
+            });
+            await test.step("Verify the auto cashout icon is disable", async () => {
+                const lblAutoCashout = await this.game.captureLocator(baseLocatorNames.lblAutoCashoutDisable);
+                // Assert
+                expect(lblAutoCashout.image).toMatchSnapshot(lblAutoCashout.name);
+            });
+        });
+        test("Verify that player be able to increase auto cashout", async () => {
+            //Act
+            await test.step("Click on increase button 2 times", async () => {
+                for (let i = 0; i < 2; i++) {
+                    await this.game.clickLocator(baseLocatorNames.btnIncreaseAutoCashout);
+                }
+            });
+
+            //Assert
+            await test.step("Verify number of auto cashout", async () => {
+                const imgAutoCashout = await this.game.capture(baseLocatorNames.imgAutoCashoutIncrease);
+                expect(imgAutoCashout.image).toMatchSnapshot(imgAutoCashout.name);
+            });
+        });
+        test("Verify that player be able to decrease auto cashout", async () => {
+            //Act
+            await test.step("Click on decrease button 2 times", async () => {
+                for (let i = 0; i < 2; i++) {
+                    await this.game.clickLocator(baseLocatorNames.btnDecreaseAutoCashout);
+                }
+            });
+
+            //Assert
+            await test.step("Verify number of auto cashout", async () => {
+                const imgAutoCashout = await this.game.capture(baseLocatorNames.imgAutoCashoutDecrease);
+                expect(imgAutoCashout.image).toMatchSnapshot(imgAutoCashout.name);
             });
         });
     }
