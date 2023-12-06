@@ -14,7 +14,7 @@ const btnLocatorNames = ["btnRebet","btnHome","btnClosePopup","btnRightArrow","b
     "btnCancelChoice2", "btnCancelChoice3", "btnCashOut", "btnCashOutHalf", "btnBetAmount", "btnMaxChip", "btnClearBetamount", "btnFirstChip", "btnConfirm",
      "btnIncreaseBetAmount", "btnDecreaseBetAmount", "btnPlaceBet","btnAutoPlay", "btnAutoPlayStart", "btnAutoPlay10", "btnAutoCashOut", "btnNumber1AutoCashout", "btnDotAutoCashout", 
      "btnNumber2AutoCashout", "btnNumber0AutoCashout", "btnBackspace", "btnClearAutoCashout", "btnPlaceEarlyBet", "btnPlaceEarlyBetWaiting", "btnStatisticLastRound", "btnStatisticRunningRound",
-     "btnEnableAutoCashOut", "btnConfirmAutoCashoutDisabled", "btnIncreaseAutoCashout", "btnDecreaseAutoCashout"]
+     "btnEnableAutoCashOut", "btnConfirmAutoCashout","btnConfirmAutoCashoutDisabled", "btnIncreaseAutoCashout", "btnDecreaseAutoCashout"]
 
 const popLocatorNames = ["popAutoSpin","popHistory", "popGuide","popGameGuide", "popAutoSpinTurbo",  "popBetControll1", "popBetControlMaxBetLevell1",
     "popBetControlMinBetLevell1", "popBetControlMaxCoinValuel1", "popBetControlMinCoinValuel1", "popBetControll2", "popBetControlMaxBetLevell2", 
@@ -284,9 +284,11 @@ export const CrashGameLocators = [
     new ImageLocator(baseLocatorNames.imgBetAmountIncreasel2, 297, 555, 439, 52),
     new ImageLocator(baseLocatorNames.btnIncreaseBetAmount, 690, 567, 21, 21),
     new ImageLocator(baseLocatorNames.btnDecreaseBetAmount, 490, 567, 21, 21),
-    new ImageLocator(baseLocatorNames.btnPlaceBet, 770, 565, 150, 43),
-    new ImageLocator(baseLocatorNames.btnPlaceEarlyBet, 770, 565, 150, 43),
-    new ImageLocator(baseLocatorNames.btnPlaceEarlyBetWaiting, 770, 565, 150, 43),
+    new ImageLocator(baseLocatorNames.btnPlaceBet, 786, 567, 179, 88),
+    new ImageLocator(baseLocatorNames.btnPlaceEarlyBet,  786, 567, 179, 88),
+    new ImageLocator(baseLocatorNames.btnPlaceEarlyBetWaiting,  786, 567, 179, 88),
+    new ImageLocator(baseLocatorNames.btnCashOut,  793, 555, 144, 46),
+    new ImageLocator(baseLocatorNames.btnCashOutHalf,  793, 621, 144, 46),
     new ImageLocator(baseLocatorNames.imgBetAmountDisablel1, 297, 555, 439, 52),
     new ImageLocator(baseLocatorNames.imgBetAmountDisablel2, 297, 555, 439, 52),
     new ImageLocator(baseLocatorNames.btnAutoPlay, 1068, 568, 92, 99),

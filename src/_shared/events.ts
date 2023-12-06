@@ -15,6 +15,6 @@ export enum GameEvent {
     Split = "split",
     StartCashOut = `"m":1,"`,
     StartFly = `"t":0`,
-    CashOut = "clientSendTime",
+    CashOut = `"Spaceflight",{"name"`,
 
 }
