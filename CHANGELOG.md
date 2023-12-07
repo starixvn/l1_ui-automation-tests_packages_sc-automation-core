@@ -1,3 +1,10 @@
+## [1.19.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.19.0...v1.19.1) (2023-12-07)
+
+
+### Bug Fixes
+
+* bug config prod ([072fcf4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/072fcf4eceac69d14e409b362a54a0b1ae3076dd))
+
 # [1.19.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.18.0...v1.19.0) (2023-12-07)
 
 
