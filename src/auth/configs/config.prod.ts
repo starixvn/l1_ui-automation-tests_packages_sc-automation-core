@@ -4,6 +4,7 @@ export default {
     l2memberSite: "http://smart.athena-demo-online.com/",
     l2lobbyDomain: "#ThirdPartyGame/vid=66&gid=",
     lobbyTimeout: 45000,
+    enabledMsgPack: true,
     pwd: "1234aa",
     l2pwd: "1q2w3e4r",
     groupCurrencyId: "61b048be7e6d8f000145357d",
