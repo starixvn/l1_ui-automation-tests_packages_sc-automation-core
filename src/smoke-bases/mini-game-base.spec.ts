@@ -60,6 +60,7 @@ export class MiniGameBase {
 
             // Act
             await this.player.placeHedgeBet(hedgeBetGroups[0], this.options.placeBetAmount ?? 1);
+            await this.game.waitForTimeout(500)
             const error = await this.game.captureErrorMessage();
 
             // Assert
