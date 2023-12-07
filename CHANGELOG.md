@@ -1,3 +1,10 @@
+# [1.19.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.18.0...v1.19.0) (2023-12-07)
+
+
+### Features
+
+* add timeout smoke test-headgebets ([ea03bf3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/ea03bf3ba732db42c15e2b6e9a4194b900ca872e))
+
 # [1.18.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.17.0...v1.18.0) (2023-12-01)
 
 
