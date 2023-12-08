@@ -5,7 +5,6 @@ import { IBaseOptions } from "./base-options";
 import { baseLocatorNames } from "../components/base-game-locator";
 import { GameGuides } from "../game-components/guides/guides.spec";
 import { BetHistory } from "../game-components/history/history.spec";
-import toMatchBetOptions from "../expects/to-match-bet-options";
 
 const timeout = 4000;
 
