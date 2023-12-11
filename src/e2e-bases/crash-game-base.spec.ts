@@ -702,14 +702,13 @@ export class CrashGameBase {
             const pathLobbyImg = this.options.snapshotFolderPath+ "-snapshots/" +"lobby.png"
             const pathGameIcon = this.options.snapshotFolderPath+ "-snapshots/" +"gameIcon.png"
             await this.game.page.screenshot({ path: pathLobbyImg, fullPage: true })
-            const gameicon = await this.game.detectImageLocation(pathLobbyImg,pathGameIcon)||{x: 0, y: 0,w: 0,h: 0}
+            const gameicon = await this.game.detectImageLocation(pathLobbyImg,pathGameIcon)||{x: 0, y: 0}
             console.log(gameicon);
-            let locator = {x: gameicon.x+(gameicon.w/2), y: gameicon.y+(gameicon.h/2)}
-            await this.game.page.mouse.click(locator.x, locator.y)
-            await this.game.waitForTimeout(timeout*2)
-            const dealerSnapshot = await this.game.capture("imgdealer");
+            await this.game.page.mouse.click(gameicon.x, gameicon.y)
+            await this.game.waitForTimeout(timeout*3)
+            const imgControlArea = await this.game.capture(baseLocatorNames.imgControlArea);
             // Assert
-            expect(dealerSnapshot.image).toMatchSnapshot(dealerSnapshot.name);
+            expect(imgControlArea.image).toMatchSnapshot(imgControlArea.name);
         });
     }
 
