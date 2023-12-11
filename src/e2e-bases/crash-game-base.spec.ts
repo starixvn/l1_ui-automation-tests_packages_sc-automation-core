@@ -8,6 +8,12 @@ import { BetHistory } from "../game-components/history/history.spec";
 
 const timeout = 4000;
 
+const CrashGameEvent{
+    StartCashOut = `"m":1,"`,
+    StartFly = `"t":0`,
+    CashOut = `"Spaceflight",{"name"`,
+}
+
 export class CrashGameBase {
     game: BaseGame;
     player: BasePlayer;
@@ -239,7 +245,7 @@ export class CrashGameBase {
 
         test("Verify place early bet when start auto-play", async () => {
             await test.step("Wait for rocket start fly", async () => {
-                await this.game.waitForEvent(GameEvent.StartCashOut);
+                await this.game.waitForEvent(CrashGameEvent.StartCashOut);
             });
             await test.step("Start auto-play", async () => {
                 await selectAutoPlay(this.game, totalAutoPlay);
@@ -512,7 +518,7 @@ export class CrashGameBase {
 
         test("Verify early bet button", async () => {
             await test.step("Wait for start cash out", async () => {
-                await this.game.waitForEvent(GameEvent.StartCashOut);
+                await this.game.waitForEvent(CrashGameEvent.StartCashOut);
                 await this.game.waitForTimeout(500);
             });
             await test.step("Capture early bet button and compare with snapshot", async () => {
@@ -543,22 +549,22 @@ export class CrashGameBase {
             });
             await test.step("Click cashout 50% and verify win amount", async () => {
                 this.game.attachSocketAndCaptureEvent(GameEvent.Settlement);
-                this.game.attachSocketAndCaptureEvent(GameEvent.CashOut);
-                await this.game.waitForEvent(GameEvent.StartFly); //Wait for start fly
+                this.game.attachSocketAndCaptureEvent(CrashGameEvent.CashOut);
+                await this.game.waitForEvent(CrashGameEvent.StartFly); //Wait for start fly
                 let settledResults = await this.game.latestCaptureEvent(GameEvent.Settlement)
                 if(settledResults === "") //Have not crash yet
                 {
-                    await this.game.waitForEvent(GameEvent.StartCashOut); //wait for start cash out
+                    await this.game.waitForEvent(CrashGameEvent.StartCashOut); //wait for start cash out
                     await cashOutHalf(this.game); //click cash out 50%
-                    let cashOutResult = await this.game.latestCaptureEvent(GameEvent.CashOut)
+                    let cashOutResult = await this.game.latestCaptureEvent(CrashGameEvent.CashOut)
                     settledResults = await this.game.waitForSettlement();
                     expect(settledResults.winAmount).toEqual(cashOutResult.halfCashOut.cashOutWin);
                 }
                 else{               // If crash at base, place bet again
                     await placeBet(this.game);
-                    await this.game.waitForEvent(GameEvent.StartCashOut); //wait for start cash out
+                    await this.game.waitForEvent(CrashGameEvent.StartCashOut); //wait for start cash out
                     await cashOutHalf(this.game); //click cash out 50%
-                    let cashOutResult = await this.game.latestCaptureEvent(GameEvent.CashOut)
+                    let cashOutResult = await this.game.latestCaptureEvent(CrashGameEvent.CashOut)
                     settledResults = await this.game.waitForSettlement();
                     expect(settledResults.winAmount).toEqual(cashOutResult.halfCashOut.cashOutWin);
                 }
@@ -578,22 +584,22 @@ export class CrashGameBase {
             let settledResults;
             await test.step("Click cashout and verify win amount", async () => {
                 this.game.attachSocketAndCaptureEvent(GameEvent.Settlement);
-                this.game.attachSocketAndCaptureEvent(GameEvent.CashOut);
-                await this.game.waitForEvent(GameEvent.StartFly); //Wait for start fly
+                this.game.attachSocketAndCaptureEvent(CrashGameEvent.CashOut);
+                await this.game.waitForEvent(CrashGameEvent.StartFly); //Wait for start fly
                 settledResults = await this.game.latestCaptureEvent(GameEvent.Settlement)
                 if(settledResults === "") //Have not crash yet
                 {
-                    await this.game.waitForEvent(GameEvent.StartCashOut); //wait for start cash out
+                    await this.game.waitForEvent(CrashGameEvent.StartCashOut); //wait for start cash out
                     await cashOut(this.game); //click cash out
-                    let cashOutResult = await this.game.latestCaptureEvent(GameEvent.CashOut)
+                    let cashOutResult = await this.game.latestCaptureEvent(CrashGameEvent.CashOut)
                     settledResults = await this.game.waitForSettlement();
                     expect(settledResults.winAmount).toEqual(cashOutResult.cashOut.cashOutWin);
                 }
                 else{               // If crash at base, place bet again
                     await placeBet(this.game);
-                    await this.game.waitForEvent(GameEvent.StartCashOut); //wait for start cash out
+                    await this.game.waitForEvent(CrashGameEvent.StartCashOut); //wait for start cash out
                     await cashOut(this.game); //click cash out
-                    let cashOutResult = await this.game.latestCaptureEvent(GameEvent.CashOut)
+                    let cashOutResult = await this.game.latestCaptureEvent(CrashGameEvent.CashOut)
                     settledResults = await this.game.waitForSettlement();
                     expect(settledResults.winAmount).toEqual(cashOutResult.cashOut.cashOutWin);
                 }
