@@ -1,3 +1,10 @@
+## [1.19.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.19.1...v1.19.2) (2023-12-11)
+
+
+### Bug Fixes
+
+* enhance the function waitUntilPlaceBet using ws event "spb" instead of cal whole round time ([35c2451](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/35c2451dcc7eaf8b33f14bc89a0a9337ad478590))
+
 ## [1.19.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.19.0...v1.19.1) (2023-12-07)
 
 
