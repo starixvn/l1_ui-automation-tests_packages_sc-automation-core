@@ -329,5 +329,6 @@ export const CrashGameLocators = [
     new ImageLocator(baseLocatorNames.lblHistoryFirstRow, 243, 192, 842, 31),
     new ImageLocator(baseLocatorNames.locHistoryRoundId, 422, 198, 39, 15),
     new ImageLocator(baseLocatorNames.lblHistoryDetailRoundId, 255, 116, 96, 30),
+    new ImageLocator(baseLocatorNames.btnhome, 37, 47, 30, 30),
     new ImageLocator(baseLocatorNames.btnClosePopup, 5, 5, 10, 10),
 ];
