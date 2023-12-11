@@ -3,7 +3,7 @@ export default {
     lobbyDomain: "/VendorGame/OpenSabaClub?GameID=",
     l2memberSite: "http://smart.athena-demo-online.com/",
     l2lobbyDomain: "#ThirdPartyGame/vid=66&gid=",
-    lobbyTimeout: 15000, // 15s
+    lobbyTimeout: 45000,
     enabledMsgPack: true,
     pwd: "1234aa",
     l2pwd: "1q2w3e4r",
