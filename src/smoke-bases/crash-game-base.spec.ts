@@ -8,7 +8,7 @@ export interface CrashGameOptions extends IBaseOptions {
     placeBetChoices: string[];
     placeBetAmount?: number;
 }
-const CrashGameEvent{
+const enum CrashGameEvent {
     StartCashOut = `"m":1,"`,
     StartFly = `"t":0`,
     CashOut = `"Spaceflight",{"name"`,

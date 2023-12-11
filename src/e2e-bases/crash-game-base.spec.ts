@@ -8,7 +8,7 @@ import { BetHistory } from "../game-components/history/history.spec";
 
 const timeout = 4000;
 
-const CrashGameEvent{
+const enum CrashGameEvent  {
     StartCashOut = `"m":1,"`,
     StartFly = `"t":0`,
     CashOut = `"Spaceflight",{"name"`,
