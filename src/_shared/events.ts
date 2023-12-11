@@ -12,5 +12,6 @@ export enum GameEvent {
     Deal = "deal",
     OwnBets = "ownBets",
     Double = "double",
-    Split = "split"
+    Split = "split",
+    StartPlaceBet = "spb"
 }

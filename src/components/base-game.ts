@@ -140,9 +140,9 @@ export class BaseGame {
     }
 
     async waitUntilPlaceBet(subGameName?: string): Promise<void> {
-        const { wholeRound, placingBets } = this.gameConfiguration.durations;
         await this.waitUntilNextRound(subGameName);
-        await this.page.waitForTimeout(wholeRound - placingBets);
+        await this.waitForEvent(GameEvent.StartPlaceBet, subGameName)
+        await this.waitForTimeout(3000);
     }
 
     async waitForEndBet(subGameName?: string): Promise<any> {
