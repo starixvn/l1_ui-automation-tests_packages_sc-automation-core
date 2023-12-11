@@ -8,7 +8,11 @@ export interface CrashGameOptions extends IBaseOptions {
     placeBetChoices: string[];
     placeBetAmount?: number;
 }
-
+const CrashGameEvent{
+    StartCashOut = `"m":1,"`,
+    StartFly = `"t":0`,
+    CashOut = `"Spaceflight",{"name"`,
+}
 export class CrashGameBase {
     game: BaseGame;
     player: BasePlayer;
@@ -33,11 +37,11 @@ export class CrashGameBase {
             // Act
             const placeBetResponse = await this.player.placeBet(bet.choice, bet.amount);
             this.game.attachSocketAndCaptureEvent(GameEvent.Settlement);
-            await this.game.waitForEvent(GameEvent.StartFly); //Wait for start fly
+            await this.game.waitForEvent(CrashGameEvent.StartFly); //Wait for start fly
             let settledResults = await this.game.latestCaptureEvent(GameEvent.Settlement)
             if(settledResults === "") //Have not crash yet
             {
-                await this.game.waitForEvent(GameEvent.StartCashOut); //wait for start cash out
+                await this.game.waitForEvent(CrashGameEvent.StartCashOut); //wait for start cash out
                 await cashOut(this.game); //click cash out
                 settledResults = await this.game.waitForSettlement();
 

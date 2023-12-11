@@ -13,8 +13,4 @@ export enum GameEvent {
     OwnBets = "ownBets",
     Double = "double",
     Split = "split",
-    StartCashOut = `"m":1,"`,
-    StartFly = `"t":0`,
-    CashOut = `"Spaceflight",{"name"`,
-
 }
