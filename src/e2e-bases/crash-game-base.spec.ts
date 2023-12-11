@@ -678,25 +678,35 @@ export class CrashGameBase {
             await this.game.clickOutSide();
         });
     }
-
+    protected returnGameLobby(): void {
+        test("Verify player redirect to gamelooby after clicking home icon", async () => {
+            // Act 1
+            await this.game.waitForTimeout(2000);
+            await this.game.clickHome(timeout / 2, baseLocatorNames.btnHome);
+            await this.game.waitUntilGameLobbyUiLoad();
+            const gamelobby = await this.game.capture(baseLocatorNames.imgGameLobby);
+            expect(gamelobby.image).toMatchSnapshot(gamelobby.name);
+        });
+    }
     
-protected turnbackGame(): void {
-    test("Verify player able to go back game by clicking on game icon", async () => {
-      // Act 1.
-      await this.game.waitForTimeout(timeout / 2);
-      const pathLobbyImg = this.options.snapshotFolderPath+ "-snapshots/" +"lobby.png"
-      const pathGameIcon = this.options.snapshotFolderPath+ "-snapshots/" +"gameIcon.png"
-      await this.game.page.screenshot({ path: pathLobbyImg, fullPage: true })
-      const gameicon = await this.game.detectImageLocation(pathLobbyImg,pathGameIcon)||{x: 0, y: 0,w: 0,h: 0}
-      console.log(gameicon);
-      let locator = {x: gameicon.x+(gameicon.w/2), y: gameicon.y+(gameicon.h/2)}
-      await this.game.page.mouse.click(locator.x, locator.y)
-      await this.game.waitForTimeout(timeout*2)
-      const dealerSnapshot = await this.game.capture("imgdealer");
-      // Assert
-      expect(dealerSnapshot.image).toMatchSnapshot(dealerSnapshot.name);
-  });
-  }
+    protected turnbackGame(): void {
+        test("Verify player able to go back game by clicking on game icon", async () => {
+        // Act 1.
+            await this.game.waitForTimeout(timeout / 2);
+            const pathLobbyImg = this.options.snapshotFolderPath+ "-snapshots/" +"lobby.png"
+            const pathGameIcon = this.options.snapshotFolderPath+ "-snapshots/" +"gameIcon.png"
+            await this.game.page.screenshot({ path: pathLobbyImg, fullPage: true })
+            const gameicon = await this.game.detectImageLocation(pathLobbyImg,pathGameIcon)||{x: 0, y: 0,w: 0,h: 0}
+            console.log(gameicon);
+            let locator = {x: gameicon.x+(gameicon.w/2), y: gameicon.y+(gameicon.h/2)}
+            await this.game.page.mouse.click(locator.x, locator.y)
+            await this.game.waitForTimeout(timeout*2)
+            const dealerSnapshot = await this.game.capture("imgdealer");
+            // Assert
+            expect(dealerSnapshot.image).toMatchSnapshot(dealerSnapshot.name);
+        });
+    }
+
     start(): void {
         test.beforeEach(async ({}, testInfo) => {
             testInfo.snapshotPath = (name: string) => {
@@ -731,6 +741,7 @@ protected turnbackGame(): void {
         this.autoPlayTests();
         this.placeBetAndCashoutTests();
         this.ticketHistoryTests();
+        this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
     }
 }
 
