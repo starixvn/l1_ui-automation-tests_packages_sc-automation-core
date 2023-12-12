@@ -12,7 +12,7 @@ const btnLocatorNames = ["btnRebet","btnHome","btnClosePopup","btnRightArrow","b
     "btnOddPayline","btnClearPayline", "btnConfirmPayline",  "btnSymbol","btnTotalStake","btnBetLevelIncrease", "btnBetLevelDecrease","btnCoinValueIncrease", 
     "btnCoinValueDecrease", "btnTotalBetIncrease", "btnTotalBetDecrease","btnTrialMode", "btnHistoryTrialmode","btnCancelChoice1",
     "btnCancelChoice2", "btnCancelChoice3", "btnCashOut", "btnCashOutHalf", "btnBetAmount", "btnMaxChip", "btnClearBetamount", "btnFirstChip", "btnConfirm",
-     "btnIncreaseBetAmount", "btnDecreaseBetAmount", "btnPlaceBet","btnAutoPlay", "btnAutoPlayStart", "btnAutoPlay10", "btnAutoCashOut", "btnNumber1AutoCashout", "btnDotAutoCashout", 
+     "btnIncreaseBetAmount", "btnDecreaseBetAmount", "btnPlaceBet", "btnPlaceBetBetAccepted", "btnEarlyBetAccepted","btnAutoPlay", "btnAutoPlayStart", "btnAutoPlay10", "btnAutoCashOut", "btnNumber1AutoCashout", "btnDotAutoCashout", 
      "btnNumber2AutoCashout", "btnNumber0AutoCashout", "btnBackspace", "btnClearAutoCashout", "btnPlaceEarlyBet", "btnPlaceEarlyBetWaiting", "btnStatisticLastRound", "btnStatisticRunningRound",
      "btnEnableAutoCashOut", "btnConfirmAutoCashout","btnConfirmAutoCashoutDisabled", "btnIncreaseAutoCashout", "btnDecreaseAutoCashout", "btnAutoPlay9Remaining", "btnAutoPlay10Remaining"]
 
@@ -287,6 +287,8 @@ export const CrashGameLocators = [
     new ImageLocator(baseLocatorNames.btnPlaceBet, 786, 567, 179, 88),
     new ImageLocator(baseLocatorNames.btnPlaceEarlyBet,  786, 567, 179, 88),
     new ImageLocator(baseLocatorNames.btnPlaceEarlyBetWaiting,  786, 567, 179, 88),
+    new ImageLocator(baseLocatorNames.btnPlaceBetBetAccepted, 786, 567, 179, 88),
+    new ImageLocator(baseLocatorNames.btnEarlyBetAccepted, 786, 567, 179, 88),
     new ImageLocator(baseLocatorNames.btnCashOut,  793, 555, 144, 46),
     new ImageLocator(baseLocatorNames.btnCashOutHalf,  793, 621, 144, 46),
     new ImageLocator(baseLocatorNames.imgBetAmountDisablel1, 297, 555, 439, 52),
