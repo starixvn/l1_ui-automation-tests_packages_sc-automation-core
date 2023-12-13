@@ -536,7 +536,7 @@ export class CrashGameBase {
                 expect(placeBetResponse.endBet).toBe(this.options.placeBetAmount);
             });
             await test.step("Verify button place bet accepted", async () => {
-                const btnPlaceBet = await this.game.captureLocator(baseLocatorNames.btnEarlyBetAccepted);
+                const btnPlaceBet = await this.game.captureLocator(baseLocatorNames.btnPlaceBetBetAccepted);
                 // Assert
                 expect(btnPlaceBet.image).toMatchSnapshot(btnPlaceBet.name);
             });
