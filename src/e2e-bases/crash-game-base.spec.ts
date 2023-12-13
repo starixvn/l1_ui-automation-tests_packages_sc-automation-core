@@ -311,6 +311,7 @@ export class CrashGameBase {
             });
 
             await test.step("Verify button place bet show bet accepted", async () => {
+                this.game.waitForTimeout(1000);
                 const btnPlaceBet = await this.game.captureLocator(baseLocatorNames.btnPlaceBetBetAccepted);
                 expect(btnPlaceBet.image).toMatchSnapshot(btnPlaceBet.name);
             });
@@ -539,7 +540,7 @@ export class CrashGameBase {
                 await this.game.clickLocator(baseLocatorNames.btnPlaceBet);
             });
             await test.step("Verify button bet waitting", async () => {
-                const btnPlaceBet = await this.game.captureLocator(baseLocatorNames.btnPlaceEarlyBetWaiting);
+                const btnPlaceBet = await this.game.captureLocator(baseLocatorNames.btnEarlyBetAccepted);
                 // Assert
                 expect(btnPlaceBet.image).toMatchSnapshot(btnPlaceBet.name);
             });
@@ -809,7 +810,7 @@ const getDataFistRowHistory = async (game: BaseGame, elementname: string = baseL
 
 const waitForSettlement = async (game: BaseGame) => {
     const message = await game.waitForEvent(GameEvent.Settlement);
-        await game.waitForTimeout(1000); // add sleep due to feature Publish round result prior to settlement
+        await game.waitForTimeout(2000); // add sleep due to feature Publish round result prior to settlement
         const winningByChoice = game.latestCaptureEvent(GameEvent.WinStatus);
 
         let settledResults = {
