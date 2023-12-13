@@ -330,6 +330,11 @@ export class CrashGameBase {
                 expect(settledResultsAutoPlay.length >= 10).toBe(true);
             });
 
+            await test.step(`Close popup`, async () => {
+                this.game. waitForTimeout(timeout);
+                this.game.clickOutSide();
+            });
+
             await test.step(`Disable auto cashout`, async () => {
                 await enableAutoCashOut(this.game);
             });
@@ -634,7 +639,7 @@ export class CrashGameBase {
         test("Verify MD5 popup of running round", async () => {
             //Act
             await test.step("Wait for start new round", async () => {
-                await this.game.clickLocator(baseLocatorNames.btnStatisticRunningRound);
+                await this.game.waitUntilPlaceBet();
             });
             await test.step("Click on statistic icon running round", async () => {
                 await this.game.clickLocator(baseLocatorNames.btnStatisticRunningRound);
@@ -747,6 +752,8 @@ export class CrashGameBase {
         this.placeBetAndCashoutTests();
         this.ticketHistoryTests();
         this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
+        this.returnGameLobby();
+        this.turnbackGame();
     }
 }
 
@@ -781,13 +788,8 @@ const openBetAmoutPopup = async (game: BaseGame) => {
 };
 
 const placeBet = async (game: BaseGame) => {
-    await waitUntilPlaceBet(game);
-    await game.clickLocator(baseLocatorNames.btnPlaceBet);
-}
-
-const waitUntilPlaceBet = async (game: BaseGame) => {
     await game.waitUntilPlaceBet();
-    await game.waitForTimeout(game.gameConfiguration.durations.wholeRound - game.gameConfiguration.durations.placingBets);
+    await game.clickLocator(baseLocatorNames.btnPlaceBet);
 }
 
 const cashOutHalf = async (game: BaseGame) => {
