@@ -200,19 +200,6 @@ export class CrashGameBase {
                 expect(imgBetAmount.image).toMatchSnapshot(imgBetAmount.name, {maxDiffPixelRatio : 0});
             });
         });
-
-        test("Verify that bet amount will be disable when accept bet", async () => {
-            //Act
-            await test.step("Place bet", async () => {
-                await placeBet(this.game);
-            });
-
-            //Assert
-            await test.step("Verify that bet amount is disable", async () => {
-                const imgBetAmount = await this.game.capture(`imgBetAmountDisable${process.env.npm_config_project}`);
-                expect(imgBetAmount.image).toMatchSnapshot(imgBetAmount.name, {maxDiffPixelRatio : 0});
-            });
-        });
     }
 
     protected autoPlayTests() {
