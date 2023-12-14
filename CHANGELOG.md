@@ -1,3 +1,41 @@
+# [1.20.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.19.2...v1.20.0) (2023-12-14)
+
+
+### Bug Fixes
+
+* autoPlayTests ([889e0bb](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/889e0bb92bac605c496370f3c04db5d49a011d42))
+* clean code format ([5458a28](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/5458a2869b943cf80964a869c856211ba6bfe42b))
+* update crash e2e ([66a5d7e](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/66a5d7e844073942984b50132380e062ae1d99ee))
+* update crash game base ([e103d60](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/e103d60e59addecbc352e80654b1ddfca65bc751))
+* update crash game base ([82e9650](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/82e9650deac1191be5ad4cfa6bb1caa2e5d7bcff))
+* update crash game base ([38e5453](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/38e545376ae5e5b38fb794d33037840df9ef6cb9))
+* update crash game base ([7e3f077](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/7e3f077dd89ada78820e8657fd9a5cdf90d68775))
+* update crash game base ([9d50915](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/9d50915a0b01039aa79bf06a590fe255b2e8cff3))
+* update crash game base e2e ([2ad41a6](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/2ad41a6109d0cec0b5be1063e9c280d5d122929c))
+* update crash game base e2e ([b0e33fe](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/b0e33fee27fc556b120922d1ba573cd666a0f8eb))
+* update crash game e2e base ([05c927d](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/05c927df5af9eaad21d879e9a643341026313707))
+* update crash game e2e base ([6acf6d8](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/6acf6d819d414520b8d84485a1e517cc4a7b2dd3))
+* update crash game e2e base ([6544323](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/65443233eb54b549fbc1afc6df1064374ec8cdf8))
+* update crash game e2e base ([bf6a8dd](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/bf6a8dd55d9869e1bfce2fce256efea43d446292))
+* update crash game e2e base ([bcdad5a](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/bcdad5a12d40adedad2d05cda15b6e7637bef363))
+* update crash game e2e base ([f50cac9](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/f50cac933876411bb01fe903ef37b4955dbffe1f))
+* update e2e crash game base ([b93e790](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/b93e790a5a945ab513e7103a8dc898c2f51ca747))
+* update e2e crash game base ([b111ac7](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/b111ac7bd956659a3124e99ca0f2df43598ec75c))
+* update e2e crash game base ([cd74445](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/cd744457a4607b6c9b60d6fbe8acdf4f4b6eb3eb))
+* update e2e crash game base ([a8a4899](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/a8a48998fa94b7d7e499cb51219696db628d0a7a))
+* update e2e crash game base ([76e3847](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/76e3847e159b6877768c53ff72b29d5b82e34858))
+* update e2e crash game base ([9455c2a](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/9455c2adbcb8b44c68cadb910392afbde8cac1b5))
+* update e2e crash game base ([9af9cf4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/9af9cf40624d1b2dc0029bcb30fe96cdecd0c83d))
+* update index ([22f2ab2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/22f2ab2f0c3ed84b3dee0f3532bfb23824b1f1a2))
+* update locators ([5869f5b](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/5869f5b80181092eca45dad5970a63689ee6ce74))
+* update locators ([780d3e3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/780d3e39b3859509fbf061142b4f450db056da4d))
+
+
+### Features
+
+* crash game ([c4bfb89](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/c4bfb897bb6da44a3695f913c5df3d265ab0df45))
+* crash game e2e ([65cc338](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/65cc3387e1aa3a7dca41b52e623db7b344c3396b))
+
 ## [1.19.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.19.1...v1.19.2) (2023-12-11)
 
 
