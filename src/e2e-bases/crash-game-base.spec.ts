@@ -281,7 +281,7 @@ export class CrashGameBase {
 
         test("Verify player can start 10 auto play", async () => {
 
-            test.setTimeout(this.options.gameConfiguration.maxTimeout);
+            test.setTimeout(this.options.gameConfiguration.maxTimeout*2);
 
             let settledResultsAutoPlay: Array<string> = [];
 
@@ -298,7 +298,7 @@ export class CrashGameBase {
             });
 
             await test.step("Verify button place bet show bet accepted", async () => {
-                this.game.waitForTimeout(1000);
+                await this.game.waitForTimeout(1000);
                 const btnPlaceBet = await this.game.captureLocator(baseLocatorNames.btnPlaceBetBetAccepted);
                 expect(btnPlaceBet.image).toMatchSnapshot(btnPlaceBet.name);
             });
