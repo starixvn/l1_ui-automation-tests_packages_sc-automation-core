@@ -198,8 +198,7 @@ export class CrashGameBase {
         });
     }
 
-    protected autoPlayTests() {
-        const totalAutoPlay = 10;
+    protected autoPlayTests(totalAutoPlay:number = 10) {
         test("Verify default state of auto-play button", async () => {
             await test.step("Capture default auto-play button and compare with snapshot", async () => {
                 const btnAutoPlay = await this.game.captureLocator(baseLocatorNames.btnAutoPlay);
