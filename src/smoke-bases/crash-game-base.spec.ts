@@ -28,27 +28,39 @@ export class CrashGameBase {
     }
 
     protected placeBetAndSettleTests() {
-        test("THEN player able to place a bet and settle", async () => {
-            // Arrange
+        test("Verify player be able to place bet and cash out", async () => {
+            test.setTimeout(this.options.gameConfiguration.maxTimeout * 2);
+            await test.step("Wait for new round and click place bet", async () => {
+                await placeBet(this.game);
+            });
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount ?? 1 };
-            this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
-
-            // Act
-            const placeBetResponse = await this.player.placeBet(bet.choice, bet.amount);
-            this.game.attachSocketAndCaptureEvent(GameEvent.Settlement);
-            await this.game.waitForEvent(CrashGameEvent.StartFly); //Wait for start fly
-            let settledResults = await this.game.latestCaptureEvent(GameEvent.Settlement)
-            if(settledResults === "") //Have not crash yet
-            {
-                await this.game.waitForEvent(CrashGameEvent.StartCashOut); //wait for start cash out
-                await cashOut(this.game); //click cash out
-                settledResults = await this.game.waitForSettlement();
-
-                expect(settledResults.winAmount).toBeGreaterThanOrEqual(bet.amount);
-            }
-            // Assert
-            expect(placeBetResponse.endBet).toBe(bet.amount);
+            await test.step("Verify place bet button", async () => {
+                const btnPlaceBet = await this.game.captureLocator(baseLocatorNames.btnPlaceBetBetAccepted);
+                expect(btnPlaceBet.image).toMatchSnapshot(btnPlaceBet.name);
+            });
+            let settledResults;
+            await test.step("Click cashout and verify win amount", async () => {
+                this.game.attachSocketAndCaptureEvent(GameEvent.Settlement);
+                this.game.attachSocketAndCaptureEvent(CrashGameEvent.CashOut);
+                await this.game.waitForEvent(CrashGameEvent.StartFly); //Wait for start fly
+                settledResults = await this.game.latestCaptureEvent(GameEvent.Settlement);
+                if (settledResults === "") {
+                    //Have not crash yet
+                    await this.game.waitForEvent(CrashGameEvent.StartCashOut); //wait for start cash out
+                    await cashOut(this.game); //click cash out
+                    let cashOutResult = await this.game.latestCaptureEvent(CrashGameEvent.CashOut);
+                    settledResults = await waitForSettlement(this.game);
+                    expect(settledResults.winAmount).toEqual(cashOutResult.cashOut.cashOutWin);
+                } else {
+                    // If crash at base, place bet again
+                    await placeBet(this.game);
+                    await this.game.waitForEvent(CrashGameEvent.StartCashOut); //wait for start cash out
+                    await cashOut(this.game); //click cash out
+                    let cashOutResult = await this.game.latestCaptureEvent(CrashGameEvent.CashOut);
+                    settledResults = await waitForSettlement(this.game);
+                    expect(settledResults.winAmount).toEqual(cashOutResult.cashOut.cashOutWin);
+                }
+            });
         });
     }
 
@@ -96,10 +108,24 @@ export class CrashGameBase {
     }
 }
 const cashOut = async (game: BaseGame) => {
+    await game.waitForTimeout(200);
     await game.clickLocator(baseLocatorNames.btnCashOut);
 };
 
-// const cashOutHalf = async (game: BaseGame) => {
-//     await game.waitForEvent('101')
-//     await game.clickLocator(baseLocatorNames.btnCashOutHalf);
-// };
+const placeBet = async (game: BaseGame) => {
+    await game.waitUntilPlaceBet();
+    await game.clickLocator(baseLocatorNames.btnPlaceBet);
+};
+const waitForSettlement = async (game: BaseGame) => {
+    const message = await game.waitForEvent(GameEvent.Settlement);
+    await game.waitForTimeout(2000); // add sleep due to feature Publish round result prior to settlement
+    const winningByChoice = game.latestCaptureEvent(GameEvent.WinStatus);
+
+    let settledResults = {
+        settlementResult: message?.finish?.settlementResult,
+        winStatus: typeof winningByChoice == "object" ? winningByChoice.status.win : "",
+        roundId: message.finish.roundId || 0,
+    };
+    settledResults["winAmount"] = winningByChoice.status.win ? winningByChoice.status.bet : 0;
+    return settledResults;
+};

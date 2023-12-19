@@ -498,16 +498,26 @@ export class CrashGameBase {
             });
         });
 
-        test("Verify early bet button", async () => {
+        test("Verify player be able to cancel early bet", async () => {
             await test.step("Wait for start cash out", async () => {
                 await this.game.waitForEvent(CrashGameEvent.StartCashOut);
-                await this.game.waitForTimeout(500);
+                await this.game.waitForTimeout(300);
             });
             await test.step("Capture early bet button and compare with snapshot", async () => {
                 const btnPlaceBet = await this.game.captureLocator(baseLocatorNames.btnPlaceEarlyBet);
                 // Assert
                 expect(btnPlaceBet.image).toMatchSnapshot(btnPlaceBet.name);
             });
+            await test.step("Click place early bet then clicks again to cancel bet", async () => {
+                await this.game.clickLocator(baseLocatorNames.btnPlaceBet,1000);
+                await this.game.clickLocator(baseLocatorNames.btnPlaceBet);
+            });
+            await test.step("Capture early bet button and compare with snapshot", async () => {
+                const btnPlaceBet = await this.game.captureLocator(baseLocatorNames.btnPlaceEarlyBet);
+                // Assert
+                expect(btnPlaceBet.image).toMatchSnapshot(btnPlaceBet.name);
+            });
+            
         });
 
         test("Verify player be able to place early bet and cash out 50%", async () => {
