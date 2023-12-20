@@ -658,7 +658,7 @@ export class CrashGameBase {
             // Assert
             expect(parseFloat(winamount)).toBeCloseTo(parseFloat(global.settledata.betwin), -1);
             expect(totalbet).toEqual(global.settledata.bet);
-            //expect(parseInt(roundId)).toBeCloseTo(parseInt(global.settledata.roundId), -1);
+            expect(parseInt(roundId)).toBeCloseTo(parseInt(global.settledata.roundId), -1);
 
             // Act 2
             if (indexHistory.isIdLink) {
