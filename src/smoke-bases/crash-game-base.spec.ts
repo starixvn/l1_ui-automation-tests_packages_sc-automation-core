@@ -33,7 +33,6 @@ export class CrashGameBase {
             await test.step("Wait for new round and click place bet", async () => {
                 await placeBet(this.game);
             });
-            test.setTimeout(this.options.gameConfiguration.maxTimeout);
             await test.step("Verify place bet button", async () => {
                 const btnPlaceBet = await this.game.captureLocator(baseLocatorNames.btnPlaceBetBetAccepted);
                 expect(btnPlaceBet.image).toMatchSnapshot(btnPlaceBet.name);
@@ -68,6 +67,7 @@ export class CrashGameBase {
         test("AND player could open history popup", async () => {
             // Arrange
             await this.game.clickHistory();
+            await this.game.waitForTimeout(2000);
 
             // Act
             const historySnapshot = await this.game.captureHistory();
@@ -118,7 +118,7 @@ const placeBet = async (game: BaseGame) => {
 };
 const waitForSettlement = async (game: BaseGame) => {
     const message = await game.waitForEvent(GameEvent.Settlement);
-    await game.waitForTimeout(2000); // add sleep due to feature Publish round result prior to settlement
+    await game.waitForTimeout(2500); // add sleep due to feature Publish round result prior to settlement
     const winningByChoice = game.latestCaptureEvent(GameEvent.WinStatus);
 
     let settledResults = {

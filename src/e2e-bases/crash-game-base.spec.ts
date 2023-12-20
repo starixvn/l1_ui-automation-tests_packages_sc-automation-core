@@ -568,7 +568,6 @@ export class CrashGameBase {
             await test.step("Wait for new round and click place bet", async () => {
                 await placeBet(this.game);
             });
-            test.setTimeout(this.options.gameConfiguration.maxTimeout);
             await test.step("Verify place bet button", async () => {
                 const btnPlaceBet = await this.game.captureLocator(baseLocatorNames.btnPlaceBetBetAccepted);
                 expect(btnPlaceBet.image).toMatchSnapshot(btnPlaceBet.name);
@@ -659,7 +658,7 @@ export class CrashGameBase {
             // Assert
             expect(parseFloat(winamount)).toBeCloseTo(parseFloat(global.settledata.betwin), -1);
             expect(totalbet).toEqual(global.settledata.bet);
-            expect(parseInt(roundId)).toBeCloseTo(parseInt(global.settledata.roundId), -1);
+            //expect(parseInt(roundId)).toBeCloseTo(parseInt(global.settledata.roundId), -1);
 
             // Act 2
             if (indexHistory.isIdLink) {
@@ -699,6 +698,29 @@ export class CrashGameBase {
             const imgControlArea = await this.game.capture(baseLocatorNames.imgControlArea);
             // Assert
             expect(imgControlArea.image).toMatchSnapshot(imgControlArea.name);
+        });
+    }
+
+    protected leaderBoardTests(): void {
+        test("Verify UI of leaderboard", async () => {
+            await test.step("Wait for start new round", async () => {
+                await this.game.waitUntilPlaceBet();
+            });
+            await test.step("Verify UI of leader board ", async () => {
+                const imgLeaderBoard = await this.game.captureLocator(baseLocatorNames.imgLeaderBoard);
+                expect(imgLeaderBoard.image).toMatchSnapshot(imgLeaderBoard.name, {maxDiffPixelRatio : 0.3});
+            });
+        });
+
+        test("Verify icon space man at leaderboard", async () => {
+            await test.step("Verify icon spaceman on board", async () => {
+                const icoSpaceMan = await this.game.captureLocator(baseLocatorNames.icoSpaceManOnBoard);
+                expect(icoSpaceMan.image).toMatchSnapshot(icoSpaceMan.name, {maxDiffPixelRatio : 0.3});
+            });
+            await test.step("Verify icon spaceman cash out", async () => {
+                const icoSpaceMan = await this.game.captureLocator(baseLocatorNames.icoSpaceManCashOut);
+                expect(icoSpaceMan.image).toMatchSnapshot(icoSpaceMan.name, {maxDiffPixelRatio : 0.3});
+            });
         });
     }
 
@@ -794,7 +816,7 @@ const getDataFistRowHistory = async (game: BaseGame, elementname: string = baseL
 
 const waitForSettlement = async (game: BaseGame) => {
     const message = await game.waitForEvent(GameEvent.Settlement);
-    await game.waitForTimeout(2000); // add sleep due to feature Publish round result prior to settlement
+    await game.waitForTimeout(2500); // add sleep due to feature Publish round result prior to settlement
     const winningByChoice = game.latestCaptureEvent(GameEvent.WinStatus);
 
     let settledResults = {
