@@ -5,7 +5,7 @@ const imgLocatorNames = ["imgdealer","imgGameName","imgB0","imgB1",  "imgB2","im
      "imgTotalbet0_1", "imgTotalbet0_2", "imgTotalbet1", "imgTotalbet5","imgTotalbet10","imgLeftNumbersColumn", "imgRightNumbersColumn",
     "imgConfirmPaylineDisabled","imgTurboTrial","imgTurboDefault","imgBetLevel","imgCoinValue","imgTotalBet", "imgBottomArea", "imgBottomAreaTrialMode",
     "imgUserBalanceTrialMode", "imgRoundIdFirstRoundTrialMode","imgGameLobby", "imgTurboOn", "imgTurboOFF", "imgControlArea", "imgRocket", "imgBetAmountFirstChipl1", "imgBetAmountFirstChipl2",
-    "imgBetAmountDisablel1", "imgBetAmountDisablel2", "imgBetAmountIncreasel1", "imgBetAmountIncreasel2","imgAutoCashoutIncrease", "imgAutoCashoutDecrease"]
+    "imgBetAmountDisablel1", "imgBetAmountDisablel2", "imgBetAmountIncreasel1", "imgBetAmountIncreasel2","imgAutoCashoutIncrease", "imgAutoCashoutDecrease", "imgLeaderBoard"]
 
 const btnLocatorNames = ["btnRebet","btnHome","btnClosePopup","btnRightArrow","btnLeftArrow","btnHitCard", "btnCancel","btnSplit","btnDouble","btnNewbet",
     "btnPayline","btnAutoSpin","btnTurbo", "btnSpin", "btnAutoSpin10", "btnAutoSpinTurbo", "btnAutoSpinStart","btnPayline1", "btnAllPayline", "btnEvenPayline",
@@ -36,6 +36,7 @@ const commonLocatorNames = [
     "mnuHamburgerExpandSoundOn","mnuHamburgerExpandSoundOff", "mnuHamburgerExpandTrialMode", "icoSound", "icoMusic", 
     "tabAll", "tabSedie","tabBigSmall","tabCardGames","tabSlots","tabKenoLottery","tabOthers","jackPotbanner",
     "icoGame1","icoGame2","icoGame3","icoGame4","icoGame5","icoGame6","icoGame7","icoGame8","icoGame9","icoGame10",
+    "icoSpaceManOnBoard", "icoSpaceManCashOut"
 ];
 
 const listLocatorNames = imgLocatorNames.concat(popLocatorNames, commonLocatorNames, btnLocatorNames,lblLocatorNames)
@@ -331,6 +332,9 @@ export const CrashGameLocators = [
     new ImageLocator(baseLocatorNames.lblHistoryFirstRow, 243, 192, 842, 31),
     new ImageLocator(baseLocatorNames.locHistoryRoundId, 422, 198, 39, 15),
     new ImageLocator(baseLocatorNames.lblHistoryDetailRoundId, 255, 116, 96, 30),
+    new ImageLocator(baseLocatorNames.imgLeaderBoard, 157, 122, 212, 159),
+    new ImageLocator(baseLocatorNames.icoSpaceManCashOut, 273, 83, 25, 26),
+    new ImageLocator(baseLocatorNames.icoSpaceManOnBoard, 171, 80, 21, 30),
     new ImageLocator(baseLocatorNames.btnHome, 37, 47, 30, 30),
     new ImageLocator(baseLocatorNames.btnClosePopup, 5, 5, 10, 10),
 ];

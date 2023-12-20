@@ -498,16 +498,26 @@ export class CrashGameBase {
             });
         });
 
-        test("Verify early bet button", async () => {
+        test("Verify player be able to cancel early bet", async () => {
             await test.step("Wait for start cash out", async () => {
                 await this.game.waitForEvent(CrashGameEvent.StartCashOut);
-                await this.game.waitForTimeout(500);
+                await this.game.waitForTimeout(300);
             });
             await test.step("Capture early bet button and compare with snapshot", async () => {
                 const btnPlaceBet = await this.game.captureLocator(baseLocatorNames.btnPlaceEarlyBet);
                 // Assert
                 expect(btnPlaceBet.image).toMatchSnapshot(btnPlaceBet.name);
             });
+            await test.step("Click place early bet then clicks again to cancel bet", async () => {
+                await this.game.clickLocator(baseLocatorNames.btnPlaceBet,1000);
+                await this.game.clickLocator(baseLocatorNames.btnPlaceBet);
+            });
+            await test.step("Capture early bet button and compare with snapshot", async () => {
+                const btnPlaceBet = await this.game.captureLocator(baseLocatorNames.btnPlaceEarlyBet);
+                // Assert
+                expect(btnPlaceBet.image).toMatchSnapshot(btnPlaceBet.name);
+            });
+            
         });
 
         test("Verify player be able to place early bet and cash out 50%", async () => {
@@ -558,7 +568,6 @@ export class CrashGameBase {
             await test.step("Wait for new round and click place bet", async () => {
                 await placeBet(this.game);
             });
-            test.setTimeout(this.options.gameConfiguration.maxTimeout);
             await test.step("Verify place bet button", async () => {
                 const btnPlaceBet = await this.game.captureLocator(baseLocatorNames.btnPlaceBetBetAccepted);
                 expect(btnPlaceBet.image).toMatchSnapshot(btnPlaceBet.name);
@@ -692,6 +701,29 @@ export class CrashGameBase {
         });
     }
 
+    protected leaderBoardTests(): void {
+        test("Verify UI of leaderboard", async () => {
+            await test.step("Wait for start new round", async () => {
+                await this.game.waitUntilPlaceBet();
+            });
+            await test.step("Verify UI of leader board ", async () => {
+                const imgLeaderBoard = await this.game.captureLocator(baseLocatorNames.imgLeaderBoard);
+                expect(imgLeaderBoard.image).toMatchSnapshot(imgLeaderBoard.name, {maxDiffPixelRatio : 0.3});
+            });
+        });
+
+        test("Verify icon space man at leaderboard", async () => {
+            await test.step("Verify icon spaceman on board", async () => {
+                const icoSpaceMan = await this.game.captureLocator(baseLocatorNames.icoSpaceManOnBoard);
+                expect(icoSpaceMan.image).toMatchSnapshot(icoSpaceMan.name, {maxDiffPixelRatio : 0.3});
+            });
+            await test.step("Verify icon spaceman cash out", async () => {
+                const icoSpaceMan = await this.game.captureLocator(baseLocatorNames.icoSpaceManCashOut);
+                expect(icoSpaceMan.image).toMatchSnapshot(icoSpaceMan.name, {maxDiffPixelRatio : 0.3});
+            });
+        });
+    }
+
     start(): void {
         test.beforeEach(async ({}, testInfo) => {
             testInfo.snapshotPath = (name: string) => {
@@ -720,6 +752,7 @@ export class CrashGameBase {
 
     protected runScenario() {
         this.mainUITests();
+        this.leaderBoardTests();
         this.md5PopupTests();
         this.autoCashoutTests();
         this.betAmountTests();
@@ -784,7 +817,7 @@ const getDataFistRowHistory = async (game: BaseGame, elementname: string = baseL
 
 const waitForSettlement = async (game: BaseGame) => {
     const message = await game.waitForEvent(GameEvent.Settlement);
-    await game.waitForTimeout(2000); // add sleep due to feature Publish round result prior to settlement
+    await game.waitForTimeout(2500); // add sleep due to feature Publish round result prior to settlement
     const winningByChoice = game.latestCaptureEvent(GameEvent.WinStatus);
 
     let settledResults = {
