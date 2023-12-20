@@ -64,3 +64,8 @@ export enum GroupCurrencyLocator {
     specificCheckbox = "id=groupTypeSpecific",
 }
 
+export enum AdminLogin {
+    usernameInput = 'id=UserName',
+    pwdInput = 'id=Password',
+    loginButton = "//*[@class='btn-submit']",
+}

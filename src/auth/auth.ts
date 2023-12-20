@@ -1,4 +1,4 @@
-import { LobbyLocator, UATLocator, PRODLocator, GroupCurrencyLocator } from "./locators/index";
+import { LobbyLocator, UATLocator, PRODLocator, GroupCurrencyLocator, AdminLogin } from "./locators/index";
 import { configs } from "./configs/config";
 import { Page } from "@playwright/test";
 
@@ -240,4 +240,21 @@ const formatGameLobbyUrl = (url: string, lobbyDomain: string, productId: string)
 
 const mustSelectCurrencyGroup = (env: string): boolean => {
     return env !== Environment.SIT;
+};
+
+export const loginAdmin = async (
+    page: Page,
+    config: any,
+    projectCode: string,
+) => {
+    const timeout = config.lobbyTimeout;
+    const adminLink = projectCode === "l1" ? config.admin : config[`${projectCode}admin`];
+    const admin = {username: "admauto", pwd: "admauto"}
+
+    await page.goto(adminLink);
+    await page.waitForLoadState("domcontentloaded", { timeout });
+    await page.fill(AdminLogin.usernameInput, admin.username);
+    await page.fill(AdminLogin.pwdInput, admin.pwd);
+    await page.click(AdminLogin.loginButton)
+    await page.waitForLoadState("domcontentloaded", { timeout });
 };
