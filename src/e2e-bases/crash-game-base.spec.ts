@@ -752,6 +752,7 @@ export class CrashGameBase {
 
     protected runScenario() {
         this.mainUITests();
+        this.leaderBoardTests();
         this.md5PopupTests();
         this.autoCashoutTests();
         this.betAmountTests();
