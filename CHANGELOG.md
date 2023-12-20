@@ -1,3 +1,13 @@
+## [1.20.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.20.0...v1.20.1) (2023-12-20)
+
+
+### Bug Fixes
+
+* update crash game base ([094fefd](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/094fefde117cea0ced924647156e6850db5f439f))
+* update crash game base ([32348a3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/32348a38b75b018e801ccb92c50f2a8e8f8cf42f))
+* update crash game base ([406fa14](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/406fa143e6c18d4b90b577e4c79cce70f7f35c42))
+* update crash game base ([32c1d52](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/32c1d526b925ba4e231674a9559f67474aa0d3aa))
+
 # [1.20.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.19.2...v1.20.0) (2023-12-14)
 
 
