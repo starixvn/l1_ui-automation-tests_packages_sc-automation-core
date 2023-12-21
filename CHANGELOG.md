@@ -1,3 +1,10 @@
+## [1.20.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.20.1...v1.20.2) (2023-12-21)
+
+
+### Bug Fixes
+
+* l1 membersite new login UI ([13d8301](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/13d830106114693e5143966fcad57f4dc76695e8))
+
 ## [1.20.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.20.0...v1.20.1) (2023-12-20)
 
 
