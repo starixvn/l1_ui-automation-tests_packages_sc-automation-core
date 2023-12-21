@@ -36,7 +36,7 @@ export class CrashGameBase {
             //Act
             let imgControlArea;
             await test.step("Capture default control area", async () => {
-                imgControlArea = await this.game.capture(baseLocatorNames.imgControlArea);
+                imgControlArea = await this.game.capture(`imgControlArea${process.env.npm_config_project}`);
             });
 
             await test.step("Compare with snapshot", async () => {

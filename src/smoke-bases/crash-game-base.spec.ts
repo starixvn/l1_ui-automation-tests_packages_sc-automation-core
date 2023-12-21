@@ -22,7 +22,7 @@ export class CrashGameBase {
     protected inGameUITests() {
         test("Verify default control area", async () => {
             // Arrange
-            const imgControlArea = await this.game.capture(baseLocatorNames.imgControlArea);
+            const imgControlArea = await this.game.capture(`imgControlArea${process.env.npm_config_project}`);
             expect(imgControlArea.image).toMatchSnapshot(imgControlArea.name, { maxDiffPixelRatio: 0 });
         });
     }
