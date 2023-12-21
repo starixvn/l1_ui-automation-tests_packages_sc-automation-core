@@ -23,7 +23,7 @@ export class BaseAdmin {
     async login() {
         const projectCode = process.env.npm_config_project ?? "l1";
 
-        await loginAdmin(this.page, this.gameConfiguration.id, projectCode);
+        await loginAdmin(this.page, projectCode);
         this.msgpack = false;
         this.page.on("websocket", async (ws) => {
             if (ws.url().includes(this.gameConfiguration.socketName ?? this.gameConfiguration.name.toLowerCase())) {
@@ -109,7 +109,7 @@ export class BaseAdmin {
     async getWsToken(data:object): Promise<void> {
         const currentPageUrl = await this.page.url();
         const admindomain = new URL(currentPageUrl).hostname;
-        const responseData = await this.makeRequest("Post",admindomain+'/jwt', data ) || ""
+        const responseData = await this.makeRequest("POST",'http://'+admindomain+'/jwt', data ) || ""
         return JSON.parse(responseData as string).token || ""
     }
 

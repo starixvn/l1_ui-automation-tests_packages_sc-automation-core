@@ -244,13 +244,12 @@ const mustSelectCurrencyGroup = (env: string): boolean => {
 
 export const loginAdmin = async (
     page: Page,
-    config: any,
     projectCode: string,
 ) => {
+    const config = getConfig();
     const timeout = config.lobbyTimeout;
     const adminLink = config[`${projectCode}admin`];
     const admin = {username: "admauto", pwd: "admauto"}
-
     await page.goto(adminLink);
     await page.waitForLoadState("domcontentloaded", { timeout });
     await page.fill(AdminLogin.usernameInput, admin.username);
