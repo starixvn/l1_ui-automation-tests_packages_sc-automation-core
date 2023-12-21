@@ -14,17 +14,14 @@ export class RERGameBase {
         admintest("Verify case Player has ticket on roundId is running", async () => {
             // Arrange
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-
+            console.log(1);
+            
         });
 
         admintest("Verify case roundId is archived", async () => {
             // Arrange
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-        });
-
-        admintest("Verify case Player has ticket on roundId is running", async () => {
-            // Arrange
-            admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
+            console.log(2);
         });
 
         admintest("Verify case Player placebet 1 choice and win", async () => {
