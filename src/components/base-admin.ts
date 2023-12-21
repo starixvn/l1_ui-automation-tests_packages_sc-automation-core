@@ -59,6 +59,10 @@ export class BaseAdmin {
         return message;
     }
 
+    private getGameName(subGameName?: string): string {
+        return subGameName ?? this.gameConfiguration.name;
+    }
+
     async waitForEvent(event: string, subGameName?: string): Promise<any> {
         return await waitForMessage(this.gameSocket, event, this.getGameName(subGameName), this.msgpack);
     }
