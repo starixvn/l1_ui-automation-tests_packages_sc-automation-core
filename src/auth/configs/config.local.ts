@@ -7,5 +7,6 @@ export default {
     l2lobbyDomain: "https://l2-games.lumigame.com",
     guideLinkL1: "https://l1-guide.luminetsoft.com",
     guideLinkL2: "https://l2-guide.lumigame.com",
-    admin: "http://admin.lumigame.com"
+    l1admin: "http://admin.lumigame.com",
+    l2admin: "http://l2-admin.lumigame.com"
 };

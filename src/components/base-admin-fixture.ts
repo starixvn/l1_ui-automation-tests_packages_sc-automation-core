@@ -12,7 +12,7 @@ type AdminBaseFixtures = {
     baseAdmin: BaseAdmin;
 };
 
-export const test = base.extend<AdminBaseFixtures>({
+export const admintest = base.extend<AdminBaseFixtures>({
     gameConfigurations: new GameConfiguration(),
 
     locators: new Array<ImageLocator>(),
@@ -32,10 +32,10 @@ export const test = base.extend<AdminBaseFixtures>({
     },
 });
 
-test.beforeEach(async ({}, testInfo) => {
+admintest.beforeEach(async ({}, testInfo) => {
     testInfo.snapshotPath = (name: string) => `${testInfo.file}-snapshots/${name}`;
 });
 
-test.afterAll(async ({ browser }) => {
+admintest.afterAll(async ({ browser }) => {
     await browser.close();
 });

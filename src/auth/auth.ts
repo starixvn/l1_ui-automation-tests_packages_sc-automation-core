@@ -248,7 +248,7 @@ export const loginAdmin = async (
     projectCode: string,
 ) => {
     const timeout = config.lobbyTimeout;
-    const adminLink = projectCode === "l1" ? config.admin : config[`${projectCode}admin`];
+    const adminLink = config[`${projectCode}admin`];
     const admin = {username: "admauto", pwd: "admauto"}
 
     await page.goto(adminLink);
