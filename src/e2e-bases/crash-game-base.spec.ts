@@ -9,8 +9,8 @@ import { BetHistory } from "../game-components/history/history.spec";
 const timeout = 4000;
 
 const enum CrashGameEvent {
-    StartCashOut = `"m":1,"`,
-    StartFly = `"t":0`,
+    StartCashOut = `"m": 1,"`,
+    StartFly = `"t": 0`,
     CashOut = `"Spaceflight",{"name"`,
 }
 
@@ -227,7 +227,7 @@ export class CrashGameBase {
 
         test("Verify place early bet when start auto-play", async () => {
             await test.step("Wait for rocket start fly", async () => {
-                await this.game.waitForEvent(CrashGameEvent.StartCashOut);
+                await this.game.waitForEvent(CrashGameEvent.StartFly);
             });
             await test.step("Start auto-play", async () => {
                 await selectAutoPlay(this.game, totalAutoPlay);
