@@ -7,4 +7,11 @@ export interface IBaseOptions {
     snapshotFolderPath: string;
     placeBetChoices: string[];
     placeBetAmount?: number;
+    Adminconfiguration: Adminconfiguration
 }
+
+export class Adminconfiguration {
+    wsGameName?: string;
+    dataset: object;
+}
+
