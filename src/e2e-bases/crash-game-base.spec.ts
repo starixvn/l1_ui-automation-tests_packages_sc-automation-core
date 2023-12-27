@@ -227,6 +227,7 @@ export class CrashGameBase {
 
         test("Verify place early bet when start auto-play", async () => {
             await test.step("Wait for rocket start fly", async () => {
+                this.game.attachSocketAndCaptureEvent(CrashGameEvent.StartFly);
                 await this.game.waitForEvent(CrashGameEvent.StartFly);
             });
             await test.step("Start auto-play", async () => {
@@ -500,6 +501,7 @@ export class CrashGameBase {
 
         test("Verify player be able to cancel early bet", async () => {
             await test.step("Wait for start cash out", async () => {
+                this.game.attachSocketAndCaptureEvent(CrashGameEvent.StartCashOut)
                 await this.game.waitForEvent(CrashGameEvent.StartCashOut);
                 await this.game.waitForTimeout(300);
             });
