@@ -1,6 +1,6 @@
 import { expect } from "@playwright/test";
 import { GameEvent } from "../_shared";
-import { admintest, BasePlayer, BaseGame, BaseAdmin,test } from "../components";
+import { admintest, BasePlayer, BaseGame, BaseAdmin } from "../components";
 import { IBaseOptions } from "./base-options";
 const env = process.env.npm_config_env || "local"
 
@@ -43,9 +43,9 @@ export class RERGameBase {
             global.settleRoundID = settleRoundID
             
         });
-        test("THEN player able to place a bet and settle", async () => {
+        admintest("THEN player able to place a bet and settle", async () => {
             // Arrange
-            test.setTimeout(this.options.gameConfiguration.maxTimeout);
+            admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount ?? 1 };
             const settleRoundID = `roundId":${global.settleRoundID}`
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
