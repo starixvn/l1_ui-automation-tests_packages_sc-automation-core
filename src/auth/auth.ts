@@ -140,9 +140,10 @@ const loginUAT = async (page: Page, accountId: string, pwd: string, langCode: st
 
 const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: string, projectCode: string, timeout: number = 15000) => {
     if (projectCode === "l1") {
-        await page.fill(PRODLocator.memberIdInput, accountId);
-        await page.fill(PRODLocator.pwdInput, pwd);
-        await page.click(PRODLocator.loginButton);
+        await page.click(PRODLocator.openLoginFormbtn)
+        await page.fill(PRODLocator.usernameInput, accountId);
+        await page.fill(PRODLocator.passwordInput, pwd);
+        await page.click(PRODLocator.submitLoginbtn);
         await page.waitForLoadState("networkidle", { timeout: timeout });
         await page.click(PRODLocator.langDropdown);
         await page.click(PRODLocator[`${langCode}LangOption`]);
