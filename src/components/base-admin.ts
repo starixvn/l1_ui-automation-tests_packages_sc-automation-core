@@ -112,7 +112,7 @@ export class BaseAdmin {
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.48 Safari/537.36",
             game: gameName.toLowerCase(),
         };
-        const currentPageUrl = await this.page.url();
+        const currentPageUrl = this.page.url();
         const admindomain = new URL(currentPageUrl).hostname;
         const responseData = (await this.makeRequest("POST", "http://" + admindomain + "/jwt", requestHeader)) || "";
         return JSON.parse(responseData as string).token || "";
@@ -160,9 +160,7 @@ export class BaseAdmin {
             roundId = await new Promise((resolve) => {
                 const gameNamelower = gameName.toLocaleLowerCase();
                 const socket = new w3cwebsocket(`wss://${projectCode}.lumigame.com/${gameNamelower}/socket.io/?EIO=4&transport=websocket`);
-                console.log(`wss://${projectCode}.lumigame.com/${gameNamelower}/socket.io/?EIO=4&transport=websocket`);
                 socket.onopen = function () {
-                    console.log("WebSocket Client Connected");
                     const inGame = [
                         `40/admin/${gameNamelower}`,
                         `42/admin/${gameNamelower},["message",{"authentication":{"jwt":"${authToken}"}}]`,
@@ -187,14 +185,12 @@ export class BaseAdmin {
                     }
                 };
                 socket.onclose = () => {
-                    console.log("WebSocket connection closed");
                     resolve(undefined);
                 };
                 setTimeout(() => {
                     socket.close();
                 }, 4000);
             });
-            console.log(roundId, i);
             if (typeof roundId != "undefined") {
                 break;
             }
@@ -220,9 +216,7 @@ export class BaseAdmin {
                     const socket = new w3cwebsocket(
                         `wss://${projectCode}.lumigame.com/${gameNamelower}/socket.io/?EIO=4&transport=websocket`
                     );
-                    console.log(`wss://${projectCode}.lumigame.com/${gameNamelower}/socket.io/?EIO=4&transport=websocket`);
                     socket.onopen = function () {
-                        console.log("WebSocket Client Connected");
                         const inGame = [
                             `40/admin/${gameNamelower}`,
                             `42/admin/${gameNamelower},["message",{"authentication":{"jwt":"${authToken}"}}]`,
@@ -248,14 +242,12 @@ export class BaseAdmin {
                         }
                     };
                     socket.onclose = () => {
-                        console.log("WebSocket connection closed");
                         resolve(undefined);
                     };
                     setTimeout(() => {
                         socket.close();
                     }, 4000);
                 });
-                console.log(roundId, i);
                 if (typeof roundId != "undefined") {
                     break;
                 }
