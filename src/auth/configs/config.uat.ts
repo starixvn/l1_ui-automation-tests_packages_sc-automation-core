@@ -1,9 +1,9 @@
 export default {
-    memberSite: "http://casinoqavm2.viva88.com:6202/",
+    memberSite: "http://casinoqavm2.viva88.com:6201/",
     lobbyDomain: "#ThirdPartyGame/vid=42&gid=",
     l2memberSite: "http://qbm005.athena000.com/",
     l2lobbyDomain: "#ThirdPartyGame/vid=66&gid=",
-    lobbyTimeout: 15000, // 15s
+    lobbyTimeout: 30000, 
     enabledMsgPack: true,
     pwd: "1234aaAA",
     l2pwd: "1234aa",

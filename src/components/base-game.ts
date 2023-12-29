@@ -1,6 +1,6 @@
 import type { Page } from "@playwright/test";
 import type { WebSocket as PlaywrightWs } from "playwright-core";
-import { GameEvent, waitForMessage, parseSocketPayload } from "./../_shared";
+import { GameEvent, waitForMessage, parseSocketPayload, waitForSpecificMessage } from "./../_shared";
 import { ssoToGame, getConfig } from "./../auth/auth";
 import { ImageLocator, ImageSnapshot } from "./base-image-locator";
 import { GameConfiguration } from "./game-configuration";
@@ -133,6 +133,10 @@ export class BaseGame {
         return await waitForMessage(this.gameSocket, event, this.getGameName(subGameName), this.msgpack);
     }
 
+    async waitForSpecificEvent(validate: Function, subGameName?: string): Promise<any> {
+        return await waitForSpecificMessage(this.gameSocket, validate, this.getGameName(subGameName), this.msgpack);
+    }
+
     async waitUntilNextRound(subGameName?: string): Promise<any> {
         this.capturedEvents[GameEvent.WinStatus] = "";
 
@@ -141,7 +145,7 @@ export class BaseGame {
 
     async waitUntilPlaceBet(subGameName?: string): Promise<void> {
         await this.waitUntilNextRound(subGameName);
-        await this.waitForEvent(GameEvent.StartPlaceBet, subGameName)
+        await this.waitForEvent(GameEvent.StartPlaceBet, subGameName);
         await this.waitForTimeout(3000);
     }
 
@@ -436,7 +440,7 @@ export class BaseGame {
                     }
 
                     if (match) {
-                        return { x: x+smallWidth/2, y: y+smallHeight/2};
+                        return { x: x + smallWidth / 2, y: y + smallHeight / 2 };
                     }
                 }
             }
