@@ -21,6 +21,25 @@ export async function waitForMessage(socket: PlaywrightWs, key: string, gameName
     return promise;
 }
 
+export async function waitForSpecificMessage(socket: PlaywrightWs, checkMsg: Function, gameName: string, msgpack: boolean = false): Promise<any> {
+    let resolve: (payload: any) => any;
+
+    const promise = new Promise<any>((_resolve) => {
+        resolve = _resolve;
+    });
+
+    socket.on("framereceived", async (msg: any) => {
+        const { payload } = msg ?? "";
+        const jsonMsg = parseSocketPayload(payload, msgpack);
+
+        if (checkMsg(jsonMsg.message) && jsonMsg.eventName?.toLocaleLowerCase() === gameName?.toLocaleLowerCase()) {
+            resolve(jsonMsg.message);
+        }
+    });
+
+    return promise;
+}
+
 export function parseSocketPayload(payload: string, msgpack: boolean = false): SocketPayload {
     const packet = msgpack ? decode(payload) : decodeJson(payload);
     const { data } = packet;

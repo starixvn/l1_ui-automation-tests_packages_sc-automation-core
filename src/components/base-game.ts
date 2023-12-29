@@ -7,6 +7,7 @@ import { GameConfiguration } from "./game-configuration";
 import { createWorker } from "tesseract.js";
 import { baseLocatorNames } from "./base-game-locator";
 import fs from "fs";
+import { waitForSpecificMessage } from "../_shared/socket-helpers";
 const PNG = require("pngjs").PNG;
 
 export class BaseGame {
@@ -131,6 +132,10 @@ export class BaseGame {
 
     async waitForEvent(event: string, subGameName?: string): Promise<any> {
         return await waitForMessage(this.gameSocket, event, this.getGameName(subGameName), this.msgpack);
+    }
+
+    async waitForSpecificEvent(validate: Function, subGameName?: string): Promise<any> {
+        return await waitForSpecificMessage(this.gameSocket, validate, this.getGameName(subGameName), this.msgpack);
     }
 
     async waitUntilNextRound(subGameName?: string): Promise<any> {
