@@ -9,5 +9,6 @@ export default {
     l2pwd: "1q2w3e4r",
     getbalance: "https://l1sit.sgamesuat.com/sit/user/auth/balance",
     guideLinkL1: "https://l1guidessit.sgamesuat.com",
-    guideLinkL2: "https://l2guidessit.sgamesuat.com"
+    guideLinkL2: "https://l2guidessit.sgamesuat.com",
+    l1admin: "https://l1sitadm.sgamesuat.com",
 };

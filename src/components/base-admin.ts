@@ -4,6 +4,9 @@ import { GameEvent, waitForMessage, parseSocketPayload } from "../_shared";
 import { loginAdmin } from "../auth/auth";
 import { GameConfiguration } from "./game-configuration";
 const w3cwebsocket = require("websocket").w3cwebsocket;
+import { io, Socket } from "socket.io-client";
+import { decode, encode } from "notepack.io";
+import { decodeJson } from "../_shared/socket-parser";
 
 export class BaseAdmin {
     readonly page: Page;
@@ -113,8 +116,8 @@ export class BaseAdmin {
             game: gameName.toLowerCase(),
         };
         const currentPageUrl = this.page.url();
-        const admindomain = new URL(currentPageUrl).hostname;
-        const responseData = (await this.makeRequest("POST", "http://" + admindomain + "/jwt", requestHeader)) || "";
+        const admindomain = new URL(currentPageUrl);
+        const responseData = (await this.makeRequest("POST", admindomain.protocol + "//" + admindomain.hostname + "/jwt", requestHeader)) || "";
         return JSON.parse(responseData as string).token || "";
     }
 
@@ -153,51 +156,79 @@ export class BaseAdmin {
         return response;
     }
 
-    async getRunningRoundId(projectCode:any, gameName: string, authToken: string) {
-        let i = 0;
-        let roundId;
-        while (i <= 5) {
-            roundId = await new Promise((resolve) => {
-                const gameNamelower = gameName.toLocaleLowerCase();
-                const socket = new w3cwebsocket(`wss://${projectCode}.lumigame.com/${gameNamelower}/socket.io/?EIO=4&transport=websocket`);
-                socket.onopen = function () {
-                    const inGame = [
-                        `40/admin/${gameNamelower}`,
-                        `42/admin/${gameNamelower},["message",{"authentication":{"jwt":"${authToken}"}}]`,
-                        `42/admin/${gameNamelower},["message",{"${gameName}":{"get_time":true,"view":true,"get_new":true,"sync":true}}]`,
-                    ];
-                    for (const iterator of inGame) {
-                        if (socket.readyState === socket.OPEN) {
-                            setTimeout(function () {
-                                socket.send(iterator.toString());
-                            }, 100);
-                        }
-                    }
-                };
-                socket.onmessage = function (event) {
-                    for (let index = 0; index <= 10; index++) {
-                        setTimeout(function () {
-                            if (event.data.includes("roundId")) {
-                                let roundId = JSON.parse(event.data.replace(`42/admin/${gameNamelower},`, ""))[1][gameName].roundId;
-                                resolve(roundId);
-                            }
-                        }, 100);
-                    }
-                };
-                socket.onclose = () => {
-                    resolve(undefined);
-                };
-                setTimeout(() => {
-                    socket.close();
-                }, 4000);
-            });
-            if (typeof roundId != "undefined") {
-                break;
-            }
-            i += 1;
-        }
-        return roundId;
+    async postData( url: string, data: string) {
+        let response;
+        // POST request
+            response = await this.page.evaluate(async ({ url, data }) => {
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+                    },
+                    body: data,
+                });
+                const responseData = await response.text();
+                return responseData;
+            }, { url, data });
+        return response;
     }
+
+    async getRunningRoundId(projectCode: any, gameName: string, authToken: string) {
+        const gameNamelower = gameName.toLocaleLowerCase();
+        let roundId;
+      
+        for (let i = 0; i <= 5; i++) {
+          roundId = await new Promise((resolve) => {
+            const socket = new w3cwebsocket(`wss://${projectCode}.lumigame.com/${gameNamelower}/socket.io/?EIO=4&transport=websocket`);
+      
+            socket.onopen = function () {
+              const inGame = [
+                `40/admin/${gameNamelower}`,
+                `42/admin/${gameNamelower},["message",{"authentication":{"jwt":"${authToken}"}}]`,
+                `42/admin/${gameNamelower},["message",{"${gameName}":{"get_time":true,"view":true,"get_new":true,"sync":true}}]`,
+              ];
+      
+              for (const iterator of inGame) {
+                if (socket.readyState === socket.OPEN) {
+                  setTimeout(function () {
+                    socket.send(iterator.toString());
+                  }, 200);
+                }
+              }
+            };
+      
+            socket.onmessage = function (event) {
+              for (let index = 0; index <= 10; index++) {
+                setTimeout(function () {
+                  if (event.data.includes("roundId")) {
+                    const parsedData = JSON.parse(event.data.replace(`42/admin/${gameNamelower},`, ""));
+                    const gameData = parsedData[1][gameName];
+                    if (gameData && gameData.roundId) {
+                      resolve(gameData.roundId);
+                      index = 10;
+                    }
+                  }
+                }, 200);
+              }
+            };
+      
+            socket.onclose = () => {
+                console.log('socket close');
+                resolve(undefined);
+            };
+      
+            setTimeout(() => {
+              socket.close();
+            }, 2000);
+          });
+      
+          if (roundId) {
+            break;
+          }
+        }
+      
+        return roundId;
+      }
 
     async setGameResult(
         projectCode: any,
@@ -212,6 +243,7 @@ export class BaseAdmin {
             let i = 0;
             let roundId;
             while (i <= 5) {
+                // Retry once
                 roundId = await new Promise((resolve) => {
                     const socket = new w3cwebsocket(
                         `wss://${projectCode}.lumigame.com/${gameNamelower}/socket.io/?EIO=4&transport=websocket`
@@ -221,22 +253,27 @@ export class BaseAdmin {
                             `40/admin/${gameNamelower}`,
                             `42/admin/${gameNamelower},["message",{"authentication":{"jwt":"${authToken}"}}]`,
                             `42/admin/${gameNamelower},["message",{"${gameName}":{"get_time":true,"view":true,"get_new":true,"sync":true}}]`,
-                            `42/admin/${gameNamelower},["message",{"${gameName}":{"set_result":{"roundId":${settleRoundId},"result":${setledata}}}}]`,
+                            `42/admin/${gameNamelower},["message",{"${gameName}":{"set_result":{"result":${setledata},"roundId":${settleRoundId}}}}]`,
+                            `42/admin/${gameNamelower},["message",{"${gameName}":{"set_result":{"result":${setledata},"roundId":${settleRoundId}}}}]`,
                         ];
                         for (const iterator of inGame) {
                             if (socket.readyState === socket.OPEN) {
                                 setTimeout(function () {
                                     socket.send(iterator.toString());
-                                }, 100);
+                                }, 200);
                             }
                         }
                     };
                     socket.onmessage = function (event) {
-                        for (let index = 0; index <= 5; index++) {
+                        for (let index = 0; index <= 10; index++) {
                             setTimeout(function () {
                                 if (event.data.includes("roundId")) {
-                                    let roundId = JSON.parse(event.data.replace(`42/admin/${gameNamelower},`, ""))[1][gameName].roundId;
-                                    resolve(roundId + 1);
+                                    const parsedData = JSON.parse(event.data.replace(`42/admin/${gameNamelower},`, ""));
+                                    const gameData = parsedData[1][gameName];
+                                    if (gameData && gameData.roundId) {
+                                      resolve(gameData.roundId+1);
+                                      index = 10;
+                                    }
                                 }
                             }, 100);
                         }
@@ -246,9 +283,9 @@ export class BaseAdmin {
                     };
                     setTimeout(() => {
                         socket.close();
-                    }, 4000);
+                    }, 2000);
                 });
-                if (typeof roundId != "undefined") {
+                if (roundId !== "N/A" && typeof roundId !== "undefined") {
                     break;
                 }
                 i += 1;
@@ -256,16 +293,16 @@ export class BaseAdmin {
             return roundId;
         } else {
             const domain = `https://${projectCode}.lumigame.com/monitoring/ResultMonitor/${gameName}`;
-            await this.makeRequest("Post", domain, setledata);
+            await this.postData(domain, setledata);
         }
     }
 
     async getRetrieveEndRound(gameType: any, roundId: any, playerId: any, operatorId: string = "ONEworks1") {
-        const currentPageUrl = await this.page.url();
-        const admindomain = new URL(currentPageUrl).hostname;
+        const currentPageUrl = this.page.url();
+        const admindomain = new URL(currentPageUrl);
 
         const inItRequest = {
-            url: "http://" + admindomain + "/RetrieveEndRound/Index",
+            url: admindomain.protocol + "//" + admindomain.hostname + "/RetrieveEndRound/Index",
             body: `OperatorId=${operatorId}&GameType=${gameType}&RoundId=${roundId}&PlayerId=${playerId}&Language=en-US`,
         };
         let response = await this.page.evaluate(async (inItRequest) => {
@@ -282,4 +319,69 @@ export class BaseAdmin {
         }, inItRequest);
         return JSON.parse(response);
     }
+
+    async  getRunningRoundId1(projectCode: any, gameName: string, authToken: string,msgpack:boolean = true) {
+        const gameNamelower = gameName.toLocaleLowerCase();
+        let roundId;
+    
+        
+        for (let i = 0; i <= 5; i++) {
+            roundId = await new Promise((resolve) => {
+                const socket: Socket = io(`wss://${projectCode}.lumigame.com/${gameNamelower}`, {
+                    transports: ["websocket"],
+                    query: {
+                        EIO: "4",
+                        transport: "websocket",
+                    },
+                });
+
+                socket.on("connect", () => {
+                    const inGame = [
+                        `40/admin/${gameNamelower}`,
+                        `42/admin/${gameNamelower}`, encode(["message", { authentication: { jwt: authToken } }]),
+                        `42/admin/${gameNamelower}`, encode([gameName, { get_time: true, view: true, get_new: true, sync: true }]),
+                    ];
+
+                    for (const iterator of inGame) {
+                        socket.emit("message", iterator);
+                    }
+                });
+
+                socket.on("message", (event) => {
+                    for (let index = 0; index <= 10; index++) {
+                        setTimeout(() => {
+                            const packet = msgpack ? decode(event.data) : decodeJson(event.data);
+                            const { data } = packet;
+                            if (data.includes("roundId")) {
+                                console.log("data", data);
+                                
+                                // const parsedData = decode(event.replace(`42/admin/${gameNamelower},`, ""));
+                                // const gameData = parsedData[1][gameName];
+                                // if (gameData && gameData.roundId) {
+                                //     resolve(gameData.roundId);
+                                //     index = 10;
+                                // }
+                            }
+                        }, 200);
+                    }
+                });
+
+                socket.on("disconnect", () => {
+                    console.log("socket close");
+                    resolve(undefined);
+                });
+
+                setTimeout(() => {
+                    socket.close();
+                }, 2000);
+            });
+
+            if (roundId) {
+                break;
+            }
+        }
+
+        return roundId;
+    }
+
 }

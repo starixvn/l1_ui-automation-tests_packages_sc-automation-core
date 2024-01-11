@@ -8,12 +8,13 @@ export interface IBaseOptions {
     placeBetChoices: string[];
     placeBetAmount?: number;
     multiPlaceBetChoices?: string[];
-    Adminconfiguration: Adminconfiguration
+    Adminconfiguration: Adminconfiguration;
 }
 
 export class Adminconfiguration {
     settleRequestType: string;
-    wsGameName?: string;
     dataset: object;
+    settlePath?: string;
+    tokenGameName?: string;
+    wsGameName?: string;
 }
-

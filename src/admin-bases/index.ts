@@ -1,7 +1,13 @@
 import { IBaseOptions } from "./base-options";
-import { RERGameBase } from "./retrieve-end-round.spec";
+import { TicketDetailGameBase } from "./ticket-detail.spec";
+import { CardRERGameBase } from "./card-game-retrieve-end-round.spec";
+import { RERGameBase } from "./round-game-retrieve-end-round.spec";
+
+
 
 export {
     RERGameBase,
+    CardRERGameBase,
+    TicketDetailGameBase,
     IBaseOptions
 };
