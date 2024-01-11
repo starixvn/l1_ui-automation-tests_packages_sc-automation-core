@@ -4,7 +4,7 @@ import { GameEvent, waitForMessage, parseSocketPayload } from "../_shared";
 import { loginAdmin } from "../auth/auth";
 import { GameConfiguration } from "./game-configuration";
 const w3cwebsocket = require("websocket").w3cwebsocket;
-import { io, Socket } from "socket.io-client";
+// import { io, Socket } from "socket.io-client";
 import { decode, encode } from "notepack.io";
 import { decodeJson } from "../_shared/socket-parser";
 
@@ -320,41 +320,35 @@ export class BaseAdmin {
         return JSON.parse(response);
     }
 
-    async  getRunningRoundId1(projectCode: any, gameName: string, authToken: string,msgpack:boolean = true) {
-        const gameNamelower = gameName.toLocaleLowerCase();
-        let roundId;
-    
-        
+    async  getRunningRoundId1(gameName: string, authToken: string,msgpack:boolean = true) {
+        console.log(gameName);
+        let roundId;       
         for (let i = 0; i <= 5; i++) {
             roundId = await new Promise((resolve) => {
-                const socket: Socket = io(`wss://${projectCode}.lumigame.com/${gameNamelower}`, {
-                    transports: ["websocket"],
-                    query: {
-                        EIO: "4",
-                        transport: "websocket",
-                    },
-                });
-
-                socket.on("connect", () => {
+                const socket = new w3cwebsocket(`wss://l1uatproxy.sgamesuat.com/sit/sedie/socket.io/?EIO=4&transport=websocket`);
+                socket.onopen = function () {
                     const inGame = [
-                        `40/admin/${gameNamelower}`,
-                        `42/admin/${gameNamelower}`, encode(["message", { authentication: { jwt: authToken } }]),
-                        `42/admin/${gameNamelower}`, encode([gameName, { get_time: true, view: true, get_new: true, sync: true }]),
+                      `40/admin/sedie`,
+                      `42/admin/sedie,["message",{"authentication":{"jwt":"${authToken}"}}]`,
+                      `42/admin/sedie,["message",{"SeDie":{"get_time":true,"view":true,"get_new":true,"sync":true}}]`,
                     ];
-
+            
                     for (const iterator of inGame) {
-                        socket.emit("message", iterator);
+                      if (socket.readyState === socket.OPEN) {
+                        setTimeout(function () {
+                          socket.send(encode(iterator.toString()));
+                        }, 200);
+                      }
                     }
-                });
+                  };
 
-                socket.on("message", (event) => {
+                socket.onmessage = function (event) {
                     for (let index = 0; index <= 10; index++) {
                         setTimeout(() => {
-                            const packet = msgpack ? decode(event.data) : decodeJson(event.data);
-                            const { data } = packet;
+                            console.log(decode(event.data));
+                            let data = decode(event.data);
                             if (data.includes("roundId")) {
                                 console.log("data", data);
-                                
                                 // const parsedData = decode(event.replace(`42/admin/${gameNamelower},`, ""));
                                 // const gameData = parsedData[1][gameName];
                                 // if (gameData && gameData.roundId) {
@@ -364,18 +358,14 @@ export class BaseAdmin {
                             }
                         }, 200);
                     }
-                });
-
-                socket.on("disconnect", () => {
-                    console.log("socket close");
+                };
+                socket.onclose = () => {
                     resolve(undefined);
-                });
-
+                };
                 setTimeout(() => {
                     socket.close();
                 }, 2000);
             });
-
             if (roundId) {
                 break;
             }
