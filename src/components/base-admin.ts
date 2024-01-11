@@ -6,7 +6,7 @@ import { GameConfiguration } from "./game-configuration";
 const w3cwebsocket = require("websocket").w3cwebsocket;
 // import { io, Socket } from "socket.io-client";
 import { decode, encode } from "notepack.io";
-import { decodeJson } from "../_shared/socket-parser";
+// import { decodeJson } from "../_shared/socket-parser";
 
 export class BaseAdmin {
     readonly page: Page;
@@ -320,7 +320,7 @@ export class BaseAdmin {
         return JSON.parse(response);
     }
 
-    async  getRunningRoundId1(gameName: string, authToken: string,msgpack:boolean = true) {
+    async  getRunningRoundId1(gameName: string, authToken: string) {
         console.log(gameName);
         let roundId;       
         for (let i = 0; i <= 5; i++) {
