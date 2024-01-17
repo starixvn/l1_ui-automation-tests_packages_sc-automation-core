@@ -12,9 +12,9 @@ export interface IBaseOptions {
 }
 
 export class Adminconfiguration {
-    settleRequestType: string;
-    dataset: object;
+    settleDomain: string;
     settlePath?: string;
     tokenGameName?: string;
     wsGameName?: string;
+    dataset: object;
 }

@@ -40,22 +40,10 @@ export class RERGameBase {
     }
 
     protected TC3() {
-        admintest("Verify case Player placebet 1 choice and win", async () => {
+        admintest("Set result win for user when placing 1 bet choice", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const gameName = this.options.gameConfiguration.name;
-            const wstoken = await this.admin.getWsToken(this.options.Adminconfiguration.tokenGameName);
-            let runningRoundID = await this.admin.getRunningRoundId(this.options.Adminconfiguration.wsGameName, gameName, wstoken);
-            let nextRoundID = runningRoundID + 1;
-            await this.admin.waitForTimeout(1000);
-            const settleRoundID = await this.admin.setGameResult(
-                this.options.Adminconfiguration.wsGameName,
-                gameName,
-                wstoken,
-                nextRoundID,
-                this.options.Adminconfiguration.dataset["TC3_settle"],
-                "ws"
-            );
-            global.settleRoundID = typeof settleRoundID === "number" ? settleRoundID : nextRoundID;
+            const settleRoundId = await this.admin.setUiGameResult(this.admin.page.context(),this.options.gameConfiguration.id ,this.options.Adminconfiguration.dataset["TC3_settle"])
+            global.settleRoundID = settleRoundId
         });
         admintest("THEN player able to place a bet and settle", async () => {
             // Arrange
@@ -79,20 +67,8 @@ export class RERGameBase {
     protected TC4() {
         admintest("Verify case Player has ticket on roundId is running", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const gameName = this.options.gameConfiguration.name;
-            const wstoken = await this.admin.getWsToken(this.options.Adminconfiguration.tokenGameName);
-            let runningRoundID = await this.admin.getRunningRoundId(this.options.Adminconfiguration.wsGameName, gameName, wstoken);
-            let nextRoundID = runningRoundID+1;
-            await this.admin.waitForTimeout(1000);
-            const settleRoundID = await this.admin.setGameResult(
-                this.options.Adminconfiguration.wsGameName,
-                gameName,
-                wstoken,
-                nextRoundID,
-                this.options.Adminconfiguration.dataset["TC3_settle"],
-                this.options.Adminconfiguration.settleRequestType
-            );
-            global.settleRoundID = typeof settleRoundID === "number" ? settleRoundID : nextRoundID;
+            const settleRoundId = await this.admin.setUiGameResult(this.admin.page.context(),this.options.gameConfiguration.id ,this.options.Adminconfiguration.dataset["TC4_settle"])
+            global.settleRoundID = settleRoundId
 
         });
         admintest("THEN player able to place a bet and settle on running round", async () => {
@@ -117,20 +93,8 @@ export class RERGameBase {
     protected TC5() {
         admintest("Verify case Player placebet 1 choice and lose", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const gameName = this.options.gameConfiguration.name;
-            const wstoken = await this.admin.getWsToken(this.options.Adminconfiguration.tokenGameName);
-            let runningRoundID = await this.admin.getRunningRoundId(this.options.Adminconfiguration.wsGameName, gameName, wstoken);
-            let nextRoundID = runningRoundID+1;
-            await this.admin.waitForTimeout(1000);
-            const settleRoundID = await this.admin.setGameResult(
-                this.options.Adminconfiguration.wsGameName,
-                gameName,
-                wstoken,
-                nextRoundID,
-                this.options.Adminconfiguration.dataset["TC5_settle"],
-                this.options.Adminconfiguration.settleRequestType
-            );
-            global.settleRoundID = typeof settleRoundID === "number" ? settleRoundID : nextRoundID;
+            const settleRoundId = await this.admin.setUiGameResult(this.admin.page.context(),this.options.gameConfiguration.id ,this.options.Adminconfiguration.dataset["TC5_settle"])
+            global.settleRoundID = settleRoundId
         });
         admintest("THEN player able to place a bet and lose", async () => {
             // Arrange
@@ -155,20 +119,8 @@ export class RERGameBase {
     protected TC6() {
         admintest("Verify case Player placebet multiple choices and lose", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const gameName = this.options.gameConfiguration.name;
-            const wstoken = await this.admin.getWsToken(this.options.Adminconfiguration.tokenGameName);
-            let runningRoundID = await this.admin.getRunningRoundId(this.options.Adminconfiguration.wsGameName, gameName, wstoken);
-            let nextRoundID = runningRoundID+1;
-            await this.admin.waitForTimeout(1000);
-            const settleRoundID = await this.admin.setGameResult(
-                this.options.Adminconfiguration.wsGameName,
-                gameName,
-                wstoken,
-                nextRoundID,
-                this.options.Adminconfiguration.dataset["TC6_settle"],
-                this.options.Adminconfiguration.settleRequestType
-            );
-            global.settleRoundID = typeof settleRoundID === "number" ? settleRoundID : nextRoundID;
+            const settleRoundId = await this.admin.setUiGameResult(this.admin.page.context(),this.options.gameConfiguration.id ,this.options.Adminconfiguration.dataset["TC6_settle"])
+            global.settleRoundID = settleRoundId
         });
         admintest("THEN player able to placebet multiple choices and lose all", async () => {
             // Arrange

@@ -4,9 +4,8 @@ import { GameEvent, waitForMessage, parseSocketPayload } from "../_shared";
 import { loginAdmin } from "../auth/auth";
 import { GameConfiguration } from "./game-configuration";
 const w3cwebsocket = require("websocket").w3cwebsocket;
-// import { io, Socket } from "socket.io-client";
-import { decode, encode } from "notepack.io";
-// import { decodeJson } from "../_shared/socket-parser";
+import * as adminLocator from "./base-admin-locator";
+
 
 export class BaseAdmin {
     readonly page: Page;
@@ -117,11 +116,11 @@ export class BaseAdmin {
         };
         const currentPageUrl = this.page.url();
         const admindomain = new URL(currentPageUrl);
-        const responseData = (await this.makeRequest("POST", admindomain.protocol + "//" + admindomain.hostname + "/jwt", requestHeader)) || "";
+        const responseData = (await this.makeJsonRequest("POST", admindomain.protocol + "//" + admindomain.hostname + "/jwt", requestHeader)) || "";
         return JSON.parse(responseData as string).token || "";
     }
 
-    async makeRequest(requestType: string, url: string, jsonData: any): Promise<any> {
+    async makeJsonRequest(requestType: string, url: string, jsonData: any): Promise<any> {
         let response;
         // POST request
         if (requestType === "POST") {
@@ -230,71 +229,36 @@ export class BaseAdmin {
         return roundId;
       }
 
-    async setGameResult(
-        projectCode: any,
-        gameName: string,
-        authToken: string,
-        settleRoundId: number,
-        setledata: any,
-        settleType: string = "ws"
-    ) {
-        const gameNamelower = gameName.toLocaleLowerCase();
-        if (settleType === "ws") {
-            let i = 0;
-            let roundId;
-            while (i <= 5) {
-                // Retry once
-                roundId = await new Promise((resolve) => {
-                    const socket = new w3cwebsocket(
-                        `wss://${projectCode}.lumigame.com/${gameNamelower}/socket.io/?EIO=4&transport=websocket`
-                    );
-                    socket.onopen = function () {
-                        const inGame = [
-                            `40/admin/${gameNamelower}`,
-                            `42/admin/${gameNamelower},["message",{"authentication":{"jwt":"${authToken}"}}]`,
-                            `42/admin/${gameNamelower},["message",{"${gameName}":{"get_time":true,"view":true,"get_new":true,"sync":true}}]`,
-                            `42/admin/${gameNamelower},["message",{"${gameName}":{"set_result":{"result":${setledata},"roundId":${settleRoundId}}}}]`,
-                            `42/admin/${gameNamelower},["message",{"${gameName}":{"set_result":{"result":${setledata},"roundId":${settleRoundId}}}}]`,
-                        ];
-                        for (const iterator of inGame) {
-                            if (socket.readyState === socket.OPEN) {
-                                setTimeout(function () {
-                                    socket.send(iterator.toString());
-                                }, 200);
-                            }
-                        }
-                    };
-                    socket.onmessage = function (event) {
-                        for (let index = 0; index <= 10; index++) {
-                            setTimeout(function () {
-                                if (event.data.includes("roundId")) {
-                                    const parsedData = JSON.parse(event.data.replace(`42/admin/${gameNamelower},`, ""));
-                                    const gameData = parsedData[1][gameName];
-                                    if (gameData && gameData.roundId) {
-                                      resolve(gameData.roundId+1);
-                                      index = 10;
-                                    }
-                                }
-                            }, 100);
-                        }
-                    };
-                    socket.onclose = () => {
-                        resolve(undefined);
-                    };
-                    setTimeout(() => {
-                        socket.close();
-                    }, 2000);
-                });
-                if (roundId !== "N/A" && typeof roundId !== "undefined") {
-                    break;
-                }
-                i += 1;
-            }
-            return roundId;
-        } else {
-            const domain = `https://${projectCode}.lumigame.com/monitoring/ResultMonitor/${gameName}`;
+    async postGameResult(settleDomain: any,settlePath: string,setledata: any) {
+            const domain = `https://${settleDomain}.lumigame.com/monitoring/ResultMonitor/${settlePath}`;
             await this.postData(domain, setledata);
         }
+
+    async setUiGameResult(context: any, gameId: number, data: object) {
+        const admindomain = new URL(this.page.url());
+        const monitoring = admindomain.protocol + "//" + admindomain.hostname + "/GameSettings/GameMonitor";
+        await this.page.goto(monitoring);
+        await this.page.focus(adminLocator.monitoring[gameId]);
+        const [newtab] = await Promise.all([
+            context.waitForEvent("page"),
+            await this.page.click(adminLocator.monitoring[gameId]),
+        ]);
+        await newtab.waitForLoadState();
+
+        let roundTimer = await newtab.locator(adminLocator.commonUiResult.lblTimmer).innerText();
+        while (Number(roundTimer) < 10) {
+            roundTimer = await newtab.locator(adminLocator.commonUiResult.lblTimmer).innerText();
+            await this.page.waitForTimeout(1000); // Wait for 1 second before checking again
+        }
+        let roundId = await newtab.locator(adminLocator.commonUiResult.lblroundId).innerText();
+        for (const [key, value] of Object.entries(data)) {
+            await newtab.click(key);
+            await newtab.waitForTimeout(200);
+            await newtab.click(value);
+            await newtab.waitForTimeout(200);
+        }
+        await newtab.close();
+        return Number(roundId+1);
     }
 
     async getRetrieveEndRound(gameType: any, roundId: any, playerId: any, operatorId: string = "ONEworks1") {
@@ -320,58 +284,21 @@ export class BaseAdmin {
         return JSON.parse(response);
     }
 
-    async  getRunningRoundId1(gameName: string, authToken: string) {
-        console.log(gameName);
-        let roundId;       
-        for (let i = 0; i <= 5; i++) {
-            roundId = await new Promise((resolve) => {
-                const socket = new w3cwebsocket(`wss://l1uatproxy.sgamesuat.com/sit/sedie/socket.io/?EIO=4&transport=websocket`);
-                socket.onopen = function () {
-                    const inGame = [
-                      `40/admin/sedie`,
-                      `42/admin/sedie,["message",{"authentication":{"jwt":"${authToken}"}}]`,
-                      `42/admin/sedie,["message",{"SeDie":{"get_time":true,"view":true,"get_new":true,"sync":true}}]`,
-                    ];
-            
-                    for (const iterator of inGame) {
-                      if (socket.readyState === socket.OPEN) {
-                        setTimeout(function () {
-                          socket.send(encode(iterator.toString()));
-                        }, 200);
-                      }
-                    }
-                  };
+    async filterBetDetails(
+        context: any,
+        gameType: any,
+        roundId: any,
+        playerId: any
+      ) {
+        await this.page.locator("id=GameType").selectOption(gameType.toString());
+        await this.page.fill("id=RoundId", roundId.toString());
+        await this.page.fill("id=PlayerId", playerId.toString());
+        const [newtab] = await Promise.all([
+          context.waitForEvent("page"),
+          await this.page.click("input[value='Get Bet Details']"),
+        ]);
+        return newtab;
+      };
 
-                socket.onmessage = function (event) {
-                    for (let index = 0; index <= 10; index++) {
-                        setTimeout(() => {
-                            console.log(decode(event.data));
-                            let data = decode(event.data);
-                            if (data.includes("roundId")) {
-                                console.log("data", data);
-                                // const parsedData = decode(event.replace(`42/admin/${gameNamelower},`, ""));
-                                // const gameData = parsedData[1][gameName];
-                                // if (gameData && gameData.roundId) {
-                                //     resolve(gameData.roundId);
-                                //     index = 10;
-                                // }
-                            }
-                        }, 200);
-                    }
-                };
-                socket.onclose = () => {
-                    resolve(undefined);
-                };
-                setTimeout(() => {
-                    socket.close();
-                }, 2000);
-            });
-            if (roundId) {
-                break;
-            }
-        }
-
-        return roundId;
-    }
 
 }
