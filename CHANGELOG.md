@@ -1,3 +1,16 @@
+# [1.21.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.20.3...v1.21.0) (2024-01-17)
+
+
+### Bug Fixes
+
+* update crash game locators ([285da2d](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/285da2d8b2a40d835ba04f303e63ead2d58fa9d9))
+* update e2e crash game base ([7f60f2c](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/7f60f2c887c8c274803b003818f493ce687a1273))
+
+
+### Features
+
+* crash game and log total login time ([7f1d143](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/7f1d1439203a2f086da602482e1cd288e06159cd))
+
 ## [1.20.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.20.2...v1.20.3) (2023-12-29)
 
 
