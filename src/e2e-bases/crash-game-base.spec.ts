@@ -5,6 +5,7 @@ import { IBaseOptions } from "./base-options";
 import { baseLocatorNames } from "../components/base-game-locator";
 import { GameGuides } from "../game-components/guides/guides.spec";
 import { BetHistory } from "../game-components/history/history.spec";
+import verifyImage from "../expects/verify-image";
 
 const timeout = 4000;
 
@@ -81,9 +82,11 @@ export class CrashGameBase {
                 await this.game.clickLocator(baseLocatorNames.mnuHamburger);
             });
             await test.step("Capture expand hamburger menu and compare with the snapshot", async () => {
-                const mnuHamburgerExpandSoundOn = await this.game.capture(baseLocatorNames.mnuHamburgerExpandSoundOn);
-                //Assert
-                expect(mnuHamburgerExpandSoundOn.image).toMatchSnapshot(mnuHamburgerExpandSoundOn.name, { maxDiffPixelRatio: 0 });
+                // const mnuHamburgerExpandSoundOn = await this.game.capture(baseLocatorNames.mnuHamburgerExpandSoundOn);
+                // //Assert
+                // expect(mnuHamburgerExpandSoundOn.image).toMatchSnapshot(mnuHamburgerExpandSoundOn.name, { maxDiffPixelRatio: 0 });
+
+                verifyImage(this.game, baseLocatorNames.mnuHamburgerExpandSoundOn);
             });
             //Post-Act
             await test.step("Click out side to close the menu", async () => {
