@@ -5,7 +5,8 @@ const imgLocatorNames = ["imgdealer","imgGameName","imgB0","imgB1",  "imgB2","im
      "imgTotalbet0_1", "imgTotalbet0_2", "imgTotalbet1", "imgTotalbet5","imgTotalbet10","imgLeftNumbersColumn", "imgRightNumbersColumn",
     "imgConfirmPaylineDisabled","imgTurboTrial","imgTurboDefault","imgBetLevel","imgCoinValue","imgTotalBet", "imgBottomArea", "imgBottomAreaTrialMode",
     "imgUserBalanceTrialMode", "imgRoundIdFirstRoundTrialMode","imgGameLobby", "imgTurboOn", "imgTurboOFF", "imgControlAreal1","imgControlAreal2", "imgRocket", "imgBetAmountFirstChipl1", "imgBetAmountFirstChipl2",
-    "imgBetAmountDisablel1", "imgBetAmountDisablel2", "imgBetAmountIncreasel1", "imgBetAmountIncreasel2","imgAutoCashoutIncrease", "imgAutoCashoutDecrease", "imgLeaderBoard"]
+    "imgBetAmountDisablel1", "imgBetAmountDisablel2", "imgBetAmountIncreasel1", "imgBetAmountIncreasel2","imgAutoCashoutIncrease", "imgAutoCashoutDecrease", "imgLeaderBoard", "imgMainPlayerNameLeaderBoard",
+    "imgMainPlayerBetAmountLeaderBoardl1", "imgMainPlayerBetAmountLeaderBoardl2", "imgBetAmountMaxChipl1", "imgBetAmountMaxChipl2", "imgLeaderboardTable"]
 
 const btnLocatorNames = ["btnRebet","btnHome","btnClosePopup","btnRightArrow","btnLeftArrow","btnHitCard", "btnCancel","btnSplit","btnDouble","btnNewbet",
     "btnPayline","btnAutoSpin","btnTurbo", "btnSpin", "btnAutoSpin10", "btnAutoSpinTurbo", "btnAutoSpinStart","btnPayline1", "btnAllPayline", "btnEvenPayline",
@@ -14,17 +15,17 @@ const btnLocatorNames = ["btnRebet","btnHome","btnClosePopup","btnRightArrow","b
     "btnCancelChoice2", "btnCancelChoice3", "btnCashOut", "btnCashOutHalf", "btnBetAmount", "btnMaxChip", "btnClearBetamount", "btnFirstChip", "btnConfirm",
      "btnIncreaseBetAmount", "btnDecreaseBetAmount", "btnPlaceBet", "btnPlaceBetBetAccepted", "btnEarlyBetAccepted","btnAutoPlay", "btnAutoPlayStart", "btnAutoPlay10", "btnAutoCashOut", "btnNumber1AutoCashout", "btnDotAutoCashout", 
      "btnNumber2AutoCashout", "btnNumber0AutoCashout", "btnBackspace", "btnClearAutoCashout", "btnPlaceEarlyBet", "btnPlaceEarlyBetWaiting", "btnStatisticLastRound", "btnStatisticRunningRound",
-     "btnEnableAutoCashOut", "btnConfirmAutoCashout","btnConfirmAutoCashoutDisabled", "btnIncreaseAutoCashout", "btnDecreaseAutoCashout", "btnAutoPlay9Remaining", "btnAutoPlay10Remaining"]
+     "btnEnableAutoCashOut", "btnConfirmAutoCashout","btnConfirmAutoCashoutDisabled", "btnIncreaseAutoCashout", "btnDecreaseAutoCashout", "btnAutoPlay9Remaining", "btnAutoPlay10Remaining", "btnTooltipMd5"]
 
 const popLocatorNames = ["popAutoSpin","popHistory", "popGuide","popGameGuide", "popAutoSpinTurbo",  "popBetControll1", "popBetControlMaxBetLevell1",
     "popBetControlMinBetLevell1", "popBetControlMaxCoinValuel1", "popBetControlMinCoinValuel1", "popBetControll2", "popBetControlMaxBetLevell2", 
     "popBetControlMinBetLevell2", "popBetControlMaxCoinValuel2","popBetControlMinCoinValuel2","popBetAmountl1", "popBetAmountl2","popBetControlTrialMode", "popBetAmountMaxChipl1","popBetAmountMaxChipl2", 
-    "popAutoPlay", "popAutoCashout", "popMD5"];
+    "popAutoPlay", "popAutoCashout", "popMD5", "popGuideMd5"];
 
 const lblLocatorNames = ["lblRoundIdOnTable",   "lblTotalBetl1", "lblTotalBetl2","lblChoice1",  "lblChoice2","lblChoice3", "lblRoundIdChoice1","lblRoundIdChoice2",
     "lblRoundIdChoice3", "lblRoundID", "lblBetLevel0_1", "lblWin", "lblErrorMsg", "lblHistoryFirstRow","lblHistoryDetailRoundId","lblRoundIdFirstRoundTrialMode", 
     "lblTumbleWinList", "lblTumbleWinListTrialMode","lblBetLevel0_2","lblBetLevel1",  "lblBetLevel5", "lblBetLevel10", "lblTotalbet","lblDefaultTotalBet", "lblAutoCashoutMultiplierMaxLength", 
-    "lblAutoCashoutMultiplierMaxLengthApplied", "lblMultiplier2001", "lblMultiplier200", "lblMultiplierCleared", "lblResultCleared", "lblAutoCashoutEnable", "lblAutoCashoutDisable"];
+    "lblAutoCashoutMultiplierMaxLengthApplied", "lblMultiplier2001", "lblMultiplier200", "lblMultiplierCleared", "lblResultCleared", "lblAutoCashoutEnable", "lblAutoCashoutDisable", "txtCrashed",];
 
 const commonLocatorNames = [
     "defaultChipBarl1", "defaultChipBarl2","hamburgerMenu","historyMenu",
@@ -36,7 +37,7 @@ const commonLocatorNames = [
     "mnuHamburgerExpandSoundOn","mnuHamburgerExpandSoundOff", "mnuHamburgerExpandTrialMode", "icoSound", "icoMusic", 
     "tabAll", "tabSedie","tabBigSmall","tabCardGames","tabSlots","tabKenoLottery","tabOthers","jackPotbanner",
     "icoGame1","icoGame2","icoGame3","icoGame4","icoGame5","icoGame6","icoGame7","icoGame8","icoGame9","icoGame10",
-    "icoSpaceManOnBoard", "icoSpaceManCashOut"
+    "icoSpaceManOnBoard", "icoSpaceManCashOut", "icoExpand", "icoCollapse"
 ];
 
 const listLocatorNames = imgLocatorNames.concat(popLocatorNames, commonLocatorNames, btnLocatorNames,lblLocatorNames)
@@ -282,6 +283,8 @@ export const CrashGameLocators = [
     new ImageLocator(baseLocatorNames.btnConfirm, 651, 383, 132, 32),
     new ImageLocator(baseLocatorNames.imgBetAmountFirstChipl1, 297, 555, 439, 52),
     new ImageLocator(baseLocatorNames.imgBetAmountFirstChipl2, 297, 555, 439, 52),    
+    new ImageLocator(baseLocatorNames.imgBetAmountMaxChipl1, 297, 555, 439, 52),
+    new ImageLocator(baseLocatorNames.imgBetAmountMaxChipl2, 297, 555, 439, 52),    
     new ImageLocator(baseLocatorNames.imgBetAmountIncreasel1, 297, 555, 439, 52),
     new ImageLocator(baseLocatorNames.imgBetAmountIncreasel2, 297, 555, 439, 52),
     new ImageLocator(baseLocatorNames.btnIncreaseBetAmount, 690, 567, 21, 21),
@@ -334,8 +337,17 @@ export const CrashGameLocators = [
     new ImageLocator(baseLocatorNames.locHistoryRoundId, 422, 198, 39, 15),
     new ImageLocator(baseLocatorNames.lblHistoryDetailRoundId, 255, 116, 96, 30),
     new ImageLocator(baseLocatorNames.imgLeaderBoard, 157, 122, 212, 159),
-    new ImageLocator(baseLocatorNames.icoSpaceManCashOut, 273, 83, 25, 26),
-    new ImageLocator(baseLocatorNames.icoSpaceManOnBoard, 171, 80, 21, 30),
+    new ImageLocator(baseLocatorNames.icoSpaceManCashOut, 171, 92, 21, 26),
+    new ImageLocator(baseLocatorNames.icoSpaceManOnBoard, 112, 93, 20, 25),
+    new ImageLocator(baseLocatorNames.imgLeaderboardTable, 108, 132, 287, 20),
+    new ImageLocator(baseLocatorNames.icoExpand, 403, 98, 18, 17),
+    new ImageLocator(baseLocatorNames.icoCollapse, 403, 98, 18, 17),
+    new ImageLocator(baseLocatorNames.txtCrashed, 232, 93, 64, 20),
     new ImageLocator(baseLocatorNames.btnHome, 37, 47, 30, 30),
     new ImageLocator(baseLocatorNames.btnClosePopup, 5, 5, 10, 10),
+    new ImageLocator(baseLocatorNames.btnTooltipMd5, 645, 196, 5, 5),
+    new ImageLocator(baseLocatorNames.popGuideMd5, 151, 90, 965, 557),
+    new ImageLocator(baseLocatorNames.imgMainPlayerNameLeaderBoard, 168, 133, 19, 10),
+    new ImageLocator(baseLocatorNames.imgMainPlayerBetAmountLeaderBoardl1, 205, 153, 25, 20),
+    new ImageLocator(baseLocatorNames.imgMainPlayerBetAmountLeaderBoardl2, 205, 153, 25, 20),
 ];

@@ -37,6 +37,7 @@ export class BaseGame {
         } else {
             account = projectCode === "l1" ? this.gameConfiguration.accounts[env] : this.gameConfiguration.accounts[`l2${env}`];
         }
+        const startTime = performance.now(); // Measure start time
         await ssoToGame(this.page, this.gameConfiguration.id, account, this.gameConfiguration.productId, env, projectCode);
         this.msgpack = getConfig().enabledMsgPack;
         this.page.on("websocket", async (ws) => {
@@ -60,8 +61,10 @@ export class BaseGame {
             }
         });
         await this.logConsole();
-
         await this.waitUntilGameUiLoad();
+        const endTime = performance.now(); // Measure end time
+        console.log(`Total login time: ${endTime - startTime} ms`);
+        
     }
 
     async waitUntilGameUiLoad() {
