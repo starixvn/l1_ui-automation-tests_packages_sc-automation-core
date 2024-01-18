@@ -12,9 +12,9 @@ export interface IBaseOptions {
 }
 
 export class Adminconfiguration {
+    accountId: number
     settleDomain: string;
     settlePath?: string;
-    tokenGameName?: string;
-    wsGameName?: string;
+    gameType?: string;
     dataset: object;
 }

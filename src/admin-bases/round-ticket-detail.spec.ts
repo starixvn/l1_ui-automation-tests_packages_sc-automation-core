@@ -5,13 +5,16 @@ export class TicketDetailGameBase {
     admin: BaseAdmin;
     game: BaseGame;
     player: BasePlayer;
+    configAdmin = this.options.Adminconfiguration;
 
     constructor(protected options: IBaseOptions) {}
 
-    protected Verify_UI_and_Format() {
-        admintest("Verify Round result table", async () => {
+    protected TC01() {
+        admintest("Verify bet detail of running round", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-
+            let currentRoundID = await this.admin.getRunningRoundId(this.admin.page.context(),this.options.gameConfiguration.id);
+            const betdetails = await this.admin.filterBetDetails(this.admin.page.context(),this.configAdmin.gameType,currentRoundID,this.configAdmin.accountId);
+            
         });
     }
 

@@ -2,7 +2,6 @@ import { expect } from "@playwright/test";
 import { GameEvent } from "../_shared";
 import { admintest, BasePlayer, BaseGame, BaseAdmin } from "../components";
 import { IBaseOptions } from "./base-options";
-const env = process.env.npm_config_env || "local";
 
 export class CardRERGameBase {
     admin: BaseAdmin;
@@ -28,7 +27,7 @@ export class CardRERGameBase {
             let getRER = await this.admin.getRetrieveEndRound(
                 this.options.gameConfiguration.id,
                 global.roundId,
-                this.options.gameConfiguration.accounts[env]
+                this.options.Adminconfiguration.accountId
             );
             await this.verifyRER(getRER, this.options.Adminconfiguration.dataset["TC1_expect"]);
             await this.cancelBet();
@@ -42,7 +41,7 @@ export class CardRERGameBase {
             let getRER = await this.admin.getRetrieveEndRound(
                 this.options.gameConfiguration.id,
                 archivedRoundID,
-                this.options.gameConfiguration.accounts[env]
+                this.options.Adminconfiguration.accountId
             );
             await this.verifyRER(getRER, this.options.Adminconfiguration.dataset["TC2_expect"]);
         });
@@ -76,7 +75,7 @@ export class CardRERGameBase {
             let getRER = await this.admin.getRetrieveEndRound(
                 this.options.gameConfiguration.id,
                 global.roundId,
-                this.options.gameConfiguration.accounts[env]
+                this.options.Adminconfiguration.accountId
             );
             await this.verifyRER(getRER, this.options.Adminconfiguration.dataset["TC3_expect"]);
         });
@@ -110,7 +109,7 @@ export class CardRERGameBase {
             let getRER = await this.admin.getRetrieveEndRound(
                 this.options.gameConfiguration.id,
                 global.roundId,
-                this.options.gameConfiguration.accounts[env]
+                this.options.Adminconfiguration.accountId
             );
             await this.verifyRER(getRER, this.options.Adminconfiguration.dataset["TC4_expect"]);
         });
@@ -135,7 +134,7 @@ export class CardRERGameBase {
             let getRER = await this.admin.getRetrieveEndRound(
                 this.options.gameConfiguration.id,
                 global.roundId,
-                this.options.gameConfiguration.accounts[env]
+                this.options.Adminconfiguration.accountId
             );
             await this.verifyRER(getRER, this.options.Adminconfiguration.dataset["TC5_expect"]);
         });
@@ -175,7 +174,7 @@ export class CardRERGameBase {
             let getRER = await this.admin.getRetrieveEndRound(
                 this.options.gameConfiguration.id,
                 global.roundId,
-                this.options.gameConfiguration.accounts[env]
+                this.options.Adminconfiguration.accountId
             );
             await this.verifyRER(getRER, this.options.Adminconfiguration.dataset["TC6_expect"]);
         });
@@ -216,7 +215,7 @@ export class CardRERGameBase {
     }
 
     async verifyRER(getData: any, expectedData: any) {
-        const checkData = await JSON.parse(getData);
+        const checkData = await JSON.parse(getData).result;
         expect(checkData.totalAmount).toBe(expectedData.totalAmount);
         expect(checkData.totalWin).toBe(expectedData.totalWin);
         expect(checkData.validBetAmount).toBe(expectedData.validBetAmount);

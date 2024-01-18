@@ -2,7 +2,6 @@ import { expect } from "@playwright/test";
 import { GameEvent } from "../_shared";
 import { admintest, BasePlayer, BaseGame, BaseAdmin } from "../components";
 import { IBaseOptions } from "./base-options";
-const env = process.env.npm_config_env || "local";
 
 export class RERGameBase {
     admin: BaseAdmin;
@@ -14,13 +13,11 @@ export class RERGameBase {
     protected TC1() {
         admintest("Verify RER on roundId is running", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const gameName = this.options.gameConfiguration.name;
-            const wstoken = await this.admin.getWsToken(this.options.Adminconfiguration.tokenGameName);
-            let currentRoundID = await this.admin.getRunningRoundId(this.options.Adminconfiguration.wsGameName, gameName, wstoken);
+            let currentRoundID = await this.admin.getRunningRoundId(this.admin.page.context(),this.options.gameConfiguration.id);
             let getRER = await this.admin.getRetrieveEndRound(
                 this.options.gameConfiguration.id,
                 currentRoundID,
-                this.options.gameConfiguration.accounts[env]
+                this.options.Adminconfiguration.accountId
             );
             await this.verifyRER(getRER, this.options.Adminconfiguration.dataset["TC1_expect"]);
         });
@@ -33,7 +30,7 @@ export class RERGameBase {
             let getRER = await this.admin.getRetrieveEndRound(
                 this.options.gameConfiguration.id,
                 archivedRoundID,
-                this.options.gameConfiguration.accounts[env]
+                this.options.Adminconfiguration.accountId
             );
             await this.verifyRER(getRER, this.options.Adminconfiguration.dataset["TC2_expect"]);
         });
@@ -58,7 +55,7 @@ export class RERGameBase {
             let getRER = await this.admin.getRetrieveEndRound(
                 this.options.gameConfiguration.id,
                 global.settleRoundID,
-                this.options.gameConfiguration.accounts[env]
+                this.options.Adminconfiguration.accountId
             );
             await this.verifyRER(getRER, this.options.Adminconfiguration.dataset["TC3_expect"]);
         });
@@ -84,7 +81,7 @@ export class RERGameBase {
             let getRER = await this.admin.getRetrieveEndRound(
                 this.options.gameConfiguration.id,
                 global.settleRoundID,
-                this.options.gameConfiguration.accounts[env]
+                this.options.Adminconfiguration.accountId
             );
             await this.verifyRER(getRER, this.options.Adminconfiguration.dataset["TC4_expect"]);
         });
@@ -110,7 +107,7 @@ export class RERGameBase {
             let getRER = await this.admin.getRetrieveEndRound(
                 this.options.gameConfiguration.id,
                 global.settleRoundID,
-                this.options.gameConfiguration.accounts[env]
+                this.options.Adminconfiguration.accountId
             );
             await this.verifyRER(getRER, this.options.Adminconfiguration.dataset["TC5_expect"]);
         });
@@ -134,7 +131,6 @@ export class RERGameBase {
             await this.game.waitForTimeout(this.options.waitBetTimeout);
             let currentRoundID = Number(await this.getClientRunningRound());
             if (currentRoundID !=  global.settleRoundID) {
-                console.log("global.settleRoundID", global.settleRoundID);
                 await this.game.waitUntilPlaceBet()
             }
             for (const iterator of betChoices) {
@@ -144,8 +140,7 @@ export class RERGameBase {
               }
 
             // Act
-            let settlement = await this.game.waitForEvent(GameEvent.Settlement);
-            console.log(" settlement placebet roundId: ", settlement.finish.roundId);
+            await this.game.waitForEvent(GameEvent.Settlement);
         });
 
         admintest("Verify RER placebet multiple choices and lose all", async () => {
@@ -153,7 +148,7 @@ export class RERGameBase {
             let getRER = await this.admin.getRetrieveEndRound(
                 this.options.gameConfiguration.id,
                 global.settleRoundID,
-                this.options.gameConfiguration.accounts[env]
+                this.options.Adminconfiguration.accountId
             );
             await this.verifyRER(getRER, this.options.Adminconfiguration.dataset["TC6_expect"]);
         });
@@ -194,7 +189,7 @@ export class RERGameBase {
     }
 
     async verifyRER(getData: any, expectedData: any) {
-        const checkData = await JSON.parse(getData);
+        const checkData = await JSON.parse(getData).result;
         expect(checkData.totalAmount).toBe(expectedData.totalAmount);
         expect(checkData.totalWin).toBe(expectedData.totalWin);
         expect(checkData.validBetAmount).toBe(expectedData.validBetAmount);
@@ -208,29 +203,23 @@ export class RERGameBase {
         let currentRoundID = Number(await this.getClientRunningRound());
         if (currentRoundID < roundId && isWaitForSettlement) {
             // Act
-            console.log(1);
             await this.player.placeBet(bet.choice, bet.amount);
-            let settlement = await this.game.waitForEvent(GameEvent.Settlement);
-            console.log("placebet result: ", settlement.finish.result);   
+            await this.game.waitForEvent(GameEvent.Settlement);
         }
         else if (currentRoundID ===  roundId && isWaitForSettlement) {
-            console.log(2);
 
             await this.game.clickStake(bet.amount);
             await this.game.clickToChoice(bet.choice);
             await this.game.waitForTimeout(800);
-            let settlement = await this.game.waitForEvent(GameEvent.Settlement);
-            console.log("placebet result: ", settlement.finish.result)
+            await this.game.waitForEvent(GameEvent.Settlement);
         }
         else if (currentRoundID ===  roundId) {
-            console.log(3);
 
             await this.game.clickStake(bet.amount);
             await this.game.clickToChoice(bet.choice);
             await this.game.waitForTimeout(800);
         }
         else if (currentRoundID !=  roundId) {
-            console.log(4);
             await this.game.waitUntilPlaceBet()
             await this.game.clickStake(bet.amount);
             await this.game.clickToChoice(bet.choice);

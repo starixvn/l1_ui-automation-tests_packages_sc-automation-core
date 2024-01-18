@@ -19,6 +19,18 @@ export const monitoring = {
 
 export const commonUiResult = {
     lblroundId: "//*[contains(@class,'round-num')]",
-    lblTimmer: "//*[contains(@class,'time-counter')]",
+    lblTimmer: "//*[contains(@class,'time-counter')]/span",
 };
+
+export const commonUiBetDetails = {
+    optOperatorId : "id=OperatorId",
+    optGameType : "id=GameType",
+    inpRoundId : "id=RoundId",
+    inpPlayerId : "id=PlayerId",
+    ckbFreeBet: "id=FreeBet",
+    ckbUseHmacHash : "id=UseHmacHash",
+    btnGetBetDetails : "input[value='Get Bet Details']",
+    btnRER : "id=btn-retrieve-end-round"
+};
+
 

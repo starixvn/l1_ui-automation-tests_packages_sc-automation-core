@@ -3,7 +3,6 @@ import type { WebSocket as PlaywrightWs } from "playwright-core";
 import { GameEvent, waitForMessage, parseSocketPayload } from "../_shared";
 import { loginAdmin } from "../auth/auth";
 import { GameConfiguration } from "./game-configuration";
-const w3cwebsocket = require("websocket").w3cwebsocket;
 import * as adminLocator from "./base-admin-locator";
 
 
@@ -172,62 +171,22 @@ export class BaseAdmin {
         return response;
     }
 
-    async getRunningRoundId(projectCode: any, gameName: string, authToken: string) {
-        const gameNamelower = gameName.toLocaleLowerCase();
-        let roundId;
-      
-        for (let i = 0; i <= 5; i++) {
-          roundId = await new Promise((resolve) => {
-            const socket = new w3cwebsocket(`wss://${projectCode}.lumigame.com/${gameNamelower}/socket.io/?EIO=4&transport=websocket`);
-      
-            socket.onopen = function () {
-              const inGame = [
-                `40/admin/${gameNamelower}`,
-                `42/admin/${gameNamelower},["message",{"authentication":{"jwt":"${authToken}"}}]`,
-                `42/admin/${gameNamelower},["message",{"${gameName}":{"get_time":true,"view":true,"get_new":true,"sync":true}}]`,
-              ];
-      
-              for (const iterator of inGame) {
-                if (socket.readyState === socket.OPEN) {
-                  setTimeout(function () {
-                    socket.send(iterator.toString());
-                  }, 200);
-                }
-              }
-            };
-      
-            socket.onmessage = function (event) {
-              for (let index = 0; index <= 10; index++) {
-                setTimeout(function () {
-                  if (event.data.includes("roundId")) {
-                    const parsedData = JSON.parse(event.data.replace(`42/admin/${gameNamelower},`, ""));
-                    const gameData = parsedData[1][gameName];
-                    if (gameData && gameData.roundId) {
-                      resolve(gameData.roundId);
-                      index = 10;
-                    }
-                  }
-                }, 200);
-              }
-            };
-      
-            socket.onclose = () => {
-                console.log('socket close');
-                resolve(undefined);
-            };
-      
-            setTimeout(() => {
-              socket.close();
-            }, 2000);
-          });
-      
-          if (roundId) {
-            break;
-          }
-        }
-      
-        return roundId;
-      }
+    async getRunningRoundId(context: any, gameId: number) {
+        const admindomain = new URL(this.page.url());
+        const monitoring = admindomain.protocol + "//" + admindomain.hostname + "/GameSettings/GameMonitor";
+        await this.page.goto(monitoring);
+        await this.page.focus(adminLocator.monitoring[gameId]);
+        const [newtab] = await Promise.all([
+            context.waitForEvent("page"),
+            await this.page.click(adminLocator.monitoring[gameId]),
+        ]);
+        await newtab.waitForLoadState();
+        await newtab.waitForSelector(adminLocator.commonUiResult.lblroundId, { state: 'visible' });
+        let roundId = await newtab.locator(adminLocator.commonUiResult.lblroundId).innerText();
+        roundId = Number(roundId.replace("#", ""));
+        await newtab.close();
+        return Number(roundId);
+    }
 
     async postGameResult(settleDomain: any,settlePath: string,setledata: any) {
             const domain = `https://${settleDomain}.lumigame.com/monitoring/ResultMonitor/${settlePath}`;
@@ -244,13 +203,14 @@ export class BaseAdmin {
             await this.page.click(adminLocator.monitoring[gameId]),
         ]);
         await newtab.waitForLoadState();
-
-        let roundTimer = await newtab.locator(adminLocator.commonUiResult.lblTimmer).innerText();
+        await newtab.waitForSelector(adminLocator.commonUiResult.lblTimmer, { state: 'visible' });
+        let roundTimer = Number(await newtab.locator(adminLocator.commonUiResult.lblTimmer).innerText());
         while (Number(roundTimer) < 10) {
-            roundTimer = await newtab.locator(adminLocator.commonUiResult.lblTimmer).innerText();
+            roundTimer = Number(await newtab.locator(adminLocator.commonUiResult.lblTimmer).innerText());
             await this.page.waitForTimeout(1000); // Wait for 1 second before checking again
         }
         let roundId = await newtab.locator(adminLocator.commonUiResult.lblroundId).innerText();
+        roundId =  Number(roundId.replace("#", ""))
         for (const [key, value] of Object.entries(data)) {
             await newtab.click(key);
             await newtab.waitForTimeout(200);
@@ -288,17 +248,23 @@ export class BaseAdmin {
         context: any,
         gameType: any,
         roundId: any,
-        playerId: any
+        playerId: any,
+        operatorId: string = "ONEworks1"
       ) {
-        await this.page.locator("id=GameType").selectOption(gameType.toString());
-        await this.page.fill("id=RoundId", roundId.toString());
-        await this.page.fill("id=PlayerId", playerId.toString());
+        const admindomain = new URL(this.page.url());
+        const monitoring = admindomain.protocol + "//" + admindomain.hostname + "/BetDetails";
+        await this.page.goto(monitoring);
+        await this.page.waitForSelector(adminLocator.commonUiBetDetails.btnGetBetDetails, { state: 'visible' });
+        await this.page.locator(adminLocator.commonUiBetDetails.optOperatorId).selectOption(operatorId);
+        await this.page.locator(adminLocator.commonUiBetDetails.optGameType).selectOption(gameType);
+        await this.page.fill(adminLocator.commonUiBetDetails.inpRoundId, roundId.toString());
+        await this.page.fill(adminLocator.commonUiBetDetails.inpPlayerId, playerId.toString());
         const [newtab] = await Promise.all([
           context.waitForEvent("page"),
-          await this.page.click("input[value='Get Bet Details']"),
+          await this.page.click(adminLocator.commonUiBetDetails.btnGetBetDetails),
         ]);
+        await newtab.waitForLoadState();
         return newtab;
       };
-
 
 }
