@@ -15,7 +15,6 @@ export class Adminconfiguration {
     accountId: number
     settleDomain: string;
     settlePath?: string;
-    gameType?: string;
     datasetRER: object;
     datasetTicket: object;
 }

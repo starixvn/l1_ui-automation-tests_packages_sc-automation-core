@@ -86,7 +86,7 @@ export class CrashGameBase {
                 // //Assert
                 // expect(mnuHamburgerExpandSoundOn.image).toMatchSnapshot(mnuHamburgerExpandSoundOn.name, { maxDiffPixelRatio: 0 });
 
-                verifyImage(this.game, baseLocatorNames.mnuHamburgerExpandSoundOn);
+                await verifyImage(this.game, baseLocatorNames.mnuHamburgerExpandSoundOn);
             });
             //Post-Act
             await test.step("Click out side to close the menu", async () => {

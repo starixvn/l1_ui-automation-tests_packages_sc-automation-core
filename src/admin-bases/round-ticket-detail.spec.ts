@@ -16,7 +16,7 @@ export class TicketDetailGameBase {
         admintest("Verify bet detail of running round", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             let currentRoundID = await this.admin.getRunningRoundId(this.admin.page.context(),this.options.gameConfiguration.id);
-            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.configAdmin.gameType,currentRoundID,this.configAdmin.accountId);
+            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,currentRoundID,this.configAdmin.accountId);
             const detailsRunning = await betdetailsTab.locator(adminLocator.commonUiBetDetailsTicket.tblMain);
             await expect(detailsRunning).toHaveScreenshot(`detailsRunning`);
         });
@@ -25,7 +25,7 @@ export class TicketDetailGameBase {
     protected TC2() {
         admintest("Verify bet detail of archived round", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.configAdmin.gameType,1,this.configAdmin.accountId);
+            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,1,this.configAdmin.accountId);
             const archivedRound = await betdetailsTab.locator(adminLocator.commonUiBetDetailsTicket.tblMain);
             await expect(archivedRound).toHaveScreenshot(`archivedRound`);
         });
@@ -34,7 +34,7 @@ export class TicketDetailGameBase {
     protected TC3() {
         admintest("Set result win for user when placing 1 bet choice", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const settleRoundId = await this.admin.setUiGameResult(this.admin.page.context(),this.options.gameConfiguration.id ,this.options.Adminconfiguration.datasetTicket["TC3_settle"])
+            const settleRoundId = await this.admin.setUiGameResult(this.admin.page.context(),this.options.gameConfiguration.id ,this.configAdmin.datasetTicket["TC3_settle"])
             global.settleRoundID = settleRoundId
         });
         admintest("THEN player able to place a bet and settle", async () => {
@@ -47,15 +47,15 @@ export class TicketDetailGameBase {
 
         admintest("Verify BetDetails of case placebet 1 choice and win", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.configAdmin.gameType,global.settleRoundID,this.configAdmin.accountId);
-            await this.verifyBetDetails(betdetailsTab, this.options.Adminconfiguration.datasetTicket["TC3_expect"].value, this.options.Adminconfiguration.datasetTicket["TC3_expect"].snapshot);
+            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.settleRoundID,this.configAdmin.accountId);
+            await this.verifyBetDetails(betdetailsTab, global.settleRoundID ,this.options.Adminconfiguration.datasetTicket["TC3_expect"].snapshot);
         });
     }
 
     protected TC4() {
         admintest("Verify case Player has ticket on roundId is running", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const settleRoundId = await this.admin.setUiGameResult(this.admin.page.context(),this.options.gameConfiguration.id ,this.options.Adminconfiguration.datasetTicket["TC4_settle"])
+            const settleRoundId = await this.admin.setUiGameResult(this.admin.page.context(),this.options.gameConfiguration.id ,this.configAdmin.datasetTicket["TC4_settle"])
             global.settleRoundID = settleRoundId
 
         });
@@ -69,14 +69,16 @@ export class TicketDetailGameBase {
 
         admintest("Verify BetDetails of case of running round", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            // await this.verifyBetDetails(getRER, this.options.Adminconfiguration.datasetTicket["TC4_expect"]);
+            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.settleRoundID,this.configAdmin.accountId);
+            const detailsRunning = await betdetailsTab.locator(adminLocator.commonUiBetDetailsTicket.tblMain);
+            await expect(detailsRunning).toHaveScreenshot(`detailsRunning`);
         });
     }
 
     protected TC5() {
         admintest("Verify case Player placebet 1 choice and lose", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const settleRoundId = await this.admin.setUiGameResult(this.admin.page.context(),this.options.gameConfiguration.id ,this.options.Adminconfiguration.datasetTicket["TC5_settle"])
+            const settleRoundId = await this.admin.setUiGameResult(this.admin.page.context(),this.options.gameConfiguration.id ,this.configAdmin.datasetTicket["TC5_settle"])
             global.settleRoundID = settleRoundId
         });
         admintest("THEN player able to place a bet and lose", async () => {
@@ -89,15 +91,15 @@ export class TicketDetailGameBase {
         });
 
         admintest("Verify BetDetails of case placebet 1 choice and lose", async () => {
-            admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            // await this.verifyBetDetails(getRER, this.options.Adminconfiguration.datasetTicket["TC5_expect"]);
+            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.settleRoundID,this.configAdmin.accountId);
+            await this.verifyBetDetails(betdetailsTab, global.settleRoundID ,this.options.Adminconfiguration.datasetTicket["TC5_expect"].snapshot);
         });
     }
 
     protected TC6() {
         admintest("Verify case Player placebet multiple choices and lose", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const settleRoundId = await this.admin.setUiGameResult(this.admin.page.context(),this.options.gameConfiguration.id ,this.options.Adminconfiguration.datasetTicket["TC6_settle"])
+            const settleRoundId = await this.admin.setUiGameResult(this.admin.page.context(),this.options.gameConfiguration.id ,this.configAdmin.datasetTicket["TC6_settle"])
             global.settleRoundID = settleRoundId
         });
         admintest("THEN player able to placebet multiple choices and lose all", async () => {
@@ -126,7 +128,8 @@ export class TicketDetailGameBase {
 
         admintest("Verify BetDetails of case placebet multiple choices and lose all", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            // await this.verifyBetDetails(getRER, this.options.Adminconfiguration.datasetTicket["TC6_expect"]);
+            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.settleRoundID,this.configAdmin.accountId);
+            await this.verifyBetDetails(betdetailsTab, global.settleRoundID ,this.options.Adminconfiguration.datasetTicket["TC6_expect"].snapshot);
         });
     }
 
@@ -199,18 +202,27 @@ export class TicketDetailGameBase {
         return this.game.getTextLocator("roundId");
     }
 
-    async verifyBetDetails(page: any, expectValue: object, expectSnapshot: object) {
-        for (const key in expectValue) {
-            const elementText = await page.getTextLocator(key);
-            const expectedText = expectValue[key];
-            expect(elementText).toEqual(expectedText);
-        }
-
+    async verifyBetDetails(page: any, roundId: number, expectSnapshot: object) {
+        expect(this.checkDate(await page.locator("//*[@id='game-ticket']/table[1]/tbody//td[1]").innerText())).toBe(true);
+        expect(await page.locator("//*[@id='game-ticket']/table[1]/tbody//td[2]").innerText()).toBe(roundId.toString());
         for (const key in expectSnapshot) {
-            const screenshot = await page.locator(key).screenshot();
-            expect(screenshot).toMatchSnapshot(expectSnapshot[key]);
+            expect(await page.locator(key).screenshot()).toMatchSnapshot(expectSnapshot[key]);
         }
     }
 
+    async checkDate(dateString:string) {
+        // Parse the date string
+        const date = new Date(dateString);
     
+        // Get the current date
+        const currentDate = new Date();
+    
+        // Compare the year, month, and day
+        const sameYear = date.getFullYear() === currentDate.getFullYear();
+        const sameMonth = date.getMonth() === currentDate.getMonth();
+        const sameDay = date.getDate() === currentDate.getDate();
+    
+        // If all three are true, the dates are the same
+        return sameYear && sameMonth && sameDay;
+    }
 }
