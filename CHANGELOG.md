@@ -1,3 +1,28 @@
+# [1.22.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.21.0...v1.22.0) (2024-01-19)
+
+
+### Bug Fixes
+
+* admin test ([5295329](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/5295329856c3f8583a23dafd99a91a453b834d67))
+* beta ver ([cd2a800](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/cd2a8007570e92d38152fc8c87a2e184f4e8cbe6))
+* install needed modules ([ebe4bf2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/ebe4bf271792da4644d5857d2a9a5e0be5e0da0c))
+* login ([6d1f0e2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/6d1f0e25551a97f89d796903c9a58f57edcdff38))
+* msgpack ([579d75e](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/579d75e987e51367b07bd22e2e8ec7da7e64eb9d))
+* rer ([f33c4ae](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/f33c4aec777dc8a86fcc692711d6f6aab7ae4f60))
+* rer round base ([3799657](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/3799657e97a4a64c5160e7470625a70ba4ab7bb6))
+
+
+### Features
+
+* add AdminBases ([41ff7c5](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/41ff7c583756f8a30bd35f423e3cfa80467ac85f))
+* admin for card game ([6cf4149](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/6cf4149e030c236c045f154bf26fc7d4377c8910))
+* admin rer ([0d3b07f](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/0d3b07ff75c81b29a58e7ea3971436ac60b2542d))
+* admin rer ([992565e](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/992565e137d4702a7c9ac36cb2998706258d7658))
+* base admin rer ([f92402c](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/f92402ceb6cda4dd00782691d7b834fd04c70451))
+* completed ticket details ([ec4df14](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/ec4df14eaecaadf14abfa311170aa152b777e4cc))
+* merge admin feat ([e44b2e8](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/e44b2e8e0ce8b229ce1a65a43d9c86613326d557))
+* rer ([546d716](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/546d7168c2a04140a7704608dcb20c0423a6e222))
+
 ## [1.20.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.20.1...v1.20.2) (2023-12-21)
 
 
