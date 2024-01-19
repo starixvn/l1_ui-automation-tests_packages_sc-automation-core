@@ -16,5 +16,6 @@ export class Adminconfiguration {
     settleDomain: string;
     settlePath?: string;
     gameType?: string;
-    dataset: object;
+    datasetRER: object;
+    datasetTicket: object;
 }

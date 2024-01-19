@@ -29,7 +29,7 @@ export class CardRERGameBase {
                 global.roundId,
                 this.options.Adminconfiguration.accountId
             );
-            await this.verifyRER(getRER, this.options.Adminconfiguration.dataset["TC1_expect"]);
+            await this.verifyRER(getRER, this.options.Adminconfiguration.datasetRER["TC1_expect"]);
             await this.cancelBet();
         });
     }
@@ -43,7 +43,7 @@ export class CardRERGameBase {
                 archivedRoundID,
                 this.options.Adminconfiguration.accountId
             );
-            await this.verifyRER(getRER, this.options.Adminconfiguration.dataset["TC2_expect"]);
+            await this.verifyRER(getRER, this.options.Adminconfiguration.datasetRER["TC2_expect"]);
         });
     }
 
@@ -54,7 +54,7 @@ export class CardRERGameBase {
             await this.admin.postGameResult(
                 this.options.Adminconfiguration.settleDomain,
                 settlePath,
-                this.options.Adminconfiguration.dataset["TC3_settle"]
+                this.options.Adminconfiguration.datasetRER["TC3_settle"]
             );
         });
         admintest("Placebet on win hand", async () => {
@@ -77,7 +77,7 @@ export class CardRERGameBase {
                 global.roundId,
                 this.options.Adminconfiguration.accountId
             );
-            await this.verifyRER(getRER, this.options.Adminconfiguration.dataset["TC3_expect"]);
+            await this.verifyRER(getRER, this.options.Adminconfiguration.datasetRER["TC3_expect"]);
         });
     }
 
@@ -88,7 +88,7 @@ export class CardRERGameBase {
             await this.admin.postGameResult(
                 this.options.Adminconfiguration.settleDomain,
                 settlePath,
-                this.options.Adminconfiguration.dataset["TC4_settle"]
+                this.options.Adminconfiguration.datasetRER["TC4_settle"]
             );
         });
         admintest("Placebet on loose hand", async () => {
@@ -111,7 +111,7 @@ export class CardRERGameBase {
                 global.roundId,
                 this.options.Adminconfiguration.accountId
             );
-            await this.verifyRER(getRER, this.options.Adminconfiguration.dataset["TC4_expect"]);
+            await this.verifyRER(getRER, this.options.Adminconfiguration.datasetRER["TC4_expect"]);
         });
     }
 
@@ -136,7 +136,7 @@ export class CardRERGameBase {
                 global.roundId,
                 this.options.Adminconfiguration.accountId
             );
-            await this.verifyRER(getRER, this.options.Adminconfiguration.dataset["TC5_expect"]);
+            await this.verifyRER(getRER, this.options.Adminconfiguration.datasetRER["TC5_expect"]);
         });
     }
 
@@ -147,7 +147,7 @@ export class CardRERGameBase {
             await this.admin.postGameResult(
                 this.options.Adminconfiguration.settleDomain,
                 settlePath,
-                this.options.Adminconfiguration.dataset["TC6_settle"]
+                this.options.Adminconfiguration.datasetRER["TC6_settle"]
             );
         });
         admintest("Placebet on win hands", async () => {
@@ -176,7 +176,7 @@ export class CardRERGameBase {
                 global.roundId,
                 this.options.Adminconfiguration.accountId
             );
-            await this.verifyRER(getRER, this.options.Adminconfiguration.dataset["TC6_expect"]);
+            await this.verifyRER(getRER, this.options.Adminconfiguration.datasetRER["TC6_expect"]);
         });
     }
 

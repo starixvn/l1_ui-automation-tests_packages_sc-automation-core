@@ -33,4 +33,9 @@ export const commonUiBetDetails = {
     btnRER : "id=btn-retrieve-end-round"
 };
 
+export const commonUiBetDetailsTicket = {
+    tblMain: "//*/div[@class='main-container']",
+    tblResult: "//*/div[@id='game-ticket']/table[2]",
+    tblBetDetails: "//*/div[@id='game-ticket']/table[2]",
+};
 
