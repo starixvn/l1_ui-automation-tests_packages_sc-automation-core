@@ -14,6 +14,8 @@ export const monitoring = {
     1: "//*[@data-game-name='taixiu']",
     2: "//*[@data-game-name='xocxoc']",
     75: "//*[@data-game-name='bandarqiuqiu']",
+    76: "//*/td[text()='Dragon Ball']//following::a[1]",
+
 };
 
 

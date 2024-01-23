@@ -2,7 +2,6 @@ import { expect } from "@playwright/test";
 import { GameEvent } from "../_shared";
 import { admintest, BasePlayer, BaseGame, BaseAdmin } from "../components";
 import { IBaseOptions } from "./base-options";
-import { log } from "console";
 
 export class SlotRERGameBase {
     admin: BaseAdmin;
@@ -20,7 +19,7 @@ export class SlotRERGameBase {
                 archivedRoundID,
                 this.options.Adminconfiguration.accountId
             );
-            await this.verifyRER(getRER, this.options.Adminconfiguration.datasetRER["rer_archived_expect"]);
+            await this.verifyRER(getRER, this.options.Adminconfiguration.datasetRER["expect_archived"]);
         });
     }
 
@@ -42,10 +41,8 @@ export class SlotRERGameBase {
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
             await this.player.placeBet(bet.choice, bet.amount);
             const settledResults = await this.game.waitForSettlement();
-            log(settledResults);
-
-            let currentRoundID = Number(await this.getClientRunningRound());
-            global.roundId = currentRoundID;
+            await this.game.waitForTimeout(5000); 
+            global.roundId = settledResults.roundId;
         });
 
         admintest("Verify RER of case win", async () => {
@@ -68,6 +65,7 @@ export class SlotRERGameBase {
                 settlePath,
                 this.options.Adminconfiguration.datasetRER["settle_loose"]
             );
+            await this.admin.waitForTimeout(5000);
         });
         admintest("Placebet on loose choice", async () => {
             // Arrange
@@ -77,10 +75,8 @@ export class SlotRERGameBase {
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
             await this.player.placeBet(bet.choice, bet.amount);
             const settledResults = await this.game.waitForSettlement();
-            log(settledResults);
-
-            let currentRoundID = Number(await this.getClientRunningRound());
-            global.roundId = currentRoundID;
+            global.roundId = settledResults.roundId;
+            await this.game.waitForTimeout(5000);
         });
 
         admintest("Verify RER of case loose", async () => {
@@ -111,15 +107,12 @@ export class SlotRERGameBase {
             // Act
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
             await this.player.placeBet(bet.choice, bet.amount);
-            let currentRoundID = Number(await this.getClientRunningRound());
-            global.roundId = currentRoundID;
-            const settledResults1 = await this.game.waitForSettlement();
-            log(settledResults1);
-            const settledResults2 = await this.game.waitForSettlement();
-            log(settledResults2);
-            const settledResults3 = await this.game.waitForSettlement();
-            log(settledResults3);
-
+            const mainsettledResults =await this.game.waitForSettlement();//wait for main placebet
+            await this.game.waitForSettlement();//wait for freespin 1
+            await this.game.waitForSettlement();//wait for freespin 2
+            await this.game.waitForSettlement();//wait for freespin 3
+            global.roundId = mainsettledResults.roundId;
+            await this.game.waitForTimeout(8000);
 
         });
 
@@ -150,12 +143,23 @@ export class SlotRERGameBase {
             const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount ?? 1 };
             // Act
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
-            await this.player.placeBet(bet.choice, bet.amount);
-            const settledResults = await this.game.waitForSettlement();
-            log(settledResults);
+            this.game.attachSocketAndCaptureEvent("bonuses");
 
-            let currentRoundID = Number(await this.getClientRunningRound());
-            global.roundId = currentRoundID;
+            await this.player.placeBet(bet.choice, bet.amount);
+            const bonus = await this.game.waitForEvent("bonuses");
+            await this.game.waitForTimeout(5000);
+            let x = 305
+            for (let index = 1; index <= bonus.bonuses.bonus; index++) {
+                await this.game.page.mouse.click(x,366)
+                x+=150
+                if (index == bonus.bonuses.bonus) {
+                    const settledResults = await this.game.waitForSettlement();
+                    global.roundId = settledResults.roundId;
+                    global.winamount = settledResults.winAmount;
+                }
+                await this.game.waitForTimeout(800);
+            }
+
         });
 
         admintest("Verify RER of bonus", async () => {
@@ -165,7 +169,9 @@ export class SlotRERGameBase {
                 global.roundId,
                 this.options.Adminconfiguration.accountId
             );
-            await this.verifyRER(getRER, this.options.Adminconfiguration.datasetRER["expect_bonus"]);
+            await this.verifyRER(getRER, this.options.Adminconfiguration.datasetRER["expect_bonus"],global.winamount);
+            await this.admin.waitForTimeout(5000);
+
         });
     }
 
@@ -187,10 +193,9 @@ export class SlotRERGameBase {
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
             await this.player.placeBet(bet.choice, bet.amount);
             const settledResults = await this.game.waitForSettlement();
-            log(settledResults);
-
-            let currentRoundID = Number(await this.getClientRunningRound());
-            global.roundId = currentRoundID;
+            global.roundId = settledResults.roundId;
+            global.winamount = settledResults.winAmount;
+            await this.game.waitForTimeout(5000);
         });
 
         admintest("Verify RER of jackpot", async () => {
@@ -200,7 +205,7 @@ export class SlotRERGameBase {
                 global.roundId,
                 this.options.Adminconfiguration.accountId
             );
-            await this.verifyRER(getRER, this.options.Adminconfiguration.datasetRER["expect_jackpot"]);
+            await this.verifyRER(getRER, this.options.Adminconfiguration.datasetRER["expect_jackpot"],global.winamount);
         });
     }
 
@@ -240,17 +245,18 @@ export class SlotRERGameBase {
         }
     }
 
-    async verifyRER(getData: any, expectedData: any) {
+    async verifyRER(getData: any, expectedData: any, winAmount?: number) {
         const checkData = await JSON.parse(getData).result;
         expect(checkData.totalAmount).toBe(expectedData.totalAmount);
-        expect(checkData.totalWin).toBe(expectedData.totalWin);
+        if (winAmount) {
+         expect(checkData.totalWin).toBe(winAmount);
+        }
+        else{
+            expect(checkData.totalWin).toBe(expectedData.totalWin);
+        }
         expect(checkData.validBetAmount).toBe(expectedData.validBetAmount);
         expect(checkData.errorCode).toBe(expectedData.errorCode);
         expect(checkData.errorDescription).toBe(expectedData.errorDescription);
-    }
-
-    async getClientRunningRound() {
-        return this.game.getTextLocator("roundId");
     }
 
 }
