@@ -18,7 +18,8 @@ export class TicketDetailGameBase {
             let currentRoundID = await this.admin.getRunningRoundId(this.admin.page.context(),this.options.gameConfiguration.id);
             const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,currentRoundID,this.configAdmin.accountId);
             const detailsRunning = await betdetailsTab.locator(adminLocator.commonUiBetDetailsTicket.tblMain);
-            await expect(detailsRunning).toHaveScreenshot(`detailsRunning`);
+            await expect(detailsRunning).toHaveScreenshot(`detailsRunning.png`);
+            await betdetailsTab.close()
         });
     }
 
@@ -27,7 +28,8 @@ export class TicketDetailGameBase {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,1,this.configAdmin.accountId);
             const archivedRound = await betdetailsTab.locator(adminLocator.commonUiBetDetailsTicket.tblMain);
-            await expect(archivedRound).toHaveScreenshot(`archivedRound`);
+            await expect(archivedRound).toHaveScreenshot(`archivedRound.png`);
+            await betdetailsTab.close()
         });
     }
 
@@ -71,7 +73,7 @@ export class TicketDetailGameBase {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.settleRoundID,this.configAdmin.accountId);
             const detailsRunning = await betdetailsTab.locator(adminLocator.commonUiBetDetailsTicket.tblMain);
-            await expect(detailsRunning).toHaveScreenshot(`detailsRunning`);
+            await expect(detailsRunning).toHaveScreenshot(`detailsRunning.png`);
         });
     }
 
@@ -208,6 +210,7 @@ export class TicketDetailGameBase {
         for (const key in expectSnapshot) {
             expect(await page.locator(key).screenshot()).toMatchSnapshot(expectSnapshot[key]);
         }
+        await page.close()
     }
 
     async checkDate(dateString:string) {

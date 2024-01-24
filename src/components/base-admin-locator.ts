@@ -39,5 +39,7 @@ export const commonUiBetDetailsTicket = {
     tblMain: "//*/div[@class='main-container']",
     tblResult: "//*/div[@id='game-ticket']/table[2]",
     tblBetDetails: "//*/div[@id='game-ticket']/table[2]",
+    lblRoundId: "//*[@id='game-ticket']/table[1]/tbody/tr/td[2]",
+    lblBetDate: "//*[@id='game-ticket']/table[1]/tbody/tr/td[1]",
 };
 

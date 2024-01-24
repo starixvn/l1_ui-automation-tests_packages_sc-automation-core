@@ -6,6 +6,8 @@ import { ImageLocator, ImageSnapshot } from "./base-image-locator";
 import { GameConfiguration } from "./game-configuration";
 import { createWorker } from "tesseract.js";
 import { baseLocatorNames } from "./base-game-locator";
+import * as accounts from "../auth/configs/config.account";
+
 import fs from "fs";
 const PNG = require("pngjs").PNG;
 
@@ -35,7 +37,7 @@ export class BaseGame {
         if (env.includes("local")) {
             account = this.gameConfiguration.accounts[env];
         } else {
-            account = projectCode === "l1" ? this.gameConfiguration.accounts[env] : this.gameConfiguration.accounts[`l2${env}`];
+            account = accounts[`${projectCode}${env}`][this.gameConfiguration.id];
         }
         const startTime = performance.now(); // Measure start time
         await ssoToGame(this.page, this.gameConfiguration.id, account, this.gameConfiguration.productId, env, projectCode);

@@ -108,12 +108,15 @@ export class SlotRERGameBase {
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
             await this.player.placeBet(bet.choice, bet.amount);
             const mainsettledResults =await this.game.waitForSettlement();//wait for main placebet
-            await this.game.waitForSettlement();//wait for freespin 1
-            await this.game.waitForSettlement();//wait for freespin 2
-            await this.game.waitForSettlement();//wait for freespin 3
+            const settledResults_freespin1 = await this.game.waitForSettlement();//wait for freespin 1
+            const settledResults_freespin2 = await this.game.waitForSettlement();//wait for freespin 2
+            const settledResults_freespin3 = await this.game.waitForSettlement();//wait for freespin 3
             global.roundId = mainsettledResults.roundId;
+            global.freespin1 = settledResults_freespin1;
+            global.freespin2 = settledResults_freespin2;
+            global.freespin3 = settledResults_freespin3;
             await this.game.waitForTimeout(8000);
-
+            
         });
 
         admintest("Verify RER of freespin", async () => {
@@ -123,7 +126,14 @@ export class SlotRERGameBase {
                 global.roundId,
                 this.options.Adminconfiguration.accountId
             );
+            let getRER1 = await this.admin.getRetrieveEndRound(this.options.gameConfiguration.id,global.freespin1.roundId,this.options.Adminconfiguration.accountId);
+            let getRER2 = await this.admin.getRetrieveEndRound(this.options.gameConfiguration.id,global.freespin2.roundId,this.options.Adminconfiguration.accountId);
+            let getRER3 = await this.admin.getRetrieveEndRound(this.options.gameConfiguration.id,global.freespin3.roundId,this.options.Adminconfiguration.accountId);
+
             await this.verifyRER(getRER, this.options.Adminconfiguration.datasetRER["expect_freespin"]);
+            await this.verifyRER(getRER1, this.options.Adminconfiguration.datasetRER["expect_freespinRound"],global.freespin1.winAmount);
+            await this.verifyRER(getRER2, this.options.Adminconfiguration.datasetRER["expect_freespinRound"],global.freespin2.winAmount);
+            await this.verifyRER(getRER3, this.options.Adminconfiguration.datasetRER["expect_freespinRound"],global.freespin3.winAmount);
         });
     }
 

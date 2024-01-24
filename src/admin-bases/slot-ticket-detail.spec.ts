@@ -4,7 +4,7 @@ import { GameEvent } from "../_shared";
 import * as adminLocator from "../components/base-admin-locator";
 import { expect } from "@playwright/test";
 
-export class TicketDetailGameBase {
+export class SlotTicketDetailGameBase {
     admin: BaseAdmin;
     game: BaseGame;
     player: BasePlayer;
@@ -17,7 +17,8 @@ export class TicketDetailGameBase {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,1,this.configAdmin.accountId);
             const archivedRound = await betdetailsTab.locator(adminLocator.commonUiBetDetailsTicket.tblMain);
-            await expect(archivedRound).toHaveScreenshot(`archivedRound`);
+            await expect(archivedRound).toHaveScreenshot(`archivedRound.png`);
+            await betdetailsTab.close()
         });
     }
 
@@ -28,7 +29,7 @@ export class TicketDetailGameBase {
             await this.admin.postGameResult(
                 this.options.Adminconfiguration.settleDomain,
                 settlePath,
-                this.options.Adminconfiguration.datasetRER["settle_win"]
+                this.options.Adminconfiguration.datasetTicket["settle_win"]
             );
         });
         admintest("Placebet on win choice", async () => {
@@ -46,7 +47,7 @@ export class TicketDetailGameBase {
         admintest("Verify BetDetails of case win", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId);
-            await this.verifyBetDetails(betdetailsTab, this.options.Adminconfiguration.datasetTicket["expect_win"].snapshot);
+            await this.verifyBetDetails(betdetailsTab, global.roundId, this.options.Adminconfiguration.datasetTicket["expect_win"].snapshot);
         });
     }
 
@@ -57,7 +58,7 @@ export class TicketDetailGameBase {
             await this.admin.postGameResult(
                 this.options.Adminconfiguration.settleDomain,
                 settlePath,
-                this.options.Adminconfiguration.datasetRER["settle_loose"]
+                this.options.Adminconfiguration.datasetTicket["settle_loose"]
             );
             await this.admin.waitForTimeout(5000);
 
@@ -77,7 +78,7 @@ export class TicketDetailGameBase {
         admintest("Verify BetDetails of case loose", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId);
-            await this.verifyBetDetails(betdetailsTab, this.options.Adminconfiguration.datasetTicket["expect_loose"].snapshot);
+            await this.verifyBetDetails(betdetailsTab,global.roundId, this.options.Adminconfiguration.datasetTicket["expect_loose"].snapshot);
         });
     }
 
@@ -88,7 +89,7 @@ export class TicketDetailGameBase {
             await this.admin.postGameResult(
                 this.options.Adminconfiguration.settleDomain,
                 settlePath,
-                this.options.Adminconfiguration.datasetRER["settle_freespin"]
+                this.options.Adminconfiguration.datasetTicket["settle_freespin"]
             );
         });
         admintest("Placebet on case got freespin", async () => {
@@ -99,16 +100,31 @@ export class TicketDetailGameBase {
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
             await this.player.placeBet(bet.choice, bet.amount);
             const mainsettledResults =await this.game.waitForSettlement();//wait for main placebet
-            await this.game.waitForSettlement();//wait for freespin 1
-            await this.game.waitForSettlement();//wait for freespin 2
-            await this.game.waitForSettlement();//wait for freespin 3
+            const settledResults_freespin1 = await this.game.waitForSettlement();//wait for freespin 1
+            const settledResults_freespin2 = await this.game.waitForSettlement();//wait for freespin 2
+            const settledResults_freespin3 = await this.game.waitForSettlement();//wait for freespin 3
             global.roundId = mainsettledResults.roundId;
+            global.freespin1 = settledResults_freespin1;
+            global.freespin2 = settledResults_freespin2;
+            global.freespin3 = settledResults_freespin3;
             await this.game.waitForTimeout(8000);
         });
 
         admintest("Verify BetDetails of bonus", async () => {
-            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId);
-            await this.verifyBetDetails(betdetailsTab, this.options.Adminconfiguration.datasetTicket["expect_freespin"].snapshot);
+            let betdetailsTab :any
+            const roundIdFreeSpin = [global.freespin1.roundId,global.freespin2.roundId,global.freespin3.roundId]
+            betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId);
+            await this.verifyBetDetails(betdetailsTab,global.roundId, this.options.Adminconfiguration.datasetTicket["expect_freespin"].snapshot);
+            await betdetailsTab.close()
+
+            for (const iterator of roundIdFreeSpin) {
+                betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,iterator,this.configAdmin.accountId);
+                const round = await betdetailsTab.locator(adminLocator.commonUiBetDetailsTicket.lblRoundId).innerText()
+                expect((round.includes(iterator))).toBe(true);
+                expect((round.includes("Free Spins"))).toBe(true);
+                await betdetailsTab.close()
+            }
+            
         });
     }
 
@@ -119,7 +135,7 @@ export class TicketDetailGameBase {
             await this.admin.postGameResult(
                 this.options.Adminconfiguration.settleDomain,
                 settlePath,
-                this.options.Adminconfiguration.datasetRER["settle_bonus"]
+                this.options.Adminconfiguration.datasetTicket["settle_bonus"]
             );
         });
         admintest("Placebet on case got bonus", async () => {
@@ -149,8 +165,16 @@ export class TicketDetailGameBase {
 
         admintest("Verify BetDetails of case case got bonus", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId);
-            await this.verifyBetDetails(betdetailsTab ,this.options.Adminconfiguration.datasetTicket["expect_bonus"].snapshot);
+            let betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId);
+            await this.verifyBetDetails(betdetailsTab ,global.roundId, this.options.Adminconfiguration.datasetTicket["expect_bonus"].snapshot);
+            betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId);
+            const totalBonus = await betdetailsTab.locator("//*/div[@id='game-ticket']/table[2]/tbody/tr[1]/td[4]").innerText()
+            const win = await betdetailsTab.locator("//*/div[@id='game-ticket']/table[2]/tbody/tr[1]/td[6]").innerText()
+            const totalWin = await betdetailsTab.locator("//*/div[@id='game-ticket']/table[2]/tbody/tr[3]/td[6]").innerText()
+            expect(totalBonus).toBe("3 Bonus");
+            expect(win).toBe(global.winamount.toString());
+            expect(totalWin).toBe(global.winamount.toString());
+
         });
     }
 
@@ -161,7 +185,7 @@ export class TicketDetailGameBase {
             await this.admin.postGameResult(
                 this.options.Adminconfiguration.settleDomain,
                 settlePath,
-                this.options.Adminconfiguration.datasetRER["settle_jackpot"]
+                this.options.Adminconfiguration.datasetTicket["settle_jackpot"]
             );
         });
         admintest("Placebet on case got jackpot", async () => {
@@ -180,7 +204,7 @@ export class TicketDetailGameBase {
         admintest("Verify BetDetails of jackpot", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId);
-            await this.verifyBetDetails(betdetailsTab ,this.options.Adminconfiguration.datasetTicket["expect_jackpot"].snapshot);        
+            await this.verifyBetDetails(betdetailsTab,global.roundId ,this.options.Adminconfiguration.datasetTicket["expect_jackpot"].snapshot);        
         });
     }
 
@@ -216,8 +240,9 @@ export class TicketDetailGameBase {
         this.TC3();
         this.TC4();
         this.TC5();
-        this.TC6();
-
+        if (process.env.npm_config_jackpot) {
+            this.TC6();
+        }
     }
 
     async placeBetOnRound(bet: { choice: string; amount: number }, roundId: number, isWaitForSettlement = true) {
@@ -254,16 +279,21 @@ export class TicketDetailGameBase {
         return this.game.getTextLocator("roundId");
     }
 
-    async verifyBetDetails(page: any, expectSnapshot: object, expectedValue?: object) {
-        expect(this.checkDate(await page.locator("//*[@id='game-ticket']/table[1]/tbody//td[1]").innerText())).toBe(true);
+    async verifyBetDetails(page: any, roundID:number, expectSnapshot: object, expectedValue?: object) {
+        let bettime = await page.locator(adminLocator.commonUiBetDetailsTicket.lblBetDate).innerText()
+        let roundId = await page.locator(adminLocator.commonUiBetDetailsTicket.lblRoundId).innerText()
+
+        expect(await this.checkDate(bettime)).toBe(true);
+        expect(roundId.includes(roundID)).toBe(true);
+
         for (const key in expectSnapshot) {
             expect(await page.locator(key).screenshot()).toMatchSnapshot(expectSnapshot[key]);
         }
         for (const key in expectedValue) {
             expect(await page.locator(key).innerText()).toBe(expectedValue[key]);
         }
+        await page.close();
     }
-
 
     async checkDate(dateString:string) {
         // Parse the date string
