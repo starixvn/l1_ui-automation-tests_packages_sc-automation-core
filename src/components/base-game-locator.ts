@@ -6,7 +6,7 @@ const imgLocatorNames = ["imgdealer","imgGameName","imgB0","imgB1",  "imgB2","im
     "imgConfirmPaylineDisabled","imgTurboTrial","imgTurboDefault","imgBetLevel","imgCoinValue","imgTotalBet", "imgBottomArea", "imgBottomAreaTrialMode",
     "imgUserBalanceTrialMode", "imgRoundIdFirstRoundTrialMode","imgGameLobby", "imgTurboOn", "imgTurboOFF", "imgControlAreal1","imgControlAreal2", "imgRocket", "imgBetAmountFirstChipl1", "imgBetAmountFirstChipl2",
     "imgBetAmountDisablel1", "imgBetAmountDisablel2", "imgBetAmountIncreasel1", "imgBetAmountIncreasel2","imgAutoCashoutIncrease", "imgAutoCashoutDecrease", "imgLeaderBoard", "imgMainPlayerNameLeaderBoard",
-    "imgMainPlayerBetAmountLeaderBoardl1", "imgMainPlayerBetAmountLeaderBoardl2", "imgBetAmountMaxChipl1", "imgBetAmountMaxChipl2", "imgLeaderboardTable"]
+    "imgMainPlayerBetAmountLeaderBoardl1", "imgMainPlayerBetAmountLeaderBoardl2", "imgBetAmountMaxChipl1", "imgBetAmountMaxChipl2", "imgLeaderboardTable", "imgChipBarHidden"]
 
 const btnLocatorNames = ["btnRebet","btnHome","btnClosePopup","btnRightArrow","btnLeftArrow","btnHitCard", "btnCancel","btnSplit","btnDouble","btnNewbet",
     "btnPayline","btnAutoSpin","btnTurbo", "btnSpin", "btnAutoSpin10", "btnAutoSpinTurbo", "btnAutoSpinStart","btnPayline1", "btnAllPayline", "btnEvenPayline",
@@ -15,7 +15,8 @@ const btnLocatorNames = ["btnRebet","btnHome","btnClosePopup","btnRightArrow","b
     "btnCancelChoice2", "btnCancelChoice3", "btnCashOut", "btnCashOutHalf", "btnBetAmount", "btnMaxChip", "btnClearBetamount", "btnFirstChip", "btnConfirm",
      "btnIncreaseBetAmount", "btnDecreaseBetAmount", "btnPlaceBet", "btnPlaceBetBetAccepted", "btnEarlyBetAccepted","btnAutoPlay", "btnAutoPlayStart", "btnAutoPlay10", "btnAutoCashOut", "btnNumber1AutoCashout", "btnDotAutoCashout", 
      "btnNumber2AutoCashout", "btnNumber0AutoCashout", "btnBackspace", "btnClearAutoCashout", "btnPlaceEarlyBet", "btnPlaceEarlyBetWaiting", "btnStatisticLastRound", "btnStatisticRunningRound",
-     "btnEnableAutoCashOut", "btnConfirmAutoCashout","btnConfirmAutoCashoutDisabled", "btnIncreaseAutoCashout", "btnDecreaseAutoCashout", "btnAutoPlay9Remaining", "btnAutoPlay10Remaining", "btnTooltipMd5"]
+     "btnEnableAutoCashOut", "btnConfirmAutoCashout","btnConfirmAutoCashoutDisabled", "btnIncreaseAutoCashout", "btnDecreaseAutoCashout", "btnAutoPlay9Remaining", "btnAutoPlay10Remaining", "btnTooltipMd5", "btnConfirmStand",
+    "btnClear", "btnDeal", "btnStand"]
 
 const popLocatorNames = ["popAutoSpin","popHistory", "popGuide","popGameGuide", "popAutoSpinTurbo",  "popBetControll1", "popBetControlMaxBetLevell1",
     "popBetControlMinBetLevell1", "popBetControlMaxCoinValuel1", "popBetControlMinCoinValuel1", "popBetControll2", "popBetControlMaxBetLevell2", 
@@ -69,9 +70,13 @@ export const CardLocators = [
     new ImageLocator(baseLocatorNames.lblRoundIdChoice3, 285, 502, 75, 22),
     new ImageLocator(baseLocatorNames.btnRebet, 1060, 590, 40, 40),
     new ImageLocator(baseLocatorNames.btnNewbet, 1184, 514, 40, 40),
+    new ImageLocator(baseLocatorNames.btnClear, 1145, 512, 60, 60),
+    new ImageLocator(baseLocatorNames.btnDeal, 1008, 565, 70, 70),
+    new ImageLocator(baseLocatorNames.btnStand, 1142, 515, 83, 62),
     new ImageLocator(baseLocatorNames.lblHistoryFirstRow, 97, 187, 1080, 40),
     new ImageLocator(baseLocatorNames.btnRightArrow, 922, 607, 40, 40),
     new ImageLocator(baseLocatorNames.btnLeftArrow, 324, 607, 40, 40),
+    new ImageLocator(baseLocatorNames.imgChipBarHidden, 315, 576, 630, 95),
     new ImageLocator(baseLocatorNames.defaultChipBarl1, 315, 576, 630, 95),
     new ImageLocator(baseLocatorNames.defaultChipBarl2, 315, 576, 630, 95),
     new ImageLocator(baseLocatorNames.stake1, 380, 584, 30, 30),
