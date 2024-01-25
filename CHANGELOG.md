@@ -1,3 +1,10 @@
+## [1.23.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.23.0...v1.23.1) (2024-01-25)
+
+
+### Bug Fixes
+
+* login ultra888 domain ([f903726](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/f903726d55547ed9e3048e6117380eca48621390))
+
 # [1.23.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.22.0...v1.23.0) (2024-01-24)
 
 
