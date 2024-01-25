@@ -14,6 +14,8 @@ export const monitoring = {
     1: "//*[@data-game-name='taixiu']",
     2: "//*[@data-game-name='xocxoc']",
     75: "//*[@data-game-name='bandarqiuqiu']",
+    76: "//*/td[text()='Dragon Ball']//following::a[1]",
+
 };
 
 
@@ -37,5 +39,7 @@ export const commonUiBetDetailsTicket = {
     tblMain: "//*/div[@class='main-container']",
     tblResult: "//*/div[@id='game-ticket']/table[2]",
     tblBetDetails: "//*/div[@id='game-ticket']/table[2]",
+    lblRoundId: "//*[@id='game-ticket']/table[1]/tbody/tr/td[2]",
+    lblBetDate: "//*[@id='game-ticket']/table[1]/tbody/tr/td[1]",
 };
 

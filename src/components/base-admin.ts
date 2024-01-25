@@ -255,8 +255,8 @@ export class BaseAdmin {
         const monitoring = admindomain.protocol + "//" + admindomain.hostname + "/BetDetails";
         await this.page.goto(monitoring);
         await this.page.waitForSelector(adminLocator.commonUiBetDetails.btnGetBetDetails, { state: 'visible' });
-        await this.page.locator(adminLocator.commonUiBetDetails.optOperatorId).selectOption(operatorId);
-        await this.page.locator(adminLocator.commonUiBetDetails.optGameType).selectOption(gameType);
+        await this.page.locator(adminLocator.commonUiBetDetails.optOperatorId).selectOption({value:operatorId});
+        await this.page.locator(adminLocator.commonUiBetDetails.optGameType).selectOption({value:gameType.toString()});
         await this.page.fill(adminLocator.commonUiBetDetails.inpRoundId, roundId.toString());
         await this.page.fill(adminLocator.commonUiBetDetails.inpPlayerId, playerId.toString());
         const [newtab] = await Promise.all([
