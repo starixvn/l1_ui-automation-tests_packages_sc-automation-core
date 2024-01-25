@@ -37,7 +37,7 @@ export class BaseGame {
         if (env.includes("local")) {
             account = this.gameConfiguration.accounts[env];
         } else {
-            account = accounts[`${projectCode}${env}`][this.gameConfiguration.id];
+            account = (projectCode != "ultra888") ? accounts[`${projectCode}${env}`][this.gameConfiguration.id]:this.gameConfiguration.id ;
         }
         const startTime = performance.now(); // Measure start time
         await ssoToGame(this.page, this.gameConfiguration.id, account, this.gameConfiguration.productId, env, projectCode);
