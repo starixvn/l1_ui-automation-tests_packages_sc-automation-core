@@ -4,6 +4,7 @@ import { SlotTicketDetailGameBase } from "./slot-ticket-detail.spec";
 import { CardRERGameBase } from "./card-game-retrieve-end-round.spec";
 import { RERGameBase } from "./round-game-retrieve-end-round.spec";
 import { SlotRERGameBase } from "./slot-game-retrieve-end-round.spec";
+import { CardTicketDetailsGameBase } from "./card-game-ticket-detail.spec";
 
 
 
@@ -13,5 +14,6 @@ export {
     TicketDetailGameBase,
     SlotTicketDetailGameBase,
     IBaseOptions,
-    SlotRERGameBase
+    SlotRERGameBase,
+    CardTicketDetailsGameBase
 };

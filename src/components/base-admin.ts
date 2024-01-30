@@ -264,6 +264,7 @@ export class BaseAdmin {
           await this.page.click(adminLocator.commonUiBetDetails.btnGetBetDetails),
         ]);
         await newtab.waitForLoadState();
+        await newtab.waitForTimeout(2000);
         return newtab;
       };
 
