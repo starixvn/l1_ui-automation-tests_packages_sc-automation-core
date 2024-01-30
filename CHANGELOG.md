@@ -1,3 +1,16 @@
+# [1.24.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.23.1...v1.24.0) (2024-01-30)
+
+
+### Bug Fixes
+
+* update card game bet details base ([9691c89](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/9691c89c35cf0e38bf31472d418390a59cba6698))
+
+
+### Features
+
+* card games ticket detail ([8ad071e](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/8ad071e2cb85a0900dd0ba2960fc0e4b9001fbc5))
+* merge card game ticket details ([c9ecfcf](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/c9ecfcf793fa82d54ed1f23995c7f0d799db2e15))
+
 ## [1.23.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.23.0...v1.23.1) (2024-01-25)
 
 
