@@ -205,9 +205,13 @@ export class TicketDetailGameBase {
         return this.game.getTextLocator("roundId");
     }
 
-    async verifyBetDetails(page: any, roundId: number, expectSnapshot: object) {
-        expect(this.checkDate(await page.locator("//*[@id='game-ticket']/table[1]/tbody//td[1]").innerText())).toBe(true);
-        expect(await page.locator("//*[@id='game-ticket']/table[1]/tbody//td[2]").innerText()).toBe(roundId.toString());
+    async verifyBetDetails(page: any, roundID: number, expectSnapshot: object) {
+        let bettime = await page.locator(adminLocator.commonUiBetDetailsTicket.lblBetDate).innerText()
+        let roundId = await page.locator(adminLocator.commonUiBetDetailsTicket.lblRoundId).innerText()
+
+        expect(await this.checkDate(bettime)).toBe(true);
+        expect(roundId.includes(roundID)).toBe(true);
+
         for (const key in expectSnapshot) {
             expect(await page.locator(key).screenshot()).toMatchSnapshot(expectSnapshot[key]);
         }

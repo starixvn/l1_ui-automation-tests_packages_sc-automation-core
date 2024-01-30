@@ -9,6 +9,7 @@ export class CardTicketDetailsGameBase {
     game: BaseGame;
     player: BasePlayer;
     configAdmin = this.options.Adminconfiguration;
+    dataSet = this.configAdmin[`${process.env.npm_config_project}datasetTicket`];
 
     constructor(protected options: IBaseOptions) {}
 
@@ -19,7 +20,7 @@ export class CardTicketDetailsGameBase {
             await this.admin.postGameResult(
                 this.options.Adminconfiguration.settleDomain,
                 settlePath,
-                this.options.Adminconfiguration.datasetTicket["settle_running"]
+                this.dataSet["settle_running"]
             );
         });
 
@@ -36,7 +37,7 @@ export class CardTicketDetailsGameBase {
         admintest("Verify bet details on handId is running", async () => {
             const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId);
             await this.admin.waitForTimeout(1000);
-            await this.verifyBetDetails(betdetailsTab, global.roundId ,this.options.Adminconfiguration.datasetTicket["expect_running"].snapshot);
+            await this.verifyBetDetails(betdetailsTab, global.roundId ,this.dataSet["expect_running"].snapshot);
             await this.standCard();
         });
     }
@@ -57,7 +58,7 @@ export class CardTicketDetailsGameBase {
             await this.admin.postGameResult(
                 this.options.Adminconfiguration.settleDomain,
                 settlePath,
-                this.options.Adminconfiguration.datasetTicket["settle_win"]
+                this.dataSet["settle_win"]
             );
         });
         admintest("Placebet on win hand", async () => {
@@ -75,7 +76,7 @@ export class CardTicketDetailsGameBase {
         admintest("Verify bet details of case placebet on win hand", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId);
-            await this.verifyBetDetails(betdetailsTab, global.roundId ,this.options.Adminconfiguration.datasetTicket["expect_win"].snapshot);
+            await this.verifyBetDetails(betdetailsTab, global.roundId ,this.dataSet["expect_win"].snapshot);
         });
     }
 
@@ -86,7 +87,7 @@ export class CardTicketDetailsGameBase {
             await this.admin.postGameResult(
                 this.options.Adminconfiguration.settleDomain,
                 settlePath,
-                this.options.Adminconfiguration.datasetTicket["settle_lose"]
+                this.dataSet["settle_lose"]
             );
         });
         admintest("Placebet on lose hand", async () => {
@@ -105,7 +106,7 @@ export class CardTicketDetailsGameBase {
         admintest("Verify bet details of case placebet on lose hand", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId);
-            await this.verifyBetDetails(betdetailsTab, global.roundId ,this.options.Adminconfiguration.datasetTicket["expect_lose"].snapshot);
+            await this.verifyBetDetails(betdetailsTab, global.roundId ,this.dataSet["expect_lose"].snapshot);
         });
     }
 
@@ -116,7 +117,7 @@ export class CardTicketDetailsGameBase {
             await this.admin.postGameResult(
                 this.options.Adminconfiguration.settleDomain,
                 settlePath,
-                this.options.Adminconfiguration.datasetTicket["settle_draw"]
+                this.dataSet["settle_draw"]
             );
         });
         admintest("Placebet on draw hand", async () => {
@@ -135,7 +136,7 @@ export class CardTicketDetailsGameBase {
         admintest("Verify bet details of case placebet on draw hand", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId);
-            await this.verifyBetDetails(betdetailsTab, global.roundId ,this.options.Adminconfiguration.datasetTicket["expect_draw"].snapshot);
+            await this.verifyBetDetails(betdetailsTab, global.roundId ,this.dataSet["expect_draw"].snapshot);
         });
     }
 
@@ -214,9 +215,13 @@ export class CardTicketDetailsGameBase {
         }
     }
 
-    async verifyBetDetails(page: any, roundId: number, expectSnapshot: object) {
-        //expect(this.checkDate(await page.locator("//*[@id='game-ticket']/table[1]/tbody//td[1]").innerText())).toBe(true);
-        expect(await page.locator("//*[@id='game-ticket']/table[1]/tbody//td[2]").innerText()).toBe(roundId.toString());
+    async verifyBetDetails(page: any, roundID: number, expectSnapshot: object) {
+        let bettime = await page.locator(adminLocator.commonUiBetDetailsTicket.lblBetDate).innerText()
+        let roundId = await page.locator(adminLocator.commonUiBetDetailsTicket.lblRoundId).innerText()
+
+        expect(await this.checkDate(bettime)).toBe(true);
+        expect(roundId.includes(roundID)).toBe(true);
+
         for (const key in expectSnapshot) {
             expect(await page.locator(key).screenshot()).toMatchSnapshot(expectSnapshot[key]);
         }
