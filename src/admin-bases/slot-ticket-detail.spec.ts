@@ -9,7 +9,8 @@ export class SlotTicketDetailGameBase {
     game: BaseGame;
     player: BasePlayer;
     configAdmin = this.options.Adminconfiguration;
-
+    dataSet = this.configAdmin[`${process.env.npm_config_project}datasetTicket`];
+    
     constructor(protected options: IBaseOptions) {}
 
     protected TC1() {
@@ -17,7 +18,7 @@ export class SlotTicketDetailGameBase {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,1,this.configAdmin.accountId);
             const archivedRound = await betdetailsTab.locator(adminLocator.commonUiBetDetailsTicket.tblMain);
-            await expect(archivedRound).toHaveScreenshot(`archivedRound.png`);
+            await expect(archivedRound).toHaveScreenshot(`${process.env.npm_config_project}archivedRound.png`);
             await betdetailsTab.close()
         });
     }
@@ -29,7 +30,7 @@ export class SlotTicketDetailGameBase {
             await this.admin.postGameResult(
                 this.options.Adminconfiguration.settleDomain,
                 settlePath,
-                this.options.Adminconfiguration.datasetTicket["settle_win"]
+                 this.dataSet["settle_win"]
             );
         });
         admintest("Placebet on win choice", async () => {
@@ -47,7 +48,7 @@ export class SlotTicketDetailGameBase {
         admintest("Verify BetDetails of case win", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId);
-            await this.verifyBetDetails(betdetailsTab, global.roundId, this.options.Adminconfiguration.datasetTicket["expect_win"].snapshot);
+            await this.verifyBetDetails(betdetailsTab, global.roundId,  this.dataSet["expect_win"].snapshot);
         });
     }
 
@@ -58,7 +59,7 @@ export class SlotTicketDetailGameBase {
             await this.admin.postGameResult(
                 this.options.Adminconfiguration.settleDomain,
                 settlePath,
-                this.options.Adminconfiguration.datasetTicket["settle_loose"]
+                 this.dataSet["settle_loose"]
             );
             await this.admin.waitForTimeout(5000);
 
@@ -78,7 +79,7 @@ export class SlotTicketDetailGameBase {
         admintest("Verify BetDetails of case loose", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId);
-            await this.verifyBetDetails(betdetailsTab,global.roundId, this.options.Adminconfiguration.datasetTicket["expect_loose"].snapshot);
+            await this.verifyBetDetails(betdetailsTab,global.roundId,  this.dataSet["expect_loose"].snapshot);
         });
     }
 
@@ -89,7 +90,7 @@ export class SlotTicketDetailGameBase {
             await this.admin.postGameResult(
                 this.options.Adminconfiguration.settleDomain,
                 settlePath,
-                this.options.Adminconfiguration.datasetTicket["settle_freespin"]
+                 this.dataSet["settle_freespin"]
             );
         });
         admintest("Placebet on case got freespin", async () => {
@@ -114,7 +115,7 @@ export class SlotTicketDetailGameBase {
             let betdetailsTab :any
             const roundIdFreeSpin = [global.freespin1.roundId,global.freespin2.roundId,global.freespin3.roundId]
             betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId);
-            await this.verifyBetDetails(betdetailsTab,global.roundId, this.options.Adminconfiguration.datasetTicket["expect_freespin"].snapshot);
+            await this.verifyBetDetails(betdetailsTab,global.roundId,  this.dataSet["expect_freespin"].snapshot);
             await betdetailsTab.close()
 
             for (const iterator of roundIdFreeSpin) {
@@ -135,7 +136,7 @@ export class SlotTicketDetailGameBase {
             await this.admin.postGameResult(
                 this.options.Adminconfiguration.settleDomain,
                 settlePath,
-                this.options.Adminconfiguration.datasetTicket["settle_bonus"]
+                 this.dataSet["settle_bonus"]
             );
         });
         admintest("Placebet on case got bonus", async () => {
@@ -148,7 +149,7 @@ export class SlotTicketDetailGameBase {
 
             await this.player.placeBet(bet.choice, bet.amount);
             const bonus = await this.game.waitForEvent("bonuses");
-            await this.game.waitForTimeout(5000);
+            await this.game.waitForTimeout(8000);
             let x = 305
             for (let index = 1; index <= bonus.bonuses.bonus; index++) {
                 await this.game.page.mouse.click(x,366)
@@ -166,7 +167,7 @@ export class SlotTicketDetailGameBase {
         admintest("Verify BetDetails of case case got bonus", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             let betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId);
-            await this.verifyBetDetails(betdetailsTab ,global.roundId, this.options.Adminconfiguration.datasetTicket["expect_bonus"].snapshot);
+            await this.verifyBetDetails(betdetailsTab ,global.roundId,  this.dataSet["expect_bonus"].snapshot);
             betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId);
             const totalBonus = await betdetailsTab.locator("//*/div[@id='game-ticket']/table[2]/tbody/tr[1]/td[4]").innerText()
             const win = await betdetailsTab.locator("//*/div[@id='game-ticket']/table[2]/tbody/tr[1]/td[6]").innerText()
@@ -185,7 +186,7 @@ export class SlotTicketDetailGameBase {
             await this.admin.postGameResult(
                 this.options.Adminconfiguration.settleDomain,
                 settlePath,
-                this.options.Adminconfiguration.datasetTicket["settle_jackpot"]
+                 this.dataSet["settle_jackpot"]
             );
         });
         admintest("Placebet on case got jackpot", async () => {
@@ -204,7 +205,7 @@ export class SlotTicketDetailGameBase {
         admintest("Verify BetDetails of jackpot", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId);
-            await this.verifyBetDetails(betdetailsTab,global.roundId ,this.options.Adminconfiguration.datasetTicket["expect_jackpot"].snapshot);        
+            await this.verifyBetDetails(betdetailsTab,global.roundId , this.dataSet["expect_jackpot"].snapshot);        
         });
     }
 

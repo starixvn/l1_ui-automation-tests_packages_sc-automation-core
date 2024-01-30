@@ -15,6 +15,8 @@ export class Adminconfiguration {
     accountId: number
     settleDomain: string;
     settlePath?: string;
-    datasetRER: object;
-    datasetTicket: object;
+    l1datasetRER?: object;
+    l1datasetTicket?: object;
+    l2datasetRER?: object;
+    l2datasetTicket?: object;
 }

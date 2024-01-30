@@ -153,6 +153,7 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
             width: 340,
             height: 667,
         });
+        await page.waitForSelector(PRODLocator.l2memberIdInput); 
         await page.fill(PRODLocator.l2memberIdInput, accountId);
         await page.fill(PRODLocator.l2pwdInput, pwd);
         await page.click(PRODLocator.l2loginButton);

@@ -9,6 +9,7 @@ export class TicketDetailGameBase {
     game: BaseGame;
     player: BasePlayer;
     configAdmin = this.options.Adminconfiguration;
+    dataSet = this.configAdmin[`${process.env.npm_config_project}datasetTicket`];
 
     constructor(protected options: IBaseOptions) {}
 
@@ -36,7 +37,7 @@ export class TicketDetailGameBase {
     protected TC3() {
         admintest("Set result win for user when placing 1 bet choice", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const settleRoundId = await this.admin.setUiGameResult(this.admin.page.context(),this.options.gameConfiguration.id ,this.configAdmin.datasetTicket["TC3_settle"])
+            const settleRoundId = await this.admin.setUiGameResult(this.admin.page.context(),this.options.gameConfiguration.id , this.dataSet["TC3_settle"])
             global.settleRoundID = settleRoundId
         });
         admintest("THEN player able to place a bet and settle", async () => {
@@ -50,14 +51,14 @@ export class TicketDetailGameBase {
         admintest("Verify BetDetails of case placebet 1 choice and win", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.settleRoundID,this.configAdmin.accountId);
-            await this.verifyBetDetails(betdetailsTab, global.settleRoundID ,this.options.Adminconfiguration.datasetTicket["TC3_expect"].snapshot);
+            await this.verifyBetDetails(betdetailsTab, global.settleRoundID , this.dataSet["TC3_expect"].snapshot);
         });
     }
 
     protected TC4() {
         admintest("Verify case Player has ticket on roundId is running", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const settleRoundId = await this.admin.setUiGameResult(this.admin.page.context(),this.options.gameConfiguration.id ,this.configAdmin.datasetTicket["TC4_settle"])
+            const settleRoundId = await this.admin.setUiGameResult(this.admin.page.context(),this.options.gameConfiguration.id , this.dataSet["TC4_settle"])
             global.settleRoundID = settleRoundId
 
         });
@@ -80,7 +81,7 @@ export class TicketDetailGameBase {
     protected TC5() {
         admintest("Verify case Player placebet 1 choice and lose", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const settleRoundId = await this.admin.setUiGameResult(this.admin.page.context(),this.options.gameConfiguration.id ,this.configAdmin.datasetTicket["TC5_settle"])
+            const settleRoundId = await this.admin.setUiGameResult(this.admin.page.context(),this.options.gameConfiguration.id , this.dataSet["TC5_settle"])
             global.settleRoundID = settleRoundId
         });
         admintest("THEN player able to place a bet and lose", async () => {
@@ -94,14 +95,14 @@ export class TicketDetailGameBase {
 
         admintest("Verify BetDetails of case placebet 1 choice and lose", async () => {
             const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.settleRoundID,this.configAdmin.accountId);
-            await this.verifyBetDetails(betdetailsTab, global.settleRoundID ,this.options.Adminconfiguration.datasetTicket["TC5_expect"].snapshot);
+            await this.verifyBetDetails(betdetailsTab, global.settleRoundID , this.dataSet["TC5_expect"].snapshot);
         });
     }
 
     protected TC6() {
         admintest("Verify case Player placebet multiple choices and lose", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const settleRoundId = await this.admin.setUiGameResult(this.admin.page.context(),this.options.gameConfiguration.id ,this.configAdmin.datasetTicket["TC6_settle"])
+            const settleRoundId = await this.admin.setUiGameResult(this.admin.page.context(),this.options.gameConfiguration.id , this.dataSet["TC6_settle"])
             global.settleRoundID = settleRoundId
         });
         admintest("THEN player able to placebet multiple choices and lose all", async () => {
@@ -131,7 +132,7 @@ export class TicketDetailGameBase {
         admintest("Verify BetDetails of case placebet multiple choices and lose all", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.settleRoundID,this.configAdmin.accountId);
-            await this.verifyBetDetails(betdetailsTab, global.settleRoundID ,this.options.Adminconfiguration.datasetTicket["TC6_expect"].snapshot);
+            await this.verifyBetDetails(betdetailsTab, global.settleRoundID , this.dataSet["TC6_expect"].snapshot);
         });
     }
 

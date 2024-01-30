@@ -7,6 +7,8 @@ export class SlotRERGameBase {
     admin: BaseAdmin;
     game: BaseGame;
     player: BasePlayer;
+    configAdmin = this.options.Adminconfiguration;
+    dataSet = this.configAdmin[`${process.env.npm_config_project}datasetRER`];
 
     constructor(protected options: IBaseOptions) {}
 
@@ -19,7 +21,7 @@ export class SlotRERGameBase {
                 archivedRoundID,
                 this.options.Adminconfiguration.accountId
             );
-            await this.verifyRER(getRER, this.options.Adminconfiguration.datasetRER["expect_archived"]);
+            await this.verifyRER(getRER, this.dataSet["expect_archived"]);
         });
     }
 
@@ -30,7 +32,7 @@ export class SlotRERGameBase {
             await this.admin.postGameResult(
                 this.options.Adminconfiguration.settleDomain,
                 settlePath,
-                this.options.Adminconfiguration.datasetRER["settle_win"]
+                this.dataSet["settle_win"]
             );
         });
         admintest("Placebet on win choice", async () => {
@@ -52,7 +54,7 @@ export class SlotRERGameBase {
                 global.roundId,
                 this.options.Adminconfiguration.accountId
             );
-            await this.verifyRER(getRER, this.options.Adminconfiguration.datasetRER["expect_win"]);
+            await this.verifyRER(getRER, this.dataSet["expect_win"]);
         });
     }
 
@@ -63,7 +65,7 @@ export class SlotRERGameBase {
             await this.admin.postGameResult(
                 this.options.Adminconfiguration.settleDomain,
                 settlePath,
-                this.options.Adminconfiguration.datasetRER["settle_loose"]
+                this.dataSet["settle_loose"]
             );
             await this.admin.waitForTimeout(5000);
         });
@@ -86,7 +88,7 @@ export class SlotRERGameBase {
                 global.roundId,
                 this.options.Adminconfiguration.accountId
             );
-            await this.verifyRER(getRER, this.options.Adminconfiguration.datasetRER["expect_loose"]);
+            await this.verifyRER(getRER, this.dataSet["expect_loose"]);
         });
     }
 
@@ -97,7 +99,7 @@ export class SlotRERGameBase {
             await this.admin.postGameResult(
                 this.options.Adminconfiguration.settleDomain,
                 settlePath,
-                this.options.Adminconfiguration.datasetRER["settle_freespin"]
+                this.dataSet["settle_freespin"]
             );
         });
         admintest("Placebet on case got freespin", async () => {
@@ -130,10 +132,10 @@ export class SlotRERGameBase {
             let getRER2 = await this.admin.getRetrieveEndRound(this.options.gameConfiguration.id,global.freespin2.roundId,this.options.Adminconfiguration.accountId);
             let getRER3 = await this.admin.getRetrieveEndRound(this.options.gameConfiguration.id,global.freespin3.roundId,this.options.Adminconfiguration.accountId);
 
-            await this.verifyRER(getRER, this.options.Adminconfiguration.datasetRER["expect_freespin"]);
-            await this.verifyRER(getRER1, this.options.Adminconfiguration.datasetRER["expect_freespinRound"],global.freespin1.winAmount);
-            await this.verifyRER(getRER2, this.options.Adminconfiguration.datasetRER["expect_freespinRound"],global.freespin2.winAmount);
-            await this.verifyRER(getRER3, this.options.Adminconfiguration.datasetRER["expect_freespinRound"],global.freespin3.winAmount);
+            await this.verifyRER(getRER, this.dataSet["expect_freespin"]);
+            await this.verifyRER(getRER1, this.dataSet["expect_freespinRound"],global.freespin1.winAmount);
+            await this.verifyRER(getRER2, this.dataSet["expect_freespinRound"],global.freespin2.winAmount);
+            await this.verifyRER(getRER3, this.dataSet["expect_freespinRound"],global.freespin3.winAmount);
         });
     }
 
@@ -144,7 +146,7 @@ export class SlotRERGameBase {
             await this.admin.postGameResult(
                 this.options.Adminconfiguration.settleDomain,
                 settlePath,
-                this.options.Adminconfiguration.datasetRER["settle_bonus"]
+                this.dataSet["settle_bonus"]
             );
         });
         admintest("Placebet on case got bonus", async () => {
@@ -179,7 +181,7 @@ export class SlotRERGameBase {
                 global.roundId,
                 this.options.Adminconfiguration.accountId
             );
-            await this.verifyRER(getRER, this.options.Adminconfiguration.datasetRER["expect_bonus"],global.winamount);
+            await this.verifyRER(getRER, this.dataSet["expect_bonus"],global.winamount);
             await this.admin.waitForTimeout(5000);
 
         });
@@ -192,7 +194,7 @@ export class SlotRERGameBase {
             await this.admin.postGameResult(
                 this.options.Adminconfiguration.settleDomain,
                 settlePath,
-                this.options.Adminconfiguration.datasetRER["settle_jackpot"]
+                this.dataSet["settle_jackpot"]
             );
         });
         admintest("Placebet on case got jackpot", async () => {
@@ -215,7 +217,7 @@ export class SlotRERGameBase {
                 global.roundId,
                 this.options.Adminconfiguration.accountId
             );
-            await this.verifyRER(getRER, this.options.Adminconfiguration.datasetRER["expect_jackpot"],global.winamount);
+            await this.verifyRER(getRER, this.dataSet["expect_jackpot"],global.winamount);
         });
     }
 

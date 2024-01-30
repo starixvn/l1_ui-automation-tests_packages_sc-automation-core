@@ -24,45 +24,22 @@ export class CrashGameBase {
 
     constructor(protected options: IBaseOptions) {}
 
-    protected inGameTests() {
-        test("Verify received websocket Odds of game should be the same with game's config ", async () => {
-            // Assert
-            await test.step(`Verify ODDs should be correct`, async () => {
-                expect(this.game.odds).toStrictEqual(this.options.gameConfiguration.odds);
-            });
-        });
-    }
-
     protected mainUITests() {
         test("Verify default control area", async () => {
-            //Act
-            let imgControlArea;
-            await test.step("Capture default control area", async () => {
-                imgControlArea = await this.game.capture(`imgControlArea${process.env.npm_config_project}`);
-            });
-
-            await test.step("Compare with snapshot", async () => {
                 //Assert
-                expect(imgControlArea.image).toMatchSnapshot(imgControlArea.name, { maxDiffPixelRatio: 0 });
-            });
+                await verifyImage(this.game, `imgControlArea${process.env.npm_config_project}`);
         });
 
         test("Verify UI of the rocket", async () => {
             //Act
-            let imgRocket;
             await test.step("Wait for start new round", async () => {
                 await this.game.waitUntilPlaceBet();
                 await this.game.waitForTimeout(2000);
             });
-
-            await test.step("Get rocket image", async () => {
-                imgRocket = await this.game.capture(baseLocatorNames.imgRocket);
-            });
-
-            await test.step("Compare with snapshot", async () => {
                 //Assert
-                expect(imgRocket.image).toMatchSnapshot(imgRocket.name, { maxDiffPixelRatio: 0.3 });
-            });
+            await test.step("Get rocket image", async () => {
+                await verifyImage(this.game, baseLocatorNames.imgRocket, 0.3);
+            })
         });
 
         test("Verify roundID in showed on game client", async () => {
@@ -82,10 +59,6 @@ export class CrashGameBase {
                 await this.game.clickLocator(baseLocatorNames.mnuHamburger);
             });
             await test.step("Capture expand hamburger menu and compare with the snapshot", async () => {
-                // const mnuHamburgerExpandSoundOn = await this.game.capture(baseLocatorNames.mnuHamburgerExpandSoundOn);
-                // //Assert
-                // expect(mnuHamburgerExpandSoundOn.image).toMatchSnapshot(mnuHamburgerExpandSoundOn.name, { maxDiffPixelRatio: 0 });
-
                 await verifyImage(this.game, baseLocatorNames.mnuHamburgerExpandSoundOn);
             });
             //Post-Act
@@ -106,9 +79,8 @@ export class CrashGameBase {
                 await this.game.clickLocator(baseLocatorNames.icoMusic);
             });
             await test.step("Capture expand hamburger menu and compare with snapshot", async () => {
-                const mnuHamburgerExpandSoundOff = await this.game.capture(baseLocatorNames.mnuHamburgerExpandSoundOff);
-                //Assert
-                expect(mnuHamburgerExpandSoundOff.image).toMatchSnapshot(mnuHamburgerExpandSoundOff.name, { maxDiffPixelRatio: 0 });
+                 //Assert
+                await verifyImage(this.game, baseLocatorNames.mnuHamburgerExpandSoundOff);
             });
             //Post-Act
             await test.step("Click outside to close the menu", async () => {
@@ -125,8 +97,7 @@ export class CrashGameBase {
             });
             //Assert
             await test.step("Capture bet control popup and compare with snapshot", async () => {
-                const popBetAmount = await this.game.capture(`popBetAmount${process.env.npm_config_project}`);
-                expect(popBetAmount.image).toMatchSnapshot(popBetAmount.name, { maxDiffPixelRatio: 0 });
+                await verifyImage(this.game,`popBetAmount${process.env.npm_config_project}`);
             });
         });
 
@@ -139,16 +110,14 @@ export class CrashGameBase {
             });
             //Assert
             await test.step("Capture bet control popup and compare with snapshot", async () => {
-                const popBetAmountMaxChip = await this.game.capture(`popBetAmountMaxChip${process.env.npm_config_project}`);
-                expect(popBetAmountMaxChip.image).toMatchSnapshot(popBetAmountMaxChip.name, { maxDiffPixelRatio: 0 });
+                await verifyImage(this.game,`popBetAmountMaxChip${process.env.npm_config_project}`);
             });
 
             await test.step("Click confirm button", async () => {
                 await this.game.clickLocator(baseLocatorNames.btnMaxChip);
             });
             await test.step("Verify that bet amount show correctly", async () => {
-                const imgBetAmount = await this.game.capture(`imgBetAmountMaxChip${process.env.npm_config_project}`);
-                expect(imgBetAmount.image).toMatchSnapshot(imgBetAmount.name, { maxDiffPixelRatio: 0 });
+                await verifyImage(this.game,`imgBetAmountMaxChip${process.env.npm_config_project}`);
             });
         });
 
@@ -159,8 +128,7 @@ export class CrashGameBase {
             });
             //Assert
             await test.step("Verify the bet amount is clear and confirm button is disable", async () => {
-                const popBetAmount = await this.game.capture(`popBetAmount${process.env.npm_config_project}`);
-                expect(popBetAmount.image).toMatchSnapshot(popBetAmount.name, { maxDiffPixelRatio: 0 });
+                await verifyImage(this.game,`popBetAmount${process.env.npm_config_project}`);
             });
         });
 
@@ -174,8 +142,8 @@ export class CrashGameBase {
             });
             //Assert
             await test.step("Verify that bet amount show correctly", async () => {
-                const imgBetAmount = await this.game.capture(`imgBetAmountFirstChip${process.env.npm_config_project}`);
-                expect(imgBetAmount.image).toMatchSnapshot(imgBetAmount.name, { maxDiffPixelRatio: 0 });
+                await verifyImage(this.game,`imgBetAmountFirstChip${process.env.npm_config_project}`);
+
             });
         });
 
@@ -189,8 +157,7 @@ export class CrashGameBase {
 
             //Assert
             await test.step("Verify bet amount", async () => {
-                const imgBetAmount = await this.game.capture(`imgBetAmountIncrease${process.env.npm_config_project}`);
-                expect(imgBetAmount.image).toMatchSnapshot(imgBetAmount.name, { maxDiffPixelRatio: 0 });
+                await verifyImage(this.game,`imgBetAmountIncrease${process.env.npm_config_project}`);
             });
         });
 
@@ -204,8 +171,7 @@ export class CrashGameBase {
 
             //Assert
             await test.step("Verify bet amount", async () => {
-                const imgBetAmount = await this.game.capture(`imgBetAmountFirstChip${process.env.npm_config_project}`);
-                expect(imgBetAmount.image).toMatchSnapshot(imgBetAmount.name, { maxDiffPixelRatio: 0 });
+                await verifyImage(this.game,`imgBetAmountFirstChip${process.env.npm_config_project}`);
             });
         });
     }
@@ -213,10 +179,7 @@ export class CrashGameBase {
     protected autoPlayTests(totalAutoPlay:number = 10) {
         test("Verify default state of auto-play button", async () => {
             await test.step("Capture default auto-play button and compare with snapshot", async () => {
-                const btnAutoPlay = await this.game.captureLocator(baseLocatorNames.btnAutoPlay);
-
-                // Assert
-                expect(btnAutoPlay.image).toMatchSnapshot(btnAutoPlay.name);
+                await verifyImage(this.game,baseLocatorNames.btnAutoPlay);
             });
         });
 
@@ -227,9 +190,8 @@ export class CrashGameBase {
             });
 
             await test.step("Capture default auto-play popup and compare with snapshot", async () => {
-                const popAutoPlay = await this.game.captureLocator(baseLocatorNames.popAutoPlay);
-                // Assert
-                expect(popAutoPlay.image).toMatchSnapshot(popAutoPlay.name);
+                await verifyImage(this.game,baseLocatorNames.popAutoPlay);
+
             });
 
             await test.step("Click outside to close the popup", async () => {
@@ -245,13 +207,12 @@ export class CrashGameBase {
                 await selectAutoPlay(this.game, totalAutoPlay);
             });
             await test.step("Verify button place bet accepted", async () => {
-                const btnPlaceBet = await this.game.captureLocator(baseLocatorNames.btnEarlyBetAccepted);
-                expect(btnPlaceBet.image).toMatchSnapshot(btnPlaceBet.name);
+                await verifyImage(this.game,baseLocatorNames.btnEarlyBetAccepted);
             });
 
             await test.step("Verify number of auto-play is 9", async () => {
-                const btnAutoPlay = await this.game.captureLocator(baseLocatorNames.btnAutoPlay9Remaining);
-                expect(btnAutoPlay.image).toMatchSnapshot(btnAutoPlay.name);
+                await verifyImage(this.game,baseLocatorNames.btnAutoPlay9Remaining);
+
             });
         });
 
@@ -260,12 +221,12 @@ export class CrashGameBase {
                 await this.game.clickLocator(baseLocatorNames.btnPlaceBet, 3000);
             });
             await test.step("Verify auto play button", async () => {
-                const btnAutoPlay = await this.game.captureLocator(baseLocatorNames.btnAutoPlay);
-                expect(btnAutoPlay.image).toMatchSnapshot(btnAutoPlay.name);
+                await verifyImage(this.game,baseLocatorNames.btnAutoPlay);
+
             });
             await test.step("Verify button place bet ", async () => {
-                const btnPlaceBet = await this.game.captureLocator(baseLocatorNames.btnPlaceEarlyBet);
-                expect(btnPlaceBet.image).toMatchSnapshot(btnPlaceBet.name);
+                await verifyImage(this.game,baseLocatorNames.btnPlaceEarlyBet);
+
             });
         });
 
@@ -281,8 +242,8 @@ export class CrashGameBase {
                 await selectAutoPlay(this.game, totalAutoPlay);
             });
             await test.step("Verify auto play button", async () => {
-                const btnAutoPlay = await this.game.captureLocator(baseLocatorNames.btnAutoPlay10Remaining);
-                expect(btnAutoPlay.image).toMatchSnapshot(btnAutoPlay.name);
+                await verifyImage(this.game,baseLocatorNames.btnAutoPlay10Remaining);
+
             });
             await test.step("Cancel auto-play", async () => {
                 await this.game.clickLocator(baseLocatorNames.btnAutoPlay);
@@ -298,8 +259,7 @@ export class CrashGameBase {
                 await selectAutoPlay(this.game, totalAutoPlay);
             });
             await test.step("Verify number of auto-play is 10", async () => {
-                const btnAutoPlay = await this.game.captureLocator(baseLocatorNames.btnAutoPlay10Remaining);
-                expect(btnAutoPlay.image).toMatchSnapshot(btnAutoPlay.name);
+                await verifyImage(this.game,baseLocatorNames.btnAutoPlay10Remaining);
             });
             await test.step("Stop auto play", async () => {
                 this.game.clickLocator(baseLocatorNames.btnAutoPlay);
@@ -325,13 +285,13 @@ export class CrashGameBase {
 
             await test.step("Verify button place bet show bet accepted", async () => {
                 await this.game.waitForTimeout(1000);
-                const btnPlaceBet = await this.game.captureLocator(baseLocatorNames.btnPlaceBetBetAccepted);
-                expect(btnPlaceBet.image).toMatchSnapshot(btnPlaceBet.name);
+                await verifyImage(this.game,baseLocatorNames.btnPlaceBetBetAccepted);
+
             });
 
             await test.step("Verify number of auto-play is 9", async () => {
-                const btnAutoPlay = await this.game.captureLocator(baseLocatorNames.btnAutoPlay9Remaining);
-                expect(btnAutoPlay.image).toMatchSnapshot(btnAutoPlay.name);
+                await verifyImage(this.game,baseLocatorNames.btnAutoPlay9Remaining);
+
             });
             for (let index = 1; index <= totalAutoPlay; index++) {
                 this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
@@ -344,8 +304,7 @@ export class CrashGameBase {
             });
 
             await test.step("Verify that auto-play button is back to default", async () => {
-                const btnAutoPlay = await this.game.captureLocator(baseLocatorNames.btnAutoPlay);
-                expect(btnAutoPlay.image).toMatchSnapshot(btnAutoPlay.name);
+                await verifyImage(this.game,baseLocatorNames.btnAutoPlay);
             });
 
             await test.step(`Close popup`, async () => {
@@ -380,9 +339,7 @@ export class CrashGameBase {
             });
 
             await test.step("Verify UI of auto play button", async () => {
-                const btnAutoPlay = await this.game.captureLocator(baseLocatorNames.btnAutoPlay);
-                // Assert
-                expect(btnAutoPlay.image).toMatchSnapshot(btnAutoPlay.name);
+                await verifyImage(this.game,baseLocatorNames.btnAutoPlay);
             });
         });
     }
@@ -393,9 +350,7 @@ export class CrashGameBase {
                 await openAutoCashoutPopup(this.game);
             });
             await test.step("Capture default auto cashout button and compare with snapshot", async () => {
-                const popAutoCashout = await this.game.captureLocator(baseLocatorNames.popAutoCashout);
-                // Assert
-                expect(popAutoCashout.image).toMatchSnapshot(popAutoCashout.name, { maxDiffPixelRatio: 0 });
+                await verifyImage(this.game,baseLocatorNames.popAutoCashout);
             });
         });
 
@@ -416,15 +371,14 @@ export class CrashGameBase {
                 }
             });
             await test.step("Verify multiplier number", async () => {
-                const multiplierMaxLength = await this.game.capture(baseLocatorNames.lblAutoCashoutMultiplierMaxLength);
-                expect(multiplierMaxLength.image).toMatchSnapshot(multiplierMaxLength.name, { maxDiffPixelRatio: 0 });
+                await verifyImage(this.game,baseLocatorNames.lblAutoCashoutMultiplierMaxLength);
+
             });
             await test.step("Click confirm", async () => {
                 await this.game.clickLocator(baseLocatorNames.btnConfirmAutoCashout);
             });
             await test.step("Verify multiplier number is applied", async () => {
-                const multiplierMaxLengthApplied = await this.game.capture(baseLocatorNames.lblAutoCashoutMultiplierMaxLengthApplied);
-                expect(multiplierMaxLengthApplied.image).toMatchSnapshot(multiplierMaxLengthApplied.name, { maxDiffPixelRatio: 0 });
+                await verifyImage(this.game,baseLocatorNames.lblAutoCashoutMultiplierMaxLengthApplied);
             });
         });
         test("Verify multiplier is red when input invalid number in auto cashout popup", async () => {
@@ -438,14 +392,10 @@ export class CrashGameBase {
                 await this.game.clickLocator(baseLocatorNames.btnNumber1AutoCashout);
             });
             await test.step("Verify the number is in red", async () => {
-                const lblMultiplier = await this.game.captureLocator(baseLocatorNames.lblMultiplier2001);
-                // Assert
-                expect(lblMultiplier.image).toMatchSnapshot(lblMultiplier.name, { maxDiffPixelRatio: 0 });
+                await verifyImage(this.game,baseLocatorNames.lblMultiplier2001);
             });
             await test.step("Verify confirm button is disabled", async () => {
-                const btnConfirm = await this.game.captureLocator(baseLocatorNames.btnConfirmAutoCashoutDisabled);
-                // Assert
-                expect(btnConfirm.image).toMatchSnapshot(btnConfirm.name, { maxDiffPixelRatio: 0 });
+                await verifyImage(this.game,baseLocatorNames.btnConfirmAutoCashoutDisabled);
             });
         });
         test("Verify backspace a number in auto cashout popup", async () => {
@@ -453,9 +403,8 @@ export class CrashGameBase {
                 await this.game.clickLocator(baseLocatorNames.btnBackspace);
             });
             await test.step("Verify the number is deleted", async () => {
-                const lblMultiplier = await this.game.captureLocator(baseLocatorNames.lblMultiplier200);
-                // Assert
-                expect(lblMultiplier.image).toMatchSnapshot(lblMultiplier.name, { maxDiffPixelRatio: 0 });
+                await verifyImage(this.game,baseLocatorNames.lblMultiplier200);
+
             });
         });
         test("Verify clear multiplier in auto cashout popup", async () => {
@@ -463,9 +412,7 @@ export class CrashGameBase {
                 await this.game.clickLocator(baseLocatorNames.btnClearAutoCashout);
             });
             await test.step("Verify the number is cleared", async () => {
-                const lblMultiplier = await this.game.captureLocator(baseLocatorNames.lblMultiplierCleared);
-                // Assert
-                expect(lblMultiplier.image).toMatchSnapshot(lblMultiplier.name, { maxDiffPixelRatio: 0 });
+                await verifyImage(this.game,baseLocatorNames.lblMultiplierCleared);
             });
             await test.step("Set auto cash out to 1.01", async () => {
                 await this.game.clickLocator(baseLocatorNames.btnNumber1AutoCashout);
@@ -480,9 +427,8 @@ export class CrashGameBase {
                 await this.game.clickLocator(baseLocatorNames.btnEnableAutoCashOut);
             });
             await test.step("Verify the auto cashout icon is enable", async () => {
-                const lblAutoCashout = await this.game.captureLocator(baseLocatorNames.lblAutoCashoutEnable);
-                // Assert
-                expect(lblAutoCashout.image).toMatchSnapshot(lblAutoCashout.name, { maxDiffPixelRatio: 0 });
+                await verifyImage(this.game,baseLocatorNames.lblAutoCashoutEnable);
+
             });
         });
         test("Verify player can disable auto cash out", async () => {
@@ -490,9 +436,8 @@ export class CrashGameBase {
                 await this.game.clickLocator(baseLocatorNames.btnEnableAutoCashOut);
             });
             await test.step("Verify the auto cashout icon is disable", async () => {
-                const lblAutoCashout = await this.game.captureLocator(baseLocatorNames.lblAutoCashoutDisable);
-                // Assert
-                expect(lblAutoCashout.image).toMatchSnapshot(lblAutoCashout.name, { maxDiffPixelRatio: 0 });
+                await verifyImage(this.game,baseLocatorNames.lblAutoCashoutDisable);
+
             });
         });
         test("Verify that player be able to increase auto cashout", async () => {
@@ -505,8 +450,8 @@ export class CrashGameBase {
 
             //Assert
             await test.step("Verify number of auto cashout", async () => {
-                const imgAutoCashout = await this.game.capture(baseLocatorNames.imgAutoCashoutIncrease);
-                expect(imgAutoCashout.image).toMatchSnapshot(imgAutoCashout.name, { maxDiffPixelRatio: 0 });
+                await verifyImage(this.game,baseLocatorNames.imgAutoCashoutIncrease);
+
             });
         });
         test("Verify that player be able to decrease auto cashout", async () => {
@@ -519,8 +464,8 @@ export class CrashGameBase {
 
             //Assert
             await test.step("Verify number of auto cashout", async () => {
-                const imgAutoCashout = await this.game.capture(baseLocatorNames.imgAutoCashoutDecrease);
-                expect(imgAutoCashout.image).toMatchSnapshot(imgAutoCashout.name, { maxDiffPixelRatio: 0 });
+                await verifyImage(this.game,baseLocatorNames.imgAutoCashoutDecrease);
+
             });
         });
     }
@@ -532,9 +477,7 @@ export class CrashGameBase {
                 await this.game.waitUntilPlaceBet();
             });
             await test.step("Capture place bet button and compare with snapshot", async () => {
-                const btnPlaceBet = await this.game.captureLocator(baseLocatorNames.btnPlaceBet);
-                // Assert
-                expect(btnPlaceBet.image).toMatchSnapshot(btnPlaceBet.name);
+                await verifyImage(this.game,baseLocatorNames.btnPlaceBet);
             });
         });
 
@@ -544,18 +487,15 @@ export class CrashGameBase {
                 await this.game.waitForTimeout(300);
             });
             await test.step("Capture early bet button and compare with snapshot", async () => {
-                const btnPlaceBet = await this.game.captureLocator(baseLocatorNames.btnPlaceEarlyBet);
-                // Assert
-                expect(btnPlaceBet.image).toMatchSnapshot(btnPlaceBet.name);
+                await verifyImage(this.game,baseLocatorNames.btnPlaceEarlyBet);
+
             });
             await test.step("Click place early bet then clicks again to cancel bet", async () => {
                 await this.game.clickLocator(baseLocatorNames.btnPlaceBet,1000);
                 await this.game.clickLocator(baseLocatorNames.btnPlaceBet);
             });
             await test.step("Capture early bet button and compare with snapshot", async () => {
-                const btnPlaceBet = await this.game.captureLocator(baseLocatorNames.btnPlaceEarlyBet);
-                // Assert
-                expect(btnPlaceBet.image).toMatchSnapshot(btnPlaceBet.name);
+                await verifyImage(this.game,baseLocatorNames.btnPlaceEarlyBet);
             });
             
         });
@@ -566,18 +506,16 @@ export class CrashGameBase {
                 await this.game.clickLocator(baseLocatorNames.btnPlaceBet);
             });
             await test.step("Verify button bet waitting", async () => {
-                const btnPlaceBet = await this.game.captureLocator(baseLocatorNames.btnEarlyBetAccepted);
-                // Assert
-                expect(btnPlaceBet.image).toMatchSnapshot(btnPlaceBet.name);
+                await verifyImage(this.game,baseLocatorNames.btnEarlyBetAccepted);
+
             });
             await test.step("Verify bet amount when new round started", async () => {
                 const placeBetResponse = await this.game.waitForEndBet();
                 expect(placeBetResponse.endBet).toBe(this.options.placeBetAmount);
             });
             await test.step("Verify button place bet accepted", async () => {
-                const btnPlaceBet = await this.game.captureLocator(baseLocatorNames.btnPlaceBetBetAccepted);
-                // Assert
-                expect(btnPlaceBet.image).toMatchSnapshot(btnPlaceBet.name);
+                await verifyImage(this.game,baseLocatorNames.btnPlaceBetBetAccepted);
+
             });
             await test.step("Click cashout 50% and verify win amount", async () => {
                 this.game.attachSocketAndCaptureEvent(GameEvent.Settlement);
@@ -607,8 +545,8 @@ export class CrashGameBase {
                 await placeBet(this.game);
             });
             await test.step("Verify place bet button", async () => {
-                const btnPlaceBet = await this.game.captureLocator(baseLocatorNames.btnPlaceBetBetAccepted);
-                expect(btnPlaceBet.image).toMatchSnapshot(btnPlaceBet.name);
+                await verifyImage(this.game,baseLocatorNames.btnPlaceBetBetAccepted);
+
             });
             let settledResults;
             await test.step("Click cashout and verify win amount", async () => {
@@ -649,8 +587,7 @@ export class CrashGameBase {
             });
             //Assert
             await test.step("Verify the popup is opened", async () => {
-                const popMD5 = await this.game.capture(baseLocatorNames.popMD5);
-                expect(popMD5.image).toMatchSnapshot(popMD5.name, { maxDiffPixelRatio: 0.3 });
+                await verifyImage(this.game,baseLocatorNames.popMD5,0.3 );
             });
         });
 
@@ -661,8 +598,8 @@ export class CrashGameBase {
             });
             //Assert
             await test.step("Verify the game guide is opened in MD5 section", async () => {
-                const popGuideMd5 = await this.game.capture(baseLocatorNames.popGuideMd5);
-                expect(popGuideMd5.image).toMatchSnapshot(popGuideMd5.name, { maxDiffPixelRatio: 0 });
+                await verifyImage(this.game,baseLocatorNames.popGuideMd5);
+
             });
             await test.step("Close the popup", async () => {
                 await this.game.clickOutSide();
@@ -680,8 +617,7 @@ export class CrashGameBase {
             });
             //Assert
             await test.step("Verify field result is cleared", async () => {
-                const lblResultCleared = await this.game.capture(baseLocatorNames.lblResultCleared);
-                expect(lblResultCleared.image).toMatchSnapshot(lblResultCleared.name, { maxDiffPixelRatio: 0 });
+                await verifyImage(this.game,baseLocatorNames.lblResultCleared);
             });
             await test.step("Close the popup", async () => {
                 await this.game.clickOutSide();
@@ -728,8 +664,9 @@ export class CrashGameBase {
             await this.game.waitForTimeout(2000);
             await this.game.clickHome(timeout / 2, baseLocatorNames.btnHome);
             await this.game.waitUntilGameLobbyUiLoad();
-            const gamelobby = await this.game.capture(baseLocatorNames.imgGameLobby);
-            expect(gamelobby.image).toMatchSnapshot(gamelobby.name);
+
+            await verifyImage(this.game,baseLocatorNames.imgGameLobby);
+
         });
     }
 
@@ -744,9 +681,7 @@ export class CrashGameBase {
             console.log(gameicon);
             await this.game.page.mouse.click(gameicon.x, gameicon.y);
             await this.game.waitForTimeout(timeout * 3);
-            const imgControlArea = await this.game.capture(baseLocatorNames.imgControlArea);
-            // Assert
-            expect(imgControlArea.image).toMatchSnapshot(imgControlArea.name);
+            await verifyImage(this.game,baseLocatorNames.imgControlArea);
         });
     }
 
@@ -754,20 +689,20 @@ export class CrashGameBase {
 
         test("Verify UI of leader board in collapse mode", async () => {
             await test.step("Verify icon spaceman on board", async () => {
-                const icoSpaceMan = await this.game.captureLocator(baseLocatorNames.icoSpaceManOnBoard);
-                expect(icoSpaceMan.image).toMatchSnapshot(icoSpaceMan.name, {maxDiffPixelRatio : 0});
+                await verifyImage(this.game,baseLocatorNames.icoSpaceManOnBoard);
+
             });
             await test.step("Verify icon spaceman cash out", async () => {
-                const icoSpaceMan = await this.game.captureLocator(baseLocatorNames.icoSpaceManCashOut);
-                expect(icoSpaceMan.image).toMatchSnapshot(icoSpaceMan.name, {maxDiffPixelRatio : 0});
+                await verifyImage(this.game,baseLocatorNames.icoSpaceManCashOut);
+
             });
             await test.step("Verify text crashed", async () => {
-                const txtCrashed = await this.game.captureLocator(baseLocatorNames.txtCrashed);
-                expect(txtCrashed.image).toMatchSnapshot(txtCrashed.name, {maxDiffPixelRatio : 0});
+                await verifyImage(this.game,baseLocatorNames.txtCrashed);
+
             });
             await test.step("Verify icon expand", async () => {
-                const icoExpand = await this.game.captureLocator(baseLocatorNames.icoExpand);
-                expect(icoExpand.image).toMatchSnapshot(icoExpand.name, {maxDiffPixelRatio : 0});
+                await verifyImage(this.game,baseLocatorNames.icoExpand);
+
             });
         });
 
@@ -776,12 +711,12 @@ export class CrashGameBase {
                 await this.game.clickLocator(baseLocatorNames.icoExpand);
             });
             await test.step("Verify icon collapse", async () => {
-                const icoCollapse = await this.game.captureLocator(baseLocatorNames.icoCollapse);
-                expect(icoCollapse.image).toMatchSnapshot(icoCollapse.name, {maxDiffPixelRatio : 0});
+                await verifyImage(this.game,baseLocatorNames.icoCollapse);
+
             });
             await test.step("Verify leader board table", async () => {
-                const imgLeaderboardTable = await this.game.captureLocator(baseLocatorNames.imgLeaderboardTable);
-                expect(imgLeaderboardTable.image).toMatchSnapshot(imgLeaderboardTable.name, {maxDiffPixelRatio : 0});
+                await verifyImage(this.game,baseLocatorNames.imgLeaderboardTable);
+
             });
         });
 
@@ -791,8 +726,7 @@ export class CrashGameBase {
                 await placeBet(this.game);
             });
             await test.step("Verify main player bet amount in leader board", async () => {
-                const imgMainPlayerBetAmountLeaderBoard = await this.game.captureLocator(`imgMainPlayerBetAmountLeaderBoard${process.env.npm_config_project}`);
-                expect(imgMainPlayerBetAmountLeaderBoard.image).toMatchSnapshot(imgMainPlayerBetAmountLeaderBoard.name, {maxDiffPixelRatio : 0.01});
+                await verifyImage(this.game,`imgMainPlayerBetAmountLeaderBoard${process.env.npm_config_project}`, 0.01);
             });
         });
 

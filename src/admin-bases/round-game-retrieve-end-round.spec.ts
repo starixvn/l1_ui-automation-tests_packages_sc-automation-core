@@ -7,6 +7,8 @@ export class RERGameBase {
     admin: BaseAdmin;
     game: BaseGame;
     player: BasePlayer;
+    configAdmin = this.options.Adminconfiguration;
+    dataSet = this.configAdmin[`${process.env.npm_config_project}datasetRER`];
 
     constructor(protected options: IBaseOptions) {}
 
@@ -19,7 +21,7 @@ export class RERGameBase {
                 currentRoundID,
                 this.options.Adminconfiguration.accountId
             );
-            await this.verifyRER(getRER, this.options.Adminconfiguration.datasetRER["TC1_expect"]);
+            await this.verifyRER(getRER, this.dataSet["TC1_expect"]);
         });
     }
 
@@ -32,14 +34,14 @@ export class RERGameBase {
                 archivedRoundID,
                 this.options.Adminconfiguration.accountId
             );
-            await this.verifyRER(getRER, this.options.Adminconfiguration.datasetRER["TC2_expect"]);
+            await this.verifyRER(getRER, this.dataSet["TC2_expect"]);
         });
     }
 
     protected TC3() {
         admintest("Set result win for user when placing 1 bet choice", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const settleRoundId = await this.admin.setUiGameResult(this.admin.page.context(),this.options.gameConfiguration.id ,this.options.Adminconfiguration.datasetRER["TC3_settle"])
+            const settleRoundId = await this.admin.setUiGameResult(this.admin.page.context(),this.options.gameConfiguration.id ,this.dataSet["TC3_settle"])
             global.settleRoundID = settleRoundId
         });
         admintest("THEN player able to place a bet and settle", async () => {
@@ -57,14 +59,14 @@ export class RERGameBase {
                 global.settleRoundID,
                 this.options.Adminconfiguration.accountId
             );
-            await this.verifyRER(getRER, this.options.Adminconfiguration.datasetRER["TC3_expect"]);
+            await this.verifyRER(getRER, this.dataSet["TC3_expect"]);
         });
     }
 
     protected TC4() {
         admintest("Verify case Player has ticket on roundId is running", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const settleRoundId = await this.admin.setUiGameResult(this.admin.page.context(),this.options.gameConfiguration.id ,this.options.Adminconfiguration.datasetRER["TC4_settle"])
+            const settleRoundId = await this.admin.setUiGameResult(this.admin.page.context(),this.options.gameConfiguration.id ,this.dataSet["TC4_settle"])
             global.settleRoundID = settleRoundId
 
         });
@@ -83,14 +85,14 @@ export class RERGameBase {
                 global.settleRoundID,
                 this.options.Adminconfiguration.accountId
             );
-            await this.verifyRER(getRER, this.options.Adminconfiguration.datasetRER["TC4_expect"]);
+            await this.verifyRER(getRER, this.dataSet["TC4_expect"]);
         });
     }
 
     protected TC5() {
         admintest("Verify case Player placebet 1 choice and lose", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const settleRoundId = await this.admin.setUiGameResult(this.admin.page.context(),this.options.gameConfiguration.id ,this.options.Adminconfiguration.datasetRER["TC5_settle"])
+            const settleRoundId = await this.admin.setUiGameResult(this.admin.page.context(),this.options.gameConfiguration.id ,this.dataSet["TC5_settle"])
             global.settleRoundID = settleRoundId
         });
         admintest("THEN player able to place a bet and lose", async () => {
@@ -109,14 +111,14 @@ export class RERGameBase {
                 global.settleRoundID,
                 this.options.Adminconfiguration.accountId
             );
-            await this.verifyRER(getRER, this.options.Adminconfiguration.datasetRER["TC5_expect"]);
+            await this.verifyRER(getRER, this.dataSet["TC5_expect"]);
         });
     }
 
     protected TC6() {
         admintest("Verify case Player placebet multiple choices and lose", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const settleRoundId = await this.admin.setUiGameResult(this.admin.page.context(),this.options.gameConfiguration.id ,this.options.Adminconfiguration.datasetRER["TC6_settle"])
+            const settleRoundId = await this.admin.setUiGameResult(this.admin.page.context(),this.options.gameConfiguration.id ,this.dataSet["TC6_settle"])
             global.settleRoundID = settleRoundId
         });
         admintest("THEN player able to placebet multiple choices and lose all", async () => {
@@ -150,7 +152,7 @@ export class RERGameBase {
                 global.settleRoundID,
                 this.options.Adminconfiguration.accountId
             );
-            await this.verifyRER(getRER, this.options.Adminconfiguration.datasetRER["TC6_expect"]);
+            await this.verifyRER(getRER, this.dataSet["TC6_expect"]);
         });
     }
 
