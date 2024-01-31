@@ -1,3 +1,10 @@
+## [1.25.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.25.1...v1.25.2) (2024-01-31)
+
+
+### Bug Fixes
+
+*     const frameExists = await page.$('#frmGame'); ([f5200a8](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/f5200a89c70365708167747f42592952c5be1da5))
+
 ## [1.25.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.25.0...v1.25.1) (2024-01-31)
 
 
