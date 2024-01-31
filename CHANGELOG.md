@@ -1,3 +1,10 @@
+## [1.25.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.25.0...v1.25.1) (2024-01-31)
+
+
+### Bug Fixes
+
+* handle case frame existed in selectCurrencyGroup ([5f3a14e](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/5f3a14eff9ce16335fe8b67a04c0f03e7c8bc639))
+
 # [1.25.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.24.0...v1.25.0) (2024-01-31)
 
 
