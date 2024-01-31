@@ -1,3 +1,10 @@
+# [1.25.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.24.0...v1.25.0) (2024-01-31)
+
+
+### Features
+
+* login l2 ([effdd87](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/effdd870d9995559bfeec963ac173e10eca46e80))
+
 # [1.24.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.23.1...v1.24.0) (2024-01-30)
 
 
