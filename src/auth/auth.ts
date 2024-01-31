@@ -102,7 +102,7 @@ const loginMemberSite = async (
 };
 
 const selectCurrencyGroup = async (page: Page, timeout: number = 15000) => {
-    const frameExists = await page.frame('#frmGame');
+    const frameExists = await page.$('#frmGame');
     
     if (frameExists) {
         await page.frameLocator('#frmGame').locator(GroupCurrencyLocator.submitButton).click();
