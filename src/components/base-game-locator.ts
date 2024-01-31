@@ -301,7 +301,7 @@ export const CrashGameLocators = [
     new ImageLocator(baseLocatorNames.btnAutoPlay, 1068, 568, 92, 99),
     new ImageLocator(baseLocatorNames.btnAutoPlay9Remaining, 1082, 580, 60, 50),
     new ImageLocator(baseLocatorNames.btnAutoPlay10Remaining, 1082, 580, 60, 50),
-    new ImageLocator(baseLocatorNames.popAutoPlay, 460, 111, 503, 294),
+    new ImageLocator(baseLocatorNames.popAutoPlay, 460, 111, 503, 284),
     new ImageLocator(baseLocatorNames.btnAutoPlayStart, 650, 380, 145, 43),
     new ImageLocator(baseLocatorNames.btnAutoPlay10, 497, 232, 94, 35),
     new ImageLocator(baseLocatorNames.popAutoCashout, 458, 111, 510, 286),

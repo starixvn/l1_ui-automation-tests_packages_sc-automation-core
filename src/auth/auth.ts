@@ -1,6 +1,7 @@
 import { LobbyLocator, UATLocator, PRODLocator, GroupCurrencyLocator, AdminLogin } from "./locators/index";
 import { configs } from "./configs/config";
 import { Page } from "@playwright/test";
+import { createWorker } from "tesseract.js";
 
 export enum Environment {
     LOCAL = "local",
@@ -67,9 +68,9 @@ const loginMemberSite = async (
     gameId: number
 ) => {
     const timeout = config.lobbyTimeout;
-    const memberSiteLink = process.env.npm_config_memberSite ||(projectCode === "l1" ? config.memberSite : config[`${projectCode}memberSite`]);
-    const pwd = projectCode === "l1" ? config.pwd : config[`${projectCode}pwd`];
-    const lobbyDomain = projectCode === "l1" ? config.lobbyDomain : config[`${projectCode}lobbyDomain`];
+    const memberSiteLink = process.env.npm_config_memberSite ||(process.env.npm_config_mobile === "true" ? config[`${projectCode}memberSiteMobile`] : config[`${projectCode}memberSite`]);
+    const pwd = config[`${projectCode}pwd`];
+    const lobbyDomain = process.env.npm_config_mobile === "true" ? config[`${projectCode}lobbyDomainMobile`] : config[`${projectCode}lobbyDomain`];
 
     await page.goto(memberSiteLink);
     console.log(`Login ${playerId} - ${gameId} Member Site: ${memberSiteLink}`);
@@ -101,9 +102,15 @@ const loginMemberSite = async (
 };
 
 const selectCurrencyGroup = async (page: Page, timeout: number = 15000) => {
-    await page.click(GroupCurrencyLocator.submitButton);
-
-    await page.waitForLoadState("domcontentloaded", { timeout });
+    if (process.env.npm_config_project==="l2") {
+        await page.frameLocator('#frmGame').locator(GroupCurrencyLocator.submitButton).click();
+        await page.waitForLoadState("domcontentloaded", { timeout });
+        
+    }
+    else{
+        await page.click(GroupCurrencyLocator.submitButton);
+        await page.waitForLoadState("domcontentloaded", { timeout });
+    }
 };
 
 const loginUAT = async (page: Page, accountId: string, pwd: string, langCode: string, projectCode: string, timeout: number = 15000) => {
@@ -140,33 +147,56 @@ const loginUAT = async (page: Page, accountId: string, pwd: string, langCode: st
 
 const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: string, projectCode: string, timeout: number = 15000) => {
     if (projectCode === "l1") {
-        await page.click(PRODLocator.openLoginFormbtn)
-        await page.fill(PRODLocator.usernameInput, accountId);
-        await page.fill(PRODLocator.passwordInput, pwd);
-        await page.click(PRODLocator.submitLoginbtn);
-        await page.waitForLoadState("networkidle", { timeout: timeout });
-        await page.click(PRODLocator.langDropdown);
-        await page.click(PRODLocator[`${langCode}LangOption`]);
+        if (process.env.npm_config_mobile === "true") {
+            // will be implemented later
+        }
+        else{
+            await page.click(PRODLocator.openLoginFormbtn)
+            await page.fill(PRODLocator.usernameInput, accountId);
+            await page.fill(PRODLocator.passwordInput, pwd);
+            await page.click(PRODLocator.submitLoginbtn);
+            await page.waitForLoadState("networkidle", { timeout: timeout });
+            await page.click(PRODLocator.langDropdown);
+            await page.click(PRODLocator[`${langCode}LangOption`]);
+        }
+
     } 
     if (projectCode === "l2") {
-        await page.setViewportSize({
-            width: 340,
-            height: 667,
-        });
-        await page.waitForSelector(PRODLocator.l2memberIdInput); 
-        await page.fill(PRODLocator.l2memberIdInput, accountId);
-        await page.fill(PRODLocator.l2pwdInput, pwd);
-        await page.click(PRODLocator.l2loginButton);
-        await page.waitForLoadState("networkidle", { timeout: timeout });
-        await page.waitForTimeout(5000)
-        const iconSurvey = await page.$$(PRODLocator.l2iconClose);
-        if (iconSurvey.length>0) {
-            await page.click(PRODLocator.l2iconClose)
+        if (process.env.npm_config_mobile === "true") {
+            await page.setViewportSize({
+                width: 340,
+                height: 667,
+            });
+            await page.goto(configs.prod.l2memberSiteMobile)
+            await page.waitForSelector(PRODLocator.l2memberIdInput); 
+            await page.fill(PRODLocator.l2memberIdInput, accountId);
+            await page.fill(PRODLocator.l2pwdInput, pwd);
+            await page.click(PRODLocator.l2loginButton);
+            await page.waitForLoadState("networkidle", { timeout: timeout });
+            await page.waitForTimeout(5000)
+            const iconSurvey = await page.$$(PRODLocator.l2iconClose);
+            if (iconSurvey.length>0) {
+                await page.click(PRODLocator.l2iconClose)
+            }
+            await page.setViewportSize({
+                width: 1280,
+                height: 720,
+            }); 
         }
-        await page.setViewportSize({
-            width: 1280,
-            height: 720,
-        });
+        else{
+            await page.waitForLoadState("domcontentloaded", { timeout: timeout });
+            await page.waitForTimeout(5000);
+            await page.waitForSelector(PRODLocator.usernameInput);
+            await page.fill(PRODLocator.usernameInput, accountId);
+            await page.fill(PRODLocator.passwordInput, pwd);
+            await page.screenshot({path: "imgcapcha.png",clip: {x: 1114, y: 18, width: 35, height: 12}});
+            const capcha = await getTextLocator("imgcapcha.png");
+            await page.fill('id=validation', capcha);
+            await page.click(`//*[@data-tag="tabBtn"]`);
+            await page.waitForTimeout(3000);
+            await page.waitForLoadState("domcontentloaded", { timeout: timeout });
+        }
+        
     }
     if (projectCode === "ultra888") {
         const isConfirm = await page.$$(PRODLocator.ultra888popupconfirm);
@@ -259,3 +289,19 @@ export const loginAdmin = async (
     await page.click(AdminLogin.loginButton)
     await page.waitForLoadState("domcontentloaded", { timeout });
 };
+
+
+const getTextLocator = async(img:any, whitelist: string = "0123456789", lang: string = "eng") =>{
+    const worker = await createWorker();
+    await worker.loadLanguage(lang);
+    await worker.initialize(lang);
+    await worker.setParameters({
+        tessedit_char_whitelist: whitelist,
+    });
+
+    const {
+        data: { text },
+    } = await worker.recognize(img);
+    await worker.terminate();
+    return text;
+}
