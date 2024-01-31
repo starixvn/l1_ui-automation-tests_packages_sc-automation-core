@@ -102,12 +102,12 @@ const loginMemberSite = async (
 };
 
 const selectCurrencyGroup = async (page: Page, timeout: number = 15000) => {
-    if (process.env.npm_config_project==="l2") {
+    const frameExists = await page.frame('#frmGame');
+    
+    if (frameExists) {
         await page.frameLocator('#frmGame').locator(GroupCurrencyLocator.submitButton).click();
         await page.waitForLoadState("domcontentloaded", { timeout });
-        
-    }
-    else{
+    } else {
         await page.click(GroupCurrencyLocator.submitButton);
         await page.waitForLoadState("domcontentloaded", { timeout });
     }
