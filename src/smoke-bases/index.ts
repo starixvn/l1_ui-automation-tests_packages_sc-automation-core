@@ -7,6 +7,7 @@ import { MultiplayGameOptions, MultiplayGameBase } from "./multiplay-game-base.s
 import { BalancedBettingGameBase } from "./balanced-betting-game-base.spec";
 import { CrashGameBase } from "./crash-game-base.spec";
 import { GameGuideBase } from "../game-components/guides/game-guide-by-language-base.spec";
+import { NumberGameBase } from "./number-game-base.spec";
 
 export {
     IBaseOptions,
@@ -18,5 +19,6 @@ export {
     SlotGameBase,
     CardGameBase,
     GameGuideBase,
-    CrashGameBase
+    CrashGameBase,
+    NumberGameBase
 };

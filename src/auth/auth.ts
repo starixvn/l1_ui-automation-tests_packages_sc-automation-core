@@ -29,10 +29,7 @@ export const ssoToGame = async (
     }
 
     if (env.includes("local")) {
-        const memberSiteLink =
-            projectCode === "l1"
-                ? `${config.memberSite}?obCustId=${playerId}&balance=20000`
-                : `${config.l2memberSite}?obCustId=${playerId}&balance=2000000`;
+        const memberSiteLink = config[`${projectCode}memberSite`] + `?obCustId=${playerId}&balance=20000`;
         await page.goto(memberSiteLink);
         console.log("Login Local", memberSiteLink);
         await page.click(LobbyLocator.advancelbl);
@@ -40,7 +37,6 @@ export const ssoToGame = async (
         await page.click(LobbyLocator.tokenBtn);
         await page.waitForTimeout(500);
         const ssoLink = (await page.locator(LobbyLocator.ssoLink).textContent()) ?? "";
-
         await page.goto(`${ssoLink.replace("gameId=0", `gameId=${gameId}`)}`);
         const isCurrencyForm = await page.$$('id=currency')
         if (isCurrencyForm.length>0) {
@@ -168,12 +164,13 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
                 height: 667,
             });
             await page.goto(configs.prod.l2memberSiteMobile)
+            await page.waitForTimeout(3000)
             await page.waitForSelector(PRODLocator.l2memberIdInput); 
             await page.fill(PRODLocator.l2memberIdInput, accountId);
             await page.fill(PRODLocator.l2pwdInput, pwd);
             await page.click(PRODLocator.l2loginButton);
-            await page.waitForLoadState("networkidle", { timeout: timeout });
-            await page.waitForTimeout(5000)
+            await page.waitForLoadState("domcontentloaded", { timeout: timeout });
+            await page.waitForTimeout(8000)
             const iconSurvey = await page.$$(PRODLocator.l2iconClose);
             if (iconSurvey.length>0) {
                 await page.click(PRODLocator.l2iconClose)
@@ -193,8 +190,8 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
             const capcha = await getTextLocator("imgcapcha.png");
             await page.fill('id=validation', capcha);
             await page.click(`//*[@data-tag="tabBtn"]`);
-            await page.waitForTimeout(3000);
-            await page.waitForLoadState("domcontentloaded", { timeout: timeout });
+            await page.waitForTimeout(8000)
+            await page.waitForLoadState("load", { timeout: timeout });
         }
         
     }

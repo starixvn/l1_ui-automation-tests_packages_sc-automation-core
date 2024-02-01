@@ -1,6 +1,7 @@
 export default {
-    memberSite: "https://gamelobby-simulator.lumigame.com/signin",
-    lobbyDomain: "https://games.lumigame.com/",
+    l1memberSite: "https://gamelobby-simulator.lumigame.com/signin",
+    l1lobbyDomain: "https://games.lumigame.com/",
+    gnmemberSite: "https://gn-gamelobby-simulator.lumigame.com/signin",
     lobbyTimeout: 15000, // 15s
     enabledMsgPack: false,
     l2memberSite: "https://l2-glbs.lumigame.com/signin",

@@ -1,6 +1,6 @@
 export default {
-    memberSite: "https://l1-glbs2.lumigame.com/signin",
-    lobbyDomain: "https://l1-glbs2.lumigame.com/",
+    l1memberSite: "https://l1-glbs2.lumigame.com/signin",
+    l1lobbyDomain: "https://l1-glbs2.lumigame.com/",
     l2memberSite: "https://l2-glbs2.lumigame.com/signin",
     l2lobbyDomain: "https://l2-games2.lumigame.com",
     lobbyTimeout: 15000, // 15s
