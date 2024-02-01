@@ -1,3 +1,10 @@
+# [1.26.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.25.2...v1.26.0) (2024-02-01)
+
+
+### Features
+
+* base number game ([a6bb1bd](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/a6bb1bdcec9200957ceffd5dfd71ff38899decd8))
+
 ## [1.25.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.25.1...v1.25.2) (2024-01-31)
 
 
