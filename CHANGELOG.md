@@ -1,3 +1,16 @@
+# [1.27.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.26.0...v1.27.0) (2024-02-05)
+
+
+### Bug Fixes
+
+* google library auth ([940426b](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/940426b620d094f352986320735c24f4060fe05d))
+* ibaseoptions ([e1734ba](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/e1734baa82d07100929100f7a01e54d30488548a))
+
+
+### Features
+
+* enhance aut l2 and add new feature for update gg sheet test result ([21afda4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/21afda4f67a7415511b11a757fb65c0cf922d758))
+
 # [1.26.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.25.2...v1.26.0) (2024-02-01)
 
 
