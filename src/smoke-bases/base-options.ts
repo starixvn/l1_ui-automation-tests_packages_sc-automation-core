@@ -2,7 +2,7 @@ import { GameConfiguration, ImageLocator } from "../components";
 
 export interface IBaseOptions {
     gameConfiguration: GameConfiguration;
-    locators: ImageLocator[];
+    locators: any;
     waitBetTimeout: number;
     snapshotFolderPath: string;
     placeBetChoices: string[];

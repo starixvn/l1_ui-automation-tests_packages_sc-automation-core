@@ -182,7 +182,7 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
         }
         else{
             await page.waitForLoadState("domcontentloaded", { timeout: timeout });
-            await page.waitForTimeout(5000);
+            await page.waitForTimeout(2000);
             await page.waitForSelector(PRODLocator.usernameInput);
             await page.fill(PRODLocator.usernameInput, accountId);
             await page.fill(PRODLocator.passwordInput, pwd);
@@ -190,8 +190,8 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
             const capcha = await getTextLocator("imgcapcha.png");
             await page.fill('id=validation', capcha);
             await page.click(`//*[@data-tag="tabBtn"]`);
-            await page.waitForTimeout(8000)
             await page.waitForLoadState("load", { timeout: timeout });
+            await page.waitForTimeout(12000)
         }
         
     }

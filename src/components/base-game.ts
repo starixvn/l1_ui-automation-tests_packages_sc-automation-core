@@ -154,6 +154,11 @@ export class BaseGame {
         await this.waitForTimeout(3000);
     }
 
+    async GnWaitUntilPlaceBet(): Promise<void> {
+        //to be implemented
+    }
+
+
     async waitForEndBet(subGameName?: string): Promise<any> {
         return await this.waitForEvent(GameEvent.EndBet, subGameName);
     }
@@ -188,6 +193,12 @@ export class BaseGame {
         }
         return settledResults;
     }
+
+    async GnWaitForSettlement(): Promise<any> {
+        //to be implemented
+        return true;
+    }
+
 
     async waitForTimeout(time = 5000): Promise<void> {
         await this.page.waitForTimeout(time);

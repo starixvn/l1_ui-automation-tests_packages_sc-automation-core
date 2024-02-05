@@ -16,6 +16,13 @@ export class BasePlayer {
         await this.betOn(hedgeChoices[1], amount, subGameName);
     }
 
+    async GnPlaceHedgeBet(hedgeChoices: string[], amount: number = 1): Promise<void> {
+        await this.game.GnWaitUntilPlaceBet();
+        // to be implemented
+        console.log(hedgeChoices,amount); 
+
+    }
+
     async placeMaxBet(choice: string, maxBetAmount: number[], subGameName?: string): Promise<void> {
         if (!this.game.gameConfiguration.cardgame) {
             await this.game.waitUntilPlaceBet(subGameName);
@@ -58,6 +65,11 @@ export class BasePlayer {
         }
     }
 
+    async GnPlaceBet(choice: string, amount = 1): Promise<any> {
+            await this.game.GnWaitUntilPlaceBet();
+            return this.GnBetOn(choice, amount);
+    }
+
     async selectPayline(choice: string): Promise<void> {
         await this.game.clickLocator(baseLocatorNames.btnPayline, 1000);
         await this.game.clickLocator(baseLocatorNames.btnClearPayline, 2000);
@@ -87,6 +99,11 @@ export class BasePlayer {
         }
 
         return this.game.waitForEndBet(subGameName);
+    }
+
+    async GnBetOn(choice: string, amount: number = 1): Promise<any> {
+        console.log(choice, amount)
+        // to be implemented
     }
 
     async betOnSlot(choice: string, amount = 1): Promise<any> {
@@ -122,4 +139,14 @@ export class BasePlayer {
     async clickOutSide(): Promise<any> {
         await this.game.clickOutSide();
     }
+
+    async GnOpenHistory(): Promise<any> {
+        // to be implemented
+    }
+
+    async GnOpenGuide(): Promise<any> {
+        // to be implemented
+    }
+
+
 }

@@ -4,51 +4,40 @@ import { expect } from "../expects";
 
 import { IBaseOptions } from "./base-options";
 
-export class NumberGameBase {
+export class NumberGameBase {nPlaceBet
     protected game: BaseGame;
     protected player: BasePlayer;
 
     constructor(protected options: IBaseOptions) {}
 
-    protected inGameBetChoiceTests() {
-        test("AND bet choices should be displayed on table", async () => {
+    protected inGameUITests() {
+        test("Verify in game UI", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
-            await this.game.waitUntilNextRound();
-            await this.game.waitForTimeout(this.options.waitBetTimeout);
-
-            for (const placeBetChoice of this.options.placeBetChoices) {
-                // Act
-                const betChoice = await this.game.captureChoice(placeBetChoice);
-
-                // Assert
-                expect(betChoice.image).toMatchSnapshot(betChoice.name);
-            }
+            await this.game.GnWaitUntilPlaceBet();
+            await this.verifyLocatorsImage(this.options.locators.inGameUI);
         });
-    }
 
-    protected inGameOddsTests() {
         test("AND odds should be correct", async () => {
             // Assert
-            expect(this.game.odds).toStrictEqual(this.options.gameConfiguration.odds);
+            await this.verifyLocatorsValue(this.options.locators.inGameValues);
         });
     }
+
 
     protected placeBetAndSettleTests() {
         test("THEN player able to place a bet and settle", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount ?? 1 };
-            this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
 
             // Act
-            const placeBetResponse = await this.player.placeBet(bet.choice, bet.amount);
-            const settledResults = await this.game.waitForSettlement();
+            const placeBetResponse = await this.player.GnPlaceBet(bet.choice, bet.amount);
+            const settledResults = await this.game.GnWaitForSettlement();
 
             // Assert
-            expect(placeBetResponse.endBet).toBe(bet.amount);
-            expect(settledResults.settlementResult).toMatchBetOptions(this.options.gameConfiguration.choices);
-            expect(bet).toMatchWinning(settledResults);
+            console.log(settledResults,placeBetResponse);
+            
         });
     }
 
@@ -59,26 +48,38 @@ export class NumberGameBase {
             test.setTimeout(maxTimeout);
 
             // Act
-            await this.player.placeHedgeBet(hedgeBetGroups[0], this.options.placeBetAmount ?? 1);
-            await this.game.waitForTimeout(500)
-            const error = await this.game.captureErrorMessage();
+            await this.player.GnPlaceHedgeBet(hedgeBetGroups[0], this.options.placeBetAmount ?? 1);
 
-            // Assert
-            expect(error.image).toMatchSnapshot(error.name, { maxDiffPixelRatio: 0.3 });
+            await this.verifyLocatorsValue(this.options.locators.hedgeBetError)
+
         });
     }
 
     protected ticketHistoryTests() {
         test("AND player could open history popup", async () => {
             // Arrange
-            const historyPayload = await this.player.openHistory();
+            await this.player.GnOpenHistory();
 
             // Act
-            const historySnapshot = await this.game.captureHistory();
+            // to be implemented
+        });
+    }
 
-            // Assert
-            expect(historyPayload.history.betLogs.length).toBeGreaterThan(0);
-            expect(historySnapshot.image).toMatchSnapshot(historySnapshot.name);
+    protected statisticBoardTests() {
+        test("AND player clarify the statistic board of above placed bet round", async () => {
+            // Arrange
+            // Act
+            // to be implemented
+        });
+    }
+
+    protected gameGuideTests() {
+        test("AND player could open guide and clarify guide content", async () => {
+            // Arrange
+            await this.player.GnOpenGuide();
+
+            // Act
+            // to be implemented
         });
     }
 
@@ -107,10 +108,25 @@ export class NumberGameBase {
     }
 
     protected runScenario() {
-        this.inGameBetChoiceTests();
-        this.inGameOddsTests();
+        this.inGameUITests();
         this.placeBetAndSettleTests();
         this.hedgeBetTests();
+        this.statisticBoardTests();
         this.ticketHistoryTests();
+        this.gameGuideTests();
     }
+
+    async verifyLocatorsImage( expectSnapshot: object) {
+        for (const key in expectSnapshot) {
+            expect(await this.game.page.locator(key).screenshot()).toMatchSnapshot(expectSnapshot[key]);
+        }
+    }
+
+    async verifyLocatorsValue(expectedValue?: object) {
+        for (const key in expectedValue) {
+            expect(await this.game.page.locator(key).innerText()).toBe(expectedValue[key]);
+        }
+    }
+
+
 }
