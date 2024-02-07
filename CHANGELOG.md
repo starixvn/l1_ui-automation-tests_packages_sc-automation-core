@@ -1,3 +1,10 @@
+## [1.27.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.27.0...v1.27.1) (2024-02-07)
+
+
+### Bug Fixes
+
+* remove google authentication ([14ee07d](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/14ee07df816d918d1813ef6aeba518f694a8b189))
+
 # [1.27.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.26.0...v1.27.0) (2024-02-05)
 
 
