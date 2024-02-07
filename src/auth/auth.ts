@@ -116,7 +116,7 @@ const loginUAT = async (page: Page, accountId: string, pwd: string, langCode: st
         await page.fill(UATLocator.memberIdInput, accountId);
         await page.fill(UATLocator.pwdInput, pwd);
         await page.click(UATLocator.loginButton);
-        await page.waitForLoadState("networkidle", { timeout });
+        await page.waitForLoadState("load", { timeout });
     } else {
         await page.setViewportSize({
             width: 340,
@@ -151,7 +151,7 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
             await page.fill(PRODLocator.usernameInput, accountId);
             await page.fill(PRODLocator.passwordInput, pwd);
             await page.click(PRODLocator.submitLoginbtn);
-            await page.waitForLoadState("networkidle", { timeout: timeout });
+            await page.waitForLoadState("load", { timeout: timeout });
             await page.click(PRODLocator.langDropdown);
             await page.click(PRODLocator[`${langCode}LangOption`]);
         }
@@ -190,8 +190,8 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
             const capcha = await getTextLocator("imgcapcha.png");
             await page.fill('id=validation', capcha);
             await page.click(`//*[@data-tag="tabBtn"]`);
-            await page.waitForLoadState("load", { timeout: timeout });
-            await page.waitForTimeout(12000)
+            await page.locator('id=__canvasContainer').waitFor({ state: "visible" });
+            await page.waitForTimeout(15000)
         }
         
     }
@@ -205,7 +205,7 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
         await page.fill(PRODLocator.ultra888pwdInput, "Bb1111");
         await page.click(PRODLocator.ultra888loginButton);
         await page.waitForLoadState("networkidle", { timeout });
-        await page.waitForTimeout(8000)
+        await page.waitForTimeout(10000)
     } 
 };
 

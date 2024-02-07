@@ -58,8 +58,6 @@
         }
     },
     "dependencies": {
-        "google-auth-library": "^9.6.2",
-        "google-spreadsheet": "^4.1.1",
         "pngjs": "^7.0.0",
         "socket.io-client": "^4.7.3",
         "tesseract.js": "^4.1.1",
