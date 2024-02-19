@@ -1,3 +1,10 @@
+## [1.27.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.27.1...v1.27.2) (2024-02-19)
+
+
+### Bug Fixes
+
+* authentication l2 captcha code ([5194e5f](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/5194e5f48e49da051f1fd8de69f374d9145b27bb))
+
 ## [1.27.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.27.0...v1.27.1) (2024-02-07)
 
 
