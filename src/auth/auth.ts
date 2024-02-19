@@ -188,10 +188,11 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
             await page.fill(PRODLocator.passwordInput, pwd);
             await page.screenshot({path: "imgcapcha.png",clip: {x: 1114, y: 18, width: 35, height: 12}});
             const capcha = await getTextLocator("imgcapcha.png");
+            console.log('capcha',capcha);
             await page.fill('id=validation', capcha);
             await page.click(`//*[@data-tag="tabBtn"]`);
             await page.locator('id=__canvasContainer').waitFor({ state: "visible" });
-            await page.waitForTimeout(15000)
+            await page.waitForTimeout(30000)
         }
         
     }
