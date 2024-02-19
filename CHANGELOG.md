@@ -1,3 +1,10 @@
+## [1.27.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.27.2...v1.27.3) (2024-02-19)
+
+
+### Bug Fixes
+
+* login gn ([419b2c8](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/419b2c8e357170c4be46c5be9da320e92d71c156))
+
 ## [1.27.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.27.1...v1.27.2) (2024-02-19)
 
 
