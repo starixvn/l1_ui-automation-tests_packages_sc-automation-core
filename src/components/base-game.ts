@@ -70,19 +70,25 @@ export class BaseGame {
     }
 
     async waitUntilGameUiLoad() {
-        const waitRange = process.env.npm_config_project === "ultra888" ? 1 : 2;
-        await this.page.waitForTimeout(1000);
-        let filterA: string[] = [];
-        const searchString = "LoadScene";
-        this.page.on("console", (msg) => {
-            if (msg.text().includes(searchString) && !msg.text().includes(searchString + " db")) {
-                filterA.push(msg.text());
-            }
-        });
-
-        while (filterA.length < waitRange) {
-            await this.page.waitForTimeout(3000);
+        if (process.env.npm_config_project != "gn") {
+            const waitRange = process.env.npm_config_project === "ultra888" ? 1 : 2;
+            await this.page.waitForTimeout(1000);
+            let filterA: string[] = [];
+            const searchString = "LoadScene";
+            this.page.on("console", (msg) => {
+                if (msg.text().includes(searchString) && !msg.text().includes(searchString + " db")) {
+                    filterA.push(msg.text());
+                }
+            });
+    
+            while (filterA.length < waitRange) {
+                await this.page.waitForTimeout(3000);
+            }  
         }
+        else if (process.env.npm_config_project === "gn") {
+            await this.page.locator("//img[@alt='Avatar']").waitFor()
+        }
+
         await this.page.waitForTimeout(3000);
         console.log("Game UI ready for testing");
     }

@@ -165,7 +165,7 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
             });
             await page.goto(configs.prod.l2memberSiteMobile)
             await page.waitForTimeout(3000)
-            await page.waitForSelector(PRODLocator.l2memberIdInput); 
+            await page.locator(PRODLocator.l2memberIdInput).waitFor(); 
             await page.fill(PRODLocator.l2memberIdInput, accountId);
             await page.fill(PRODLocator.l2pwdInput, pwd);
             await page.click(PRODLocator.l2loginButton);
@@ -183,11 +183,15 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
         else{
             await page.waitForLoadState("domcontentloaded", { timeout: timeout });
             await page.waitForTimeout(2000);
-            await page.waitForSelector(PRODLocator.usernameInput);
+            await page.locator(PRODLocator.usernameInput).waitFor();
             await page.fill(PRODLocator.usernameInput, accountId);
             await page.fill(PRODLocator.passwordInput, pwd);
             await page.screenshot({path: "imgcapcha.png",clip: {x: 1114, y: 18, width: 35, height: 12}});
-            const capcha = await getTextLocator("imgcapcha.png");
+            let capcha = await getTextLocator("imgcapcha.png");
+            if (capcha.length <5) {
+                await page.screenshot({ path: "imgcapcha.png", clip: { x: 1114, y: 18, width: 35, height: 12 } });
+                capcha = await getTextLocator("imgcapcha.png");
+            }
             console.log('capcha',capcha);
             await page.fill('id=validation', capcha);
             await page.click(`//*[@data-tag="tabBtn"]`);
