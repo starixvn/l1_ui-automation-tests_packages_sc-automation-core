@@ -184,11 +184,17 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
             await page.waitForLoadState("domcontentloaded", { timeout: timeout });
             await page.waitForTimeout(2000);
             await page.locator(PRODLocator.usernameInput).waitFor();
+            await page.locator("//i[@class='icon-refresh']").click();
+            await page.waitForTimeout(5000);
             await page.fill(PRODLocator.usernameInput, accountId);
             await page.fill(PRODLocator.passwordInput, pwd);
             await page.screenshot({path: "imgcapcha.png",clip: {x: 1114, y: 18, width: 35, height: 12}});
             let capcha = await getTextLocator("imgcapcha.png");
-            if (capcha.length <5) {
+            if (capcha.length !=4) {
+                await page.reload({ waitUntil: "domcontentloaded" })
+                await page.waitForTimeout(5000);
+                await page.fill(PRODLocator.usernameInput, accountId);
+                await page.fill(PRODLocator.passwordInput, pwd);
                 await page.screenshot({ path: "imgcapcha.png", clip: { x: 1114, y: 18, width: 35, height: 12 } });
                 capcha = await getTextLocator("imgcapcha.png");
             }
@@ -196,7 +202,7 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
             await page.fill('id=validation', capcha);
             await page.click(`//*[@data-tag="tabBtn"]`);
             await page.locator('id=__canvasContainer').waitFor({ state: "visible" });
-            await page.waitForTimeout(30000)
+            await page.waitForTimeout(20000)
         }
         
     }
@@ -205,11 +211,13 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
         if (isConfirm.length > 0) {
             await page.click(PRODLocator.ultra888popupconfirm);
         }
+        await page.waitForTimeout(2000)
         await page.selectOption(PRODLocator.ultra888langDropdown, { value: "vn" });
         await page.fill(PRODLocator.ultra888memberIdInput, "01862081667");
         await page.fill(PRODLocator.ultra888pwdInput, "Bb1111");
         await page.click(PRODLocator.ultra888loginButton);
-        await page.waitForLoadState("networkidle", { timeout });
+        await page.waitForTimeout(2000)
+        await page.waitForLoadState("domcontentloaded", { timeout });
         await page.waitForTimeout(10000)
     } 
 };
@@ -305,5 +313,5 @@ const getTextLocator = async(img:any, whitelist: string = "0123456789", lang: st
         data: { text },
     } = await worker.recognize(img);
     await worker.terminate();
-    return text;
+    return text.trim();
 }
