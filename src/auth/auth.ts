@@ -182,25 +182,25 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
         }
         else{
             await page.waitForLoadState("domcontentloaded", { timeout: timeout });
-            await page.waitForTimeout(2000);
             await page.locator(PRODLocator.usernameInput).waitFor();
-            await page.locator("//i[@class='icon-refresh']").click();
-            await page.waitForTimeout(5000);
+            await page.waitForTimeout(3000);
             await page.fill(PRODLocator.usernameInput, accountId);
             await page.fill(PRODLocator.passwordInput, pwd);
-            await page.screenshot({path: "imgcapcha.png",clip: {x: 1114, y: 18, width: 35, height: 12}});
-            let capcha = await getTextLocator("imgcapcha.png");
-            if (capcha.length !=4) {
-                await page.reload({ waitUntil: "domcontentloaded" })
-                await page.waitForTimeout(5000);
-                await page.fill(PRODLocator.usernameInput, accountId);
-                await page.fill(PRODLocator.passwordInput, pwd);
-                await page.screenshot({ path: "imgcapcha.png", clip: { x: 1114, y: 18, width: 35, height: 12 } });
-                capcha = await getTextLocator("imgcapcha.png");
-            }
+            let capcha = await getCaptcha(page);
             console.log('capcha',capcha);
             await page.fill('id=validation', capcha);
             await page.click(`//*[@data-tag="tabBtn"]`);
+            await page.waitForTimeout(2000);
+            const isElementVisible = await page.isVisible('//*[@class="hint-absolute"]');
+            if (isElementVisible) {
+                await page.locator("//i[@class='icon-refresh']").click();
+                await page.waitForTimeout(5000);
+                await page.fill(PRODLocator.usernameInput, accountId);
+                await page.fill(PRODLocator.passwordInput, pwd);
+                capcha = await getCaptcha(page);
+                await page.fill('id=validation', capcha);
+                await page.click(`//*[@data-tag="tabBtn"]`);
+            }
             await page.locator('id=__canvasContainer').waitFor({ state: "visible" });
             await page.waitForTimeout(20000)
         }
@@ -315,3 +315,18 @@ const getTextLocator = async(img:any, whitelist: string = "0123456789", lang: st
     await worker.terminate();
     return text.trim();
 }
+
+
+const getCaptcha = async(page: any) =>{
+    await page.screenshot({path: "imgcapcha.png",clip: {x: 1114, y: 18, width: 35, height: 12}});
+    let capcha = await getTextLocator("imgcapcha.png");
+    let retryCount = 0;
+    while (capcha.length !== 4 && retryCount < 2) {
+        await page.reload({ waitUntil: "domcontentloaded" });
+        await page.waitForTimeout(5000);
+        await page.screenshot({ path: "imgcapcha.png", clip: { x: 1114, y: 18, width: 35, height: 12 } });
+        capcha = await getTextLocator("imgcapcha.png");
+        retryCount++;
+    }
+    return capcha;
+  }
