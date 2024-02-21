@@ -1,3 +1,10 @@
+# [1.28.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.27.4...v1.28.0) (2024-02-21)
+
+
+### Features
+
+* get captcha with retry ([be8adf5](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/be8adf5bad5f02749f1443044c0ce4405f1d409e))
+
 ## [1.27.4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.27.3...v1.27.4) (2024-02-20)
 
 
