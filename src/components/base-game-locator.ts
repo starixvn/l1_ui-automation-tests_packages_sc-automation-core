@@ -6,7 +6,10 @@ const imgLocatorNames = ["imgdealer","imgGameName","imgB0","imgB1",  "imgB2","im
     "imgConfirmPaylineDisabled","imgTurboTrial","imgTurboDefault","imgBetLevel","imgCoinValue","imgTotalBet", "imgBottomArea", "imgBottomAreaTrialMode",
     "imgUserBalanceTrialMode", "imgRoundIdFirstRoundTrialMode","imgGameLobby", "imgTurboOn", "imgTurboOFF", "imgControlAreal1","imgControlAreal2", "imgRocket", "imgBetAmountFirstChipl1", "imgBetAmountFirstChipl2",
     "imgBetAmountDisablel1", "imgBetAmountDisablel2", "imgBetAmountIncreasel1", "imgBetAmountIncreasel2","imgAutoCashoutIncrease", "imgAutoCashoutDecrease", "imgLeaderBoard", "imgMainPlayerNameLeaderBoard",
-    "imgMainPlayerBetAmountLeaderBoardl1", "imgMainPlayerBetAmountLeaderBoardl2", "imgBetAmountMaxChipl1", "imgBetAmountMaxChipl2", "imgLeaderboardTable", "imgChipBarHidden"]
+    "imgMainPlayerBetAmountLeaderBoardl1", "imgMainPlayerBetAmountLeaderBoardl2", "imgBetAmountMaxChipl1", "imgBetAmountMaxChipl2", "imgLeaderboardTable", "imgChipBarHidden", "imgClientSeedRandomChecked",
+    "imgClientSeedManualModeDefault", "imgManualClientSeed1234", "imgManualClientSeed123", "imgManualClientSeed1234Inactive", "imgFairnessHeader", "imgFairnessRoundId", "imgFairnessCrashPoint", "imgFairnessServerSeedSHA256", "imgFairnessServerSeed", 
+    "imgFairnessClientSeed", "imgFairnessPlayer123", "imgFairnessPlayer45", "imgFairnessMergeClientSeed", "imgFairnessCombinedHash", "imgFairnessMessage", "imgVerificationHeader", "imgVerificationServerSeed", "imgVerificationMergeClientSeed", 
+    "imgVerificationCombinedHash", "imgVerificationFinalResult", "imgGameGuidePF", "imgClientSeed1", "imgClientSeed102", "imgClientSeed102Inactive", "imgFairnessResult", "imgVerifySuccessful", "imgPFPopup"]
 
 const btnLocatorNames = ["btnRebet","btnHome","btnClosePopup","btnRightArrow","btnLeftArrow","btnHitCard", "btnCancel","btnSplit","btnDouble","btnNewbet",
     "btnPayline","btnAutoSpin","btnTurbo", "btnSpin", "btnAutoSpin10", "btnAutoSpinTurbo", "btnAutoSpinStart","btnPayline1", "btnAllPayline", "btnEvenPayline",
@@ -16,12 +19,15 @@ const btnLocatorNames = ["btnRebet","btnHome","btnClosePopup","btnRightArrow","b
      "btnIncreaseBetAmount", "btnDecreaseBetAmount", "btnPlaceBet", "btnPlaceBetBetAccepted", "btnEarlyBetAccepted","btnAutoPlay", "btnAutoPlayStart", "btnAutoPlay10", "btnAutoCashOut", "btnNumber1AutoCashout", "btnDotAutoCashout", 
      "btnNumber2AutoCashout", "btnNumber0AutoCashout", "btnBackspace", "btnClearAutoCashout", "btnPlaceEarlyBet", "btnPlaceEarlyBetWaiting", "btnStatisticLastRound", "btnStatisticRunningRound",
      "btnEnableAutoCashOut", "btnConfirmAutoCashout","btnConfirmAutoCashoutDisabled", "btnIncreaseAutoCashout", "btnDecreaseAutoCashout", "btnAutoPlay9Remaining", "btnAutoPlay10Remaining", "btnTooltipMd5", "btnConfirmStand",
-    "btnClear", "btnDeal", "btnStand"]
+    "btnClear", "btnDeal", "btnStand", "btnClientSeedClear", "btnClientSeed1", "btnClientSeed2", "btnClientSeed3", "btnClientSeed4", "btnClientSeed5", "btnClientSeedBackspace", "btnClientSeedSave",
+    "btnFairnessVerify", "btnHistoryVerify", "btnIncreaseClientSeed", "btnDecreaseClientSeed", "btnClientSeed0"]
 
 const popLocatorNames = ["popAutoSpin","popHistory", "popGuide","popGameGuide", "popAutoSpinTurbo",  "popBetControll1", "popBetControlMaxBetLevell1",
     "popBetControlMinBetLevell1", "popBetControlMaxCoinValuel1", "popBetControlMinCoinValuel1", "popBetControll2", "popBetControlMaxBetLevell2", 
     "popBetControlMinBetLevell2", "popBetControlMaxCoinValuel2","popBetControlMinCoinValuel2","popBetAmountl1", "popBetAmountl2","popBetControlTrialMode", "popBetAmountMaxChipl1","popBetAmountMaxChipl2", 
-    "popAutoPlay", "popAutoCashout", "popMD5", "popGuideMd5"];
+    "popAutoPlay", "popAutoCashout", "popMD5", "popGuideMd5", "popPFSettings", "popNewClientSeed", "popNewClientSeed1234", "popNewClientSeed123", "popNewClientSeed102", "popNewClientSeed10",
+    "popNewClientSeedCleared", 
+    ];
 
 const lblLocatorNames = ["lblRoundIdOnTable",   "lblTotalBetl1", "lblTotalBetl2","lblChoice1",  "lblChoice2","lblChoice3", "lblRoundIdChoice1","lblRoundIdChoice2",
     "lblRoundIdChoice3", "lblRoundID", "lblBetLevel0_1", "lblWin", "lblErrorMsg", "lblHistoryFirstRow","lblHistoryDetailRoundId","lblRoundIdFirstRoundTrialMode", 
@@ -38,7 +44,8 @@ const commonLocatorNames = [
     "mnuHamburgerExpandSoundOn","mnuHamburgerExpandSoundOff", "mnuHamburgerExpandTrialMode", "icoSound", "icoMusic", 
     "tabAll", "tabSedie","tabBigSmall","tabCardGames","tabSlots","tabKenoLottery","tabOthers","jackPotbanner",
     "icoGame1","icoGame2","icoGame3","icoGame4","icoGame5","icoGame6","icoGame7","icoGame8","icoGame9","icoGame10",
-    "icoSpaceManOnBoard", "icoSpaceManCashOut", "icoExpand", "icoCollapse"
+    "icoSpaceManOnBoard", "icoSpaceManCashOut", "icoExpand", "icoCollapse", "icoPF", "icoPFTooltip", "checkboxManual", 
+    "icoPFTooltip", "lblClientSeed"
 ];
 
 const listLocatorNames = imgLocatorNames.concat(popLocatorNames, commonLocatorNames, btnLocatorNames,lblLocatorNames)
@@ -83,7 +90,38 @@ export const CardLocators = [
     new ImageLocator(baseLocatorNames.stake10, 380, 584, 30, 30),
     new ImageLocator(baseLocatorNames.errorMessage, 456, 531, 380, 30),
     new ImageLocator(baseLocatorNames.lstMenuItems, 64, 230, 50, 310),
-
+    new ImageLocator(baseLocatorNames.icoPF, 68, 301, 38, 30),
+    new ImageLocator(baseLocatorNames.imgPFPopup, 291, 192, 710, 151),
+    new ImageLocator(baseLocatorNames.lblClientSeed, 636, 362, 6, 6),
+    new ImageLocator(baseLocatorNames.icoPFTooltip, 762, 200, 13, 13),
+    new ImageLocator(baseLocatorNames.imgGameGuidePF, 157, 73, 981, 587),
+    new ImageLocator(baseLocatorNames.popNewClientSeed102, 312, 188, 685, 357),
+    new ImageLocator(baseLocatorNames.popNewClientSeed10, 312, 188, 685, 357),
+    new ImageLocator(baseLocatorNames.imgClientSeed1, 530, 345, 218, 50),
+    new ImageLocator(baseLocatorNames.imgManualClientSeed102, 530, 345, 218, 50),
+    new ImageLocator(baseLocatorNames.btnIncreaseClientSeed, 718, 366, 7, 7),
+    new ImageLocator(baseLocatorNames.btnDecreaseClientSeed, 552, 365, 7, 7),
+    new ImageLocator(baseLocatorNames.imgManualClientSeed102Inactive, 530, 345, 218, 50),
+    new ImageLocator(baseLocatorNames.btnHistoryVerify, 1148, 200, 69, 11),
+    new ImageLocator(baseLocatorNames.imgFairnessHeader, 543, 97, 182, 30),
+    new ImageLocator(baseLocatorNames.imgFairnessServerSeed, 342, 203, 176, 29),
+    new ImageLocator(baseLocatorNames.imgFairnessClientSeed, 708, 205, 234, 88),
+    new ImageLocator(baseLocatorNames.imgFairnessServerSeedSHA256, 350, 301, 203, 29),
+    new ImageLocator(baseLocatorNames.imgFairnessResult, 345, 393, 206, 27),
+    new ImageLocator(baseLocatorNames.imgVerifySuccessful, 415, 500, 465, 125),
+    new ImageLocator(baseLocatorNames.btnFairnessVerify, 586, 567, 120, 45),
+    new ImageLocator(baseLocatorNames.popNewClientSeed, 528, 192, 262, 56),
+    new ImageLocator(baseLocatorNames.btnClientSeedClear, 823, 272, 104, 36),
+    new ImageLocator(baseLocatorNames.popNewClientSeedCleared, 308, 190, 685, 360),
+    new ImageLocator(baseLocatorNames.btnClientSeed1, 348, 402, 33, 33),
+    new ImageLocator(baseLocatorNames.btnClientSeed0, 782, 478, 30, 30),
+    new ImageLocator(baseLocatorNames.btnClientSeed2, 455, 402, 33, 33),
+    new ImageLocator(baseLocatorNames.popNewClientSeed102, 308, 190, 685, 360),
+    new ImageLocator(baseLocatorNames.btnClientSeedBackspace, 880, 403, 45, 28),
+    new ImageLocator(baseLocatorNames.popNewClientSeed10, 308, 190, 685, 360),
+    new ImageLocator(baseLocatorNames.btnClientSeedSave, 883, 478, 40, 27),
+    new ImageLocator(baseLocatorNames.imgClientSeed102, 326, 192, 667, 285),
+    new ImageLocator(baseLocatorNames.imgClientSeed102Inactive, 326, 192, 667, 285),
 ];
 
 export const ClassicSlotLocators = [
@@ -355,4 +393,42 @@ export const CrashGameLocators = [
     new ImageLocator(baseLocatorNames.imgMainPlayerNameLeaderBoard, 168, 133, 19, 10),
     new ImageLocator(baseLocatorNames.imgMainPlayerBetAmountLeaderBoardl1, 205, 153, 25, 20),
     new ImageLocator(baseLocatorNames.imgMainPlayerBetAmountLeaderBoardl2, 205, 153, 25, 20),
+    new ImageLocator(baseLocatorNames.icoPF, 35, 181, 36, 36),
+    new ImageLocator(baseLocatorNames.popPFSettings, 316, 186, 686, 199),
+    new ImageLocator(baseLocatorNames.imgClientSeedRandomChecked, 342, 392, 281, 35),
+    new ImageLocator(baseLocatorNames.imgClientSeedManualModeDefault, 337, 435, 590, 43),
+    new ImageLocator(baseLocatorNames.icoPFTooltip, 756, 198, 14, 14),
+    new ImageLocator(baseLocatorNames.checkboxManual, 361, 451, 12, 12),
+    new ImageLocator(baseLocatorNames.popNewClientSeed, 477, 205, 335, 36),
+    new ImageLocator(baseLocatorNames.btnClientSeedClear, 662, 266, 104, 31),
+    new ImageLocator(baseLocatorNames.btnClientSeed1, 393, 361, 47, 37),
+    new ImageLocator(baseLocatorNames.btnClientSeed2, 485, 361, 47, 37),
+    new ImageLocator(baseLocatorNames.btnClientSeed3, 578, 361, 47, 37),
+    new ImageLocator(baseLocatorNames.btnClientSeed4, 662, 361, 47, 37),
+    new ImageLocator(baseLocatorNames.btnClientSeed5, 752, 361, 47, 37),
+    new ImageLocator(baseLocatorNames.btnClientSeedBackspace, 482, 361, 47, 37),
+    new ImageLocator(baseLocatorNames.btnClientSeedSave, 845, 425, 45, 41),
+    new ImageLocator(baseLocatorNames.imgManualClientSeed1234, 337, 435, 590, 43),
+    new ImageLocator(baseLocatorNames.imgManualClientSeed123, 340, 205, 638, 303),
+    new ImageLocator(baseLocatorNames.imgManualClientSeed1234Inactive, 337, 435, 590, 43),
+    new ImageLocator(baseLocatorNames.imgFairnessHeader, 490, 56, 298, 32),
+    new ImageLocator(baseLocatorNames.imgFairnessRoundId, 355, 102, 62, 21),
+    new ImageLocator(baseLocatorNames.imgFairnessCrashPoint, 776, 102, 84, 24),
+    new ImageLocator(baseLocatorNames.imgFairnessServerSeedSHA256, 352, 195, 354, 22),
+    new ImageLocator(baseLocatorNames.imgFairnessServerSeed, 346, 132, 302, 24),
+    new ImageLocator(baseLocatorNames.imgFairnessClientSeed, 356, 282, 287, 25),
+    new ImageLocator(baseLocatorNames.imgFairnessPlayer123, 1,1,1,1),
+    new ImageLocator(baseLocatorNames.imgFairnessPlayer45, 1,1,1,1),
+    new ImageLocator(baseLocatorNames.imgFairnessMergeClientSeed, 353, 413, 192, 30),
+    new ImageLocator(baseLocatorNames.imgFairnessCombinedHash, 352, 465, 208, 30),
+    new ImageLocator(baseLocatorNames.imgFairnessMessage, 333, 532, 614, 59),
+    new ImageLocator(baseLocatorNames.btnFairnessVerify, 597, 602, 86, 31),
+    new ImageLocator(baseLocatorNames.popNewClientSeed1234, 320, 202, 661, 290),
+    new ImageLocator(baseLocatorNames.popNewClientSeed123, 320, 202, 661, 290),
+    new ImageLocator(baseLocatorNames.btnHistoryVerify, 1017, 201, 40, 11),
+    // new ImageLocator(baseLocatorNames.imgVerificationHeader, ),
+    // new ImageLocator(baseLocatorNames.imgVerificationServerSeed, ),
+    // new ImageLocator(baseLocatorNames.imgVerificationMergeClientSeed, ),
+    // new ImageLocator(baseLocatorNames.imgVerificationCombinedHash, ),
+    // new ImageLocator(baseLocatorNames.imgVerificationFinalResult, ),
 ];

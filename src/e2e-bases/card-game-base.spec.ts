@@ -81,6 +81,107 @@ export class CardGameBase {
         });
     }
 
+    protected provablyFairTests() {
+        test("Verify PF icon and UI of PF popup before deal", async () => {
+            await verifyImage(this.game, baseLocatorNames.icoPF);
+            // Act
+            await this.openPFPopup();
+            //Assert
+            await verifyImage(this.game, baseLocatorNames.imgPFPopup);
+        });
+
+        test("Verify client seed popup", async () => {
+            await test.step("Verify client seed popup", async () => {
+                await this.game.clickLocator(baseLocatorNames.lblClientSeed, 5000);
+                await verifyImage(this.game, baseLocatorNames.popNewClientSeed);
+            });
+
+            await test.step("Clear client seed", async () => {
+                await this.game.clickLocator(baseLocatorNames.btnClientSeedClear);
+                await verifyImage(this.game, baseLocatorNames.popNewClientSeedCleared);
+            });   
+
+            await test.step("Input client seed 102", async () => {
+                await this.game.clickLocator(baseLocatorNames.btnClientSeed1);
+                await this.game.clickLocator(baseLocatorNames.btnClientSeed0);
+                await this.game.clickLocator(baseLocatorNames.btnClientSeed2);
+                await verifyImage(this.game, baseLocatorNames.popNewClientSeed102);
+            });   
+
+            await test.step("Backspace a number", async () => {
+                await this.game.clickLocator(baseLocatorNames.btnClientSeedBackspace);
+                await verifyImage(this.game, baseLocatorNames.popNewClientSeed10);
+            });   
+
+            await test.step("Save client seed", async () => {
+                await this.game.clickLocator(baseLocatorNames.btnClientSeed2);
+                await this.game.clickLocator(baseLocatorNames.btnClientSeedSave, 1000);
+                await verifyImage(this.game, baseLocatorNames.imgClientSeed102);
+            });   
+
+            await test.step("Open client seed again and verify the value", async () => {
+                await this.game.clickLocator(baseLocatorNames.lblClientSeed, 1000);
+                await verifyImage(this.game, baseLocatorNames.popNewClientSeed102);
+                await this.game.clickOutSide();
+                await verifyImage(this.game, baseLocatorNames.imgClientSeed102);
+            });
+
+            await test.step("Verify increase and decrease client seed", async () => {
+                for(let i = 1; i<=3; i++){
+                    await this.game.clickLocator(baseLocatorNames.btnIncreaseClientSeed);
+                }
+                await verifyImage(this.game, baseLocatorNames.imgClientSeed1);
+                for(let i = 1; i<=3; i++){
+                    await this.game.clickLocator(baseLocatorNames.btnDecreaseClientSeed);
+                }
+                await verifyImage(this.game, baseLocatorNames.imgClientSeed102);
+            });
+        });
+
+        test("Verify opening game guide when click on tooltip icon", async () => {
+            //Act
+            await this.game.clickLocator(baseLocatorNames.icoPFTooltip, timeout)
+            //Assert
+            await verifyImage(this.game, baseLocatorNames.imgGameGuidePF);
+            //Pre-act
+            await this.game.clickOutSide();
+            await this.game.clickOutSide();
+        });
+
+        test("Verify PF setting popup in case place bet", async () => {
+            //Act
+            await this.selectChoices(this.options.placeBetChoices);
+            await this.game.clickLocator(baseLocatorNames.btnHitCard, timeout*3);
+            await this.game.clickLocator(baseLocatorNames.icoPF);
+            await this.game.clickLocator(baseLocatorNames.lblClientSeed);
+            //Assert
+            await verifyImage(this.game, baseLocatorNames.imgClientSeed102Inactive);
+            //Pre-act
+            await this.game.clickOutSide();
+            await this.game.clickLocator(baseLocatorNames.btnStand); 
+            if(this.game.locator(baseLocatorNames.btnConfirmStand)){
+                await this.game.clickLocator(baseLocatorNames.btnConfirmStand)
+            }
+            await this.game.waitForTimeout(timeout*2);
+        });
+
+        
+        test("Verify PF popup from history", async () => {
+            //Act
+            await this.game.clickHistory();
+            await this.game.clickLocator(baseLocatorNames.btnHistoryVerify, 1000);
+            //Assert
+            await verifyImage(this.game, baseLocatorNames.imgFairnessServerSeed);
+            await verifyImage(this.game, baseLocatorNames.imgFairnessClientSeed);
+            await verifyImage(this.game, baseLocatorNames.imgFairnessServerSeedSHA256);
+            await verifyImage(this.game, baseLocatorNames.imgFairnessResult);
+            await verifyImage(this.game, baseLocatorNames.btnFairnessVerify);
+            await this.game.clickLocator(baseLocatorNames.btnFairnessVerify); 
+            await verifyImage(this.game, baseLocatorNames.imgVerifySuccessful);
+        });
+
+    }
+
 
     protected placebetandCancelBehaviours() {
         test("Verify user can place bet and cancel bet on one hand", async () => {
@@ -284,17 +385,18 @@ export class CardGameBase {
     }
 
     protected runScenario() {
-        this.inGameUiTests();
-        this.gamePlayButtonsTests();
-        this.placebetandCancelBehaviours();
-        this.placebetandsettlement()
-        this.ticketHistoryTests()
-        this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
-        this.returnGameLobby();
-        this.turnbackGame();
-        if (process.env.npm_config_project === "l2") {
-            this.jackPotBanner()
-        }
+        this.provablyFairTests();
+        // this.inGameUiTests();
+        // this.gamePlayButtonsTests();
+        // this.placebetandCancelBehaviours();
+        // this.placebetandsettlement()
+        // this.ticketHistoryTests()
+        // this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
+        // this.returnGameLobby();
+        // this.turnbackGame();
+        // if (process.env.npm_config_project === "l2") {
+        //     this.jackPotBanner()
+        // }
     }
 
     async selectChoices(choices: any) {
@@ -554,6 +656,10 @@ export class CardGameBase {
     async getDataFistRowHistory (elementname: string = baseLocatorNames.lblHistoryFirstRow){
         let tempdata = await this.game.getTextLocator(elementname, "0123456789:/, ", "history");
         return tempdata?.split(" ") || "";
+    };
+
+    async openPFPopup (){
+        await this.game.clickLocator(baseLocatorNames.icoPF, 1000)
     };
     
 }

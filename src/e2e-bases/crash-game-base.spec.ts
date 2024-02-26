@@ -579,49 +579,85 @@ export class CrashGameBase {
         });
     }
 
-    protected md5PopupTests() {
-        test("Verify opening md5 popup when clicking on statistic icon last round", async () => {
+    protected provablyFairTests() {
+        test("Verify PF icon, PF setting popup and introduce ", async () => {
             //Act
-            await test.step("Click on statistic icon last round", async () => {
-                await this.game.clickLocator(baseLocatorNames.btnStatisticLastRound);
+            await test.step("Verify image of PF icon", async () => {
+                await verifyImage(this.game, baseLocatorNames.icoPF);
             });
-            //Assert
-            await test.step("Verify the popup is opened", async () => {
-                await verifyImage(this.game,baseLocatorNames.popMD5,0.3 );
+
+            await test.step("Click on PF ico", async () => {
+                await this.game.clickLocator(baseLocatorNames.icoPF);
+            });   
+
+            await test.step("Verify default UI of PF setting popup", async () => {
+                await verifyImage(this.game, baseLocatorNames.popPFSettings);
+                await verifyImage(this.game, baseLocatorNames.imgClientSeedRandomChecked);
+                await verifyImage(this.game, baseLocatorNames.imgClientSeedManualModeDefault);
+            });
+
+            await test.step("Verify introduction popup", async () => {
+                await this.game.clickLocator(baseLocatorNames.icoPFTooltip)
+                await verifyImage(this.game, baseLocatorNames.popPFIntroduction);
             });
         });
 
-        test("Verify opening md5 section on game guide when click on tooltip icon ", async () => {
+        test("Verify new client seed popup", async () => {
             //Act
             await test.step("Click on tooltip icon", async () => {
                 await this.game.clickLocator(baseLocatorNames.btnTooltipMd5, 3000);
             });
             //Assert
             await test.step("Verify the game guide is opened in MD5 section", async () => {
-                await verifyImage(this.game,baseLocatorNames.popGuideMd5);
-
+                const popGuideMd5 = await this.game.capture(baseLocatorNames.popGuideMd5);
+                expect(popGuideMd5.image).toMatchSnapshot(popGuideMd5.name, { maxDiffPixelRatio: 0 });
             });
             await test.step("Close the popup", async () => {
                 await this.game.clickOutSide();
-                await this.game.clickOutSide();
+                await verifyImage(this.game, baseLocatorNames.imgManualClientSeed1234);
             });
         });
 
-        test("Verify MD5 popup of running round", async () => {
+        test("Verify PF setting popup in case place early bet", async () => {
             //Act
-            await test.step("Wait for start new round", async () => {
-                await this.game.waitUntilPlaceBet();
+            await test.step("Place early bet", async () => {
+                await placeEarlyBet(this.game);
             });
-            await test.step("Click on statistic icon running round", async () => {
-                await this.game.clickLocator(baseLocatorNames.btnStatisticRunningRound);
+
+            await test.step("Click on PF ico", async () => {
+                await this.game.clickLocator(baseLocatorNames.icoPF);
+            });   
+
+            await test.step("Verify UI of PF setting popup in active mode", async () => {
+                await verifyImage(this.game, baseLocatorNames.imgManualClientSeed1234);
+                await this.game.clickOutSide();
+                await waitForStartCashOut(this.game);
+            });
+        });
+
+        test("Verify PF setting popup in case place bet", async () => {
+            //Act
+            await test.step("Wait for new round and place bet", async () => {
+                await placeBet(this.game);
+            });
+
+            await test.step("Click on PF ico", async () => {
+                await this.game.clickLocator(baseLocatorNames.icoPF);
+            });   
+
+            await test.step("Verify UI of PF setting popup in active mode", async () => {
+                await verifyImage(this.game, baseLocatorNames.imgManualClientSeed1234Inactive);
+                await this.game.clickOutSide();
+                await this.game.waitForSettlement();
             });
             //Assert
             await test.step("Verify field result is cleared", async () => {
-                await verifyImage(this.game,baseLocatorNames.lblResultCleared);
+                const lblResultCleared = await this.game.capture(baseLocatorNames.lblResultCleared);
+                expect(lblResultCleared.image).toMatchSnapshot(lblResultCleared.name, { maxDiffPixelRatio: 0 });
             });
             await test.step("Close the popup", async () => {
                 await this.game.clickOutSide();
-            });
+            }); 
         });
     }
 
@@ -761,7 +797,7 @@ export class CrashGameBase {
     protected runScenario() {
         this.mainUITests();
         this.leaderBoardTests();
-        this.md5PopupTests();
+        this.provablyFairTests();
         this.autoCashoutTests();
         this.betAmountTests();
         this.autoPlayTests();
@@ -840,4 +876,10 @@ const waitForSettlement = async (game: BaseGame) => {
     };
     settledResults["winAmount"] = winningByChoice.status.win ? winningByChoice.status.bet : 0;
     return settledResults;
+};
+
+const placeEarlyBet = async (game: BaseGame) => {                
+    await waitForStartCashOut(game);
+    await game.waitForTimeout(300);
+    await game.clickLocator(baseLocatorNames.btnPlaceBet)
 };
