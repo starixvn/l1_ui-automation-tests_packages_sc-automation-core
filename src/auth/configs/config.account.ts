@@ -1,4 +1,5 @@
 export const l1prod = {
+    0: "supertestte120201001",
     1: "supertestte120201002",
     2: "supertestte120201003",
     3: "supertestte120201004",
@@ -52,6 +53,7 @@ export const l1prod = {
 };
 
 export const l2prod = {
+    0: "QCTest22082313",
     1: "QCTest22082304",
     2: "QCTest22082305",
     3: "QCTest22082317",

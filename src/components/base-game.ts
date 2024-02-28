@@ -7,7 +7,7 @@ import { GameConfiguration } from "./game-configuration";
 import { createWorker } from "tesseract.js";
 import { baseLocatorNames } from "./base-game-locator";
 import * as accounts from "../auth/configs/config.account";
-
+import * as numberGameLocator from "./base-number-game-locator";
 import fs from "fs";
 const PNG = require("pngjs").PNG;
 
@@ -37,7 +37,7 @@ export class BaseGame {
         if (env.includes("local")) {
             account = this.gameConfiguration.accounts[env];
         } else {
-            account = (projectCode != "ultra888") ? accounts[`${projectCode}${env}`][this.gameConfiguration.id]:this.gameConfiguration.id ;
+            account = projectCode != "ultra888" ? accounts[`${projectCode}${env}`][this.gameConfiguration.id] : this.gameConfiguration.id;
         }
         const startTime = performance.now(); // Measure start time
         await ssoToGame(this.page, this.gameConfiguration.id, account, this.gameConfiguration.productId, env, projectCode);
@@ -63,10 +63,13 @@ export class BaseGame {
             }
         });
         await this.logConsole();
-        await this.waitUntilGameUiLoad();
+        if (this.gameConfiguration.productId === "0") {
+            await this.waitUntilGameLobbyUiLoad();
+        } else {
+            await this.waitUntilGameUiLoad();
+        }
         const endTime = performance.now(); // Measure end time
         console.log(`Total login time: ${endTime - startTime} ms`);
-        
     }
 
     async waitUntilGameUiLoad() {
@@ -80,13 +83,12 @@ export class BaseGame {
                     filterA.push(msg.text());
                 }
             });
-    
+
             while (filterA.length < waitRange) {
                 await this.page.waitForTimeout(3000);
-            }  
-        }
-        else if (process.env.npm_config_project === "gn") {
-            await this.page.locator("//img[@alt='Avatar']").waitFor()
+            }
+        } else if (process.env.npm_config_project === "gn") {
+            await this.page.locator(numberGameLocator.commonControls.lblUserName).waitFor();
         }
 
         await this.page.waitForTimeout(3000);
@@ -157,13 +159,8 @@ export class BaseGame {
     async waitUntilPlaceBet(subGameName?: string): Promise<void> {
         await this.waitUntilNextRound(subGameName);
         await this.waitForEvent(GameEvent.StartPlaceBet, subGameName);
-        await this.waitForTimeout(3000);
+        await this.waitForTimeout(4000);
     }
-
-    async GnWaitUntilPlaceBet(): Promise<void> {
-        //to be implemented
-    }
-
 
     async waitForEndBet(subGameName?: string): Promise<any> {
         return await this.waitForEvent(GameEvent.EndBet, subGameName);
@@ -200,11 +197,22 @@ export class BaseGame {
         return settledResults;
     }
 
-    async GnWaitForSettlement(): Promise<any> {
-        //to be implemented
-        return true;
-    }
+    async gnWaitForSettlement(subGameName?: string): Promise<any> {
+        const message = await this.waitForEvent(GameEvent.Settlement, subGameName);
+        await this.page.waitForTimeout(500); // add sleep due to feature Publish round result prior to settlement
+        const winningByChoice = this.latestCaptureEvent(GameEvent.WinStatus);
 
+        let settledResults = {
+            odds: this.odds,
+            settlementResult: message?.finish?.settlementResult,
+            roundId: message.finish.roundId || 0,
+            drawId: message.finish.drawId || 0,
+            winStatus: typeof winningByChoice == "object" ? winningByChoice.status.win : "",
+            winAmount: winningByChoice.status.win ? winningByChoice.status.bet : 0,
+        };
+
+        return settledResults;
+    }
 
     async waitForTimeout(time = 5000): Promise<void> {
         await this.page.waitForTimeout(time);
@@ -453,7 +461,7 @@ export class BaseGame {
                                         smallImage.data[smallIndex + 2],
                                         smallImage.data[smallIndex + 3],
                                     ],
-                                    threshold
+                                    threshold,
                                 )
                             ) {
                                 match = false;
@@ -473,6 +481,10 @@ export class BaseGame {
             console.error("Error occurred while loading images:", error);
             return null;
         }
+    }
+
+    async click(locator: string) {
+        await this.page.locator(locator).click();
     }
 }
 

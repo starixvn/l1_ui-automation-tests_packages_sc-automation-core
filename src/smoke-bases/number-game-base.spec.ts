@@ -3,7 +3,7 @@ import { expect } from "../expects";
 
 import { IBaseOptions } from "./base-options";
 
-export class NumberGameBase {nPlaceBet
+export class NumberGameBase {
     protected game: BaseGame;
     protected player: BasePlayer;
 
@@ -13,7 +13,7 @@ export class NumberGameBase {nPlaceBet
         test("Verify in game UI", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
-            await this.game.GnWaitUntilPlaceBet();
+            await this.game.waitUntilPlaceBet();
             await this.verifyLocatorsImage(this.options.locators.inGameUI);
         });
 
@@ -23,7 +23,6 @@ export class NumberGameBase {nPlaceBet
         });
     }
 
-
     protected placeBetAndSettleTests() {
         test("THEN player able to place a bet and settle", async () => {
             // Arrange
@@ -31,12 +30,13 @@ export class NumberGameBase {nPlaceBet
             const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount ?? 1 };
 
             // Act
-            const placeBetResponse = await this.player.GnPlaceBet(bet.choice, bet.amount);
-            const settledResults = await this.game.GnWaitForSettlement();
+            const placeBetResponse = await this.player.gnPlaceBet(bet.choice, bet.amount);
+            const settledResults = await this.game.gnWaitForSettlement();
 
             // Assert
-            console.log(settledResults,placeBetResponse);
-            
+            expect(placeBetResponse.endBet).toBe(bet.amount);
+            expect(settledResults.settlementResult).toMatchBetOptions(this.options.gameConfiguration.choices);
+            expect(bet).toMatchWinning(settledResults);
         });
     }
 
@@ -47,17 +47,16 @@ export class NumberGameBase {nPlaceBet
             test.setTimeout(maxTimeout);
 
             // Act
-            await this.player.GnPlaceHedgeBet(hedgeBetGroups[0], this.options.placeBetAmount ?? 1);
+            await this.player.gnPlaceHedgeBet(hedgeBetGroups[0], this.options.placeBetAmount ?? 1);
 
-            await this.verifyLocatorsValue(this.options.locators.hedgeBetError)
-
+            await this.verifyLocatorsValue(this.options.locators.hedgeBetError);
         });
     }
 
     protected ticketHistoryTests() {
         test("AND player could open history popup", async () => {
             // Arrange
-            await this.player.GnOpenHistory();
+            await this.player.gnOpenHistory();
 
             // Act
             // to be implemented
@@ -75,7 +74,7 @@ export class NumberGameBase {nPlaceBet
     protected gameGuideTests() {
         test("AND player could open guide and clarify guide content", async () => {
             // Arrange
-            await this.player.GnOpenGuide();
+            await this.player.gnOpenGuide();
 
             // Act
             // to be implemented
@@ -115,7 +114,7 @@ export class NumberGameBase {nPlaceBet
         this.gameGuideTests();
     }
 
-    async verifyLocatorsImage( expectSnapshot: object) {
+    async verifyLocatorsImage(expectSnapshot: object) {
         for (const key in expectSnapshot) {
             expect(await this.game.page.locator(key).screenshot()).toMatchSnapshot(expectSnapshot[key]);
         }
@@ -126,6 +125,4 @@ export class NumberGameBase {nPlaceBet
             expect(await this.game.page.locator(key).innerText()).toBe(expectedValue[key]);
         }
     }
-
-
 }

@@ -19,7 +19,7 @@ export const ssoToGame = async (
     playerId: string,
     productId: string,
     env: string,
-    projectCode: string
+    projectCode: string,
 ): Promise<void> => {
     const config = getConfig();
     const langCode = process.env.npm_config_langCode ?? "vn";
@@ -38,12 +38,12 @@ export const ssoToGame = async (
         await page.waitForTimeout(500);
         const ssoLink = (await page.locator(LobbyLocator.ssoLink).textContent()) ?? "";
         await page.goto(`${ssoLink.replace("gameId=0", `gameId=${gameId}`)}`);
-        const isCurrencyForm = await page.$$('id=currency')
-        if (isCurrencyForm.length>0) {
+        const isCurrencyForm = await page.$$("id=currency");
+        if (isCurrencyForm.length > 0) {
             await page.click("text=Submit");
         }
     } else {
-        await loginMemberSite(page, config, env, playerId, productId, langCode, projectCode,gameId);
+        await loginMemberSite(page, config, env, playerId, productId, langCode, projectCode, gameId);
     }
 };
 
@@ -61,12 +61,15 @@ const loginMemberSite = async (
     productId: string,
     langCode: string,
     projectCode: string,
-    gameId: number
+    gameId: number,
 ) => {
     const timeout = config.lobbyTimeout;
-    const memberSiteLink = process.env.npm_config_memberSite ||(process.env.npm_config_mobile === "true" ? config[`${projectCode}memberSiteMobile`] : config[`${projectCode}memberSite`]);
+    const memberSiteLink =
+        process.env.npm_config_memberSite ||
+        (process.env.npm_config_mobile === "true" ? config[`${projectCode}memberSiteMobile`] : config[`${projectCode}memberSite`]);
     const pwd = config[`${projectCode}pwd`];
-    const lobbyDomain = process.env.npm_config_mobile === "true" ? config[`${projectCode}lobbyDomainMobile`] : config[`${projectCode}lobbyDomain`];
+    const lobbyDomain =
+        process.env.npm_config_mobile === "true" ? config[`${projectCode}lobbyDomainMobile`] : config[`${projectCode}lobbyDomain`];
 
     await page.goto(memberSiteLink);
     console.log(`Login ${playerId} - ${gameId} Member Site: ${memberSiteLink}`);
@@ -86,9 +89,8 @@ const loginMemberSite = async (
     }
 
     if (projectCode === "ultra888") {
-        await goToUltra888GameLobby(page,gameId) 
-    }
-    else{
+        await goToUltra888GameLobby(page, gameId);
+    } else {
         await goToGameLobby(page, lobbyDomain, productId);
     }
 
@@ -98,10 +100,10 @@ const loginMemberSite = async (
 };
 
 const selectCurrencyGroup = async (page: Page, timeout: number = 15000) => {
-    const frameExists = await page.$('#frmGame');
-    
+    const frameExists = await page.$("#frmGame");
+
     if (frameExists) {
-        await page.frameLocator('#frmGame').locator(GroupCurrencyLocator.submitButton).click();
+        await page.frameLocator("#frmGame").locator(GroupCurrencyLocator.submitButton).click();
         await page.waitForLoadState("domcontentloaded", { timeout });
     } else {
         await page.click(GroupCurrencyLocator.submitButton);
@@ -145,9 +147,8 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
     if (projectCode === "l1") {
         if (process.env.npm_config_mobile === "true") {
             // will be implemented later
-        }
-        else{
-            await page.click(PRODLocator.openLoginFormbtn)
+        } else {
+            await page.click(PRODLocator.openLoginFormbtn);
             await page.fill(PRODLocator.usernameInput, accountId);
             await page.fill(PRODLocator.passwordInput, pwd);
             await page.click(PRODLocator.submitLoginbtn);
@@ -155,40 +156,38 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
             await page.click(PRODLocator.langDropdown);
             await page.click(PRODLocator[`${langCode}LangOption`]);
         }
-
-    } 
+    }
     if (projectCode === "l2") {
         if (process.env.npm_config_mobile === "true") {
             await page.setViewportSize({
                 width: 340,
                 height: 667,
             });
-            await page.goto(configs.prod.l2memberSiteMobile)
-            await page.waitForTimeout(3000)
-            await page.locator(PRODLocator.l2memberIdInput).waitFor(); 
+            await page.goto(configs.prod.l2memberSiteMobile);
+            await page.waitForTimeout(3000);
+            await page.locator(PRODLocator.l2memberIdInput).waitFor();
             await page.fill(PRODLocator.l2memberIdInput, accountId);
             await page.fill(PRODLocator.l2pwdInput, pwd);
             await page.click(PRODLocator.l2loginButton);
             await page.waitForLoadState("domcontentloaded", { timeout: timeout });
-            await page.waitForTimeout(8000)
+            await page.waitForTimeout(8000);
             const iconSurvey = await page.$$(PRODLocator.l2iconClose);
-            if (iconSurvey.length>0) {
-                await page.click(PRODLocator.l2iconClose)
+            if (iconSurvey.length > 0) {
+                await page.click(PRODLocator.l2iconClose);
             }
             await page.setViewportSize({
                 width: 1280,
                 height: 720,
-            }); 
-        }
-        else{
+            });
+        } else {
             await page.waitForLoadState("domcontentloaded", { timeout: timeout });
             await page.locator(PRODLocator.usernameInput).waitFor();
             await page.waitForTimeout(3000);
             await page.fill(PRODLocator.usernameInput, accountId);
             await page.fill(PRODLocator.passwordInput, pwd);
             let capcha = await getCaptcha(page);
-            console.log('capcha',capcha);
-            await page.fill('id=validation', capcha);
+            console.log("capcha", capcha);
+            await page.fill("id=validation", capcha);
             await page.click(`//*[@data-tag="tabBtn"]`);
             await page.waitForTimeout(2000);
             const isElementVisible = await page.isVisible('//*[@class="hint-absolute"]');
@@ -198,51 +197,50 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
                 await page.fill(PRODLocator.usernameInput, accountId);
                 await page.fill(PRODLocator.passwordInput, pwd);
                 capcha = await getCaptcha(page);
-                await page.fill('id=validation', capcha);
+                await page.fill("id=validation", capcha);
                 await page.click(`//*[@data-tag="tabBtn"]`);
             }
-            await page.locator('id=__canvasContainer').waitFor({ state: "visible" });
-            await page.waitForTimeout(20000)
+            await page.locator("id=__canvasContainer").waitFor({ state: "visible" });
+            await page.waitForTimeout(20000);
         }
-        
     }
     if (projectCode === "ultra888") {
         const isConfirm = await page.$$(PRODLocator.ultra888popupconfirm);
         if (isConfirm.length > 0) {
             await page.click(PRODLocator.ultra888popupconfirm);
         }
-        await page.waitForTimeout(2000)
+        await page.waitForTimeout(2000);
         await page.selectOption(PRODLocator.ultra888langDropdown, { value: "vn" });
         await page.fill(PRODLocator.ultra888memberIdInput, "01862081667");
         await page.fill(PRODLocator.ultra888pwdInput, "Bb1111");
         await page.click(PRODLocator.ultra888loginButton);
-        await page.waitForTimeout(2000)
+        await page.waitForTimeout(2000);
         await page.waitForLoadState("domcontentloaded", { timeout });
-        await page.waitForTimeout(10000)
-    } 
+        await page.waitForTimeout(10000);
+    }
 };
 
 const loginSIT = async (page: Page, accountId: string, pwd: string, projectCode: string, timeout: number = 15000) => {
-    await page.setViewportSize({width: 340, height: 667,});
+    await page.setViewportSize({ width: 340, height: 667 });
     if (projectCode === "l1") {
         await page.click(UATLocator.loginDiv);
     }
-        await page.selectOption(UATLocator.langDropdown, { value: UATLocator.vnLangOption });
-        await page.fill(UATLocator.memberIdInput, accountId);
-        await page.fill(UATLocator.pwdInput, pwd);
-        await page.click(UATLocator.loginButton);
-        await page.waitForLoadState("networkidle", { timeout: timeout });
-        const isCloseExist = await page.$$(PRODLocator.l2iconClose);
-        if (isCloseExist.length > 0) {
-            await page.click(PRODLocator.l2iconClose);
-        }
+    await page.selectOption(UATLocator.langDropdown, { value: UATLocator.vnLangOption });
+    await page.fill(UATLocator.memberIdInput, accountId);
+    await page.fill(UATLocator.pwdInput, pwd);
+    await page.click(UATLocator.loginButton);
+    await page.waitForLoadState("networkidle", { timeout: timeout });
+    const isCloseExist = await page.$$(PRODLocator.l2iconClose);
+    if (isCloseExist.length > 0) {
+        await page.click(PRODLocator.l2iconClose);
+    }
     await page.setViewportSize({
         width: 1280,
         height: 720,
     });
 };
 
-const goToUltra888GameLobby = async (page: Page, productId:any  , timeout = 15000) => {
+const goToUltra888GameLobby = async (page: Page, productId: any, timeout = 15000) => {
     const ultra888MapGameIds = {
         2: `//*/div[contains(@style,"Vgaming_SeDie.")]/parent::div`,
         10: `//*/div[contains(@style,"Vgaming_Baccarat")]/parent::div`,
@@ -259,23 +257,30 @@ const goToUltra888GameLobby = async (page: Page, productId:any  , timeout = 1500
         59: `//*/div[contains(@style,"Vgaming_FruitSlot")]/parent::div`,
         60: `//*/div[contains(@style,"Vgaming_FanTan")]/parent::div`,
         61: `//*/div[contains(@style,"Vgaming_WinThreeCards")]/parent::div`,
-    }
-    await page.click(`//*/div[contains(@class,"table")]`)
-    await page.waitForTimeout(3000)
+    };
+    await page.click(`//*/div[contains(@class,"table")]`);
+    await page.waitForTimeout(3000);
     await page.waitForLoadState("networkidle", { timeout });
-    console.log('productId',productId,ultra888MapGameIds[productId]);
-    await page.click(ultra888MapGameIds[productId])
+    console.log("productId", productId, ultra888MapGameIds[productId]);
+    await page.click(ultra888MapGameIds[productId]);
     await page.waitForLoadState("networkidle", { timeout });
 };
 
 const goToGameLobby = async (page: Page, lobbyDomain: string, productId: string, timeout: number = 15000) => {
+    page.on("request", (request) => {
+        const url = request.url();
+        const type = request.resourceType();
+        const loadTime = request.timing().responseEnd - request.timing().requestStart;
+        console.log("Traffic Info:", { url, type, loadTime });
+    });
+
     await page.goto(formatGameLobbyUrl(page.url(), lobbyDomain, productId));
     await page.waitForLoadState("networkidle", { timeout });
 };
 
 const formatGameLobbyUrl = (url: string, lobbyDomain: string, productId: string): string => {
     const domain = url.split("/");
-    if (url.includes("athena") || url.includes("qa")|| url.includes("/m.")) {
+    if (url.includes("athena") || url.includes("qa") || url.includes("/m.")) {
         return `http://${domain[2]}/${lobbyDomain}${productId}`;
     } else return `https://${domain[2]}/${lobbyDomain}${productId}`;
 };
@@ -284,24 +289,20 @@ const mustSelectCurrencyGroup = (env: string): boolean => {
     return env !== Environment.SIT;
 };
 
-export const loginAdmin = async (
-    page: Page,
-    projectCode: string,
-) => {
+export const loginAdmin = async (page: Page, projectCode: string) => {
     const config = getConfig();
     const timeout = config.lobbyTimeout;
     const adminLink = config[`${projectCode}admin`];
-    const admin = {username: "admauto", pwd: "admauto"}
+    const admin = { username: "admauto", pwd: "admauto" };
     await page.goto(adminLink);
     await page.waitForLoadState("domcontentloaded", { timeout });
     await page.fill(AdminLogin.usernameInput, admin.username);
     await page.fill(AdminLogin.pwdInput, admin.pwd);
-    await page.click(AdminLogin.loginButton)
+    await page.click(AdminLogin.loginButton);
     await page.waitForLoadState("domcontentloaded", { timeout });
 };
 
-
-const getTextLocator = async(img:any, whitelist: string = "0123456789", lang: string = "eng") =>{
+const getTextLocator = async (img: any, whitelist: string = "0123456789", lang: string = "eng") => {
     const worker = await createWorker();
     await worker.loadLanguage(lang);
     await worker.initialize(lang);
@@ -314,11 +315,10 @@ const getTextLocator = async(img:any, whitelist: string = "0123456789", lang: st
     } = await worker.recognize(img);
     await worker.terminate();
     return text.trim();
-}
+};
 
-
-const getCaptcha = async(page: any) =>{
-    await page.screenshot({path: "imgcapcha.png",clip: {x: 1114, y: 18, width: 35, height: 12}});
+const getCaptcha = async (page: any) => {
+    await page.screenshot({ path: "imgcapcha.png", clip: { x: 1114, y: 18, width: 35, height: 12 } });
     let capcha = await getTextLocator("imgcapcha.png");
     let retryCount = 0;
     while (capcha.length !== 4 && retryCount < 2) {
@@ -329,4 +329,4 @@ const getCaptcha = async(page: any) =>{
         retryCount++;
     }
     return capcha;
-  }
+};
