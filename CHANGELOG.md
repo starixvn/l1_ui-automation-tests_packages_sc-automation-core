@@ -1,3 +1,10 @@
+## [1.29.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.29.0...v1.29.1) (2024-02-28)
+
+
+### Bug Fixes
+
+* remove log traffic info ([ec0455e](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/ec0455e1a9c4bdd91db99f4b8d28251424b157d8))
+
 # [1.29.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.28.0...v1.29.0) (2024-02-28)
 
 
