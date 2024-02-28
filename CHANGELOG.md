@@ -1,3 +1,10 @@
+# [1.29.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.28.0...v1.29.0) (2024-02-28)
+
+
+### Features
+
+* smoke,admin numbergame ([1754e53](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/1754e53aa45f01305545097c54300c421af52567))
+
 # [1.28.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.27.4...v1.28.0) (2024-02-21)
 
 
