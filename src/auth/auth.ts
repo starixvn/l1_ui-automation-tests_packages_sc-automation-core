@@ -267,13 +267,6 @@ const goToUltra888GameLobby = async (page: Page, productId: any, timeout = 15000
 };
 
 const goToGameLobby = async (page: Page, lobbyDomain: string, productId: string, timeout: number = 15000) => {
-    page.on("request", (request) => {
-        const url = request.url();
-        const type = request.resourceType();
-        const loadTime = request.timing().responseEnd - request.timing().requestStart;
-        console.log("Traffic Info:", { url, type, loadTime });
-    });
-
     await page.goto(formatGameLobbyUrl(page.url(), lobbyDomain, productId));
     await page.waitForLoadState("networkidle", { timeout });
 };
