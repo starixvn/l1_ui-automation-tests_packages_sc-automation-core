@@ -13,11 +13,13 @@ export class BalancedBettingGameBase extends MiniGameBase {
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount ?? 1, refund: 0 };
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
+            this.game.attachSocketAndCaptureEvent(GameEvent.History);
+
 
             // Act
             const placeBetResponse = await this.player.placeBet(bet.choice, bet.amount);
             const settledResults = await this.game.waitForSettlement();
-            await this.game.waitForTimeout(8000);
+            await this.game.waitUntilPlaceBet()
             const historyPayload = await this.player.openHistory();
             const ticketHistory = historyPayload.history.betLogs.shift();
             bet.refund = ticketHistory.refund;
@@ -30,4 +32,6 @@ export class BalancedBettingGameBase extends MiniGameBase {
             expect(bet).toMatchWinningAndRefund(settledResults);
         });
     }
+
+    ticketHistoryTests() {}
 }

@@ -20,8 +20,9 @@ export class BasePlayer {
     async gnPlaceHedgeBet(hedgeChoices: string[], amount: number = 1): Promise<void> {
         await this.game.waitUntilPlaceBet();
         // to be implemented
-        await this.gnBetOn(hedgeChoices[0], amount);
-        await this.gnBetOn(hedgeChoices[1], amount);
+        await this.game.click(`#chip-${amount}`);
+        await this.game.click(hedgeChoices[0]);
+        await this.game.click(hedgeChoices[1]);
     }
 
     async placeMaxBet(choice: string, maxBetAmount: number[], subGameName?: string): Promise<void> {
@@ -66,10 +67,9 @@ export class BasePlayer {
         }
     }
 
-    async gnPlaceBet(choice: string, amount: number): Promise<any> {
+    async gnPlaceBet(choice: string, amount: number,quickbet:boolean=true): Promise<any> {
         await this.game.waitUntilPlaceBet();
-        await this.gnBetOn(choice, amount);
-        return this.game.waitForEndBet();
+        return this.gnBetOn(choice, amount,quickbet);
     }
 
     async selectPayline(choice: string): Promise<void> {
@@ -115,11 +115,13 @@ export class BasePlayer {
         }
     }
 
-    async gnBetOn(choice: string, amount: number, quickbet: boolean = true): Promise<any> {
+    async gnBetOn(choice: string, amount: number, quickbet: boolean = true,subGameName?: string): Promise<any> {
+        const betChip = `#chip-${amount}`
         await this.gnSetQuickBet(quickbet);
-        const betChip = `Chip${amount}`
         await this.game.click(betChip);
         await this.game.click(choice);
+        
+        return this.game.waitForEndBet(subGameName);
     }
 
     async betOnSlot(choice: string, amount = 1): Promise<any> {

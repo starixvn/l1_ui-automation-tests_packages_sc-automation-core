@@ -1,6 +1,7 @@
 import { test, BasePlayer, BaseGame } from "../components";
 import { expect } from "../expects";
-
+import { GameEvent } from "../_shared";
+import {commonControls} from "../components/base-number-game-locator";
 import { IBaseOptions } from "./base-options";
 
 export class NumberGameBase {
@@ -13,13 +14,14 @@ export class NumberGameBase {
         test("Verify in game UI", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
-            await this.game.waitUntilPlaceBet();
             await this.verifyLocatorsImage(this.options.locators.inGameUI);
         });
 
-        test("AND odds should be correct", async () => {
+        test("Verify menu list items", async () => {
             // Assert
-            await this.verifyLocatorsValue(this.options.locators.inGameValues);
+            await this.game.click(commonControls.iconMenu)
+            await this.verifyListLocatorsVisible(this.options.locators.menuItems);
+            await this.game.click(commonControls.iconMenu)
         });
     }
 
@@ -28,6 +30,7 @@ export class NumberGameBase {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount ?? 1 };
+            this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
 
             // Act
             const placeBetResponse = await this.player.gnPlaceBet(bet.choice, bet.amount);
@@ -43,13 +46,14 @@ export class NumberGameBase {
     protected hedgeBetTests() {
         test("THEN player should get error when they hedge their bets", async () => {
             // Arrange
-            const { maxTimeout, hedgeBetGroups } = this.options.gameConfiguration;
-            test.setTimeout(maxTimeout);
+            test.setTimeout(this.options.gameConfiguration.maxTimeout);
+            this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
 
             // Act
-            await this.player.gnPlaceHedgeBet(hedgeBetGroups[0], this.options.placeBetAmount ?? 1);
+            await this.player.gnPlaceHedgeBet(this.options.placeBetChoices, this.options.placeBetAmount ?? 1);
 
             await this.verifyLocatorsValue(this.options.locators.hedgeBetError);
+            global.settledResults =await this.game.gnWaitForSettlement();
         });
     }
 
@@ -57,9 +61,13 @@ export class NumberGameBase {
         test("AND player could open history popup", async () => {
             // Arrange
             await this.player.gnOpenHistory();
-
+            console.log(global.settledResults);
+            
             // Act
-            // to be implemented
+            await this.verifyLocatorsValue(this.options.locators.historyHeader);
+            // await this.verifyLocatorsValue(global.settledResults);
+            await this.player.gnClosePopUp()
+
         });
     }
 
@@ -77,7 +85,8 @@ export class NumberGameBase {
             await this.player.gnOpenGuide();
 
             // Act
-            // to be implemented
+            await this.verifyLocatorsValue(this.options.locators.gameGuide);
+            await this.player.gnClosePopUp()
         });
     }
 
@@ -125,4 +134,12 @@ export class NumberGameBase {
             expect(await this.game.page.locator(key).innerText()).toBe(expectedValue[key]);
         }
     }
+
+    async verifyListLocatorsVisible(locators: string[]) {
+        for (const locator of locators) {
+            expect(await this.game.page.locator(locator).isVisible()).toBe(true);
+        }
+    }
+
+
 }

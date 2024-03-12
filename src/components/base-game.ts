@@ -51,7 +51,7 @@ export class BaseGame {
 
                     if (this.odds === null && payload.includes(GameEvent.GameConfig)) {
                         const ingameResponse = parseSocketPayload(payload, this.msgpack).message;
-                        this.odds = ingameResponse.gameConfigs.odds;
+                        this.odds = ingameResponse.gameConfigs?.odds || ingameResponse.odds;
                     }
 
                     Object.keys(this.capturedEvents)?.forEach((event) => {
