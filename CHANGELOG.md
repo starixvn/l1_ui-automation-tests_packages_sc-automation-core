@@ -1,3 +1,10 @@
+## [1.29.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.29.1...v1.29.2) (2024-03-12)
+
+
+### Bug Fixes
+
+* balanced settle game ([a891be2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/a891be21be290681ea057e63325525e138d54f7e))
+
 ## [1.29.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.29.0...v1.29.1) (2024-02-28)
 
 
