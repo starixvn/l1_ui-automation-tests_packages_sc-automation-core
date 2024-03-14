@@ -18,11 +18,12 @@ export class BasePlayer {
     }
 
     async gnPlaceHedgeBet(hedgeChoices: string[], amount: number = 1): Promise<void> {
-        await this.game.waitUntilPlaceBet();
-        // to be implemented
+        const odds = await this.game.gnWaitUntilPlaceBet();
         await this.game.click(`#chip-${amount}`);
         await this.game.click(hedgeChoices[0]);
+        await this.game.waitForTimeout(200);
         await this.game.click(hedgeChoices[1]);
+        return odds
     }
 
     async placeMaxBet(choice: string, maxBetAmount: number[], subGameName?: string): Promise<void> {
@@ -67,9 +68,21 @@ export class BasePlayer {
         }
     }
 
-    async gnPlaceBet(choice: string, amount: number,quickbet:boolean=true): Promise<any> {
-        await this.game.waitUntilPlaceBet();
-        return this.gnBetOn(choice, amount,quickbet);
+    async gnQuickPlaceBet(choice: string, amount: number): Promise<any> {
+        const odds = await this.game.gnWaitUntilPlaceBet();
+        await this.gnSetQuickBet(true);
+        await  this.gnBetOn(choice, amount);
+        const endBets =await this.game.waitForEndBet();
+        return {endBet: endBets.endBet, odds: odds};
+    }
+
+    async gnSlowPlaceBet(choice: string, amount: number): Promise<any> {
+        const odds = await this.game.gnWaitUntilPlaceBet();
+        await this.gnSetQuickBet(false);
+        await  this.gnBetOn(choice, amount);
+        await this.game.click(numberGameLocator.commonControls.btnConfirmBet);
+        const endBets =await this.game.waitForEndBet();
+        return {endBet: endBets.endBet, odds: odds};
     }
 
     async selectPayline(choice: string): Promise<void> {
@@ -115,13 +128,10 @@ export class BasePlayer {
         }
     }
 
-    async gnBetOn(choice: string, amount: number, quickbet: boolean = true,subGameName?: string): Promise<any> {
+    async gnBetOn(choice: string, amount: number): Promise<any> {
         const betChip = `#chip-${amount}`
-        await this.gnSetQuickBet(quickbet);
         await this.game.click(betChip);
         await this.game.click(choice);
-        
-        return this.game.waitForEndBet(subGameName);
     }
 
     async betOnSlot(choice: string, amount = 1): Promise<any> {
@@ -159,13 +169,15 @@ export class BasePlayer {
     }
 
     async gnOpenHistory(): Promise<any> {
+        await this.game.click(numberGameLocator.commonControls.iconMenu);
         await this.game.click(numberGameLocator.commonControls.iconHistory);
         await this.game.waitForTimeout(1000);
     }
 
     async gnOpenGuide(): Promise<any> {
+        await this.game.click(numberGameLocator.commonControls.iconMenu);
         await this.game.click(numberGameLocator.commonControls.iconGuide);
-        await this.game.waitForTimeout(1000);
+        await this.game.waitForTimeout(3000);
     }
 
     async gnClosePopUp(): Promise<any> {

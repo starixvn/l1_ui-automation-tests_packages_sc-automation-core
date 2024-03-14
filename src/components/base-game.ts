@@ -1,4 +1,5 @@
 import type { Page } from "@playwright/test";
+import { expect } from "../expects";
 import type { WebSocket as PlaywrightWs } from "playwright-core";
 import { GameEvent, waitForMessage, parseSocketPayload, waitForSpecificMessage } from "./../_shared";
 import { ssoToGame, getConfig } from "./../auth/auth";
@@ -162,6 +163,13 @@ export class BaseGame {
         await this.waitForTimeout(4000);
     }
 
+    async gnWaitUntilPlaceBet(subGameName?: string): Promise<void> {
+        const odds= await this.waitForEvent(GameEvent.Odds, subGameName);
+        await this.waitForEvent(GameEvent.StartPlaceBet, subGameName);
+        await this.waitForTimeout(3000);
+        return odds.odds;
+    }
+
     async waitForEndBet(subGameName?: string): Promise<any> {
         return await this.waitForEvent(GameEvent.EndBet, subGameName);
     }
@@ -203,12 +211,13 @@ export class BaseGame {
         const winningByChoice = this.latestCaptureEvent(GameEvent.WinStatus);
 
         let settledResults = {
-            odds: this.odds,
             settlementResult: message?.finish?.settlementResult,
             roundId: message.finish.roundId || 0,
             drawId: message.finish.drawId || 0,
             winStatus: typeof winningByChoice == "object" ? winningByChoice.status.win : "",
             winAmount: winningByChoice.status.win ? winningByChoice.status.bet : 0,
+            result: message.finish.result,
+            pf: message.finish.pf
         };
 
         return settledResults;
@@ -328,7 +337,7 @@ export class BaseGame {
     }
 
     async getGuideContent() {
-        let getguidecontent = this.page.frameLocator("iframe").locator("id=container-guide").textContent();
+        let getguidecontent = this.page.frameLocator("iframe").locator("id=container-guide").innerText();
         return getguidecontent;
     }
 
@@ -486,6 +495,29 @@ export class BaseGame {
     async click(locator: string) {
         await this.page.locator(locator).click();
     }
+
+    async verifyImageLocators(expectSnapshot: object) {
+        for (const key in expectSnapshot) {
+            expect(await this.page.locator(key).screenshot()).toMatchSnapshot(expectSnapshot[key]);
+        }
+    }
+
+    async verifyValueLocators(expectedValue?: object) {
+        for (const key in expectedValue) {
+            expect(await this.page.locator(key).innerText()).toBe(expectedValue[key]);
+        }
+    }
+
+    async verifyLocatorsVisible(locators: string[]) {
+        for (const locator of locators) {
+            expect(await this.page.locator(locator).isVisible()).toBe(true);
+        }
+    }
+
+    async verifyText(locator: string, expectedValue: string) {
+            expect((await this.page.locator(locator).innerText()).toString()).toBe(expectedValue.toString());
+    }
+
 }
 
 function loadImage(path: string) {

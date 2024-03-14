@@ -1,7 +1,7 @@
 import { test, BasePlayer, BaseGame } from "../components";
 import { expect } from "../expects";
 import { GameEvent } from "../_shared";
-import {commonControls} from "../components/base-number-game-locator";
+import { commonControls } from "../components/base-number-game-locator";
 import { IBaseOptions } from "./base-options";
 
 export class NumberGameBase {
@@ -14,14 +14,15 @@ export class NumberGameBase {
         test("Verify in game UI", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
-            await this.verifyLocatorsImage(this.options.locators.inGameUI);
+            await this.game.click("#ico-bacball");
+            await this.game.verifyImageLocators(this.options.locators.inGameUI);
         });
 
         test("Verify menu list items", async () => {
             // Assert
-            await this.game.click(commonControls.iconMenu)
-            await this.verifyListLocatorsVisible(this.options.locators.menuItems);
-            await this.game.click(commonControls.iconMenu)
+            await this.game.click(commonControls.iconMenu);
+            await this.game.verifyLocatorsVisible(this.options.locators.menuItems);
+            await this.game.click(commonControls.iconMenu);
         });
     }
 
@@ -29,12 +30,16 @@ export class NumberGameBase {
         test("THEN player able to place a bet and settle", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount ?? 1 };
+            const bet = {
+                choice: this.options.placeBetChoices[2],
+                amount: this.options.placeBetAmount ?? 1,
+                locator: this.options.locators.betchoices[this.options.placeBetChoices[2]],
+            };
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
-
             // Act
-            const placeBetResponse = await this.player.gnPlaceBet(bet.choice, bet.amount);
-            const settledResults = await this.game.gnWaitForSettlement();
+            const placeBetResponse = await this.player.gnQuickPlaceBet(bet.locator, bet.amount);
+            let settledResults = await this.game.gnWaitForSettlement();
+            settledResults.odds = placeBetResponse.odds;
 
             // Assert
             expect(placeBetResponse.endBet).toBe(bet.amount);
@@ -49,11 +54,17 @@ export class NumberGameBase {
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
 
+            const hedgeBetLocators = [
+                this.options.locators.betchoices[this.options.placeBetChoices[0]],
+                this.options.locators.betchoices[this.options.placeBetChoices[1]],
+            ];
             // Act
-            await this.player.gnPlaceHedgeBet(this.options.placeBetChoices, this.options.placeBetAmount ?? 1);
+            const odds = await this.player.gnPlaceHedgeBet(hedgeBetLocators, this.options.placeBetAmount ?? 1);
 
-            await this.verifyLocatorsValue(this.options.locators.hedgeBetError);
-            global.settledResults =await this.game.gnWaitForSettlement();
+            await this.game.verifyValueLocators(this.options.locators.hedgeBetError);
+            let settledResults = await this.game.gnWaitForSettlement();
+            settledResults.odds = odds;
+            global.settledResults = settledResults;
         });
     }
 
@@ -61,21 +72,47 @@ export class NumberGameBase {
         test("AND player could open history popup", async () => {
             // Arrange
             await this.player.gnOpenHistory();
-            console.log(global.settledResults);
-            
             // Act
-            await this.verifyLocatorsValue(this.options.locators.historyHeader);
-            // await this.verifyLocatorsValue(global.settledResults);
-            await this.player.gnClosePopUp()
+            await this.game.verifyValueLocators(this.options.locators.historyHeader);
+            const expectedValue = {
+                drawId: global.settledResults.drawId,
+                player: global.settledResults.result.player,
+                banker: global.settledResults.result.banker,
+                amount: this.options.placeBetAmount,
+                winAmount: global.settledResults.winAmount,
+            };
 
+            for (const key in expectedValue) {
+                await this.game.verifyText(this.options.locators.ticketHistory[key], expectedValue[key]);
+            }
+            await this.player.gnClosePopUp();
         });
     }
 
     protected statisticBoardTests() {
-        test("AND player clarify the statistic board of above placed bet round", async () => {
+        test("Verify Statistic bar icon", async () => {
             // Arrange
-            // Act
-            // to be implemented
+            await this.game.verifyImageLocators(this.options.locators.statisticbar);
+        });
+
+        test("Verify user can slide left/right to switch road", async () => {
+            // Arrange
+            await this.game.verifyImageLocators(this.options.locators.statisticbar);
+            await this.game.page.click(commonControls.btnStatisticNext);
+            await this.game.waitForTimeout(1000);
+            expect(await this.game.page.locator(commonControls.tblbigRoad).isVisible()).toBe(true);
+            await this.game.page.locator(commonControls.btnStatisticPrev).first().click();
+            await this.game.waitForTimeout(1000);
+            expect(await this.game.page.locator(commonControls.tblbeadRoad).isVisible()).toBe(true);
+        });
+
+        test("Verify total rows and columns of Bead Road & Big Road", async () => {
+            // Arrange
+            await this.game.verifyImageLocators(this.options.locators.inGameUI);
+            const totalcellBIR = await this.game.page.$$eval(commonControls.cellsbigRoad, (elements) => elements.length);
+            const totalcellBER = await this.game.page.$$eval(commonControls.cellsbeadRoad, (elements) => elements.length);
+            expect(totalcellBIR).toBe(108);
+            expect(totalcellBER).toBe(108);
         });
     }
 
@@ -83,10 +120,14 @@ export class NumberGameBase {
         test("AND player could open guide and clarify guide content", async () => {
             // Arrange
             await this.player.gnOpenGuide();
+            const getGuideContent = await this.game.getGuideContent();
+            const expectedGuideContent = this.options.locators.guideContent.replace(/[\n\r]/g, "").replace(/ /g, "");
+            const cleanedGuideContent = getGuideContent.replace(/[\n\r]/g, "").replace(/ /g, "");
 
             // Act
-            await this.verifyLocatorsValue(this.options.locators.gameGuide);
-            await this.player.gnClosePopUp()
+            
+            expect(cleanedGuideContent).toBe(expectedGuideContent);
+            await this.player.gnClosePopUp();
         });
     }
 
@@ -122,24 +163,4 @@ export class NumberGameBase {
         this.ticketHistoryTests();
         this.gameGuideTests();
     }
-
-    async verifyLocatorsImage(expectSnapshot: object) {
-        for (const key in expectSnapshot) {
-            expect(await this.game.page.locator(key).screenshot()).toMatchSnapshot(expectSnapshot[key]);
-        }
-    }
-
-    async verifyLocatorsValue(expectedValue?: object) {
-        for (const key in expectedValue) {
-            expect(await this.game.page.locator(key).innerText()).toBe(expectedValue[key]);
-        }
-    }
-
-    async verifyListLocatorsVisible(locators: string[]) {
-        for (const locator of locators) {
-            expect(await this.game.page.locator(locator).isVisible()).toBe(true);
-        }
-    }
-
-
 }

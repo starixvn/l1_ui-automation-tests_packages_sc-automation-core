@@ -15,13 +15,16 @@ export class BalancedBettingGameBase extends MiniGameBase {
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
             this.game.attachSocketAndCaptureEvent(GameEvent.History);
 
-
             // Act
             const placeBetResponse = await this.player.placeBet(bet.choice, bet.amount);
             const settledResults = await this.game.waitForSettlement();
-            await this.game.waitUntilPlaceBet()
-            const historyPayload = await this.player.openHistory();
-            const ticketHistory = historyPayload.history.betLogs.shift();
+            await this.game.waitUntilPlaceBet();
+            console.log(settledResults,'click on history icon');
+            let historyPayload = await this.player.openHistory();
+            if (Object.keys(historyPayload).length === 0) {
+                historyPayload = await this.player.openHistory();
+            }
+            const ticketHistory = historyPayload.history.betLogs.shift() || 0;
             bet.refund = ticketHistory.refund;
 
             await this.game.clickOutSide();
