@@ -19,4 +19,6 @@ export class GameConfiguration {
     accounts: object;
     productId: string;
     rebet?: boolean;
+    qualifiedPoint?: number;
+    isDoubleFunction?: boolean;
 }

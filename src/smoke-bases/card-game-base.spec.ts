@@ -47,13 +47,18 @@ export class CardGameBase {
 
             // Act
             const placebetdeal = await this.player.placeBet(bet.choice, bet.amount);
-            const settledResults = await this.player.standCard();
+            let endDeal = await this.game.latestCaptureEvent(GameEvent.Deal).deal;
+            const isdealerPontoon = endDeal.dealer.length == 0 ? false : true;
+            const playertotal = Math.max(endDeal.hands[0].total[0], endDeal.hands[0].total[1] ?? 0);
 
             // Assert
-            expect(settledResults.stand.pos).toBe(parseInt(bet.choice));
-            expect(settledResults.stand.bet).toBe(bet.amount);
             expect(placebetdeal.deal.hands[0].bet).toBe(bet.amount);
             expect(placebetdeal.deal.hands[0].pos).toBe(parseInt(bet.choice));
+            if (isdealerPontoon == false && playertotal < 21){
+                const settledResults = await this.player.standCard();
+                expect(settledResults.stand.pos).toBe(parseInt(bet.choice));
+                expect(settledResults.stand.bet).toBe(bet.amount);
+            }
         });
     }
 
