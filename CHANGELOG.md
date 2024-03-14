@@ -1,3 +1,17 @@
+# [1.30.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.29.2...v1.30.0) (2024-03-14)
+
+
+### Bug Fixes
+
+* enhance smoke card game base ([4172e7f](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/4172e7fdb03b5a8b2b8d5eaddeb1aa49447f45b6))
+
+
+### Features
+
+* e2e bacball and some enhance ([4f5e4c8](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/4f5e4c8d60c3c66ebc8be3bf987114d282a050e6))
+* new game chinese blackjack ([160cbb4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/160cbb4ff0243cb3e167a5cb2001f8b2e97e6fcb))
+* provably fair for chinese blackjack and spaceflight ([c0dcf86](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/c0dcf8682766d8a98ff5174aee8f0610a02637b6))
+
 ## [1.29.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.29.1...v1.29.2) (2024-03-12)
 
 
