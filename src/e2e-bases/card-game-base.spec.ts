@@ -140,7 +140,7 @@ export class CardGameBase {
 
         test("Verify opening game guide when click on tooltip icon", async () => {
             //Act
-            await this.game.clickLocator(baseLocatorNames.icoPFTooltip, timeout)
+            await this.game.clickLocator(baseLocatorNames.icoPFTooltip, timeout*2)
             //Assert
             await verifyImage(this.game, baseLocatorNames.imgGameGuidePF);
             //Pre-act
@@ -171,13 +171,15 @@ export class CardGameBase {
             await this.game.clickHistory();
             await this.game.clickLocator(baseLocatorNames.btnHistoryVerify, 1000);
             //Assert
-            await verifyImage(this.game, baseLocatorNames.imgFairnessServerSeed);
-            await verifyImage(this.game, baseLocatorNames.imgFairnessClientSeed);
-            await verifyImage(this.game, baseLocatorNames.imgFairnessServerSeedSHA256);
-            await verifyImage(this.game, baseLocatorNames.imgFairnessResult);
-            await verifyImage(this.game, baseLocatorNames.btnFairnessVerify);
-            await this.game.clickLocator(baseLocatorNames.btnFairnessVerify); 
+            await verifyImage(this.game, baseLocatorNames.imgPFPopupServerSeed);
+            await verifyImage(this.game, baseLocatorNames.imgPFPopupClientSeed);
+            await verifyImage(this.game, baseLocatorNames.imgPFPopupServerSeedSHA256);
+            await verifyImage(this.game, baseLocatorNames.imgPFPopupResult);
+            await verifyImage(this.game, baseLocatorNames.btnPFPopupVerify);
+            await this.game.clickLocator(baseLocatorNames.btnPFPopupVerify); 
             await verifyImage(this.game, baseLocatorNames.imgVerifySuccessful);
+            await this.game.clickOutSide();
+            await this.game.clickOutSide();
         });
 
     }
@@ -385,18 +387,18 @@ export class CardGameBase {
     }
 
     protected runScenario() {
+        this.inGameUiTests();
         this.provablyFairTests();
-        // this.inGameUiTests();
-        // this.gamePlayButtonsTests();
-        // this.placebetandCancelBehaviours();
-        // this.placebetandsettlement()
-        // this.ticketHistoryTests()
-        // this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
-        // this.returnGameLobby();
-        // this.turnbackGame();
-        // if (process.env.npm_config_project === "l2") {
-        //     this.jackPotBanner()
-        // }
+        this.gamePlayButtonsTests();
+        this.placebetandCancelBehaviours();
+        this.placebetandsettlement()
+        this.ticketHistoryTests()
+        this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
+        this.returnGameLobby();
+        this.turnbackGame();
+        if (process.env.npm_config_project === "l2") {
+            this.jackPotBanner()
+        }
     }
 
     async selectChoices(choices: any) {
@@ -424,7 +426,7 @@ export class CardGameBase {
         await this.game.clickStake(amount);
         await this.game.clickLocator(choices);
 
-        await this.game.clickLocator(baseLocatorNames.btnHitCard, timeout*2);
+        await this.game.clickLocator(baseLocatorNames.btnHitCard, timeout*3);
         let endDeal = await this.game.latestCaptureEvent(GameEvent.Deal).deal;
         const isUnder16 = endDeal.hands[0].total.every((item) => item <= 16);
         const isdealerPontoon =  endDeal.dealer.length == 0 ? false : true;

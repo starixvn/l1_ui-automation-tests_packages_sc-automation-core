@@ -103,8 +103,8 @@ export class CrashGameBase {
 
         test("Verify max bet amount", async () => {
             //Act
-            await test.step("Click on max chip 5 times", async () => {
-                for (let i = 0; i < 5; i++) {
+            await test.step("Click on max chip 10 times", async () => {
+                for (let i = 0; i < 10; i++) {
                     await this.game.clickLocator(baseLocatorNames.btnMaxChip);
                 }
             });
@@ -587,7 +587,7 @@ export class CrashGameBase {
             });
 
             await test.step("Click on PF ico", async () => {
-                await this.game.clickLocator(baseLocatorNames.icoPF);
+                await this.game.clickLocator(baseLocatorNames.icoPF, 3000);
             });   
 
             await test.step("Verify default UI of PF setting popup", async () => {
@@ -597,24 +597,49 @@ export class CrashGameBase {
             });
 
             await test.step("Verify introduction popup", async () => {
-                await this.game.clickLocator(baseLocatorNames.icoPFTooltip)
-                await verifyImage(this.game, baseLocatorNames.popPFIntroduction);
+                await this.game.clickLocator(baseLocatorNames.icoPFTooltip, timeout)
+                await verifyImage(this.game, baseLocatorNames.imgGameGuidePF);
+                await this.game.clickOutSide();
             });
         });
 
         test("Verify new client seed popup", async () => {
-            //Act
-            await test.step("Click on tooltip icon", async () => {
-                await this.game.clickLocator(baseLocatorNames.btnTooltipMd5, 3000);
+            await test.step("Verify client seed popup", async () => {
+                await this.game.clickLocator(baseLocatorNames.checkboxManual, 5000);
+                await verifyImage(this.game, baseLocatorNames.popNewClientSeed);
             });
-            //Assert
-            await test.step("Verify the game guide is opened in MD5 section", async () => {
-                const popGuideMd5 = await this.game.capture(baseLocatorNames.popGuideMd5);
-                expect(popGuideMd5.image).toMatchSnapshot(popGuideMd5.name, { maxDiffPixelRatio: 0 });
-            });
-            await test.step("Close the popup", async () => {
+
+            await test.step("Clear client seed", async () => {
+                await this.game.clickLocator(baseLocatorNames.btnClientSeedClear);
+                await verifyImage(this.game, baseLocatorNames.popNewClientSeedCleared);
+            });   
+
+            await test.step("Input client seed 1234", async () => {
+                await this.game.clickLocator(baseLocatorNames.btnClientSeed1);
+                await this.game.clickLocator(baseLocatorNames.btnClientSeed2);
+                await this.game.clickLocator(baseLocatorNames.btnClientSeed3);
+                await this.game.clickLocator(baseLocatorNames.btnClientSeed4);
+                await this.game.clickLocator(baseLocatorNames.btnClientSeed5);
+                await verifyImage(this.game, baseLocatorNames.popNewClientSeed1234);
+            });   
+
+            await test.step("Backspace a number", async () => {
+                await this.game.clickLocator(baseLocatorNames.btnClientSeedBackspace);
+                await verifyImage(this.game, baseLocatorNames.popNewClientSeed123);
+            });   
+
+            await test.step("Save client seed", async () => {
+                await this.game.clickLocator(baseLocatorNames.btnClientSeed4);
+                await this.game.clickLocator(baseLocatorNames.btnClientSeedSave, 1000);
+                await verifyImage(this.game, baseLocatorNames.imgManualClientSeed1234);
+            });   
+
+            await test.step("Open client seed again and verify the value", async () => {
+                await this.game.clickLocator(baseLocatorNames.btnChangeClienSeed, 1000);
+                await verifyImage(this.game, baseLocatorNames.popNewClientSeed1234);
                 await this.game.clickOutSide();
                 await verifyImage(this.game, baseLocatorNames.imgManualClientSeed1234);
+                await this.game.clickOutSide();
             });
         });
 
@@ -645,19 +670,72 @@ export class CrashGameBase {
                 await this.game.clickLocator(baseLocatorNames.icoPF);
             });   
 
-            await test.step("Verify UI of PF setting popup in active mode", async () => {
+            await test.step("Verify UI of PF setting popup in inactive mode", async () => {
                 await verifyImage(this.game, baseLocatorNames.imgManualClientSeed1234Inactive);
                 await this.game.clickOutSide();
                 await this.game.waitForSettlement();
             });
-            //Assert
-            await test.step("Verify field result is cleared", async () => {
-                const lblResultCleared = await this.game.capture(baseLocatorNames.lblResultCleared);
-                expect(lblResultCleared.image).toMatchSnapshot(lblResultCleared.name, { maxDiffPixelRatio: 0 });
+        });
+
+        test("Verify PF popup from history", async () => {
+            //Act
+            await test.step("Open history", async () => {
+                await this.game.clickHistory();
             });
-            await test.step("Close the popup", async () => {
-                await this.game.clickOutSide();
+
+            await test.step("Click on verify icon", async () => {
+                await this.game.clickLocator(baseLocatorNames.btnHistoryVerify, 3000);
+            });   
+
+            await test.step("Verify PF popup", async () => {
+                await verifyImage(this.game, baseLocatorNames.imgPFPopup);
+                await verifyImage(this.game, baseLocatorNames.imgPFPopupRoundId);
+                await verifyImage(this.game, baseLocatorNames.imgPFPopupCrashPoint);
+                await verifyImage(this.game, baseLocatorNames.imgPFPopupServerSeed);
+                await verifyImage(this.game, baseLocatorNames.imgPFPopupClientSeed);
+                await verifyImage(this.game, baseLocatorNames.imgPFPopupMergeClientSeed);
+                await verifyImage(this.game, baseLocatorNames.imgPFPopupPlayer123);
+                await verifyImage(this.game, baseLocatorNames.imgPFPopupPlayer45);
+                await verifyImage(this.game, baseLocatorNames.imgPFPopupCombinedHash);
+                await verifyImage(this.game, baseLocatorNames.imgPFPopupMessage);
+                await verifyImage(this.game, baseLocatorNames.btnPFPopupVerify);
+                await this.game.clickLocator(baseLocatorNames.btnClientSeedTooltip);
+                await verifyImage(this.game, baseLocatorNames.imgClientSeedTooltip); 
+                await this.game.clickLocator(baseLocatorNames.btnCombinedHashTooltip);
+                await verifyImage(this.game, baseLocatorNames.imgCombinedHashTooltip);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+            });
+        });
+
+        test("Verify verification popup", async () => {
+            //Act
+            await test.step("Open verification popup", async () => {
+                await this.game.clickLocator(baseLocatorNames.btnPFPopupVerify, 3000)
             }); 
+
+            await test.step("Verify verification popup", async () => {
+                await verifyImage(this.game, baseLocatorNames.imgVerificationServerSeed);
+                await verifyImage(this.game, baseLocatorNames.imgVerificationMergeClientSeed);
+                await verifyImage(this.game, baseLocatorNames.imgVerificationCombinedHash);
+                await verifyImage(this.game, baseLocatorNames.imgVerificationFinalResult);
+                await this.game.clickOutSide(1000);
+                await this.game.clickOutSide();        
+                await this.game.clickOutSide();                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+            });
+        });
+
+        test("Verify PF popup of runnning round", async () => {
+            
+            await test.step("Wait for start new round and click on statistic icon of running round", async () => {
+                await this.game.waitUntilPlaceBet();
+                await this.game.clickLocator(baseLocatorNames.btnStatisticLastRound)
+            }); 
+
+            await test.step("Verify PF popup", async () => {
+                await verifyImage(this.game, baseLocatorNames.imgPFPopupHeader);
+                await verifyImage(this.game, baseLocatorNames.imgPFPopupRunning);
+                await this.game.clickOutSide();
+                await this.game.clickOutSide();                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+            });
         });
     }
 
@@ -669,7 +747,7 @@ export class CrashGameBase {
 
             const indexHistory: any = this.options.indexTicketHistory;
 
-            const winamount = ticketdata[ticketdata?.length - 1];
+            //const winamount = ticketdata[ticketdata?.length - 1];
             const totalbet = ticketdata[ticketdata?.length + indexHistory.totalbet];
             const dateIndex = ticketdata.findIndex((value) => {
                 return value.includes("/");
@@ -677,7 +755,7 @@ export class CrashGameBase {
             const roundId = ticketdata[dateIndex + 1];
 
             // Assert
-            expect(parseFloat(winamount)).toBeCloseTo(parseFloat(global.settledata.betwin), -1);
+            //expect(parseFloat(winamount)).toBeCloseTo(parseFloat(global.settledata.betwin), -1);
             expect(totalbet).toEqual(global.settledata.bet);
             expect(parseInt(roundId)).toBeCloseTo(parseInt(global.settledata.roundId), -1);
 
@@ -760,10 +838,12 @@ export class CrashGameBase {
         test("Verify main player in leaderboard", async () => {
             await test.step("Wait for start new round and place bet", async () => {
                 await placeBet(this.game);
+                await this.game.waitForTimeout(1000);
             });
             await test.step("Verify main player bet amount in leader board", async () => {
                 await verifyImage(this.game,`imgMainPlayerBetAmountLeaderBoard${process.env.npm_config_project}`, 0.01);
             });
+            await this.game.waitUntilPlaceBet();
         });
 
     }

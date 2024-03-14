@@ -10,12 +10,16 @@ export class GameGuideBase {
     gameId: number;
     gameName: object;
     snapshotFolderPath: string;
+    guideType: any;
 
-    constructor(gameConfig: object, gameId: number, gameName: object, snapshotFolderPath: string) {
+
+
+    constructor(gameConfig: object, gameId: number, gameName: object, snapshotFolderPath: string, guideType?: any) {
         this.gameConfig = gameConfig;
         this.gameId = gameId;
         this.gameName = gameName;
         this.snapshotFolderPath = snapshotFolderPath;
+        this.guideType = guideType;
     }
 
     start(): void {
@@ -35,15 +39,19 @@ export class GameGuideBase {
     }
 
     protected guideTest = async (langCode: string) => {
-        test(`Verify game guide content in ${langCode}`, async ({ page }) => {
+        
+        const guideType = this.guideType ?? "sc";
+
+        test(`Verify game guide ${guideType} content in ${langCode}`, async ({ page }) => {
             const config = getConfig();
 
             const projectCode = process.env.npm_config_project ?? "l1";
 
+
             const gameGuideURL =
                 projectCode === "l2"
-                    ? `${config.guideLinkL2}/${langCode}?gId=${this.gameId}&t=dark&displayName=${this.gameName[langCode]}&f=sc&p=false&fof=false&`
-                    : `${config.guideLinkL1}/${langCode}?gId=${this.gameId}&t=dark&displayName=${this.gameName[langCode]}&f=sc&p=false&fof=false&`;
+                    ? `${config.guideLinkL2}/${langCode}?gId=${this.gameId}&t=dark&displayName=${this.gameName[langCode]}&f=${guideType}&p=false&fof=false&`
+                    : `${config.guideLinkL1}/${langCode}?gId=${this.gameId}&t=dark&displayName=${this.gameName[langCode]}&f=${guideType}&p=false&fof=false&`;
 
             await page.goto(gameGuideURL);
             await page.setViewportSize({
@@ -61,9 +69,12 @@ export class GameGuideBase {
             }, inItRequest);
             await page.waitForLoadState("networkidle")
             await page.waitForTimeout(10000)
+            const screenshotName = guideType === "sc" 
+                ?  `imgGuide-${projectCode}-${langCode}.png`
+                : `imgGuide${this.guideType}-${projectCode}-${langCode}.png`
             expect
-                .soft(await page.screenshot({ path: `screenshots/imgGuide-${projectCode}-${langCode}.png`, fullPage: true }))
-                .toMatchSnapshot(`imgGuide-${projectCode}-${langCode}.png`, { maxDiffPixelRatio: 0 });
+                .soft(await page.screenshot({ path: `screenshots/${screenshotName}`, fullPage: true }))
+                .toMatchSnapshot(`${screenshotName}`, { maxDiffPixelRatio: 0 });
         });
     };
 
