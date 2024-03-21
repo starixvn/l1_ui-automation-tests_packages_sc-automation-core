@@ -1,3 +1,10 @@
+# [1.31.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.30.0...v1.31.0) (2024-03-21)
+
+
+### Features
+
+* bacball1 ([ac83b65](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/ac83b655cffa24d860c07057fcaf374b94c4df16))
+
 # [1.30.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.29.2...v1.30.0) (2024-03-14)
 
 
