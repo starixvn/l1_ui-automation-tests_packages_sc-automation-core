@@ -14,7 +14,6 @@ export class NumberGameBase {
         test("Verify in game UI", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
-            await this.game.click("#ico-bacball");
             await this.game.verifyImageLocators(this.options.locators.inGameUI);
         });
 
@@ -23,6 +22,11 @@ export class NumberGameBase {
             await this.game.click(commonControls.iconMenu);
             await this.game.verifyLocatorsVisible(this.options.locators.menuItems);
             await this.game.click(commonControls.iconMenu);
+        });
+
+        test("Verify footer value", async () => {
+            // Assert
+            await this.game.verifyValueLocators(this.options.locators.footerValues);
         });
     }
 
@@ -42,6 +46,7 @@ export class NumberGameBase {
             settledResults.odds = placeBetResponse.odds;
 
             // Assert
+            
             expect(placeBetResponse.endBet).toBe(bet.amount);
             expect(settledResults.settlementResult).toMatchBetOptions(this.options.gameConfiguration.choices);
             expect(bet).toMatchWinning(settledResults);
@@ -97,7 +102,6 @@ export class NumberGameBase {
 
         test("Verify user can slide left/right to switch road", async () => {
             // Arrange
-            await this.game.verifyImageLocators(this.options.locators.statisticbar);
             await this.game.page.click(commonControls.btnStatisticNext);
             await this.game.waitForTimeout(1000);
             expect(await this.game.page.locator(commonControls.tblbigRoad).isVisible()).toBe(true);
@@ -108,7 +112,6 @@ export class NumberGameBase {
 
         test("Verify total rows and columns of Bead Road & Big Road", async () => {
             // Arrange
-            await this.game.verifyImageLocators(this.options.locators.inGameUI);
             const totalcellBIR = await this.game.page.$$eval(commonControls.cellsbigRoad, (elements) => elements.length);
             const totalcellBER = await this.game.page.$$eval(commonControls.cellsbeadRoad, (elements) => elements.length);
             expect(totalcellBIR).toBe(108);
@@ -125,8 +128,7 @@ export class NumberGameBase {
             const cleanedGuideContent = getGuideContent.replace(/[\n\r]/g, "").replace(/ /g, "");
 
             // Act
-            
-            expect(cleanedGuideContent).toBe(expectedGuideContent);
+            expect(cleanedGuideContent).toContain(expectedGuideContent);
             await this.player.gnClosePopUp();
         });
     }

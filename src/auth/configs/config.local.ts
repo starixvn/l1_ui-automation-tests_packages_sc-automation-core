@@ -9,5 +9,6 @@ export default {
     guideLinkL1: "https://l1-guide.lumigame.com",
     guideLinkL2: "https://l2-guide.lumigame.com",
     l1admin: "http://admin.lumigame.com",
-    l2admin: "http://l2-admin.lumigame.com"
+    l2admin: "http://l2-admin.lumigame.com",
+    gnadmin: "https://gn-admin.lumigame.com"
 };

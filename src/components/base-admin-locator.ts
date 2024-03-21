@@ -15,13 +15,16 @@ export const monitoring = {
     2: "//*[@data-game-name='xocxoc']",
     75: "//*[@data-game-name='bandarqiuqiu']",
     76: "//*/td[text()='Dragon Ball']//following::a[1]",
-
+    1001: "//*/td[text()='Bac Ball']//following::a[1]",
 };
 
 
 export const commonUiResult = {
     lblroundId: "//*[contains(@class,'round-num')]",
     lblTimmer: "//*[contains(@class,'time-counter')]/span",
+    gnlblroundId: "//*[contains(text(),'Next Draw:')]",
+    btnSubmit: "//button" ,
+
 };
 
 export const commonUiBetDetails = {

@@ -11,14 +11,19 @@ export class NumberGameBase {
     constructor(protected options: IBaseOptions) {}
 
     protected inGameUITests() {
-        test("Verify in game UI", async () => {
+        test("Verify in game UI @A_1 @A_7", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
-            await this.game.click("#ico-bacball");
-            await this.game.verifyImageLocators(this.options.locators.inGameUI);
+            await this.game.gnWaitUntilPlaceBet();
+            await this.game.verifyImageLocators(this.options.locators.inGameUIE2E);
         });
 
-        test("Verify menu list items", async () => {
+        test("Verify controls are visible @A_2", async () => {
+            // Assert
+            await this.game.verifyLocatorsVisible(this.options.locators.controlsE2E);
+        });
+
+        test("Verify menu list items @A_2", async () => {
             // Assert
             await this.game.click(commonControls.iconMenu);
             await this.game.verifyLocatorsVisible(this.options.locators.menuItems);
@@ -26,10 +31,83 @@ export class NumberGameBase {
         });
     }
 
-    protected placeBetAndSettleTests() {
-        test("THEN player able to place a bet and settle", async () => {
+    protected quickBetTests() {
+        test("Verify UI of Quick bet button OFF @A_3", async () => {
+            // Assert
+            await this.player.gnSetQuickBet(false);
+            expect(await this.game.page.locator(commonControls.iconQuickBet).screenshot()).toMatchSnapshot(
+                this.options.locators.quickBetState[0],
+            );
+        });
+
+        test("Verify UI of Quick bet button ON @A_4", async () => {
+            // Assert
+            const isCheck = await this.game.page.locator(commonControls.chkQuickBet).isChecked();
+            if (isCheck == true) {
+                await this.game.click(commonControls.iconQuickBet);
+                await this.game.waitForTimeout(1000);
+            }
+            await this.game.click(commonControls.iconQuickBet);
+            const popupQBcontrols = [commonControls.btnCancelQB, commonControls.btnConfirmQB];
+            await this.game.verifyLocatorsVisible(popupQBcontrols);
+            await this.game.verifyValueLocators(this.options.locators.quickbetMessage);
+            await this.game.waitForTimeout(1000);
+        });
+
+        test("Click on button Cancel of Quick Bet popup @A_5", async () => {
+            await this.game.click(commonControls.btnCancelQB);
+            await this.game.waitForTimeout(1000);
+            expect(await this.game.page.locator(commonControls.iconQuickBet).screenshot()).toMatchSnapshot(
+                this.options.locators.quickBetState[0],
+            );
+        });
+
+        test("Click on button Enable Quick Bet of Quick Bet popup @A_6", async () => {
+            await this.game.gnWaitUntilPlaceBet();
+            await this.player.gnSetQuickBet(true);
+            expect(await this.game.page.locator(commonControls.iconQuickBet).screenshot()).toMatchSnapshot(
+                this.options.locators.quickBetState[1],
+            );
+        });
+    }
+
+    protected chipTests() {
+        test("Verify chip selected when open game @A_8", async () => {
+            const chipLocators = this.options.locators.chip;
+            for (const key in chipLocators) {
+                expect(await this.game.page.locator(key).screenshot()).toMatchSnapshot(chipLocators[key]);
+                await this.game.click(commonControls.btnChipSliderNext, 300);
+            }
+            for (let index = 0; index < Object.keys(chipLocators).length; index++) {
+                await this.game.click(commonControls.btnChipSliderPre, 300);
+            }
+        });
+
+        test("Verify betting by each bet chip @A_9", async () => {
+            const chipLocators = this.options.locators.chip;
+            const betchoice = this.options.locators.betchoices[this.options.placeBetChoices[0]];
+            const ownbet = commonControls.lblPlayerOwnBet;
+            await this.game.gnWaitUntilPlaceBet();
+            await this.player.gnSetQuickBet(false);
+
+            for (const key in chipLocators) {
+                await this.game.click(betchoice, 200);
+                let expectedValue = key.replace("#chip-", "");
+                await this.game.verifyText(ownbet, Number(expectedValue).toLocaleString());
+                await this.game.click(commonControls.btnCancelbet, 200);
+                await this.game.click(commonControls.btnChipSliderNext, 200);
+            }
+            for (let index = 0; index < Object.keys(chipLocators).length; index++) {
+                await this.game.click(commonControls.btnChipSliderPre, 300);
+            }
+        });
+    }
+
+    protected balanceTests() {
+        test("Verify Player's balance when Player placebet single choice @A_10", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
+            let bfbalance = await this.game.getText(commonControls.lblBalance);
             const bet = {
                 choice: this.options.placeBetChoices[2],
                 amount: this.options.placeBetAmount ?? 1,
@@ -38,64 +116,90 @@ export class NumberGameBase {
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
             // Act
             const placeBetResponse = await this.player.gnQuickPlaceBet(bet.locator, bet.amount);
+            let afbalance = await this.game.getText(commonControls.lblBalance);
             let settledResults = await this.game.gnWaitForSettlement();
             settledResults.odds = placeBetResponse.odds;
 
             // Assert
+            expect(parseInt(bfbalance.replace(",", "")) - bet.amount).toBe(parseInt(afbalance.replace(",", "")));
             expect(placeBetResponse.endBet).toBe(bet.amount);
             expect(settledResults.settlementResult).toMatchBetOptions(this.options.gameConfiguration.choices);
             expect(bet).toMatchWinning(settledResults);
         });
-    }
 
-    protected hedgeBetTests() {
-        test("THEN player should get error when they hedge their bets", async () => {
+        test("Verify Player's balance when Player placebet multiple choices @A_11", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
-            this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
-
-            const hedgeBetLocators = [
+            await this.game.gnWaitUntilPlaceBet();
+            let bfbalance = await this.game.getText(commonControls.lblBalance);
+            const amount = this.options.placeBetAmount ?? 1;
+            const multiplechoices = [
                 this.options.locators.betchoices[this.options.placeBetChoices[0]],
-                this.options.locators.betchoices[this.options.placeBetChoices[1]],
+                this.options.locators.betchoices[this.options.placeBetChoices[2]],
             ];
+            this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
             // Act
-            const odds = await this.player.gnPlaceHedgeBet(hedgeBetLocators, this.options.placeBetAmount ?? 1);
+            const odds = await this.player.gnPlaceHedgeBet(multiplechoices, amount);
+            await this.game.waitForTimeout(2000);
 
-            await this.game.verifyValueLocators(this.options.locators.hedgeBetError);
+            let afbalance = await this.game.getText(commonControls.lblBalance);
             let settledResults = await this.game.gnWaitForSettlement();
             settledResults.odds = odds;
-            global.settledResults = settledResults;
+
+            // Assert
+            expect(parseInt(bfbalance.replace(",", "")) - amount * 2).toBe(parseInt(afbalance.replace(",", "")));
+            expect(settledResults.settlementResult).toMatchBetOptions(this.options.gameConfiguration.choices);
         });
     }
 
-    protected ticketHistoryTests() {
-        test("AND player could open history popup", async () => {
+    protected TimerTests() {
+        test("Verify time and msg of bet round @A_12", async () => {
             // Arrange
-            await this.player.gnOpenHistory();
-            // Act
-            await this.game.verifyValueLocators(this.options.locators.historyHeader);
-            const expectedValue = {
-                drawId: global.settledResults.drawId,
-                player: global.settledResults.result.player,
-                banker: global.settledResults.result.banker,
-                amount: this.options.placeBetAmount,
-                winAmount: global.settledResults.winAmount,
+            test.setTimeout(this.options.gameConfiguration.maxTimeout);
+            await this.player.gnSetQuickBet(true);
+            const bet = {
+                choice: this.options.placeBetChoices[2],
+                amount: this.options.placeBetAmount ?? 1,
+                locator: this.options.locators.betchoices[this.options.placeBetChoices[2]],
             };
-
-            for (const key in expectedValue) {
-                await this.game.verifyText(this.options.locators.ticketHistory[key], expectedValue[key]);
+            await this.game.click(`#chip-${bet.amount}`);
+            await this.game.gnWaitUntilPlaceBet(0);
+            const startrountTime = this.options.gameConfiguration.durations.wholeRound - this.options.gameConfiguration.durations.shakeThePlateDuration;
+            for (let index = 1; index < this.options.gameConfiguration.durations.placingBets; index++) {
+                if (index === 1) {
+                    expect(await this.game.getText(commonControls.lblTimerCoundDown)).toBe(`${startrountTime}`);
+                }
+                await this.game.click(bet.locator);
+                await this.game.verifyText(commonControls.lblTimerMsg, this.options.locators.placeBetMsg.spb);
+                await this.game.waitForTimeout(1000);
             }
+            for (let index = 1; index <= this.options.gameConfiguration.durations.lockingBet; index++) {
+                await this.game.verifyText(commonControls.lblTimerMsg, this.options.locators.placeBetMsg.epb);
+                if (index === 2) {
+                    await this.game.click(bet.locator);
+                }
+                await this.game.waitForTimeout(1000);
+            }
+            await this.game.verifyText(commonControls.lblTimerMsg, this.options.locators.placeBetMsg.orb);
+
+            // Assert
+            await this.game.waitForTimeout(this.options.gameConfiguration.durations.shakeThePlateDuration);
+            await this.player.gnOpenHistory();
+            await this.game.verifyText(
+                this.options.locators.ticketHistory["amount"],
+                String(bet.amount * (this.options.gameConfiguration.durations.placingBets - 1)),
+            );
             await this.player.gnClosePopUp();
         });
     }
 
     protected statisticBoardTests() {
-        test("Verify Statistic bar icon", async () => {
+        test("Verify Statistic bar icon @A_14", async () => {
             // Arrange
             await this.game.verifyImageLocators(this.options.locators.statisticbar);
         });
 
-        test("Verify user can slide left/right to switch road", async () => {
+        test("Verify user can slide left/right to switch road @A_15", async () => {
             // Arrange
             await this.game.verifyImageLocators(this.options.locators.statisticbar);
             await this.game.page.click(commonControls.btnStatisticNext);
@@ -106,13 +210,28 @@ export class NumberGameBase {
             expect(await this.game.page.locator(commonControls.tblbeadRoad).isVisible()).toBe(true);
         });
 
-        test("Verify total rows and columns of Bead Road & Big Road", async () => {
+        test("Verify total rows and columns of Bead Road & Big Road@A_15", async () => {
             // Arrange
-            await this.game.verifyImageLocators(this.options.locators.inGameUI);
             const totalcellBIR = await this.game.page.$$eval(commonControls.cellsbigRoad, (elements) => elements.length);
             const totalcellBER = await this.game.page.$$eval(commonControls.cellsbeadRoad, (elements) => elements.length);
             expect(totalcellBIR).toBe(108);
             expect(totalcellBER).toBe(108);
+        });
+
+        test("Verify statistic result data of the latest 108 rounds @A_16", async () => {
+            // Arrange
+            await this.game.waitUntilPlaceBet()
+            let totalP = await this.game.page.locator("//div[@id='bead-road']//span[contains(@class,'scoreboard-elements_player')]").count()
+            let totalB = await this.game.page.locator("//div[@id='bead-road']//span[contains(@class,'scoreboard-elements_banker')]").count()
+            let totalT = await this.game.page.locator("//div[@id='bead-road']//span[contains(@class,'scoreboard-elements_tie')]").count()
+
+            totalP = parseInt((((totalP / 108) * 100).toFixed(0)));
+            totalB = parseInt(((totalB / 108) * 100).toFixed(0));
+            totalT = parseInt(((totalT / 108) * 100).toFixed(0));
+            
+            await this.game.verifyText(commonControls.PStatistic, totalP + "%");
+            await this.game.verifyText(commonControls.BStatistic, totalB + "%");
+            await this.game.verifyText(commonControls.TStatistic, totalT + "%");
         });
     }
 
@@ -125,9 +244,64 @@ export class NumberGameBase {
             const cleanedGuideContent = getGuideContent.replace(/[\n\r]/g, "").replace(/ /g, "");
 
             // Act
-            
+
             expect(cleanedGuideContent).toBe(expectedGuideContent);
             await this.player.gnClosePopUp();
+        });
+    }
+
+    protected PlaceBetSettleTests() {
+        test("Verify user can place a bet with default client seed then check bet data in history ticket @A_13", async () => {
+            // Arrange
+            test.setTimeout(this.options.gameConfiguration.maxTimeout);
+            const bet = {
+                choice: this.options.placeBetChoices[2],
+                amount: this.options.placeBetAmount ?? 1,
+                locator: this.options.locators.betchoices[this.options.placeBetChoices[2]],
+            };
+            this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
+            // Act
+            await this.player.gnSettingPF("");
+            const placeBetResponse = await this.player.gnQuickPlaceBet(bet.locator, bet.amount);
+            let turn = await this.game.getText(commonControls.lblTurn)
+            const match = turn.match(/\d+/);
+            turn = match ? match[0] : '';
+            let settledResults = await this.game.gnWaitForSettlement();
+            settledResults.odds = placeBetResponse.odds;
+
+            // Assert
+            await this.player.gnOpenHistory();
+            // Act
+            await this.game.verifyValueLocators(this.options.locators.historyHeader);
+            let expectedValue = {
+                drawId: settledResults.drawId,
+                player: settledResults.result.player,
+                banker: settledResults.result.banker,
+                amount: this.options.placeBetAmount,
+                winAmount: settledResults.winAmount,
+            };
+
+            for (const key in expectedValue) {
+                await this.game.verifyText(this.options.locators.ticketHistory[key], expectedValue[key]);
+            }
+            expectedValue['odds'] = placeBetResponse.odds[bet.choice];
+            await this.game.verifyDateTimeFormat("//tbody/tr[1]/td[1]");
+            //Open History Detail
+            await this.game.click(this.options.locators.ticketHistory["drawId"],1000)
+            await this.game.verifyDateTimeFormat("//div[@id='bet-detail']//tbody/tr[1]/td[1]");
+            for (const key in expectedValue) {
+                await this.game.verifyText(this.options.locators.ticketDetail[key], expectedValue[key]);
+            }
+            await this.game.verifyLocatorsVisible([commonControls.icon_Pf_HistoryDetail]);
+            await this.game.click(commonControls.icon_Pf_HistoryDetail,1000)
+            // Verify PF History Detail
+            const PFControls = [commonControls.txtServerSeed256_Pf_HistoryDetail, commonControls.txtServerSeed_Pf_HistoryDetail, commonControls.txtMergeClientSeed_Pf_HistoryDetail, commonControls.txtCombinedHash_Pf_HistoryDetail]
+            await this.game.verifyLocatorsVisible(PFControls);
+            await this.game.click(commonControls.iconClose_Pf_HistoryDetail,1000)
+            await this.game.click(commonControls.iconCloseHistoryDetail,1000)
+            await this.player.gnClosePopUp();
+
+
         });
     }
 
@@ -157,10 +331,12 @@ export class NumberGameBase {
 
     protected runScenario() {
         this.inGameUITests();
-        this.placeBetAndSettleTests();
-        this.hedgeBetTests();
+        this.quickBetTests();
+        this.chipTests()
+        this.balanceTests();
+        this.TimerTests();
         this.statisticBoardTests();
-        this.ticketHistoryTests();
-        this.gameGuideTests();
+        this.PlaceBetSettleTests();
+        // this.gameGuideTests();
     }
 }

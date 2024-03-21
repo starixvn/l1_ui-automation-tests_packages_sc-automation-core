@@ -1,8 +1,8 @@
-import { GameConfiguration, ImageLocator } from "../components";
+import { GameConfiguration} from "../components";
 
 export interface IBaseOptions {
     gameConfiguration: GameConfiguration;
-    locators: ImageLocator[];
+    locators: any;
     waitBetTimeout: number;
     snapshotFolderPath: string;
     placeBetChoices: string[];
@@ -13,6 +13,7 @@ export interface IBaseOptions {
 
 export class Adminconfiguration {
     accountId: number
+    operatorId?: string;
     settleDomain: string;
     settlePath?: string;
     l1datasetRER?: object;

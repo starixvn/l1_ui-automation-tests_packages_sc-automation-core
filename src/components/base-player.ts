@@ -128,6 +128,19 @@ export class BasePlayer {
         }
     }
 
+    async gnSettingPF(clientseed: string ): Promise<any> {
+        if (clientseed) {
+            await this.game.click(numberGameLocator.commonControls.iconPF,1000);
+            await this.game.click(numberGameLocator.commonControls.chkManualSeed,1000);
+            await this.game.page.fill(numberGameLocator.commonControls.txtManualSeed,clientseed);
+        }
+        else{
+            await this.game.click(numberGameLocator.commonControls.iconPF,1000);
+            await this.game.click(numberGameLocator.commonControls.chkRandomSeed,1000);
+        }
+        await this.game.click(numberGameLocator.commonControls.iconClosePfSetting,1000);
+    }
+
     async gnBetOn(choice: string, amount: number): Promise<any> {
         const betChip = `#chip-${amount}`
         await this.game.click(betChip);
@@ -184,5 +197,5 @@ export class BasePlayer {
         await this.game.click(numberGameLocator.commonControls.iconClosePopUp);
         await this.game.waitForTimeout(1000);
     }
-    
+   
 }

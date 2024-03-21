@@ -163,10 +163,10 @@ export class BaseGame {
         await this.waitForTimeout(4000);
     }
 
-    async gnWaitUntilPlaceBet(subGameName?: string): Promise<void> {
-        const odds= await this.waitForEvent(GameEvent.Odds, subGameName);
-        await this.waitForEvent(GameEvent.StartPlaceBet, subGameName);
-        await this.waitForTimeout(3000);
+    async gnWaitUntilPlaceBet(timeout=3000): Promise<void> {
+        const odds= await this.waitForEvent(GameEvent.Odds);
+        await this.waitForEvent(GameEvent.StartPlaceBet);
+        await this.waitForTimeout(timeout);
         return odds.odds;
     }
 
@@ -206,9 +206,8 @@ export class BaseGame {
     }
 
     async gnWaitForSettlement(subGameName?: string): Promise<any> {
+        const winningByChoice = await this.waitForEvent(GameEvent.WinStatus);
         const message = await this.waitForEvent(GameEvent.Settlement, subGameName);
-        await this.page.waitForTimeout(500); // add sleep due to feature Publish round result prior to settlement
-        const winningByChoice = this.latestCaptureEvent(GameEvent.WinStatus);
 
         let settledResults = {
             settlementResult: message?.finish?.settlementResult,
@@ -492,8 +491,9 @@ export class BaseGame {
         }
     }
 
-    async click(locator: string) {
-        await this.page.locator(locator).click();
+    async click(locator: string, waittime = 0) {
+        await this.page.locator(locator).first().click();
+        await this.waitForTimeout(waittime);
     }
 
     async verifyImageLocators(expectSnapshot: object) {
@@ -517,6 +517,16 @@ export class BaseGame {
     async verifyText(locator: string, expectedValue: string) {
             expect((await this.page.locator(locator).innerText()).toString()).toBe(expectedValue.toString());
     }
+
+    async getText(locator: string) {
+        return await this.page.locator(locator).innerText()
+
+    }
+
+    async verifyDateTimeFormat(locator: string) {
+        const isTrue =isDateTimeFormat(await this.getText(locator));
+        expect(isTrue).toBeTruthy();
+    }    
 
 }
 
@@ -548,4 +558,12 @@ function comparePixels(pixel1: number[], pixel2: number[], threshold: number): b
 export interface Pos {
     xPos: number;
     yPos: number;
+}
+
+export function isDateTimeFormat(dateString:string) {
+    // Regular expression for "hh:mm:ss dd/mm/yyyy" format
+    const regex = /^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\s(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[012])\/(19|20)\d\d$/;
+
+    // Test the date string against the regex
+    return regex.test(dateString);
 }

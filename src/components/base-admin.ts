@@ -188,6 +188,23 @@ export class BaseAdmin {
         return Number(roundId);
     }
 
+    async gnGetRunningRoundId(context: any, gameId: number) {
+        const admindomain = new URL(this.page.url());
+        const monitoring = admindomain.protocol + "//" + admindomain.hostname + "/GameSettings/GameMonitor";
+        await this.page.goto(monitoring);
+        await this.page.focus(adminLocator.monitoring[gameId]);
+        const [newtab] = await Promise.all([
+            context.waitForEvent("page"),
+            await this.page.click(adminLocator.monitoring[gameId]),
+        ]);
+        await newtab.waitForLoadState();
+        await newtab.waitForSelector(adminLocator.commonUiResult.gnlblroundId, { state: 'visible' });
+        let roundId = await newtab.locator(adminLocator.commonUiResult.lblroundId).innerText();
+        roundId = Number(roundId.split("#")[1]);
+        await newtab.close();
+        return Number(roundId);
+    }
+
     async postGameResult(settleDomain: any,settlePath: string,setledata: any) {
             const domain = `https://${settleDomain}.lumigame.com/monitoring/ResultMonitor/${settlePath}`;
             await this.postData(domain, setledata);
@@ -219,6 +236,25 @@ export class BaseAdmin {
         }
         await newtab.close();
         return Number(roundId+1);
+    }
+
+    async gnSetUiGameResult(context: any, gameId: number, data: object) {
+        const admindomain = new URL(this.page.url());
+        const monitoring = admindomain.protocol + "//" + admindomain.hostname + "/GameSettings/GameMonitor";
+        await this.page.goto(monitoring);
+        await this.page.focus(adminLocator.monitoring[gameId]);
+        const [newtab] = await Promise.all([
+            context.waitForEvent("page"),
+            await this.page.click(adminLocator.monitoring[gameId]),
+        ]);
+        await newtab.waitForLoadState();
+        await newtab.waitForSelector(adminLocator.commonUiResult.gnlblroundId, { state: 'visible' });
+        for (const [key, value] of Object.entries(data)) {
+            await newtab.fill(key, value);
+            await newtab.waitForTimeout(200);
+        }
+        await newtab.click(adminLocator.commonUiResult.btnSubmit);
+        await newtab.close();
     }
 
     async getRetrieveEndRound(gameType: any, roundId: any, playerId: any, operatorId: string = "ONEworks1") {
