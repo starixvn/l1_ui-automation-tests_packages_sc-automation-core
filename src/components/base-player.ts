@@ -20,9 +20,8 @@ export class BasePlayer {
     async gnPlaceHedgeBet(hedgeChoices: string[], amount: number = 1): Promise<void> {
         const odds = await this.game.gnWaitUntilPlaceBet();
         await this.game.click(`#chip-${amount}`);
-        await this.game.click(hedgeChoices[0]);
-        await this.game.waitForTimeout(200);
-        await this.game.click(hedgeChoices[1]);
+        await this.game.click(hedgeChoices[0],200);
+        await this.game.click(hedgeChoices[1],200);
         return odds
     }
 
@@ -129,13 +128,12 @@ export class BasePlayer {
     }
 
     async gnSettingPF(clientseed: string ): Promise<any> {
+        await this.game.click(numberGameLocator.commonControls.iconPF,1000);
         if (clientseed) {
-            await this.game.click(numberGameLocator.commonControls.iconPF,1000);
             await this.game.click(numberGameLocator.commonControls.chkManualSeed,1000);
             await this.game.page.fill(numberGameLocator.commonControls.txtManualSeed,clientseed);
         }
         else{
-            await this.game.click(numberGameLocator.commonControls.iconPF,1000);
             await this.game.click(numberGameLocator.commonControls.chkRandomSeed,1000);
         }
         await this.game.click(numberGameLocator.commonControls.iconClosePfSetting,1000);
