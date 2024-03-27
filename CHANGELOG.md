@@ -1,3 +1,10 @@
+# [1.32.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.31.0...v1.32.0) (2024-03-26)
+
+
+### Features
+
+* number game admin ([dec1310](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/dec1310b1079417427c7bdea73df3c6d9fd29911))
+
 # [1.31.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.30.0...v1.31.0) (2024-03-21)
 
 
