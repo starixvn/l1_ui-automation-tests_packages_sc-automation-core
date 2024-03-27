@@ -25,12 +25,12 @@ export class CrashGameBase {
     constructor(protected options: IBaseOptions) {}
 
     protected mainUITests() {
-        test("Verify default control area", async () => {
+        test("Verify default control area @TC01", async () => {
                 //Assert
                 await verifyImage(this.game, `imgControlArea${process.env.npm_config_project}`);
         });
 
-        test("Verify UI of the rocket", async () => {
+        test("Verify UI of the rocket @TC02", async () => {
             //Act
             await test.step("Wait for start new round", async () => {
                 await this.game.waitUntilPlaceBet();
@@ -42,7 +42,7 @@ export class CrashGameBase {
             })
         });
 
-        test("Verify roundID in showed on game client", async () => {
+        test("Verify roundID in showed on game client @TC03", async () => {
             //Act
             let roundId;
             await test.step("Get round id", async () => {
@@ -53,7 +53,7 @@ export class CrashGameBase {
             });
         });
 
-        test("Verify menu expand with sound and music on", async () => {
+        test("Verify menu expand with sound and music on @TC04", async () => {
             //Act
             await test.step("Click hamburger menu", async () => {
                 await this.game.clickLocator(baseLocatorNames.mnuHamburger);
@@ -67,7 +67,7 @@ export class CrashGameBase {
             });
         });
 
-        test("Verify menu expand with sound and music off", async () => {
+        test("Verify menu expand with sound and music off @TC05", async () => {
             //Act
             await test.step("Click on hamburger menu", async () => {
                 await this.game.clickLocator(baseLocatorNames.mnuHamburger, 1000);
@@ -90,7 +90,7 @@ export class CrashGameBase {
     }
 
     protected betAmountTests() {
-        test("Verify default state of bet amount popup", async () => {
+        test("Verify default state of bet amount popup @TC25", async () => {
             //Act
             await test.step("Open bet amount popup", async () => {
                 await openBetAmoutPopup(this.game);
@@ -101,7 +101,7 @@ export class CrashGameBase {
             });
         });
 
-        test("Verify max bet amount", async () => {
+        test("Verify max bet amount @TC26", async () => {
             //Act
             await test.step("Click on max chip 10 times", async () => {
                 for (let i = 0; i < 10; i++) {
@@ -121,7 +121,7 @@ export class CrashGameBase {
             });
         });
 
-        test("Verify player be able to clear bet amount", async () => {
+        test("Verify player be able to clear bet amount @TC27", async () => {
             //Act
             await test.step("Click on clear button", async () => {
                 this.game.clickLocator(baseLocatorNames.btnClearBetAmount);
@@ -132,7 +132,7 @@ export class CrashGameBase {
             });
         });
 
-        test("Verify player can apply bet amount", async () => {
+        test("Verify player can apply bet amount @TC28", async () => {
             //Act
             await test.step("Click on first chip", async () => {
                 await this.game.clickLocator(baseLocatorNames.btnFirstChip);
@@ -147,7 +147,7 @@ export class CrashGameBase {
             });
         });
 
-        test("Verify that player be able to increase bet amount", async () => {
+        test("Verify that player be able to increase bet amount @TC29", async () => {
             //Act
             await test.step("Click on increase button 2 times", async () => {
                 for (let i = 0; i < 2; i++) {
@@ -161,7 +161,7 @@ export class CrashGameBase {
             });
         });
 
-        test("Verify that player be able to decrease bet amount", async () => {
+        test("Verify that player be able to decrease bet amount @TC30", async () => {
             //Act
             await test.step("Click on decrease button 2 times", async () => {
                 for (let i = 0; i < 2; i++) {
@@ -177,13 +177,13 @@ export class CrashGameBase {
     }
 
     protected autoPlayTests(totalAutoPlay:number = 10) {
-        test("Verify default state of auto-play button", async () => {
+        test("Verify default state of auto-play button @TC31", async () => {
             await test.step("Capture default auto-play button and compare with snapshot", async () => {
                 await verifyImage(this.game,baseLocatorNames.btnAutoPlay);
             });
         });
 
-        test("Verify default state of auto-play popup", async () => {
+        test("Verify default state of auto-play popup @TC32", async () => {
             // Act
             await test.step("Open auto play popup", async () => {
                 await openAutoPlayBoard(this.game);
@@ -199,7 +199,7 @@ export class CrashGameBase {
             });
         });
 
-        test("Verify start auto-play at running time", async () => {
+        test("Verify start auto-play at running time @TC33", async () => {
             await test.step("Wait for rocket start fly", async () => {
                 await waitForStartCashOut(this.game);
             });
@@ -216,7 +216,7 @@ export class CrashGameBase {
             });
         });
 
-        test("Verify player be able to stop auto-play by cancel early bet", async () => {
+        test("Verify player be able to stop auto-play by cancel early bet @TC34", async () => {
             await test.step("Click on place bet button", async () => {
                 await this.game.clickLocator(baseLocatorNames.btnPlaceBet, 3000);
             });
@@ -230,7 +230,7 @@ export class CrashGameBase {
             });
         });
 
-        test("Verify auto-play button in case place early bet then start autoplay", async () => {
+        test("Verify auto-play button in case place early bet then start autoplay @TC35", async () => {
             await test.step("Click on place bet button", async () => {
                 await waitForStartCashOut(this.game);
                 await this.game.waitForTimeout(500);
@@ -251,7 +251,7 @@ export class CrashGameBase {
             });
         });
 
-        test("Verify auto-play button in case player place bet then start auto-play", async () => {
+        test("Verify auto-play button in case player place bet then start auto-play @TC36", async () => {
             await test.step("Place bet", async () => {
                 await placeBet(this.game);
             });
@@ -266,7 +266,7 @@ export class CrashGameBase {
             });
         });
 
-        test("Verify player can start 10 auto play and finish 10 round", async () => {
+        test("Verify player can start 10 auto play and finish 10 round @TC37", async () => {
             test.setTimeout(this.options.gameConfiguration.maxTimeout * 2);
 
             let settledResultsAutoPlay: Array<string> = [];
@@ -281,12 +281,6 @@ export class CrashGameBase {
 
             await test.step("Start 10 auto play", async () => {
                 await selectAutoPlay(this.game, totalAutoPlay);
-            });
-
-            await test.step("Verify button place bet show bet accepted", async () => {
-                await this.game.waitForTimeout(1000);
-                await verifyImage(this.game,baseLocatorNames.btnPlaceBetBetAccepted);
-
             });
 
             await test.step("Verify number of auto-play is 9", async () => {
@@ -317,7 +311,7 @@ export class CrashGameBase {
             });
         });
 
-        test("Verify that player can stop auto-play by click on auto-play button", async () => {
+        test("Verify that player can stop auto-play by click on auto-play button @TC38", async () => {
 
             test.setTimeout(this.options.gameConfiguration.maxTimeout * 2);
             // Act
@@ -345,7 +339,7 @@ export class CrashGameBase {
     }
 
     protected autoCashoutTests() {
-        test("Verify default state of auto cashout popup", async () => {
+        test("Verify default state of auto cashout popup @TC16", async () => {
             await test.step("Open auto cashout popup", async () => {
                 await openAutoCashoutPopup(this.game);
             });
@@ -354,7 +348,7 @@ export class CrashGameBase {
             });
         });
 
-        test("Verify max length of Multiplier in auto cashout popup", async () => {
+        test("Verify max length of Multiplier in auto cashout popup @TC17", async () => {
             await test.step("Click 6 times number 1", async () => {
                 for (let index = 1; index <= 6; index++) {
                     this.game.clickLocator(baseLocatorNames.btnNumber1AutoCashout);
@@ -381,7 +375,8 @@ export class CrashGameBase {
                 await verifyImage(this.game,baseLocatorNames.lblAutoCashoutMultiplierMaxLengthApplied);
             });
         });
-        test("Verify multiplier is red when input invalid number in auto cashout popup", async () => {
+
+        test("Verify multiplier is red when input invalid number in auto cashout popup @TC18", async () => {
             await test.step("Open auto cashout popup", async () => {
                 await openAutoCashoutPopup(this.game);
             });
@@ -398,7 +393,8 @@ export class CrashGameBase {
                 await verifyImage(this.game,baseLocatorNames.btnConfirmAutoCashoutDisabled);
             });
         });
-        test("Verify backspace a number in auto cashout popup", async () => {
+
+        test("Verify backspace a number in auto cashout popup @TC19", async () => {
             await test.step("Click backspace button", async () => {
                 await this.game.clickLocator(baseLocatorNames.btnBackspace);
             });
@@ -407,7 +403,8 @@ export class CrashGameBase {
 
             });
         });
-        test("Verify clear multiplier in auto cashout popup", async () => {
+
+        test("Verify clear multiplier in auto cashout popup @TC20", async () => {
             await test.step("Click clear button", async () => {
                 await this.game.clickLocator(baseLocatorNames.btnClearAutoCashout);
             });
@@ -422,16 +419,26 @@ export class CrashGameBase {
                 await this.game.clickLocator(baseLocatorNames.btnConfirmAutoCashout);
             });
         });
-        test("Verify player can enable auto cash out", async () => {
+
+        test("Verify player can enable auto cash out @TC21", async () => {
             await test.step("Click enable auto cash out", async () => {
                 await this.game.clickLocator(baseLocatorNames.btnEnableAutoCashOut);
             });
             await test.step("Verify the auto cashout icon is enable", async () => {
                 await verifyImage(this.game,baseLocatorNames.lblAutoCashoutEnable);
-
+            });
+            await test.step("Wait for new round and click place bet", async () => {
+                await placeBet(this.game);
+            });
+            await test.step("Wait for settlement", async () => {
+                this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
+                let settledResults = await this.game.waitForEvent(GameEvent.WinStatus);
+                expect(settledResults.status.bet).toBeLessThanOrEqual(1.01);
+                await this.game.waitUntilPlaceBet();
             });
         });
-        test("Verify player can disable auto cash out", async () => {
+
+        test("Verify player can disable auto cash out @TC22", async () => {
             await test.step("Click disable auto cash out", async () => {
                 await this.game.clickLocator(baseLocatorNames.btnEnableAutoCashOut);
             });
@@ -440,7 +447,8 @@ export class CrashGameBase {
 
             });
         });
-        test("Verify that player be able to increase auto cashout", async () => {
+
+        test("Verify that player be able to increase auto cashout @TC23", async () => {
             //Act
             await test.step("Click on increase button 2 times", async () => {
                 for (let i = 0; i < 2; i++) {
@@ -454,7 +462,8 @@ export class CrashGameBase {
 
             });
         });
-        test("Verify that player be able to decrease auto cashout", async () => {
+
+        test("Verify that player be able to decrease auto cashout @TC24", async () => {
             //Act
             await test.step("Click on decrease button 2 times", async () => {
                 for (let i = 0; i < 2; i++) {
@@ -472,7 +481,7 @@ export class CrashGameBase {
 
     protected placeBetAndCashoutTests() {
         const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount ?? 1 };
-        test("Verify place bet button", async () => {
+        test("Verify place bet button @TC39", async () => {
             await test.step("Wait for start place bet", async () => {
                 await this.game.waitUntilPlaceBet();
             });
@@ -481,13 +490,13 @@ export class CrashGameBase {
             });
         });
 
-        test("Verify player be able to cancel early bet", async () => {
+        test("Verify player be able to cancel early bet @TC40", async () => {
             await test.step("Wait for start cash out", async () => {
                 await waitForStartCashOut(this.game);
                 await this.game.waitForTimeout(300);
             });
             await test.step("Capture early bet button and compare with snapshot", async () => {
-                await verifyImage(this.game,baseLocatorNames.btnPlaceEarlyBet);
+                await verifyImage(this.game,`imgPlaceBetNextRound${process.env.npm_config_project}`);
 
             });
             await test.step("Click place early bet then clicks again to cancel bet", async () => {
@@ -500,13 +509,13 @@ export class CrashGameBase {
             
         });
 
-        test("Verify player be able to place early bet and cash out 50%", async () => {
+        test("Verify player be able to place early bet and cash out 50% @TC41", async () => {
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             await test.step("Click early bet", async () => {
                 await this.game.clickLocator(baseLocatorNames.btnPlaceBet);
             });
             await test.step("Verify button bet waitting", async () => {
-                await verifyImage(this.game,baseLocatorNames.btnEarlyBetAccepted);
+                await verifyImage(this.game,`imgBetWaiting${process.env.npm_config_project}`);
 
             });
             await test.step("Verify bet amount when new round started", async () => {
@@ -514,7 +523,7 @@ export class CrashGameBase {
                 expect(placeBetResponse.endBet).toBe(this.options.placeBetAmount);
             });
             await test.step("Verify button place bet accepted", async () => {
-                await verifyImage(this.game,baseLocatorNames.btnPlaceBetBetAccepted);
+                await verifyImage(this.game,`imgBetAccepted${process.env.npm_config_project}`);
 
             });
             await test.step("Click cashout 50% and verify win amount", async () => {
@@ -539,13 +548,13 @@ export class CrashGameBase {
             });
         });
 
-        test("Verify player be able to place bet and cash out", async () => {
+        test("Verify player be able to place bet and cash out @TC42", async () => {
             test.setTimeout(this.options.gameConfiguration.maxTimeout * 2);
             await test.step("Wait for new round and click place bet", async () => {
                 await placeBet(this.game);
             });
             await test.step("Verify place bet button", async () => {
-                await verifyImage(this.game,baseLocatorNames.btnPlaceBetBetAccepted);
+                await verifyImage(this.game,`imgBetAccepted${process.env.npm_config_project}`);
 
             });
             let settledResults;
@@ -580,7 +589,7 @@ export class CrashGameBase {
     }
 
     protected provablyFairTests() {
-        test("Verify PF icon, PF setting popup and introduce ", async () => {
+        test("Verify PF icon, PF setting popup and introduce @TC09", async () => {
             //Act
             await test.step("Verify image of PF icon", async () => {
                 await verifyImage(this.game, baseLocatorNames.icoPF);
@@ -603,7 +612,7 @@ export class CrashGameBase {
             });
         });
 
-        test("Verify new client seed popup", async () => {
+        test("Verify new client seed popup @TC10", async () => {
             await test.step("Verify client seed popup", async () => {
                 await this.game.clickLocator(baseLocatorNames.checkboxManual, 5000);
                 await verifyImage(this.game, baseLocatorNames.popNewClientSeed);
@@ -643,7 +652,7 @@ export class CrashGameBase {
             });
         });
 
-        test("Verify PF setting popup in case place early bet", async () => {
+        test("Verify PF setting popup in case place early bet @TC11", async () => {
             //Act
             await test.step("Place early bet", async () => {
                 await placeEarlyBet(this.game);
@@ -660,7 +669,7 @@ export class CrashGameBase {
             });
         });
 
-        test("Verify PF setting popup in case place bet", async () => {
+        test("Verify PF setting popup in case place bet @TC12", async () => {
             //Act
             await test.step("Wait for new round and place bet", async () => {
                 await placeBet(this.game);
@@ -677,7 +686,7 @@ export class CrashGameBase {
             });
         });
 
-        test("Verify PF popup from history", async () => {
+        test("Verify PF popup from history @TC13", async () => {
             //Act
             await test.step("Open history", async () => {
                 await this.game.clickHistory();
@@ -688,7 +697,7 @@ export class CrashGameBase {
             });   
 
             await test.step("Verify PF popup", async () => {
-                await verifyImage(this.game, baseLocatorNames.imgPFPopup);
+                await verifyImage(this.game, baseLocatorNames.imgPFPopupHeader);
                 await verifyImage(this.game, baseLocatorNames.imgPFPopupRoundId);
                 await verifyImage(this.game, baseLocatorNames.imgPFPopupCrashPoint);
                 await verifyImage(this.game, baseLocatorNames.imgPFPopupServerSeed);
@@ -706,7 +715,7 @@ export class CrashGameBase {
             });
         });
 
-        test("Verify verification popup", async () => {
+        test("Verify verification popup @TC14", async () => {
             //Act
             await test.step("Open verification popup", async () => {
                 await this.game.clickLocator(baseLocatorNames.btnPFPopupVerify, 3000)
@@ -723,7 +732,7 @@ export class CrashGameBase {
             });
         });
 
-        test("Verify PF popup of runnning round", async () => {
+        test("Verify PF popup of runnning round @TC15", async () => {
             
             await test.step("Wait for start new round and click on statistic icon of running round", async () => {
                 await this.game.waitUntilPlaceBet();
@@ -740,7 +749,7 @@ export class CrashGameBase {
     }
 
     protected ticketHistoryTests() {
-        test("Verify data of history of above round", async () => {
+        test("Verify data of history of above round @TC43", async () => {
             // Act 1
             await this.game.clickHistory(timeout);
             const ticketdata = await getDataFistRowHistory(this.game);
@@ -773,7 +782,7 @@ export class CrashGameBase {
         });
     }
     protected returnGameLobby(): void {
-        test("Verify player redirect to gamelooby after clicking home icon", async () => {
+        test("Verify player redirect to gamelooby after clicking home icon @TC45", async () => {
             // Act 1
             await this.game.waitForTimeout(2000);
             await this.game.clickHome(timeout / 2, baseLocatorNames.btnHome);
@@ -788,20 +797,19 @@ export class CrashGameBase {
         test("Verify player able to go back game by clicking on game icon", async () => {
             // Act 1.
             await this.game.waitForTimeout(timeout / 2);
-            const pathLobbyImg = this.options.snapshotFolderPath + "-snapshots/" + "lobby.png";
-            const pathGameIcon = this.options.snapshotFolderPath + "-snapshots/" + "gameIcon.png";
-            await this.game.page.screenshot({ path: pathLobbyImg, fullPage: true });
-            const gameicon = (await this.game.detectImageLocation(pathLobbyImg, pathGameIcon)) || { x: 0, y: 0 };
-            console.log(gameicon);
-            await this.game.page.mouse.click(gameicon.x, gameicon.y);
-            await this.game.waitForTimeout(timeout * 3);
-            await verifyImage(this.game,baseLocatorNames.imgControlArea);
+
+            const gameNavigate: any = this.options.gameLobbyNavigation;
+
+            await this.game.clickLocator(gameNavigate[0], timeout);
+            await this.game.clickLocator(gameNavigate[1], timeout * 2);
+            // Assert
+            await verifyImage(this.game,`imgControlArea${process.env.npm_config_project}`);
         });
     }
 
     protected leaderBoardTests(): void {
 
-        test("Verify UI of leader board in collapse mode", async () => {
+        test("Verify UI of leader board in collapse mode @TC06", async () => {
             await test.step("Verify icon spaceman on board", async () => {
                 await verifyImage(this.game,baseLocatorNames.icoSpaceManOnBoard);
 
@@ -820,7 +828,7 @@ export class CrashGameBase {
             });
         });
 
-        test("Verify UI of leader board in expand mode", async () => {
+        test("Verify UI of leader board in expand mode @TC07", async () => {
             await test.step("Click icon expand", async () => {
                 await this.game.clickLocator(baseLocatorNames.icoExpand);
             });
@@ -835,7 +843,7 @@ export class CrashGameBase {
         });
 
 
-        test("Verify main player in leaderboard", async () => {
+        test("Verify main player in leaderboard @TC08", async () => {
             await test.step("Wait for start new round and place bet", async () => {
                 await placeBet(this.game);
                 await this.game.waitForTimeout(1000);
