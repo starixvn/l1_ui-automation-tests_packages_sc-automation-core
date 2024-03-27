@@ -1,3 +1,10 @@
+## [1.32.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.32.0...v1.32.1) (2024-03-27)
+
+
+### Bug Fixes
+
+* specific playwright version ([4a2b7ba](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/4a2b7bad72b3d9d0cd85419df01581422f717f95))
+
 # [1.32.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.31.0...v1.32.0) (2024-03-26)
 
 
