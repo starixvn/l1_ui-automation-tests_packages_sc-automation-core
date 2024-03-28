@@ -1,3 +1,11 @@
+## [1.32.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.32.2...v1.32.3) (2024-03-28)
+
+
+### Bug Fixes
+
+* l1 ([8020ed3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/8020ed39424ef9302ff5ab94474c9d75012d7a65))
+* l1 remove select language ([8b0d3c7](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/8b0d3c7549e78402fbd44d85aca75d984a14388d))
+
 ## [1.32.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.32.1...v1.32.2) (2024-03-28)
 
 
