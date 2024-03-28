@@ -339,7 +339,8 @@ export class BaseGame {
     }
 
     async getGuideContent() {
-        let getguidecontent = this.page.frameLocator("iframe").locator("id=container-guide").innerText();
+        await this.page.locator("iframe").waitFor();
+        const getguidecontent = this.page.frameLocator("iframe").locator("id=container-guide").innerText();
         return getguidecontent;
     }
 

@@ -1,4 +1,4 @@
-import { test, BasePlayer, BaseGame } from "../components";
+import { test, BasePlayer, BaseGame , BaseElementLocator, ImageSnapshot} from "../components";
 import { expect } from "../expects";
 import { GameEvent } from "../_shared";
 import { commonControls } from "../components/base-number-game-locator";
@@ -44,8 +44,8 @@ export class NumberGameBase {
             // Assert
             await this.game.click(commonControls.iconPF);
             const bfRandom = await this.game.page.locator("#random-seed").isChecked();
-            console.log(bfRandom);
             await this.game.page.reload({ waitUntil: "domcontentloaded" })
+            await this.game.waitForTimeout(3000);
             await this.game.click(commonControls.iconPF);
             const afRandom = await this.game.page.locator("#random-seed").isChecked();
             expect(bfRandom).toBe(afRandom);
@@ -59,7 +59,6 @@ export class NumberGameBase {
             const bfRandom = await this.game.page.locator("#random-seed").isChecked();
             await this.game.click(commonControls.iconClosePfSetting);
             await this.game.click(commonControls.iconHome);           
-            await this.game.page.reload({ waitUntil: "domcontentloaded" })
             await this.game.click(this.options.locators.lobbyGameIcon, 1000);
             await this.game.click(commonControls.iconPF);
             const afRandom = await this.game.page.locator("#random-seed").isChecked();
@@ -189,7 +188,7 @@ export class NumberGameBase {
         });
     }
 
-    protected TimerTests() {
+    protected timerTests() {
         test("Verify time and msg of bet round @A_12", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
@@ -207,8 +206,11 @@ export class NumberGameBase {
                 if (index === 1) {
                     expect(await this.game.getText(commonControls.lblTimerCoundDown)).toBe(`${startrountTime}`);
                 }
-                await this.game.click(bet.locator);
-                await this.game.verifyText(commonControls.lblTimerMsg, this.options.locators.placeBetMsg.spb);
+                else if(index === 2 ||index === 7 || index === this.options.gameConfiguration.durations.placingBets - 1){
+                    await this.game.click(bet.locator,0);
+                    await this.game.verifyText(commonControls.lblTimerMsg, this.options.locators.placeBetMsg.spb);
+
+                }  
                 await this.game.waitForTimeout(1000);
             }
             for (let index = 1; index <= this.options.gameConfiguration.durations.lockingBet; index++) {
@@ -218,6 +220,7 @@ export class NumberGameBase {
                 }
                 await this.game.waitForTimeout(1000);
             }
+            await this.game.waitForTimeout(1000);
             await this.game.verifyText(commonControls.lblTimerMsg, this.options.locators.placeBetMsg.orb);
 
             // Assert
@@ -277,23 +280,8 @@ export class NumberGameBase {
         });
     }
 
-    protected gameGuideTests() {
-        test("AND player could open guide and clarify guide content @A_21", async () => {
-            // Arrange
-            await this.player.gnOpenGuide();
-            const getGuideContent = await this.game.getGuideContent();
-            const expectedGuideContent1 = this.options.locators.vnguide1.replace(/[\n\r]/g, "").replace(/ /g, "");
-            const expectedGuideContent2 = this.options.locators.vnguide2.replace(/[\n\r]/g, "").replace(/ /g, "");
-            const cleanedGuideContent = getGuideContent.replace(/[\n\r]/g, "").replace(/ /g, "");
-            // Act
-            expect(cleanedGuideContent).toContain(expectedGuideContent1);
-            expect(cleanedGuideContent).toContain(expectedGuideContent2);
-            await this.player.gnClosePopUp();
-        });
-    }
-
-    protected PlaceBetSettle1Tests() {
-        test("Verify user can place a bet with default client seed @A_13", async () => {
+    protected placeBetSettle1Tests() {
+        test("Verify user can place a bet with random client seed @A_13", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             const bet = {
@@ -314,7 +302,7 @@ export class NumberGameBase {
             global.settledResults = settledResults;
             global.placeBetResponse = placeBetResponse;
         });
-        test("Verify ticket history of above bet @A_13", async () => {
+        test("Verify bet ticket history of random client seed @A_13", async () => {
             // Assert
             await this.player.gnOpenHistory();
             // Act
@@ -334,7 +322,7 @@ export class NumberGameBase {
             await this.game.verifyDateTimeFormat("//tbody/tr[1]/td[1]");
             global.expectedValue = expectedValue;
         });
-        test("Verify ticket details of above bet @A_13", async () => {
+        test("Verify bet ticket details of random client seed @A_13", async () => {
             //Open History Detail
             await this.game.click(this.options.locators.ticketHistory["drawId"], 1000);
             await this.game.verifyDateTimeFormat("//div[@id='bet-detail']//tbody/tr[1]/td[1]");
@@ -345,7 +333,7 @@ export class NumberGameBase {
             await this.game.click(commonControls.icon_Pf_HistoryDetail, 1000);
         });
 
-        test("Verify PF details of above bet @A_13 @A_17", async () => {
+        test("Verify PF details of random client seed @A_13 @A_17", async () => {
             // Verify PF History Detail
             const PFControls = [
                 commonControls.txtServerSeed256_Pf_HistoryDetail,
@@ -376,8 +364,8 @@ export class NumberGameBase {
         });
     }
 
-    protected PlaceBetSettle2Tests() { 
-        test("Verify user can place a bet with input client seed @A_18", async () => {
+    protected placeBetSettle2Tests() { 
+        test("Verify user can place a bet with manual client seed @A_18", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             const bet = {
@@ -401,7 +389,7 @@ export class NumberGameBase {
             global.settledResults = settledResults;
             global.placeBetResponse = endBets;
         });
-        test("Verify ticket history of above bet @A_18", async () => {
+        test("Verify bet ticket history of manual client seed @A_18", async () => {
             // Assert
             await this.player.gnOpenHistory();
             // Act
@@ -421,7 +409,7 @@ export class NumberGameBase {
             await this.game.verifyDateTimeFormat("//tbody/tr[1]/td[1]");
             global.expectedValue = expectedValue;
         });
-        test("Verify ticket details of above bet ", async () => {
+        test("Verify bet ticket details of manual client seed @A_18 ", async () => {
             //Open History Detail
             await this.game.click(this.options.locators.ticketHistory["drawId"], 1000);
             await this.game.verifyDateTimeFormat("//div[@id='bet-detail']//tbody/tr[1]/td[1]");
@@ -432,7 +420,7 @@ export class NumberGameBase {
             await this.game.click(commonControls.icon_Pf_HistoryDetail, 1000);
         });
 
-        test("Verify PF details of above bet @A_18", async () => {
+        test("Verify PF details of manual client seed @A_18", async () => {
             // Verify PF History Detail
             const PFControls = [
                 commonControls.txtServerSeed256_Pf_HistoryDetail,
@@ -454,6 +442,30 @@ export class NumberGameBase {
             expect(combinedHash).toBe(settlePF.finalHash);
         });
 
+        test("Verify user can open PF intro from Pf verification @A_22", async () => {
+            await this.game.click(commonControls.icon_Pfverify_PfIntro, 1000);
+            await this.game.verifyLocatorsVisible([commonControls.lbl_PfIntro_title]);
+            await this.game.click(commonControls.icon_PfIntro_Close, 1000);
+        });
+
+        test("Verify user can open PF intro from client seed info @A_23", async () => {
+            await this.game.click(commonControls.link_Pfverify_Pfintro, 1000);
+            await this.game.click(commonControls.icon_ClientSeed_PfIntro, 1000);
+            await this.game.verifyLocatorsVisible([commonControls.lbl_PfIntro_title]);
+            await this.game.click(commonControls.icon_PfIntro_Close, 1000);
+            await this.game.click(commonControls.iconCloseClientSeed, 1000);
+
+        });
+
+        test("Verify user can open PF intro from verfiy pf @A_24", async () => {
+            await this.game.click(commonControls.btn_VerifyPf, 1000);
+            await this.game.click(commonControls.icon_VerifyPf_PfIntro, 2000);
+            await this.game.verifyLocatorsVisible([commonControls.lbl_PfIntro_title]);
+            await this.game.click('div:nth-child(13) > #pf-verify-detail-modal > .modal-container_title__Ut3sm > .icon-close', 1000);
+            await this.game.click(commonControls.iconCloseVerifyPf, 1000);
+
+        });
+
         test("User return main UI of game @A_18", async () => {
             // Verify PF History Detail
             await this.game.click(commonControls.iconClose_Pf_HistoryDetail, 1000);
@@ -461,7 +473,53 @@ export class NumberGameBase {
             await this.player.gnClosePopUp();
             await this.game.verifyLocatorsVisible(this.options.locators.controlsE2E);
         });
+
+        test("Verify user can open PF intro from PF setting pf @A_25", async () => {
+            await this.game.click(commonControls.iconPF, 1000);
+            await this.game.click(commonControls.iconPfIntroPfSetting, 2000);
+            await this.game.verifyLocatorsVisible([commonControls.lbl_PfIntro_title]);
+        });
+
+        test("Verify content of Pf intro @A_26", async () => {
+            const pfIntro = await capturePfIntroContent(this.game);
+            pfIntro.forEach((content) => {
+                expect(content.image).toMatchSnapshot(content.name);
+            });
+            await this.game.click(commonControls.icon_PfIntro_Close, 1000);
+            await this.game.click(commonControls.iconClosePfSetting, 1000);
+        });
     }
+
+    
+    protected lobbyTests() {
+        test("User go to game lobby", async () => {
+            await this.game.click(commonControls.iconHome,3000);    
+            const lobbyControls = [this.options.locators.lobbyGameIcon,commonControls.lbl_lobby_timmer,
+                commonControls.tbl_lobby_statistic,commonControls.img_lobby_gameimg,commonControls.lbl_lobby_currentUsers];    
+            await this.game.verifyLocatorsVisible(lobbyControls);     
+        });
+
+        test("User can go back to game success", async () => {  
+            await this.game.click(this.options.locators.lobbyGameIcon, 3000);
+            await this.game.verifyLocatorsVisible(this.options.locators.controlsE2E);
+        });
+    }
+
+    protected gameGuideTests() {
+        test("AND player could open guide and clarify guide content @A_21", async () => {
+            // Arrange
+            await this.player.gnOpenGuide();
+            const getGuideContent = await this.game.getGuideContent();
+            const expectedGuideContent1 = this.options.locators.vnguide1.replace(/[\n\r]/g, "").replace(/ /g, "");
+            const expectedGuideContent2 = this.options.locators.vnguide2.replace(/[\n\r]/g, "").replace(/ /g, "");
+            const cleanedGuideContent = getGuideContent.replace(/[\n\r]/g, "").replace(/ /g, "");
+            // Act
+            expect(cleanedGuideContent).toContain(expectedGuideContent1);
+            expect(cleanedGuideContent).toContain(expectedGuideContent2);
+            await this.player.gnClosePopUp();
+        });
+    }
+
     start(): void {
         test.beforeEach(async ({}, testInfo) => {
             testInfo.snapshotPath = (name: string) => {
@@ -492,10 +550,27 @@ export class NumberGameBase {
         this.pfSettingTests();
         this.chipTests();
         this.balanceTests();
-        this.TimerTests();
+        this.timerTests();
         this.statisticBoardTests();
-        this.PlaceBetSettle1Tests();
-        this.PlaceBetSettle2Tests();
+        this.placeBetSettle1Tests();
+        this.placeBetSettle2Tests();
         this.gameGuideTests();
+        this.lobbyTests();
     }
 }
+
+
+const capturePfIntroContent= async (game: BaseGame) => {
+    const images = new Array<ImageSnapshot>();
+    const guidepages = await game.getCountFrameLocator("//*[@id='container-guide']//div[@class='guide-item']");
+
+    for (let index = 1; index <= guidepages; index++) {
+        const filename = `pfIntro-${index}`
+        const contentFrame = new BaseElementLocator(filename, `//*[@id='container-guide']//div[@class='guide-item'][${index}]`);
+        const contentImage = await contentFrame.snapshot(game.page);
+        images.push(contentImage);
+    }
+
+    return images; 
+}
+

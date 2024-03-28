@@ -52,4 +52,18 @@ export const commonControls = {
     chkRandomSeed: "//input[@id='random-seed']/parent::div",
     txtRandomSeed: "#random-client-seed",
     iconClosePfSetting: "//div[@id='pf-setting']/div[1]/span",
+    iconPfIntroPfSetting: "//div[@id='pf-setting']/div[1]//button",
+    icon_PfIntro_Close: "//div[@id='pf-verify-detail-modal']/div[1]/span",
+    lbl_PfIntro_title: "text=Hướng Dẫn Provably Fair",
+    icon_Pfverify_PfIntro: "//div[@id='pf-verify']/div[1]//button/span",
+    link_Pfverify_Pfintro: "//div[@id='pf-verify']/div[2]//span[contains(@class,'provably-fair_link-detail')]",
+    icon_ClientSeed_PfIntro: "//div[@id='pf-client-seed-info-modal']/div[1]//button",
+    iconCloseClientSeed: "//div[@id='pf-client-seed-info-modal']/div[1]/span",
+    iconCloseVerifyPf: "//div[@id='pf-verify-detail-modal']/div[1]/span",
+    icon_VerifyPf_PfIntro: "//div[@id='pf-verify-detail-modal']/div[1]/div/button",
+    btn_VerifyPf: "//div[@id='pf-verify']//button[contains(@class,'btn-green')]",
+    lbl_lobby_timmer: "//*[@id='icon-bacball1']/div[2]/div[1]",
+    tbl_lobby_statistic: "//*[@id='icon-bacball1']/div[2]/div[2]",
+    img_lobby_gameimg: "//*[@id='icon-bacball1']/div[1]/img",
+    lbl_lobby_currentUsers: "//*[@id='icon-bacball1']/div[1]/div"
 };
