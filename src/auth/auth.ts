@@ -154,6 +154,7 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
             await page.click(PRODLocator.submitLoginbtn);
             await page.waitForLoadState();
             await page.waitForTimeout(5000);
+            console.log(langCode);
             // const frameExists = await page.locator("#betCartTutorial");
             // if (frameExists) {
             //     await page.frameLocator("#betCartTutorial").getByText("Bỏ Qua").first().click();
