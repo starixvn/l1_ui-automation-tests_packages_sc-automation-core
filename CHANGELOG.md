@@ -1,3 +1,10 @@
+## [1.32.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.32.1...v1.32.2) (2024-03-28)
+
+
+### Bug Fixes
+
+* prod SG confirm popup member site ([2fb8af5](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/2fb8af5398dbf93b96d53628da7dd57ff012e6ec))
+
 ## [1.32.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.32.0...v1.32.1) (2024-03-27)
 
 
