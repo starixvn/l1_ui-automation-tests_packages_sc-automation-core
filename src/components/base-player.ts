@@ -69,7 +69,6 @@ export class BasePlayer {
 
     async gnQuickPlaceBet(choice: string, amount: number): Promise<any> {
         const odds = await this.game.gnWaitUntilPlaceBet();
-        await this.gnSetQuickBet(true);
         await  this.gnBetOn(choice, amount);
         const endBets =await this.game.waitForEndBet();
         return {endBet: endBets.endBet, odds: odds};
@@ -116,15 +115,17 @@ export class BasePlayer {
     }
 
     async gnSetQuickBet(quickbet: boolean = true): Promise<any> {
-        const isCheck = await this.game.page.locator(numberGameLocator.commonControls.chkQuickBet).isChecked();
-        if (quickbet == true && quickbet != isCheck) {
-            await this.game.click(numberGameLocator.commonControls.iconQuickBet);
-            await this.game.click(numberGameLocator.commonControls.btnConfirmQB);
-            await this.game.waitForTimeout(1000);
-        } else if (quickbet == false && quickbet != isCheck) {
-            await this.game.click(numberGameLocator.commonControls.iconQuickBet);
-            await this.game.waitForTimeout(1000);
-        }
+        console.log(quickbet);
+        // removed funtions
+        // const isCheck = await this.game.page.locator(numberGameLocator.commonControls.chkQuickBet).isChecked();
+        // if (quickbet == true && quickbet != isCheck) {
+        //     await this.game.click(numberGameLocator.commonControls.iconQuickBet);
+        //     await this.game.click(numberGameLocator.commonControls.btnConfirmQB);
+        //     await this.game.waitForTimeout(1000);
+        // } else if (quickbet == false && quickbet != isCheck) {
+        //     await this.game.click(numberGameLocator.commonControls.iconQuickBet);
+        //     await this.game.waitForTimeout(1000);
+        // }
     }
 
     async gnSettingPF(clientseed: string ): Promise<any> {

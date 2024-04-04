@@ -62,8 +62,4 @@ export const commonControls = {
     iconCloseVerifyPf: "//div[@id='pf-verify-detail-modal']/div[1]/span",
     icon_VerifyPf_PfIntro: "//div[@id='pf-verify-detail-modal']/div[1]/div/button",
     btn_VerifyPf: "//div[@id='pf-verify']//button[contains(@class,'btn-green')]",
-    lbl_lobby_timmer: "//*[@id='icon-bacball1']/div[2]/div[1]",
-    tbl_lobby_statistic: "//*[@id='icon-bacball1']/div[2]/div[2]",
-    img_lobby_gameimg: "//*[@id='icon-bacball1']/div[1]/img",
-    lbl_lobby_currentUsers: "//*[@id='icon-bacball1']/div[1]/div"
 };

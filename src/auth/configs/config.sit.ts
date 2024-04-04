@@ -1,8 +1,8 @@
 export default {
     l1memberSite: "http://m.playthefun.com:6053/",
     l1lobbyDomain: "#ThirdPartyGame/vid=42&gid=0",
-    l2memberSite: "http://athena000smart.playthefun.com:3028/",
-    l2lobbyDomain: "#ThirdPartyGame/vid=66&gid=",
+    l2memberSite: "http://athena000smart.playthefun.com:3010/",
+    l2lobbyDomain: "VendorGame/GamePageLoading?Game=VGaming&refer=&GameID=",
     lobbyTimeout: 30000, // 15s
     enabledMsgPack: true,
     l1pwd: "1234aaAA",

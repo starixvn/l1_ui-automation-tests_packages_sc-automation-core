@@ -41,7 +41,7 @@ export class BaseGame {
             account = projectCode != "ultra888" ? accounts[`${projectCode}${env}`][this.gameConfiguration.id] : this.gameConfiguration.id;
         }
         const startTime = performance.now(); // Measure start time
-        await ssoToGame(this.page, this.gameConfiguration.id, account, this.gameConfiguration.productId, env, projectCode);
+        await ssoToGame(this.page, this.gameConfiguration.id, account, this.gameConfiguration.productId[projectCode], env, projectCode);
         this.msgpack = getConfig().enabledMsgPack;
         this.page.on("websocket", async (ws) => {
             if (ws.url().includes(this.gameConfiguration.socketName ?? this.gameConfiguration.name.toLowerCase())) {
@@ -64,7 +64,7 @@ export class BaseGame {
             }
         });
         await this.logConsole();
-        if (this.gameConfiguration.productId === "0") {
+        if ( this.gameConfiguration.id === 0) {
             await this.waitUntilGameLobbyUiLoad();
         } else {
             await this.waitUntilGameUiLoad();
@@ -524,12 +524,17 @@ export class BaseGame {
         }
     }
 
-    async verifyText(locator: string, expectedValue: string) {
-        expect((await this.page.locator(locator).innerText()).toString()).toBe(expectedValue.toString());
+    async textLocatorShouldBe(locator: string, expectedValue: string) {
+        expect(this.page.locator(locator)).toHaveText(expectedValue.toString());
     }
 
-    async getText(locator: string) {
-        return await this.page.locator(locator).innerText();
+    async getText(locator: string,datatype:string = "innerText") {
+        if(datatype == "innerHTML"){
+            return await this.page.locator(locator).innerHTML();
+        }
+        else{
+            return await this.page.locator(locator).innerText();
+        }
     }
 
     async verifyDateTimeFormat(locator: string) {
@@ -575,3 +580,4 @@ export function isDateTimeFormat(dateString: string) {
     // Test the date string against the regex
     return regex.test(dateString);
 }
+

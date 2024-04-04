@@ -17,7 +17,7 @@ export class GameConfiguration {
     slotsgame?: boolean;
     cardgame?: boolean;
     accounts: object;
-    productId: string;
+    productId: object;
     rebet?: boolean;
     qualifiedPoint?: number;
     isDoubleFunction?: boolean;

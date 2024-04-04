@@ -88,7 +88,7 @@ export class NumberGameBase {
             };
 
             for (const key in expectedValue) {
-                await this.game.verifyText(this.options.locators.ticketHistory[key], expectedValue[key]);
+                await this.game.textLocatorShouldBe(this.options.locators.ticketHistory[key], expectedValue[key]);
             }
             await this.player.gnClosePopUp();
         });

@@ -94,12 +94,11 @@ const loginMemberSite = async (
         await goToGameLobby(page, lobbyDomain, productId);
     }
 
-    if (mustSelectCurrencyGroup(env)) {
-        await selectCurrencyGroup(page, timeout);
-    }
+    await selectCurrencyGroup(page, timeout);
 };
 
 const selectCurrencyGroup = async (page: Page, timeout: number = 15000) => {
+    await page.waitForTimeout(2000)
     const frameExists = await page.$("#frmGame");
 
     if (frameExists) {
@@ -155,12 +154,6 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
             await page.waitForLoadState();
             await page.waitForTimeout(5000);
             console.log(langCode);
-            // const frameExists = await page.locator("#betCartTutorial");
-            // if (frameExists) {
-            //     await page.frameLocator("#betCartTutorial").getByText("Bỏ Qua").first().click();
-            // }
-            // await page.click(PRODLocator.langDropdown);
-            // await page.click(PRODLocator[`${langCode}LangOption`]);
         }
     }
     if (projectCode === "l2") {
@@ -227,10 +220,10 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
 };
 
 const loginSIT = async (page: Page, accountId: string, pwd: string, projectCode: string, timeout: number = 15000) => {
-    await page.setViewportSize({ width: 340, height: 667 });
     if (projectCode === "l1") {
+        await page.setViewportSize({ width: 340, height: 667 });
         await page.click(UATLocator.loginDiv);
-    }
+
     await page.selectOption(UATLocator.langDropdown, { value: UATLocator.vnLangOption });
     await page.fill(UATLocator.memberIdInput, accountId);
     await page.fill(UATLocator.pwdInput, pwd);
@@ -244,6 +237,30 @@ const loginSIT = async (page: Page, accountId: string, pwd: string, projectCode:
         width: 1280,
         height: 720,
     });
+    }
+    if(projectCode === "l2"){
+        await page.waitForLoadState("domcontentloaded", { timeout: timeout });
+            await page.locator(PRODLocator.usernameInput).waitFor();
+            await page.waitForTimeout(3000);
+            await page.fill(PRODLocator.usernameInput, accountId);
+            await page.fill(PRODLocator.passwordInput, pwd);
+            let capcha = await getCaptcha(page);
+            console.log("capcha", capcha);
+            await page.fill("id=validation", capcha);
+            await page.click(`//*[@data-tag="tabBtn"]`);
+            await page.waitForTimeout(2000);
+            const isElementVisible = await page.isVisible('//*[@class="hint-absolute"]');
+            if (isElementVisible) {
+                await page.locator("//i[@class='icon-refresh']").click();
+                await page.waitForTimeout(5000);
+                await page.fill(PRODLocator.usernameInput, accountId);
+                await page.fill(PRODLocator.passwordInput, pwd);
+                capcha = await getCaptcha(page);
+                await page.fill("id=validation", capcha);
+                await page.click(`//*[@data-tag="tabBtn"]`);
+            }
+            await page.waitForTimeout(20000);
+    }
 };
 
 const goToUltra888GameLobby = async (page: Page, productId: any, timeout = 15000) => {
@@ -266,15 +283,15 @@ const goToUltra888GameLobby = async (page: Page, productId: any, timeout = 15000
     };
     await page.click(`//*/div[contains(@class,"table")]`);
     await page.waitForTimeout(3000);
-    await page.waitForLoadState("networkidle", { timeout });
+    await page.waitForLoadState("load", { timeout });
     console.log("productId", productId, ultra888MapGameIds[productId]);
     await page.click(ultra888MapGameIds[productId]);
-    await page.waitForLoadState("networkidle", { timeout });
+    await page.waitForLoadState("load", { timeout });
 };
 
 const goToGameLobby = async (page: Page, lobbyDomain: string, productId: string, timeout: number = 15000) => {
     await page.goto(formatGameLobbyUrl(page.url(), lobbyDomain, productId));
-    await page.waitForLoadState("networkidle", { timeout });
+    await page.waitForLoadState("load", { timeout });
 };
 
 const formatGameLobbyUrl = (url: string, lobbyDomain: string, productId: string): string => {
@@ -284,9 +301,6 @@ const formatGameLobbyUrl = (url: string, lobbyDomain: string, productId: string)
     } else return `https://${domain[2]}/${lobbyDomain}${productId}`;
 };
 
-const mustSelectCurrencyGroup = (env: string): boolean => {
-    return env !== Environment.SIT;
-};
 
 export const loginAdmin = async (page: Page, projectCode: string) => {
     const config = getConfig();
