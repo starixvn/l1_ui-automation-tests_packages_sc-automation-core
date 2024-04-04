@@ -1,3 +1,10 @@
+# [1.33.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.32.3...v1.33.0) (2024-04-04)
+
+
+### Features
+
+* completed admin XD base and enhanced productId by project name ([90c3118](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/90c311853943dce4b319c32c5ccb858282647335))
+
 ## [1.32.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.32.2...v1.32.3) (2024-03-28)
 
 
