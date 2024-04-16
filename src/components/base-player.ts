@@ -189,7 +189,7 @@ export class BasePlayer {
     async gnOpenGuide(): Promise<any> {
         await this.game.click(numberGameLocator.commonControls.iconMenu);
         await this.game.click(numberGameLocator.commonControls.iconGuide);
-        await this.game.waitForTimeout(3000);
+        await this.game.waitForTimeout(4000);
     }
 
     async gnClosePopUp(): Promise<any> {

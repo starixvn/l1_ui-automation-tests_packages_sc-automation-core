@@ -81,8 +81,6 @@ export class NumberGameBase {
             await this.game.verifyValueLocators(this.options.locators.historyHeader);
             const expectedValue = {
                 drawId: global.settledResults.drawId,
-                player: global.settledResults.result.player,
-                banker: global.settledResults.result.banker,
                 amount: this.options.placeBetAmount,
                 winAmount: global.settledResults.winAmount,
             };

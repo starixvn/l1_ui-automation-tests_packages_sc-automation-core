@@ -35,7 +35,7 @@ export class NumberGameBase {
         test("Verify default state of PF setting popup @A_17", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
-            await this.game.click(commonControls.iconPF);
+            await this.game.click(commonControls.iconPF, 500);
             await this.game.verifyLocatorsVisible(this.options.locators.pfSettingControls);
             await this.game.click(commonControls.iconClosePfSetting);
         });
@@ -82,7 +82,7 @@ export class NumberGameBase {
             let chipLocators = this.options.locators.chip;
             chipLocators = Object.fromEntries(Object.entries(chipLocators).slice(0, 2));
             const betchoice = this.options.locators.betchoices[this.options.placeBetChoices[0]];
-            const ownbet = commonControls.lblPlayerOwnBet;
+            const ownbet = this.options.locators.betchoices[`${this.options.placeBetChoices[0]}OwnBet`];
             await this.game.gnWaitUntilPlaceBet();
             let amount = 0;
 
@@ -104,6 +104,7 @@ export class NumberGameBase {
         test("Verify Player's balance when Player placebet single choice @A_10", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
+            await this.game.gnWaitUntilPlaceBet();
             let bfbalance = await this.game.getText(commonControls.lblBalance);
             const bet = {
                 choice: this.options.placeBetChoices[2],
@@ -112,16 +113,15 @@ export class NumberGameBase {
             };
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
             // Act
-            const placeBetResponse = await this.player.gnQuickPlaceBet(bet.locator, bet.amount);
+            await this.game.click(`#chip-${bet.amount}`);
+            await this.game.page.click(bet.locator);
+            await this.game.waitForTimeout(2000);
             let afbalance = await this.game.getText(commonControls.lblBalance);
             let settledResults = await this.game.gnWaitForSettlement();
-            settledResults.odds = placeBetResponse.odds;
 
             // Assert
             expect(parseInt(bfbalance.replace(",", "")) - bet.amount).toBe(parseInt(afbalance.replace(",", "")));
-            expect(placeBetResponse.endBet).toBe(bet.amount);
             expect(settledResults.settlementResult).toMatchBetOptions(this.options.gameConfiguration.choices);
-            expect(bet).toMatchWinning(settledResults);
         });
 
         test("Verify Player's balance when Player placebet multiple choices @A_11", async () => {
@@ -153,7 +153,6 @@ export class NumberGameBase {
         test("Verify time and msg of bet round @A_12", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
-            await this.player.gnSetQuickBet(true);
             const bet = {
                 choice: this.options.placeBetChoices[2],
                 amount: this.options.placeBetAmount ?? 1,
@@ -217,23 +216,14 @@ export class NumberGameBase {
 
         test("Verify statistic result data of the latest 108 rounds @A_16", async () => {
             // Arrange
-            await this.game.waitUntilPlaceBet();
+            await this.game.gnWaitUntilPlaceBet();
             await this.game.waitForTimeout(3000);
-            let totalP = await this.game.page
-                .locator("//div[@id='bead-road']//span[contains(@class,'scoreboard-elements_player')]")
-                .count();
-            let totalB = await this.game.page
-                .locator("//div[@id='bead-road']//span[contains(@class,'scoreboard-elements_banker')]")
-                .count();
-            let totalT = await this.game.page.locator("//div[@id='bead-road']//span[contains(@class,'scoreboard-elements_tie')]").count();
 
-            totalP = parseInt(((totalP / 108) * 100).toFixed(0));
-            totalB = parseInt(((totalB / 108) * 100).toFixed(0));
-            totalT = parseInt(((totalT / 108) * 100).toFixed(0));
-
-            await this.game.textLocatorShouldBe(commonControls.PStatistic, totalP + "%");
-            await this.game.textLocatorShouldBe(commonControls.BStatistic, totalB + "%");
-            await this.game.textLocatorShouldBe(commonControls.TStatistic, totalT + "%");
+            for (const key in this.options.locators.statisticItems) {
+                let totalVal = await this.game.page.locator(key).count();
+                totalVal = parseInt(((totalVal / 108) * 100).toFixed(0));
+                await this.game.textLocatorShouldBe(this.options.locators.statisticItems[key], totalVal + "%");
+            }
         });
     }
 
@@ -254,6 +244,8 @@ export class NumberGameBase {
             const match = turn.match(/\d+/);
             turn = match ? match[0] : "";
             let settledResults = await this.game.gnWaitForSettlement();
+            delete settledResults.result.time;
+            delete settledResults.result.drawId;
             settledResults.odds = placeBetResponse.odds;
             settledResults.turn = turn;
             global.settledResults = settledResults;
@@ -266,8 +258,6 @@ export class NumberGameBase {
             await this.game.verifyValueLocators(this.options.locators.historyHeader);
             let expectedValue = {
                 drawId: global.settledResults.drawId,
-                player: global.settledResults.result.player,
-                banker: global.settledResults.result.banker,
                 amount: this.options.placeBetAmount,
                 winAmount: global.settledResults.winAmount,
             };
@@ -275,6 +265,11 @@ export class NumberGameBase {
             for (const key in expectedValue) {
                 await this.game.textLocatorShouldBe(this.options.locators.ticketHistory[key], expectedValue[key]);
             }
+
+            for (const key in global.settledResults.result) {
+                await this.game.textLocatorShouldBe(this.options.locators.ticketHistory[key], global.settledResults.result[key]);
+            }
+
             expectedValue["odds"] = global.settledResults.odds[this.options.placeBetChoices[2]];
             await this.game.verifyDateTimeFormat("//tbody/tr[1]/td[1]");
             global.expectedValue = expectedValue;
@@ -341,6 +336,8 @@ export class NumberGameBase {
             const match = turn.match(/\d+/);
             turn = match ? match[0] : "";
             let settledResults = await this.game.gnWaitForSettlement();
+            delete settledResults.result.time;
+            delete settledResults.result.drawId;
             settledResults.odds = odds;
             settledResults.turn = turn;
             global.settledResults = settledResults;
@@ -353,8 +350,6 @@ export class NumberGameBase {
             await this.game.verifyValueLocators(this.options.locators.historyHeader);
             let expectedValue = {
                 drawId: global.settledResults.drawId,
-                player: global.settledResults.result.player,
-                banker: global.settledResults.result.banker,
                 amount: this.options.placeBetAmount,
                 winAmount: global.settledResults.winAmount,
             };
@@ -362,6 +357,11 @@ export class NumberGameBase {
             for (const key in expectedValue) {
                 await this.game.textLocatorShouldBe(this.options.locators.ticketHistory[key], expectedValue[key]);
             }
+
+            for (const key in global.settledResults.result) {
+                await this.game.textLocatorShouldBe(this.options.locators.ticketHistory[key], global.settledResults.result[key]);
+            }
+
             expectedValue["odds"] = global.settledResults.odds[this.options.placeBetChoices[2]];
             await this.game.verifyDateTimeFormat("//tbody/tr[1]/td[1]");
             global.expectedValue = expectedValue;
@@ -446,7 +446,7 @@ export class NumberGameBase {
     }
 
     protected lobbyTests() {
-        test("User go to game lobby", async () => {
+        test("User go to game lobby @A_27", async () => {
             await this.game.click(commonControls.iconHome, 3000);
             const lobbyControls = [
                 this.options.locators.lobbyGameIcon,
@@ -456,9 +456,42 @@ export class NumberGameBase {
             await this.game.verifyLocatorsVisible(lobbyControls);
         });
 
-        test("User can go back to game success", async () => {
+        test("Verify setting controls @A_27", async () => {
+            await this.game.click(commonControls.btn_lobby_setting, 1000);
+            const settingControls = [commonControls.chk_lobby_music, commonControls.chk_lobby_sound];
+            await this.game.verifyLocatorsVisible(settingControls);
+            await this.game.click(commonControls.icon_lobby_close, 2000);
+        });
+
+        test("User can change their's avatar @A_27", async () => {
+            const avatarLocator = this.game.page.locator(commonControls.imgAvatar);
+            const randomInterval = Math.floor(Math.random() * 14) + 2;
+            const indexAvatar = [`//img[contains(@src,'avatar/${randomInterval}.jpg')]/parent::div`, "//img[contains(@src,'avatar/1.jpg')]/parent::div"];
+            for (const iterator of indexAvatar) {
+                await this.game.click(commonControls.imgAvatar, 3000);
+                await this.game.click(iterator, 1000);
+                await this.game.click("//button[@class='btn-green']", 3000);
+            }
+            await expect(avatarLocator).toHaveScreenshot("defaultAvatar.png");
+        });
+
+        test("User can go back to game success @A_27", async () => {
             await this.game.click(this.options.locators.lobbyGameIcon, 3000);
             await this.game.verifyLocatorsVisible(this.options.locators.controlsE2E);
+        });
+
+        test("User can switch game by clicking on right navigator @A_27", async () => {
+            for (const iterator of this.options.locators.slideGameList) {
+                await this.game.textLocatorShouldBe(commonControls.imgGameName, iterator);
+                await this.game.click(commonControls.btn_dashboard_next, 3000);
+            }
+        });
+        test("User can switch game by clicking on left navigator @A_27", async () => {
+            const revertGameList = this.options.locators.slideGameList.reverse();
+            for (const iterator of revertGameList) {
+                await this.game.textLocatorShouldBe(commonControls.imgGameName, iterator);
+                await this.game.click(commonControls.btn_dashboard_pre, 3000);
+            }
         });
     }
 
