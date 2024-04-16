@@ -1,3 +1,10 @@
+# [1.34.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.33.0...v1.34.0) (2024-04-16)
+
+
+### Features
+
+* add game lobby test ([0bd921c](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/0bd921c97cd6cc17e772b607d2f9cc330d569b25))
+
 # [1.33.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.32.3...v1.33.0) (2024-04-04)
 
 
