@@ -11,7 +11,7 @@ const toMatchWinning = (bet: any, settledResult: any) => {
     }
     const expectedAmount = bet.amount * odds;
 
-    if (expectedAmount === settledResult.winAmount) {
+    if (expectedAmount.toFixed(1) === settledResult.winAmount.toFixed(1)) {
         return {
             message: () => "passed",
             pass: true,

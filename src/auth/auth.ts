@@ -36,8 +36,15 @@ export const ssoToGame = async (
         await page.locator(LobbyLocator.langDropdown).selectOption(LobbyLocator[`${langCode}LangOption`]);
         await page.click(LobbyLocator.tokenBtn);
         await page.waitForTimeout(500);
+        const isdupSsoLink = await page.$$("#redirect");
+        if (isdupSsoLink.length > 0) {
+            const ssoLink = (await page.locator("#redirect").textContent()) ?? "";
+            await page.goto(`${ssoLink.replace("gameId=0", `gameId=${gameId}`)}`);
+        }
+        else {
         const ssoLink = (await page.locator(LobbyLocator.ssoLink).textContent()) ?? "";
         await page.goto(`${ssoLink.replace("gameId=0", `gameId=${gameId}`)}`);
+        }
         const isCurrencyForm = await page.$$("id=currency");
         if (isCurrencyForm.length > 0) {
             await page.click("text=Submit");
