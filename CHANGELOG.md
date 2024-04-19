@@ -1,3 +1,5 @@
+## [1.35.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.35.0...v1.35.1) (2024-04-19)
+
 # [1.35.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.34.0...v1.35.0) (2024-04-19)
 
 
