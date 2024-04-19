@@ -1,3 +1,10 @@
+# [1.35.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.34.0...v1.35.0) (2024-04-19)
+
+
+### Features
+
+* ng game local login with multiple sso links ([282fc3f](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/282fc3fe00725652024a2424c3a844db3c7dece9))
+
 # [1.34.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.33.0...v1.34.0) (2024-04-16)
 
 
