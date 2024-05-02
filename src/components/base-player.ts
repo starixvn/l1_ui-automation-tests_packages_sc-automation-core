@@ -171,7 +171,7 @@ export class BasePlayer {
     async openHistory(): Promise<any> {
         this.game.attachSocketAndCaptureEvent(GameEvent.History);
 
-        await this.game.clickHistory(1500);
+        await this.game.clickHistory();
 
         return this.game.latestCaptureEvent(GameEvent.History);
     }

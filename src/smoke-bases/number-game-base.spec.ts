@@ -14,7 +14,10 @@ export class NumberGameBase {
         test("Verify in game UI", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
-            await this.game.verifyImageLocators(this.options.locators.inGameUI);
+            const inGameUi =
+                process.env.npm_config_android == "true" ? this.options.locators.inGameUIAndroid : this.options.locators.inGameUI;
+
+            await this.game.verifyImageLocators(inGameUi);
         });
 
         test("Verify menu list items", async () => {
@@ -46,7 +49,7 @@ export class NumberGameBase {
             settledResults.odds = placeBetResponse.odds;
 
             // Assert
-            
+
             expect(placeBetResponse.endBet).toBe(bet.amount);
             expect(settledResults.settlementResult).toMatchBetOptions(this.options.gameConfiguration.choices);
             expect(bet).toMatchWinning(settledResults);
@@ -94,17 +97,18 @@ export class NumberGameBase {
 
     protected statisticBoardTests() {
         test("Verify Statistic bar icon", async () => {
+            const statisticbar =
+                process.env.npm_config_android == "true" ? this.options.locators.statisticbarAndroid : this.options.locators.statisticbar;
+
             // Arrange
-            await this.game.verifyImageLocators(this.options.locators.statisticbar);
+            await this.game.verifyImageLocators(statisticbar);
         });
 
         test("Verify user can slide left/right to switch road", async () => {
             // Arrange
-            await this.game.page.click(commonControls.btnStatisticNext);
-            await this.game.waitForTimeout(1000);
+            await this.game.click(commonControls.btnStatisticNext)
             expect(await this.game.page.locator(commonControls.tblbigRoad).isVisible()).toBe(true);
-            await this.game.page.locator(commonControls.btnStatisticPrev).first().click();
-            await this.game.waitForTimeout(1000);
+            await this.game.click(commonControls.btnStatisticPrev)
             expect(await this.game.page.locator(commonControls.tblbeadRoad).isVisible()).toBe(true);
         });
 

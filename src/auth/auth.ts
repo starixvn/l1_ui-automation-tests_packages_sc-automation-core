@@ -29,7 +29,7 @@ export const ssoToGame = async (
     }
 
     if (env.includes("local")) {
-        const memberSiteLink = config[`${projectCode}memberSite`] + `?obCustId=${playerId}&balance=20000`;
+        const memberSiteLink = config[`${projectCode}memberSite`] + `?obCustId=${playerId}&balance=200000`;
         await page.goto(memberSiteLink);
         console.log("Login Local", memberSiteLink);
         await page.click(LobbyLocator.advancelbl);

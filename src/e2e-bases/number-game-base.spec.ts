@@ -15,7 +15,9 @@ export class NumberGameBase {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             await this.game.gnWaitUntilPlaceBet();
-            await this.game.verifyImageLocators(this.options.locators.inGameUIE2E);
+            const inGameUi =
+                process.env.npm_config_android == "true" ? this.options.locators.inGameUIAndroid : this.options.locators.inGameUI;
+            await this.game.verifyImageLocators(inGameUi);
         });
 
         test("Verify controls are visible @A_2", async () => {
@@ -149,6 +151,34 @@ export class NumberGameBase {
         });
     }
 
+    protected suggestionBets() {
+        test("Verify sugestionBets on each choice", async () => {
+            // Arrange
+            test.setTimeout(this.options.gameConfiguration.maxTimeout);
+
+            for (const key in this.options.locators.suggestionBets) {
+                await this.game.gnWaitUntilPlaceBet();
+
+                const bet = {
+                    choice: key,
+                    amount: this.options.placeBetAmount,
+                    locator: this.options.locators.betchoices[key],
+                };
+                await this.game.click(`#chip-${bet.amount}`, 200);
+                await this.game.click(bet.locator, 200);
+                await this.game.page.locator(commonControls.btnChipSliderNext).click({ clickCount: 10, delay: 100 });
+                await this.game.click(bet.locator, 200);
+                await this.game.waitForTimeout(1000);
+                await expect(this.game.page.locator(commonControls.dialog_confirm_submit)).toContainText(
+                    this.options.locators.suggestionBets[key].toString(),
+                );
+                await this.game.click(commonControls.btn_no_submit_dialog);
+                await this.game.page.locator(commonControls.btnChipSliderPre).click({ clickCount: 10, delay: 100 });
+            }
+            await this.game.gnWaitForSettlement();
+        });
+    }
+
     protected timerTests() {
         test("Verify time and msg of bet round @A_12", async () => {
             // Arrange
@@ -174,7 +204,7 @@ export class NumberGameBase {
             for (let index = 1; index <= this.options.gameConfiguration.durations.lockingBet; index++) {
                 await this.game.textLocatorShouldBe(commonControls.lblTimerMsg, this.options.locators.placeBetMsg.epb);
                 if (index === 2) {
-                    await this.game.click(bet.locator);
+                    await this.game.click(bet.locator, 0);
                 }
                 await this.game.waitForTimeout(1000);
             }
@@ -192,12 +222,13 @@ export class NumberGameBase {
     protected statisticBoardTests() {
         test("Verify Statistic bar icon @A_14", async () => {
             // Arrange
-            await this.game.verifyImageLocators(this.options.locators.statisticbar);
+            const statisticbar =
+                process.env.npm_config_android == "true" ? this.options.locators.statisticbarAndroid : this.options.locators.statisticbar;
+            await this.game.verifyImageLocators(statisticbar);
         });
 
         test("Verify user can slide left/right to switch road @A_15", async () => {
             // Arrange
-            await this.game.verifyImageLocators(this.options.locators.statisticbar);
             await this.game.page.click(commonControls.btnStatisticNext);
             await this.game.waitForTimeout(1000);
             expect(await this.game.page.locator(commonControls.tblbigRoad).isVisible()).toBe(true);
@@ -276,13 +307,13 @@ export class NumberGameBase {
         });
         test("Verify bet ticket details of random client seed @A_13", async () => {
             //Open History Detail
-            await this.game.click(this.options.locators.ticketHistory["drawId"], 1000);
+            await this.game.click(this.options.locators.ticketHistory["drawId"]);
             await this.game.verifyDateTimeFormat("//div[@id='bet-detail']//tbody/tr[1]/td[1]");
             for (const key in global.expectedValue) {
                 await this.game.textLocatorShouldBe(this.options.locators.ticketDetail[key], global.expectedValue[key]);
             }
             await this.game.verifyLocatorsVisible([commonControls.icon_Pf_HistoryDetail]);
-            await this.game.click(commonControls.icon_Pf_HistoryDetail, 1000);
+            await this.game.click(commonControls.icon_Pf_HistoryDetail);
         });
 
         test("Verify PF details of random client seed @A_13 @A_17", async () => {
@@ -309,8 +340,8 @@ export class NumberGameBase {
 
         test("User return main UI of game @A_17", async () => {
             // Verify PF History Detail
-            await this.game.click(commonControls.iconClose_Pf_HistoryDetail, 1000);
-            await this.game.click(commonControls.iconCloseHistoryDetail, 1000);
+            await this.game.click(commonControls.iconClose_Pf_HistoryDetail);
+            await this.game.click(commonControls.iconCloseHistoryDetail);
             await this.player.gnClosePopUp();
             await this.game.verifyLocatorsVisible(this.options.locators.controlsE2E);
         });
@@ -368,13 +399,13 @@ export class NumberGameBase {
         });
         test("Verify bet ticket details of manual client seed @A_18 ", async () => {
             //Open History Detail
-            await this.game.click(this.options.locators.ticketHistory["drawId"], 1000);
+            await this.game.click(this.options.locators.ticketHistory["drawId"]);
             await this.game.verifyDateTimeFormat("//div[@id='bet-detail']//tbody/tr[1]/td[1]");
             for (const key in global.expectedValue) {
                 await this.game.textLocatorShouldBe(this.options.locators.ticketDetail[key], global.expectedValue[key]);
             }
             await this.game.verifyLocatorsVisible([commonControls.icon_Pf_HistoryDetail]);
-            await this.game.click(commonControls.icon_Pf_HistoryDetail, 1000);
+            await this.game.click(commonControls.icon_Pf_HistoryDetail);
         });
 
         test("Verify PF details of manual client seed @A_18", async () => {
@@ -400,37 +431,37 @@ export class NumberGameBase {
         });
 
         test("Verify user can open PF intro from Pf verification @A_22", async () => {
-            await this.game.click(commonControls.icon_Pfverify_PfIntro, 1000);
+            await this.game.click(commonControls.icon_Pfverify_PfIntro);
             await this.game.verifyLocatorsVisible([commonControls.lbl_PfIntro_title]);
-            await this.game.click(commonControls.icon_PfIntro_Close, 1000);
+            await this.game.click(commonControls.icon_PfIntro_Close);
         });
 
         test("Verify user can open PF intro from client seed info @A_23", async () => {
-            await this.game.click(commonControls.link_Pfverify_Pfintro, 1000);
-            await this.game.click(commonControls.icon_ClientSeed_PfIntro, 1000);
+            await this.game.click(commonControls.link_Pfverify_Pfintro);
+            await this.game.click(commonControls.icon_ClientSeed_PfIntro);
             await this.game.verifyLocatorsVisible([commonControls.lbl_PfIntro_title]);
-            await this.game.click(commonControls.icon_PfIntro_Close, 1000);
-            await this.game.click(commonControls.iconCloseClientSeed, 1000);
+            await this.game.click(commonControls.icon_PfIntro_Close);
+            await this.game.click(commonControls.iconCloseClientSeed);
         });
 
         test("Verify user can open PF intro from verfiy pf @A_24", async () => {
-            await this.game.click(commonControls.btn_VerifyPf, 1000);
+            await this.game.click(commonControls.btn_VerifyPf);
             await this.game.click(commonControls.icon_VerifyPf_PfIntro, 2000);
             await this.game.verifyLocatorsVisible([commonControls.lbl_PfIntro_title]);
-            await this.game.click("div:nth-child(13) > #pf-verify-detail-modal > .modal-container_title__Ut3sm > .icon-close", 1000);
-            await this.game.click(commonControls.iconCloseVerifyPf, 1000);
+            await this.game.click(commonControls.icon_PfIntro_Close);
+            await this.game.click(commonControls.iconCloseVerifyPf);
         });
 
         test("User return main UI of game @A_18", async () => {
             // Verify PF History Detail
-            await this.game.click(commonControls.iconClose_Pf_HistoryDetail, 1000);
-            await this.game.click(commonControls.iconCloseHistoryDetail, 1000);
+            await this.game.click(commonControls.iconClose_Pf_HistoryDetail);
+            await this.game.click(commonControls.iconCloseHistoryDetail);
             await this.player.gnClosePopUp();
             await this.game.verifyLocatorsVisible(this.options.locators.controlsE2E);
         });
 
         test("Verify user can open PF intro from PF setting pf @A_25", async () => {
-            await this.game.click(commonControls.iconPF, 1000);
+            await this.game.click(commonControls.iconPF);
             await this.game.click(commonControls.iconPfIntroPfSetting, 2000);
             await this.game.verifyLocatorsVisible([commonControls.lbl_PfIntro_title]);
         });
@@ -440,14 +471,14 @@ export class NumberGameBase {
             pfIntro.forEach((content) => {
                 expect(content.image).toMatchSnapshot(content.name);
             });
-            await this.game.click(commonControls.icon_PfIntro_Close, 1000);
-            await this.game.click(commonControls.iconClosePfSetting, 1000);
+            await this.game.click(commonControls.icon_PfIntro_Close);
+            await this.game.click(commonControls.iconClosePfSetting);
         });
     }
 
     protected lobbyTests() {
         test("User go to game lobby @A_27", async () => {
-            await this.game.click(commonControls.iconHome, 3000);
+            await this.game.click(commonControls.iconHome);
             const lobbyControls = [
                 this.options.locators.lobbyGameIcon,
                 this.options.locators.lobbyTimmer,
@@ -457,26 +488,29 @@ export class NumberGameBase {
         });
 
         test("Verify setting controls @A_27", async () => {
-            await this.game.click(commonControls.btn_lobby_setting, 1000);
+            await this.game.click(commonControls.btn_lobby_setting);
             const settingControls = [commonControls.chk_lobby_music, commonControls.chk_lobby_sound];
             await this.game.verifyLocatorsVisible(settingControls);
-            await this.game.click(commonControls.icon_lobby_close, 2000);
+            await this.game.click(commonControls.icon_lobby_close);
         });
 
         test("User can change their's avatar @A_27", async () => {
             const avatarLocator = this.game.page.locator(commonControls.imgAvatar);
             const randomInterval = Math.floor(Math.random() * 14) + 2;
-            const indexAvatar = [`//img[contains(@src,'avatar/${randomInterval}.jpg')]/parent::div`, "//img[contains(@src,'avatar/1.jpg')]/parent::div"];
+            const indexAvatar = [
+                `//img[contains(@src,'F${randomInterval}.jpg')]/parent::div`,
+                "//img[contains(@src,'F1.jpg')]/parent::div",
+            ];
             for (const iterator of indexAvatar) {
-                await this.game.click(commonControls.imgAvatar, 3000);
-                await this.game.click(iterator, 1000);
-                await this.game.click("//button[@class='btn-green']", 3000);
+                await this.game.click(commonControls.imgAvatar);
+                await this.game.click(iterator);
+                await this.game.click("//button[@class='btn-green']");
             }
             await expect(avatarLocator).toHaveScreenshot("defaultAvatar.png");
         });
 
         test("User can go back to game success @A_27", async () => {
-            await this.game.click(this.options.locators.lobbyGameIcon, 3000);
+            await this.game.click(this.options.locators.lobbyGameIcon);
             await this.game.verifyLocatorsVisible(this.options.locators.controlsE2E);
         });
 
@@ -485,6 +519,7 @@ export class NumberGameBase {
                 await this.game.textLocatorShouldBe(commonControls.imgGameName, iterator);
                 await this.game.click(commonControls.btn_dashboard_next, 3000);
             }
+            await this.game.click(commonControls.btn_dashboard_pre, 3000);
         });
         test("User can switch game by clicking on left navigator @A_27", async () => {
             const revertGameList = this.options.locators.slideGameList.reverse();
@@ -495,6 +530,107 @@ export class NumberGameBase {
         });
     }
 
+    protected lobbyAndroidTests() {
+        test("User go to game lobby @A_27", async () => {
+            await this.game.click(commonControls.iconHome);
+            const lobbyControls = [
+                this.options.locators.lobbyGameIcon,
+                this.options.locators.lobbyTimmer,
+                this.options.locators.lobbyStatistic,
+            ];
+            await this.game.verifyLocatorsVisible(lobbyControls);
+        });
+
+        test("Verify setting controls @A_27", async () => {
+            await this.game.click(commonControls.btn_lobby_setting);
+            const settingControls = [commonControls.chk_lobby_music, commonControls.chk_lobby_sound];
+            await this.game.verifyLocatorsVisible(settingControls);
+            await this.game.click(commonControls.icon_lobby_close);
+        });
+
+        test("User can change their's avatar @A_27", async () => {
+            const avatarLocator = this.game.page.locator(commonControls.imgAvatar);
+            const randomInterval = Math.floor(Math.random() * 14) + 2;
+            const indexAvatar = [
+                `//img[contains(@src,'F${randomInterval}.jpg')]/parent::div`,
+                "//img[contains(@src,'F1.jpg')]/parent::div",
+            ];
+            for (const iterator of indexAvatar) {
+                await this.game.click(commonControls.imgAvatar);
+                await this.game.click(iterator);
+                await this.game.click("//button[@class='btn-green']");
+            }
+            await expect(avatarLocator).toHaveScreenshot("defaultAvatar.png");
+        });
+
+        test("User can go back to game success @A_27", async () => {
+            await this.game.click(this.options.locators.lobbyGameIcon);
+            await this.game.verifyLocatorsVisible(this.options.locators.controlsE2E);
+        });
+
+        test("User can switch game by swipe right navigator @A_27", async () => {
+            const deviceScreenResolution = await this.game.page.evaluate(() => {
+                return {
+                    width: window.innerWidth,
+                    height: window.innerHeight
+                };
+            });
+            const centerPos = {x: deviceScreenResolution.width / 2, y: deviceScreenResolution.height / 2}; 
+            const toRight = {x: deviceScreenResolution.width -5, y:  centerPos.y };
+            for (const iterator of this.options.locators.slideGameList) {
+                await this.game.swipePos(centerPos,toRight)
+                await this.game.textLocatorShouldBe(commonControls.imgGameName, iterator);
+
+            }
+        });
+        test("User can switch game by swipe left navigator @A_27", async () => {
+            const deviceScreenResolution = await this.game.page.evaluate(() => {
+                return {
+                    width: window.innerWidth,
+                    height: window.innerHeight
+                };
+            });
+            const centerPos = {x: deviceScreenResolution.width / 2, y: deviceScreenResolution.height / 2}; 
+            const toLeft = {x: 5, y:  centerPos.y };
+            const revertGameList = this.options.locators.slideGameList.reverse();
+            for (const iterator of revertGameList) {
+                await this.game.swipePos(centerPos,toLeft)
+                await this.game.textLocatorShouldBe(commonControls.imgGameName, iterator);
+            }
+        });
+
+        test("User can switch game by swipe up navigator @A_27", async () => {
+            const deviceScreenResolution = await this.game.page.evaluate(() => {
+                return {
+                    width: window.innerWidth,
+                    height: window.innerHeight
+                };
+            });
+            const centerPos = {x: deviceScreenResolution.width / 2, y: deviceScreenResolution.height / 2}; 
+            const toUp = {x: centerPos.x , y:  5 };
+            for (const iterator of this.options.locators.slideGameList) {
+                await this.game.swipePos(centerPos,toUp)
+                await this.game.textLocatorShouldBe(commonControls.imgGameName, iterator);
+
+            }
+        });
+
+        test("User can switch game by swipe down navigator @A_27", async () => {
+            const deviceScreenResolution = await this.game.page.evaluate(() => {
+                return {
+                    width: window.innerWidth,
+                    height: window.innerHeight
+                };
+            });
+            const centerPos = {x: deviceScreenResolution.width / 2, y: deviceScreenResolution.height / 2}; 
+            const toDown = {x: centerPos.x , y: deviceScreenResolution.height - 5 };
+            const revertGameList = this.options.locators.slideGameList.reverse();
+            for (const iterator of revertGameList) {
+                await this.game.swipePos(centerPos,toDown)
+                await this.game.textLocatorShouldBe(commonControls.imgGameName, iterator);
+            }
+        });
+    }
     protected gameGuideTests() {
         test("AND player could open guide and clarify guide content @A_21", async () => {
             // Arrange
@@ -538,13 +674,18 @@ export class NumberGameBase {
         this.inGameUITests();
         this.pfSettingTests();
         this.chipTests();
+        this.suggestionBets();
         this.balanceTests();
         this.timerTests();
         this.placeBetSettle1Tests();
         this.placeBetSettle2Tests();
         this.statisticBoardTests();
         this.gameGuideTests();
-        this.lobbyTests();
+        if (process.env.npm_config_android) {
+            this.lobbyAndroidTests();
+        } else {
+            this.lobbyTests();
+        }
     }
 }
 
@@ -553,7 +694,8 @@ const capturePfIntroContent = async (game: BaseGame) => {
     const guidepages = await game.getCountFrameLocator("//*[@id='container-guide']//div[@class='guide-item']");
 
     for (let index = 1; index <= guidepages; index++) {
-        const filename = `pfIntro-${index}`;
+        const filename = process.env.npm_config_android=='true' ? `pfIntroAndroid-${index}` : `pfIntro-${index}`;
+        await game.page.frameLocator("iframe").locator(`//*[@id='container-guide']//div[@class='guide-item'][${index}]`).focus();
         const contentFrame = new BaseElementLocator(filename, `//*[@id='container-guide']//div[@class='guide-item'][${index}]`);
         const contentImage = await contentFrame.snapshot(game.page);
         images.push(contentImage);
