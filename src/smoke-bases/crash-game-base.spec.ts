@@ -34,6 +34,7 @@ export class CrashGameBase {
             const btnPlaceBet = await this.game.captureLocator(baseLocatorNames.btnPlaceBetBetAccepted);
             expect(btnPlaceBet.image).toMatchSnapshot(btnPlaceBet.name);
             this.game.attachSocketAndCaptureEvent(GameEvent.Settlement);
+            this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
             await this.game.waitForSpecificEvent(CrashGameEvent.StartCashOut); 
             let settledResults = await this.game.latestCaptureEvent(GameEvent.Settlement);
             if (settledResults === "") {
