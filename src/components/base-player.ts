@@ -69,7 +69,7 @@ export class BasePlayer {
 
     async gnQuickPlaceBet(choice: string, amount: number): Promise<any> {
         const odds = await this.game.gnWaitUntilPlaceBet();
-        await  this.gnBetOn(choice, amount);
+        await this.gnBetOn(choice, amount);
         const endBets =await this.game.waitForEndBet();
         return {endBet: endBets.endBet, odds: odds};
     }
@@ -143,7 +143,7 @@ export class BasePlayer {
     async gnBetOn(choice: string, amount: number): Promise<any> {
         const betChip = `#chip-${amount}`
         await this.game.click(betChip);
-        await this.game.click(choice);
+        await this.game.click(choice,0);
     }
 
     async betOnSlot(choice: string, amount = 1): Promise<any> {

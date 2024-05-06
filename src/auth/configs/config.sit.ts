@@ -1,8 +1,12 @@
 export default {
-    l1memberSite: "http://m.playthefun.com:6053/",
-    l1lobbyDomain: "#ThirdPartyGame/vid=42&gid=0",
-    l2memberSite: "http://athena000smart.playthefun.com:3010/",
+    l1memberSite: "@http://smsw.playthefun.com:16012/login",
+    l1lobbyDomain: "VendorGame/OpenSabaClub?GameID=",
+    l1memberSiteMobile: "http://m.playthefun.com:6053",
+    l1lobbyDomainMobile: "#ThirdPartyGame/vid=42&gid=0",
+    l2memberSite: "http://athena000web.playthefun.com:3010/NewIndex?lang=en&WebSkinType=3",
     l2lobbyDomain: "VendorGame/GamePageLoading?Game=VGaming&refer=&GameID=",
+    l2memberSiteMobile: "http://athena000smart.playthefun.com:3010",
+    l2lobbyDomainMobile: "VendorGame/GamePageLoading?Game=VGaming&refer=&GameID=",
     lobbyTimeout: 30000, // 15s
     enabledMsgPack: true,
     l1pwd: "1234aaAA",

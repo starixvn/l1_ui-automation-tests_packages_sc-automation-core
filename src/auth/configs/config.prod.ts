@@ -1,6 +1,8 @@
 export default {
     l1memberSite: "https://www.viva88.net/login888.aspx",
-    l1lobbyDomain: "/VendorGame/OpenSabaClub?GameID=",
+    l1lobbyDomain: "VendorGame/OpenSabaClub?GameID=",
+    l1memberSiteMobile: "https://m.viva88.com/",
+    l1lobbyDomainMobile: "#ThirdPartyGame/vid=66&gid=",
     l2memberSite: "http://www.spondemo.com/NewIndex?lang=vn&webskintype=3",
     l2lobbyDomain: "VendorGame/GamePageLoading?Game=VGaming&refer=&GameID=",
     l2memberSiteMobile: "https://smart.spondemo.com",

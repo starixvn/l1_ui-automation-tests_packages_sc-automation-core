@@ -231,6 +231,7 @@ export class TableGameBase {
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             this.game.attachSocketAndCaptureEvent(GameEvent.OwnBets);
             this.game.attachSocketAndCaptureEvent(GameEvent.Settlement);
+            this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
             let betChoices: any = this.options.multiPlaceBetChoices;
             const amount = this.options.placeBetAmount ?? 1;
             await this.game.waitUntilPlaceBet();
