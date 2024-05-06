@@ -1,3 +1,17 @@
+# [1.36.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.35.1...v1.36.0) (2024-05-06)
+
+
+### Bug Fixes
+
+* smoke crash game base ([5c7c3c6](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/5c7c3c6fdd9a20ca0b39bdedeef2d976a2822679))
+
+
+### Features
+
+* enhance login function with basic authentication popup ([6029e11](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/6029e119c198cb325724b9dc95ec06276fa0c14d))
+* pub version ([f84209d](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/f84209d96d588d6dc880d2ebb1a50e88835284d8))
+* run real android device ([ca4fd02](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/ca4fd02890c822c38f01b2fb8382d80e9ae8f85f))
+
 ## [1.35.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.35.0...v1.35.1) (2024-04-19)
 
 # [1.35.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.34.0...v1.35.0) (2024-04-19)
