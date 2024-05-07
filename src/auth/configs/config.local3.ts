@@ -3,5 +3,7 @@ export default {
     l1lobbyDomain: "https://l1-glbs3.lumigame.com/",
     lobbyTimeout: 15000, // 15s
     enabledMsgPack: false,
-    guideLinkL1: "https://l1-guide-3.lumigame.com"
+    guideLinkL1: "https://l1-guide-3.lumigame.com",
+    l1admin: "http://l1-admin3.lumigame.com",
+    l2admin: "http://l2-admin3.lumigame.com"
 };

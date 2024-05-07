@@ -15,6 +15,8 @@ export const monitoring = {
     2: "//*[@data-game-name='xocxoc']",
     75: "//*[@data-game-name='bandarqiuqiu']",
     76: "//*/td[text()='Dragon Ball']//following::a[1]",
+    78: "a[onclick='gameStatus.setControlResultFootballDice(event)']",
+    79: "//*[@data-game-name='footballslot']",
     1001: "//*/td[text()='Bac Ball']//following::a[1]",
 };
 
