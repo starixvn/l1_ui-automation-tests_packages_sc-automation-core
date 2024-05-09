@@ -102,11 +102,12 @@ export const l2prod = {
     75: "QCTest22082304",
     73: "QCTest22082305",
     74: "QCTest22082317",
-    77: "QCTest22082318",
     76: "QCTest22082302",
+    77: "QCTest22082318",
 };
 
 export const l1uat = {
+    0: "IT58Test789",
     1: "IT55Test789",
     2: "IT56Test789",
     3: "IT57Test789",
@@ -117,7 +118,7 @@ export const l1uat = {
     9: "IT58Test789",
     10: "IT55Test789",
     21: "IT56Test789",
-    22: "IT57Test789",
+    22: "IT57Test789", 
     23: "IT58Test789",
     24: "IT55Test789",
     25: "IT56Test789",
@@ -160,6 +161,7 @@ export const l1uat = {
 };
 
 export const l2uat = {
+    0: "TestSep2750",
     1: "TestSep2740",
     2: "TestSep2741",
     3: "TestSep2742",
@@ -213,6 +215,7 @@ export const l2uat = {
 };
 
 export const l1sit = {
+    0: "supertestsaba69",
     1: "supertestsaba66",
     2: "supertestsaba67",
     3: "supertestsaba68",
@@ -263,4 +266,65 @@ export const l1sit = {
     74: "supertestsaba68",
     77: "supertestsaba69",
     76: "supertestsaba66",
+};
+
+export const l2sit = {
+    0: "QCTest10Mar202242",
+    1: "QCTest10Mar202238",
+    2: "QCTest10Mar202239",
+    3: "QCTest10Mar202240",
+    4: "QCTest10Mar202241",
+    6: "QCTest10Mar202242",
+    7: "QCTest10Mar202238",
+    8: "QCTest10Mar202239",
+    9: "QCTest10Mar202240",
+    10: "QCTest10Mar202241",
+    21: "QCTest10Mar202242",
+    22: "QCTest10Mar202238",
+    23: "QCTest10Mar202239",
+    24: "QCTest10Mar202240",
+    25: "QCTest10Mar202241",
+    26: "QCTest10Mar202242",
+    27: "QCTest10Mar202238",
+    28: "QCTest10Mar202239",
+    29: "QCTest10Mar202240",
+    31: "QCTest10Mar202241",
+    35: "QCTest10Mar202242",
+    38: "QCTest10Mar202238",
+    39: "QCTest10Mar202239",
+    42: "QCTest10Mar202240",
+    43: "QCTest10Mar202241",
+    45: "QCTest10Mar202242",
+    46: "QCTest10Mar202238",
+    47: "QCTest10Mar202239",
+    48: "QCTest10Mar202240",
+    49: "QCTest10Mar202241",
+    50: "QCTest10Mar202242",
+    52: "QCTest10Mar202238",
+    59: "QCTest10Mar202239",
+    60: "QCTest10Mar202240",
+    61: "QCTest10Mar202241",
+    62: "QCTest10Mar202242",
+    63: "QCTest10Mar202238",
+    64: "QCTest10Mar202239",
+    65: "QCTest10Mar202240",
+    66: "QCTest10Mar202241",
+    67: "QCTest10Mar202242",
+    68: "QCTest10Mar202238",
+    69: "QCTest10Mar202239",
+    70: "QCTest10Mar202240",
+    71: "QCTest10Mar202241",
+    72: "QCTest10Mar202242",
+    75: "QCTest10Mar202238",
+    73: "QCTest10Mar202239",
+    74: "QCTest10Mar202240",
+    76: "QCTest10Mar202242",
+    77: "QCTest10Mar202241",
+};
+
+export const gnsit = {
+    1001: "Member611UUS02",
+    1002: "Member611UUS02",
+    1003: "Member611UUS02",
+    1004: "Member611UUS02",
 };

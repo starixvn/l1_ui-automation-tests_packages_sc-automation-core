@@ -305,3 +305,21 @@ export class BaseAdmin {
       };
 
 }
+
+export function convertDateTimeToGMTMinus4(dateTime: string): string {
+    const gmtPlus7Offset = 7 * 60 * 60 * 1000; // GMT+7 offset in milliseconds
+    const gmtMinus4Offset = -4 * 60 * 60 * 1000; // GMT-4 offset in milliseconds
+
+    const inputDateTime = new Date(dateTime);
+    const gmtPlus7DateTime = new Date(inputDateTime.getTime() + gmtPlus7Offset);
+    const gmtMinus4DateTime = new Date(gmtPlus7DateTime.getTime() + gmtMinus4Offset);
+
+    const hours = gmtMinus4DateTime.getUTCHours().toString().padStart(2, "0");
+    const minutes = gmtMinus4DateTime.getUTCMinutes().toString().padStart(2, "0");
+    const seconds = gmtMinus4DateTime.getUTCSeconds().toString().padStart(2, "0");
+    const day = gmtMinus4DateTime.getUTCDate().toString().padStart(2, "0");
+    const month = (gmtMinus4DateTime.getUTCMonth() + 1).toString().padStart(2, "0");
+    const year = gmtMinus4DateTime.getUTCFullYear().toString();
+
+    return `${hours}:${minutes}:${seconds} ${day}/${month}/${year}`;
+}

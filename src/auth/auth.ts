@@ -29,15 +29,25 @@ export const ssoToGame = async (
     }
 
     if (env.includes("local")) {
-        const memberSiteLink = config[`${projectCode}memberSite`] + `?obCustId=${playerId}&balance=20000`;
+        const memberSiteLink = config[`${projectCode}memberSite`] + `?obCustId=${playerId}&balance=200000`;
         await page.goto(memberSiteLink);
         console.log("Login Local", memberSiteLink);
         await page.click(LobbyLocator.advancelbl);
         await page.locator(LobbyLocator.langDropdown).selectOption(LobbyLocator[`${langCode}LangOption`]);
+        if (projectCode == 'gn') {
+            const env = (process.env.npm_config_env == 'local')? '#local-0' : '#local-'+(process.env.npm_config_env ?? 'local1').split('').pop();
+            await page.click(env);
+            await page.waitForTimeout(500);
+        }
         await page.click(LobbyLocator.tokenBtn);
         await page.waitForTimeout(500);
-        const ssoLink = (await page.locator(LobbyLocator.ssoLink).textContent()) ?? "";
-        await page.goto(`${ssoLink.replace("gameId=0", `gameId=${gameId}`)}`);
+        if (projectCode == 'gn') {
+            const ssoLink = (await page.locator("#link-local").textContent()) ?? "";
+            await page.goto(`${ssoLink.replace("gameId=0", `gameId=${gameId}`)}`);
+        } else {
+            const ssoLink = (await page.locator(LobbyLocator.ssoLink).textContent()) ?? "";
+            await page.goto(`${ssoLink.replace("gameId=0", `gameId=${gameId}`)}`);
+        }
         const isCurrencyForm = await page.$$("id=currency");
         if (isCurrencyForm.length > 0) {
             await page.click("text=Submit");
@@ -65,13 +75,23 @@ const loginMemberSite = async (
 ) => {
     const timeout = config.lobbyTimeout;
     const memberSiteLink =
-        process.env.npm_config_memberSite ||
-        (process.env.npm_config_mobile === "true" ? config[`${projectCode}memberSiteMobile`] : config[`${projectCode}memberSite`]);
+        process.env.npm_config_mobile === "true" ? config[`${projectCode}memberSiteMobile`] : config[`${projectCode}memberSite`];
     const pwd = config[`${projectCode}pwd`];
     const lobbyDomain =
         process.env.npm_config_mobile === "true" ? config[`${projectCode}lobbyDomainMobile`] : config[`${projectCode}lobbyDomain`];
 
-    await page.goto(memberSiteLink);
+    if (memberSiteLink.includes('@')) { // Handle basic authentication popup for desktop membersite
+            const username = 'demo'
+            const password = 'one23'
+            const authHeader ='Basic '+ btoa(username+':'+password)
+            console.log(authHeader);
+            await page.setExtraHTTPHeaders({Authorization: authHeader})
+            await page.goto(memberSiteLink.replace('@',''));
+        }
+    else{
+            await page.goto(memberSiteLink);
+        }
+
     console.log(`Login ${playerId} - ${gameId} Member Site: ${memberSiteLink}`);
     await page.waitForLoadState("domcontentloaded", { timeout });
 
@@ -94,12 +114,11 @@ const loginMemberSite = async (
         await goToGameLobby(page, lobbyDomain, productId);
     }
 
-    if (mustSelectCurrencyGroup(env)) {
-        await selectCurrencyGroup(page, timeout);
-    }
+    await selectCurrencyGroup(page, timeout);
 };
 
 const selectCurrencyGroup = async (page: Page, timeout: number = 15000) => {
+    await page.waitForTimeout(2000);
     const frameExists = await page.$("#frmGame");
 
     if (frameExists) {
@@ -113,33 +132,65 @@ const selectCurrencyGroup = async (page: Page, timeout: number = 15000) => {
 
 const loginUAT = async (page: Page, accountId: string, pwd: string, langCode: string, projectCode: string, timeout: number = 15000) => {
     if (projectCode === "l1") {
-        await page.click(UATLocator.loginDiv);
-        await page.selectOption(UATLocator.langDropdown, { value: UATLocator.vnLangOption });
-        await page.fill(UATLocator.memberIdInput, accountId);
-        await page.fill(UATLocator.pwdInput, pwd);
-        await page.click(UATLocator.loginButton);
-        await page.waitForLoadState("load", { timeout });
-    } else {
-        await page.setViewportSize({
-            width: 340,
-            height: 667,
-        });
-        await page.selectOption(UATLocator.langDropdown, { value: UATLocator.enLangOption });
-        await page.fill(PRODLocator.l2memberIdInput, accountId);
-        await page.fill(PRODLocator.l2pwdInput, pwd);
-        await page.click(PRODLocator.l2loginButton);
-        await page.waitForLoadState("networkidle", { timeout: timeout });
-        const isCloseExist = await page.$$(PRODLocator.l2iconClose);
-        if (isCloseExist.length > 0) {
-            await page.click(PRODLocator.l2iconClose);
+        if (process.env.npm_config_mobile === "true") {
+            await page.setViewportSize({
+                width: 340,
+                height: 667,
+            });
+            await page.selectOption(UATLocator.langDropdown, { value: UATLocator.enLangOption });
+            await page.fill(PRODLocator.l2memberIdInput, accountId);
+            await page.fill(PRODLocator.l2pwdInput, pwd);
+            await page.click(PRODLocator.l2loginButton);
+            await page.waitForLoadState("networkidle", { timeout: timeout });
+            const isCloseExist = await page.$$(PRODLocator.l2iconClose);
+            if (isCloseExist.length > 0) {
+                await page.click(PRODLocator.l2iconClose);
+            }
+            await page.click(PRODLocator.l2iconMe);
+            await page.click(UATLocator.l2langDropdown);
+            await page.click(PRODLocator[`l2${langCode}LangOption`]);
+            await page.setViewportSize({
+                width: 1280,
+                height: 720,
+            });
+        } else {
+            await page.fill("#txtID", accountId);
+            await page.fill("#txtPW", pwd);
+            await page.click("//button");
+            await page.waitForLoadState("load", { timeout });
+
         }
-        await page.click(PRODLocator.l2iconMe);
-        await page.click(UATLocator.l2langDropdown);
-        await page.click(PRODLocator[`l2${langCode}LangOption`]);
-        await page.setViewportSize({
-            width: 1280,
-            height: 720,
-        });
+    }
+    if (projectCode === "l2") {
+        if (process.env.npm_config_mobile === "true") {
+            await page.setViewportSize({
+                width: 340,
+                height: 667,
+            });
+            await page.selectOption(UATLocator.langDropdown, { value: UATLocator.enLangOption });
+            await page.fill(PRODLocator.l2memberIdInput, accountId);
+            await page.fill(PRODLocator.l2pwdInput, pwd);
+            await page.click(PRODLocator.l2loginButton);
+            await page.waitForLoadState("networkidle", { timeout: timeout });
+            const isCloseExist = await page.$$(PRODLocator.l2iconClose);
+            if (isCloseExist.length > 0) {
+                await page.click(PRODLocator.l2iconClose);
+            }
+            await page.click(PRODLocator.l2iconMe);
+            await page.click(UATLocator.l2langDropdown);
+            await page.click(PRODLocator[`l2${langCode}LangOption`]);
+            await page.setViewportSize({
+                width: 1280,
+                height: 720,
+            });
+        } else {
+            await page.click(UATLocator.loginDiv);
+            await page.selectOption(UATLocator.langDropdown, { value: UATLocator.vnLangOption });
+            await page.fill(UATLocator.memberIdInput, accountId);
+            await page.fill(UATLocator.pwdInput, pwd);
+            await page.click(UATLocator.loginButton);
+            await page.waitForLoadState("load", { timeout });
+        }
     }
 };
 
@@ -155,12 +206,6 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
             await page.waitForLoadState();
             await page.waitForTimeout(5000);
             console.log(langCode);
-            // const frameExists = await page.locator("#betCartTutorial");
-            // if (frameExists) {
-            //     await page.frameLocator("#betCartTutorial").getByText("Bỏ Qua").first().click();
-            // }
-            // await page.click(PRODLocator.langDropdown);
-            // await page.click(PRODLocator[`${langCode}LangOption`]);
         }
     }
     if (projectCode === "l2") {
@@ -227,23 +272,66 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
 };
 
 const loginSIT = async (page: Page, accountId: string, pwd: string, projectCode: string, timeout: number = 15000) => {
-    await page.setViewportSize({ width: 340, height: 667 });
     if (projectCode === "l1") {
-        await page.click(UATLocator.loginDiv);
+        if (process.env.npm_config_mobile === "true") {
+            await page.setViewportSize({ width: 340, height: 667 });
+            await page.click(UATLocator.loginDiv);
+
+            await page.selectOption(UATLocator.langDropdown, { value: UATLocator.vnLangOption });
+            await page.fill(UATLocator.memberIdInput, accountId);
+            await page.fill(UATLocator.pwdInput, pwd);
+            await page.click(UATLocator.loginButton);
+            await page.waitForLoadState("networkidle", { timeout: timeout });
+            const isCloseExist = await page.$$(PRODLocator.l2iconClose);
+            if (isCloseExist.length > 0) {
+                await page.click(PRODLocator.l2iconClose);
+            }
+            await page.setViewportSize({
+                width: 1280,
+                height: 720,
+            });
+        } else {
+
+            // be implemented later
+        }
     }
-    await page.selectOption(UATLocator.langDropdown, { value: UATLocator.vnLangOption });
-    await page.fill(UATLocator.memberIdInput, accountId);
-    await page.fill(UATLocator.pwdInput, pwd);
-    await page.click(UATLocator.loginButton);
-    await page.waitForLoadState("networkidle", { timeout: timeout });
-    const isCloseExist = await page.$$(PRODLocator.l2iconClose);
-    if (isCloseExist.length > 0) {
-        await page.click(PRODLocator.l2iconClose);
+    if (projectCode === "l2") {
+        if (process.env.npm_config_mobile === "true") {
+                        // be implemented later
+        } else {
+            await page.waitForLoadState("domcontentloaded", { timeout: timeout });
+            await page.locator(PRODLocator.usernameInput).waitFor();
+            await page.waitForTimeout(3000);
+            await page.fill(PRODLocator.usernameInput, accountId);
+            await page.fill(PRODLocator.passwordInput, pwd);
+            let capcha = await getCaptcha(page);
+            console.log("capcha", capcha);
+            await page.fill("id=validation", capcha);
+            await page.click(`//*[@data-tag="tabBtn"]`);
+            await page.waitForTimeout(2000);
+            const isElementVisible = await page.isVisible('//*[@class="hint-absolute"]');
+            if (isElementVisible) {
+                await page.locator("//i[@class='icon-refresh']").click();
+                await page.waitForTimeout(5000);
+                await page.fill(PRODLocator.usernameInput, accountId);
+                await page.fill(PRODLocator.passwordInput, pwd);
+                capcha = await getCaptcha(page);
+                await page.fill("id=validation", capcha);
+                await page.click(`//*[@data-tag="tabBtn"]`);
+            }
+            await page.waitForTimeout(20000);
+        }
     }
-    await page.setViewportSize({
-        width: 1280,
-        height: 720,
-    });
+    if (projectCode === "gn") {
+        await page.fill("#txtID", accountId);
+        await page.fill("#txtPW", pwd);
+        await page.click("//button");
+        await page.waitForLoadState("load", { timeout });
+        await page.locator("//div[contains(@class,'c-dropdown--lang')]").click();
+        await page.locator("//span[contains(text(),'Tiếng Việt')]").click();
+        await page.waitForLoadState("load", { timeout });
+        await page.waitForTimeout(5000);
+    }
 };
 
 const goToUltra888GameLobby = async (page: Page, productId: any, timeout = 15000) => {
@@ -266,15 +354,15 @@ const goToUltra888GameLobby = async (page: Page, productId: any, timeout = 15000
     };
     await page.click(`//*/div[contains(@class,"table")]`);
     await page.waitForTimeout(3000);
-    await page.waitForLoadState("networkidle", { timeout });
+    await page.waitForLoadState("load", { timeout });
     console.log("productId", productId, ultra888MapGameIds[productId]);
     await page.click(ultra888MapGameIds[productId]);
-    await page.waitForLoadState("networkidle", { timeout });
+    await page.waitForLoadState("load", { timeout });
 };
 
 const goToGameLobby = async (page: Page, lobbyDomain: string, productId: string, timeout: number = 15000) => {
     await page.goto(formatGameLobbyUrl(page.url(), lobbyDomain, productId));
-    await page.waitForLoadState("networkidle", { timeout });
+    await page.waitForLoadState("load", { timeout });
 };
 
 const formatGameLobbyUrl = (url: string, lobbyDomain: string, productId: string): string => {
@@ -282,10 +370,6 @@ const formatGameLobbyUrl = (url: string, lobbyDomain: string, productId: string)
     if (url.includes("athena") || url.includes("qa") || url.includes("/m.")) {
         return `http://${domain[2]}/${lobbyDomain}${productId}`;
     } else return `https://${domain[2]}/${lobbyDomain}${productId}`;
-};
-
-const mustSelectCurrencyGroup = (env: string): boolean => {
-    return env !== Environment.SIT;
 };
 
 export const loginAdmin = async (page: Page, projectCode: string) => {

@@ -17,14 +17,18 @@ export class BalancedBettingGameBase extends MiniGameBase {
 
             // Act
             const placeBetResponse = await this.player.placeBet(bet.choice, bet.amount);
+            console.log(placeBetResponse, 'placeBetResponse');
             const settledResults = await this.game.waitForSettlement();
+            console.log(settledResults, 'settledResults');
             await this.game.waitUntilPlaceBet();
-            await this.game.waitForTimeout(5000);
-            console.log(settledResults,'click on history icon');
+            console.log('click on history icon');
             let historyPayload = await this.player.openHistory();
-            if (Object.keys(historyPayload).length === 0) {
+            let retryCount = 0;
+            while (Object.keys(historyPayload).length === 0 && retryCount < 2) {
                 historyPayload = await this.player.openHistory();
+                retryCount++;
             }
+
             const ticketHistory = historyPayload.history.betLogs.shift() || 0;
             bet.refund = ticketHistory.refund;
 

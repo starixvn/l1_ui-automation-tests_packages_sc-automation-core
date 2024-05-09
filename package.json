@@ -1,6 +1,6 @@
 {
     "name": "sc-automation-core",
-    "version": "1.32.3",
+    "version": "1.36.0",
     "description": "The core of SC automation tests. Built with Playwright.",
     "license": "ISC",
     "main": "lib/index.js",
@@ -36,7 +36,7 @@
     "devDependencies": {
         "@commitlint/cli": "^9.1.2",
         "@commitlint/config-conventional": "^9.1.2",
-        "@playwright/test": "1.42.0",
+        "@playwright/test": "1.44.0",
         "@semantic-release/changelog": "^5.0.1",
         "@semantic-release/commit-analyzer": "^8.0.1",
         "@semantic-release/git": "^9.0.0",

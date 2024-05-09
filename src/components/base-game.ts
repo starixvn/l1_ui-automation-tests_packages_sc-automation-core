@@ -18,17 +18,31 @@ export class BaseGame {
     readonly page: Page;
     readonly locators: Array<ImageLocator>;
     readonly gameConfiguration: GameConfiguration;
+    readonly device: any;
 
     msgpack: boolean;
     gameSocket: PlaywrightWs;
     capturedEvents: any;
     odds: any = null;
 
-    constructor(page: Page, locators: Array<ImageLocator>, gameConfiguration: GameConfiguration) {
+    constructor(page: Page, locators: Array<ImageLocator>, gameConfiguration: GameConfiguration, device?: any) {
         this.page = page;
         this.locators = locators;
         this.gameConfiguration = gameConfiguration;
         this.capturedEvents = {};
+        this.device = device;
+    }
+
+    async swipeLocator(fromLocator: string, toLocator: string): Promise<void> {
+        const flo = (await this.page.locator(fromLocator).boundingBox()) || { x: 0, y: 0, width: 0, height: 0 };
+        const tlo = (await this.page.locator(toLocator).boundingBox()) || { x: 0, y: 0, width: 0, height: 0 };
+        const cen1 = { x: flo.x + flo.width / 2, y: flo.y + flo.height / 2 };
+        const cen2 = { x: tlo.x + tlo.width / 2, y: tlo.y + tlo.height / 2 };
+        await this.device.input.swipe({ x: cen1.x, y: cen1.y }, [{ x: cen2.x, y: cen2.y }], 1);
+    }
+
+    async swipePos(fromPos: Pos, toPos: Pos): Promise<void> {
+        await this.device.input.swipe({ x: fromPos.x, y: fromPos.y }, [{ x: toPos.x, y: toPos.y }], 1);
     }
 
     async login() {
@@ -41,7 +55,7 @@ export class BaseGame {
             account = projectCode != "ultra888" ? accounts[`${projectCode}${env}`][this.gameConfiguration.id] : this.gameConfiguration.id;
         }
         const startTime = performance.now(); // Measure start time
-        await ssoToGame(this.page, this.gameConfiguration.id, account, this.gameConfiguration.productId, env, projectCode);
+        await ssoToGame(this.page, this.gameConfiguration.id, account, this.gameConfiguration.productId[projectCode], env, projectCode);
         this.msgpack = getConfig().enabledMsgPack;
         this.page.on("websocket", async (ws) => {
             if (ws.url().includes(this.gameConfiguration.socketName ?? this.gameConfiguration.name.toLowerCase())) {
@@ -64,7 +78,7 @@ export class BaseGame {
             }
         });
         await this.logConsole();
-        if (this.gameConfiguration.productId === "0") {
+        if (this.gameConfiguration.id === 0) {
             await this.waitUntilGameLobbyUiLoad();
         } else {
             await this.waitUntilGameUiLoad();
@@ -158,7 +172,6 @@ export class BaseGame {
     }
 
     async waitUntilPlaceBet(subGameName?: string): Promise<void> {
-        await this.waitUntilNextRound(subGameName);
         await this.waitForEvent(GameEvent.StartPlaceBet, subGameName);
         await this.waitForTimeout(4000);
     }
@@ -279,7 +292,7 @@ export class BaseGame {
         return this.locators.find((x) => x.name === name);
     }
 
-    async clickHistory(waitTime: number = 500): Promise<void> {
+    async clickHistory(waitTime: number = 800): Promise<void> {
         const hamburgerMenu = this.locator("hamburgerMenu") || this.locator(baseLocatorNames.mnuHamburger);
         const historyMenu = this.locator("historyMenu") || this.locator(baseLocatorNames.icoHistory);
 
@@ -333,7 +346,7 @@ export class BaseGame {
 
         if (guideMenu) {
             await guideMenu.click(this.page);
-            await this.page.waitForLoadState("networkidle");
+            await this.page.waitForLoadState("load");
             await this.waitForTimeout(waitTime);
         }
     }
@@ -391,8 +404,8 @@ export class BaseGame {
     }
 
     async mouseDragDrop(from: Pos, to: Pos): Promise<void> {
-        const { xPos: fromX, yPos: fromY } = from;
-        const { xPos: toX, yPos: toY } = to;
+        const { x: fromX, y: fromY } = from;
+        const { x: toX, y: toY } = to;
 
         await this.page.mouse.move(fromX, fromY);
         await this.page.mouse.down();
@@ -403,8 +416,8 @@ export class BaseGame {
     }
 
     async mouseWhell(to: Pos): Promise<void> {
-        const { xPos, yPos } = to;
-        await this.page.mouse.wheel(xPos, yPos);
+        const { x, y } = to;
+        await this.page.mouse.wheel(x, y);
     }
 
     async getCountFrameLocator(locator: string) {
@@ -495,41 +508,40 @@ export class BaseGame {
         }
     }
 
-    async click(locator: string, waittime = 0) {
-        const isVisible = await this.page.locator(locator).isVisible();
-        if (isVisible) {
-            await this.page.locator(locator).first().click();
-            await this.waitForTimeout(waittime);
-        }
-        else{
-            console.log(`The input locator : ${locator} is not visible`);
-        }
+    async click(locator: string, waittime = 500) {
+        await this.page.locator(locator).waitFor({state:"visible"})  
+        await this.page.locator(locator).first().click();
+        await this.waitForTimeout(waittime);
     }
 
     async verifyImageLocators(expectSnapshot: object) {
         for (const key in expectSnapshot) {
-            expect(await this.page.locator(key).screenshot()).toMatchSnapshot(expectSnapshot[key]);
+            await expect(this.page.locator(key),{message: `${key} does not match expected screenshot`}).toHaveScreenshot(expectSnapshot[key]);
         }
     }
 
     async verifyValueLocators(expectedValue?: object) {
         for (const key in expectedValue) {
-            expect(await this.page.locator(key).innerText()).toBe(expectedValue[key]);
+            expect(await this.page.locator(key).innerText(),{message: `${key} does not have text ${expectedValue}`}).toBe(expectedValue[key]);
         }
     }
 
     async verifyLocatorsVisible(locators: string[]) {
         for (const locator of locators) {
-            expect(await this.page.locator(locator).isVisible()).toBe(true);
+            expect(await this.page.locator(locator).isVisible(),{message: `${locator} is not visible`}).toBe(true);
         }
     }
 
-    async verifyText(locator: string, expectedValue: string) {
-        expect((await this.page.locator(locator).innerText()).toString()).toBe(expectedValue.toString());
+    async textLocatorShouldBe(locator: string, expectedValue: string) {
+        await expect(this.page.locator(locator),{message: `${locator} does not have text ${expectedValue}`}).toHaveText(expectedValue.toString());
     }
 
-    async getText(locator: string) {
-        return await this.page.locator(locator).innerText();
+    async getText(locator: string, datatype: string = "innerText") {
+        if (datatype == "innerHTML") {
+            return await this.page.locator(locator).innerHTML();
+        } else {
+            return await this.page.locator(locator).innerText();
+        }
     }
 
     async verifyDateTimeFormat(locator: string) {
@@ -564,8 +576,8 @@ function comparePixels(pixel1: number[], pixel2: number[], threshold: number): b
 }
 
 export interface Pos {
-    xPos: number;
-    yPos: number;
+    x: number;
+    y: number;
 }
 
 export function isDateTimeFormat(dateString: string) {
