@@ -7,10 +7,13 @@ export default {
     l2lobbyDomain: "VendorGame/GamePageLoading?Game=VGaming&refer=&GameID=",
     l2memberSiteMobile: "http://athena000smart.playthefun.com:3010",
     l2lobbyDomainMobile: "VendorGame/GamePageLoading?Game=VGaming&refer=&GameID=",
+    gnmemberSite: "@https://sdms.playonesit.com:16002/login",
+    gnlobbyDomain: "VendorGame/Open3rdPartyGame?deviceType=1&vendorId=86&sportTypeId=240&gmt=7",
     lobbyTimeout: 30000, // 15s
     enabledMsgPack: true,
     l1pwd: "1234aaAA",
     l2pwd: "1q2w3e4r",
+    gnpwd: "1234aa",
     guideLinkL1: "https://l1guidessit.sgamesuat.com",
     guideLinkL2: "https://l2guidessit.sgamesuat.com",
     l1admin: "https://l1sitadm.sgamesuat.com",

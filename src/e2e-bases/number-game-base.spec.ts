@@ -14,6 +14,11 @@ export class NumberGameBase {
         test("Verify in game UI @A_1 @A_7", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
+            const isInGame = await this.game.page.locator(commonControls.iconHome).isVisible();
+            if (!isInGame) {
+                await this.game.click(this.options.locators.lobbyGameIcon,3000);
+                await this.game.page.locator(commonControls.iconHome).waitFor({state:"visible"})  
+            }
             await this.game.gnWaitUntilPlaceBet();
             const inGameUi =
                 process.env.npm_config_android == "true" ? this.options.locators.inGameUIAndroid : this.options.locators.inGameUI;
@@ -47,8 +52,8 @@ export class NumberGameBase {
             await this.game.click(commonControls.iconPF);
             const bfRandom = await this.game.page.locator("#random-seed").isChecked();
             await this.game.page.reload({ waitUntil: "domcontentloaded" });
-            await this.game.waitForTimeout(3000);
-            await this.game.click(commonControls.iconPF);
+            await this.game.page.waitForLoadState();
+            await this.game.click(commonControls.iconPF,1000);
             const afRandom = await this.game.page.locator("#random-seed").isChecked();
             expect(bfRandom).toBe(afRandom);
             await this.game.click(commonControls.iconClosePfSetting);
@@ -59,8 +64,8 @@ export class NumberGameBase {
             await this.game.click(commonControls.iconPF);
             const bfRandom = await this.game.page.locator("#random-seed").isChecked();
             await this.game.click(commonControls.iconClosePfSetting);
-            await this.game.click(commonControls.iconHome);
-            await this.game.click(this.options.locators.lobbyGameIcon, 1000);
+            await this.game.click(commonControls.iconHome,3000);
+            await this.game.click(this.options.locators.lobbyGameIcon, 3000);
             await this.game.click(commonControls.iconPF);
             const afRandom = await this.game.page.locator("#random-seed").isChecked();
             expect(bfRandom).toBe(afRandom);
@@ -72,7 +77,7 @@ export class NumberGameBase {
         test("Verify chip selected when open game @A_8", async () => {
             const chipLocators = this.options.locators.chip;
             for (const key in chipLocators) {
-                expect(await this.game.page.locator(key).screenshot()).toMatchSnapshot(chipLocators[key]);
+                expect(await this.game.page.locator(key).screenshot(),{message: `Chip ${key} does not match expected snapshot`}).toMatchSnapshot(chipLocators[key]);
                 await this.game.click(commonControls.btnChipSliderNext, 500);
             }
             for (let index = 0; index < Object.keys(chipLocators).length; index++) {
@@ -89,7 +94,7 @@ export class NumberGameBase {
             let amount = 0;
 
             for (const key in chipLocators) {
-                await this.game.click(betchoice, 200);
+                await this.game.click(betchoice, 1000);
                 let expectedValue = key.replace("#chip-", "");
                 amount += parseInt(expectedValue);
                 const betamount = (await this.game.page.$(ownbet)) || null;
@@ -116,13 +121,12 @@ export class NumberGameBase {
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
             // Act
             await this.game.click(`#chip-${bet.amount}`);
-            await this.game.page.click(bet.locator);
-            await this.game.waitForTimeout(2000);
+            await this.game.click(bet.locator,3000);
             let afbalance = await this.game.getText(commonControls.lblBalance);
             let settledResults = await this.game.gnWaitForSettlement();
 
             // Assert
-            expect(parseInt(bfbalance.replace(",", "")) - bet.amount).toBe(parseInt(afbalance.replace(",", "")));
+            expect(parseInt(bfbalance.replace(",", "")) - bet.amount,{message: `${bfbalance} and ${afbalance}`}).toBe(parseInt(afbalance.replace(",", "")));
             expect(settledResults.settlementResult).toMatchBetOptions(this.options.gameConfiguration.choices);
         });
 
@@ -146,7 +150,7 @@ export class NumberGameBase {
             settledResults.odds = odds;
 
             // Assert
-            expect(parseInt(bfbalance.replace(",", "")) - amount * 2).toBe(parseInt(afbalance.replace(",", "")));
+            expect(parseInt(bfbalance.replace(",", "")) - amount * 2,{message: `${bfbalance} and ${afbalance}`}).toBe(parseInt(afbalance.replace(",", "")));
             expect(settledResults.settlementResult).toMatchBetOptions(this.options.gameConfiguration.choices);
         });
     }
@@ -169,7 +173,7 @@ export class NumberGameBase {
                 await this.game.page.locator(commonControls.btnChipSliderNext).click({ clickCount: 10, delay: 100 });
                 await this.game.click(bet.locator, 200);
                 await this.game.waitForTimeout(1000);
-                await expect(this.game.page.locator(commonControls.dialog_confirm_submit)).toContainText(
+                await expect(this.game.page.locator(commonControls.dialog_confirm_submit),{message: `suggestion bet of ${bet.choice} is not correct`}).toContainText(
                     this.options.locators.suggestionBets[key].toString(),
                 );
                 await this.game.click(commonControls.btn_no_submit_dialog);
@@ -241,8 +245,8 @@ export class NumberGameBase {
             // Arrange
             const totalcellBIR = await this.game.page.$$eval(commonControls.cellsbigRoad, (elements) => elements.length);
             const totalcellBER = await this.game.page.$$eval(commonControls.cellsbeadRoad, (elements) => elements.length);
-            expect(totalcellBIR).toBe(108);
-            expect(totalcellBER).toBe(108);
+            expect(totalcellBIR,{message: `totalcellBIR ${totalcellBIR}`}).toBe(108);
+            expect(totalcellBER,{message: `totalcellBER ${totalcellBER}`}).toBe(108);
         });
 
         test("Verify statistic result data of the latest 108 rounds @A_16", async () => {
@@ -495,18 +499,18 @@ export class NumberGameBase {
         });
 
         test("User can change their's avatar @A_27", async () => {
-            const avatarLocator = this.game.page.locator(commonControls.imgAvatar);
             const randomInterval = Math.floor(Math.random() * 14) + 2;
             const indexAvatar = [
                 `//img[contains(@src,'F${randomInterval}.jpg')]/parent::div`,
-                "//img[contains(@src,'F1.jpg')]/parent::div",
             ];
+            const avatar = [`//div[contains(@class,'user-info_avatar')]/img[contains(@src,'F${randomInterval}.jpg')]`]
+
             for (const iterator of indexAvatar) {
                 await this.game.click(commonControls.imgAvatar);
                 await this.game.click(iterator);
                 await this.game.click("//button[@class='btn-green']");
             }
-            await expect(avatarLocator).toHaveScreenshot("defaultAvatar.png");
+            await this.game.verifyLocatorsVisible(avatar);
         });
 
         test("User can go back to game success @A_27", async () => {
@@ -549,18 +553,18 @@ export class NumberGameBase {
         });
 
         test("User can change their's avatar @A_27", async () => {
-            const avatarLocator = this.game.page.locator(commonControls.imgAvatar);
             const randomInterval = Math.floor(Math.random() * 14) + 2;
             const indexAvatar = [
                 `//img[contains(@src,'F${randomInterval}.jpg')]/parent::div`,
-                "//img[contains(@src,'F1.jpg')]/parent::div",
             ];
+            const avatar = [`//div[contains(@class,'user-info_avatar')]/img[contains(@src,'F${randomInterval}.jpg')]`]
+
             for (const iterator of indexAvatar) {
                 await this.game.click(commonControls.imgAvatar);
                 await this.game.click(iterator);
                 await this.game.click("//button[@class='btn-green']");
             }
-            await expect(avatarLocator).toHaveScreenshot("defaultAvatar.png");
+            await this.game.verifyLocatorsVisible(avatar);
         });
 
         test("User can go back to game success @A_27", async () => {
@@ -572,29 +576,28 @@ export class NumberGameBase {
             const deviceScreenResolution = await this.game.page.evaluate(() => {
                 return {
                     width: window.innerWidth,
-                    height: window.innerHeight
+                    height: window.innerHeight,
                 };
             });
-            const centerPos = {x: deviceScreenResolution.width / 2, y: deviceScreenResolution.height / 2}; 
-            const toRight = {x: deviceScreenResolution.width -5, y:  centerPos.y };
+            const centerPos = { x: deviceScreenResolution.width / 2, y: deviceScreenResolution.height / 2 };
+            const toRight = { x: deviceScreenResolution.width - 5, y: centerPos.y };
             for (const iterator of this.options.locators.slideGameList) {
-                await this.game.swipePos(centerPos,toRight)
+                await this.game.swipePos(centerPos, toRight);
                 await this.game.textLocatorShouldBe(commonControls.imgGameName, iterator);
-
             }
         });
         test("User can switch game by swipe left navigator @A_27", async () => {
             const deviceScreenResolution = await this.game.page.evaluate(() => {
                 return {
                     width: window.innerWidth,
-                    height: window.innerHeight
+                    height: window.innerHeight,
                 };
             });
-            const centerPos = {x: deviceScreenResolution.width / 2, y: deviceScreenResolution.height / 2}; 
-            const toLeft = {x: 5, y:  centerPos.y };
+            const centerPos = { x: deviceScreenResolution.width / 2, y: deviceScreenResolution.height / 2 };
+            const toLeft = { x: 5, y: centerPos.y };
             const revertGameList = this.options.locators.slideGameList.reverse();
             for (const iterator of revertGameList) {
-                await this.game.swipePos(centerPos,toLeft)
+                await this.game.swipePos(centerPos, toLeft);
                 await this.game.textLocatorShouldBe(commonControls.imgGameName, iterator);
             }
         });
@@ -603,15 +606,14 @@ export class NumberGameBase {
             const deviceScreenResolution = await this.game.page.evaluate(() => {
                 return {
                     width: window.innerWidth,
-                    height: window.innerHeight
+                    height: window.innerHeight,
                 };
             });
-            const centerPos = {x: deviceScreenResolution.width / 2, y: deviceScreenResolution.height / 2}; 
-            const toUp = {x: centerPos.x , y:  5 };
+            const centerPos = { x: deviceScreenResolution.width / 2, y: deviceScreenResolution.height / 2 };
+            const toUp = { x: centerPos.x, y: 5 };
             for (const iterator of this.options.locators.slideGameList) {
-                await this.game.swipePos(centerPos,toUp)
+                await this.game.swipePos(centerPos, toUp);
                 await this.game.textLocatorShouldBe(commonControls.imgGameName, iterator);
-
             }
         });
 
@@ -619,14 +621,14 @@ export class NumberGameBase {
             const deviceScreenResolution = await this.game.page.evaluate(() => {
                 return {
                     width: window.innerWidth,
-                    height: window.innerHeight
+                    height: window.innerHeight,
                 };
             });
-            const centerPos = {x: deviceScreenResolution.width / 2, y: deviceScreenResolution.height / 2}; 
-            const toDown = {x: centerPos.x , y: deviceScreenResolution.height - 5 };
+            const centerPos = { x: deviceScreenResolution.width / 2, y: deviceScreenResolution.height / 2 };
+            const toDown = { x: centerPos.x, y: deviceScreenResolution.height - 5 };
             const revertGameList = this.options.locators.slideGameList.reverse();
             for (const iterator of revertGameList) {
-                await this.game.swipePos(centerPos,toDown)
+                await this.game.swipePos(centerPos, toDown);
                 await this.game.textLocatorShouldBe(commonControls.imgGameName, iterator);
             }
         });
@@ -691,10 +693,11 @@ export class NumberGameBase {
 
 const capturePfIntroContent = async (game: BaseGame) => {
     const images = new Array<ImageSnapshot>();
+    await game.page.frameLocator("iframe").locator("#container-guide").waitFor({state:"visible"});
     const guidepages = await game.getCountFrameLocator("//*[@id='container-guide']//div[@class='guide-item']");
 
     for (let index = 1; index <= guidepages; index++) {
-        const filename = process.env.npm_config_android=='true' ? `pfIntroAndroid-${index}` : `pfIntro-${index}`;
+        const filename = process.env.npm_config_android == "true" ? `pfIntroAndroid-${index}` : `pfIntro-${index}`;
         await game.page.frameLocator("iframe").locator(`//*[@id='container-guide']//div[@class='guide-item'][${index}]`).focus();
         const contentFrame = new BaseElementLocator(filename, `//*[@id='container-guide']//div[@class='guide-item'][${index}]`);
         const contentImage = await contentFrame.snapshot(game.page);

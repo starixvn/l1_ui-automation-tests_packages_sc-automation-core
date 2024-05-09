@@ -292,7 +292,7 @@ export class BaseGame {
         return this.locators.find((x) => x.name === name);
     }
 
-    async clickHistory(waitTime: number = 500): Promise<void> {
+    async clickHistory(waitTime: number = 800): Promise<void> {
         const hamburgerMenu = this.locator("hamburgerMenu") || this.locator(baseLocatorNames.mnuHamburger);
         const historyMenu = this.locator("historyMenu") || this.locator(baseLocatorNames.icoHistory);
 
@@ -509,35 +509,31 @@ export class BaseGame {
     }
 
     async click(locator: string, waittime = 500) {
-        const isVisible = await this.page.locator(locator).isVisible();
-        if (isVisible) {
-            await this.page.locator(locator).first().click();
-            await this.waitForTimeout(waittime);
-        } else {
-            console.log(`The input locator : ${locator} is not visible`);
-        }
+        await this.page.locator(locator).waitFor({state:"visible"})  
+        await this.page.locator(locator).first().click();
+        await this.waitForTimeout(waittime);
     }
 
     async verifyImageLocators(expectSnapshot: object) {
         for (const key in expectSnapshot) {
-            await expect(this.page.locator(key)).toHaveScreenshot(expectSnapshot[key]);
+            await expect(this.page.locator(key),{message: `${key} does not match expected screenshot`}).toHaveScreenshot(expectSnapshot[key]);
         }
     }
 
     async verifyValueLocators(expectedValue?: object) {
         for (const key in expectedValue) {
-            expect(await this.page.locator(key).innerText()).toBe(expectedValue[key]);
+            expect(await this.page.locator(key).innerText(),{message: `${key} does not have text ${expectedValue}`}).toBe(expectedValue[key]);
         }
     }
 
     async verifyLocatorsVisible(locators: string[]) {
         for (const locator of locators) {
-            expect(await this.page.locator(locator).isVisible()).toBe(true);
+            expect(await this.page.locator(locator).isVisible(),{message: `${locator} is not visible`}).toBe(true);
         }
     }
 
     async textLocatorShouldBe(locator: string, expectedValue: string) {
-        await expect(this.page.locator(locator)).toHaveText(expectedValue.toString());
+        await expect(this.page.locator(locator),{message: `${locator} does not have text ${expectedValue}`}).toHaveText(expectedValue.toString());
     }
 
     async getText(locator: string, datatype: string = "innerText") {

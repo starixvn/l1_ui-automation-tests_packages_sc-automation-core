@@ -321,3 +321,10 @@ export const l2sit = {
     76: "QCTest10Mar202242",
     77: "QCTest10Mar202241",
 };
+
+export const gnsit = {
+    1001: "Member611UUS02",
+    1002: "Member611UUS02",
+    1003: "Member611UUS02",
+    1004: "Member611UUS02",
+};

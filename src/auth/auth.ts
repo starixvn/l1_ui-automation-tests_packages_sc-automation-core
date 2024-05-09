@@ -41,8 +41,7 @@ export const ssoToGame = async (
         }
         await page.click(LobbyLocator.tokenBtn);
         await page.waitForTimeout(500);
-        const isdupSsoLink = await page.$$("#redirect");
-        if (isdupSsoLink.length > 0) {
+        if (projectCode == 'gn') {
             const ssoLink = (await page.locator("#link-local").textContent()) ?? "";
             await page.goto(`${ssoLink.replace("gameId=0", `gameId=${gameId}`)}`);
         } else {
@@ -322,6 +321,16 @@ const loginSIT = async (page: Page, accountId: string, pwd: string, projectCode:
             }
             await page.waitForTimeout(20000);
         }
+    }
+    if (projectCode === "gn") {
+        await page.fill("#txtID", accountId);
+        await page.fill("#txtPW", pwd);
+        await page.click("//button");
+        await page.waitForLoadState("load", { timeout });
+        await page.locator("//div[contains(@class,'c-dropdown--lang')]").click();
+        await page.locator("//span[contains(text(),'Tiếng Việt')]").click();
+        await page.waitForLoadState("load", { timeout });
+        await page.waitForTimeout(5000);
     }
 };
 

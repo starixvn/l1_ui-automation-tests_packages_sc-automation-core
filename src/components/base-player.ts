@@ -20,7 +20,7 @@ export class BasePlayer {
     async gnPlaceHedgeBet(hedgeChoices: string[], amount: number = 1): Promise<void> {
         const odds = await this.game.gnWaitUntilPlaceBet();
         await this.game.click(`#chip-${amount}`);
-        await this.game.click(hedgeChoices[0],200);
+        await this.game.click(hedgeChoices[0],500);
         await this.game.click(hedgeChoices[1],200);
         return odds
     }
