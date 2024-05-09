@@ -7,6 +7,8 @@ import { CardRERGameBase } from "./card-game-retrieve-end-round.spec";
 import { CardTicketDetailsGameBase } from "./card-game-ticket-detail.spec";
 import { NumberRERGameBase } from "./number-game-retrieve-end-round.spec";
 import { NumberTicketDetailGameBase } from "./number-game-ticket-detail.spec";
+import { TableTicketDetailGameBase } from "./table-game-ticket-detail.spec";
+import { TableRERGameBase } from "./table-game-retrieve-end-round.spec";
 
 
 export {
@@ -18,5 +20,7 @@ export {
     CardRERGameBase,
     CardTicketDetailsGameBase,
     NumberRERGameBase,
-    NumberTicketDetailGameBase
+    NumberTicketDetailGameBase,
+    TableTicketDetailGameBase,
+    TableRERGameBase
 };
