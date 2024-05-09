@@ -1,3 +1,10 @@
+# [1.38.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.37.0...v1.38.0) (2024-05-09)
+
+
+### Features
+
+* table game admin bases ([1a26f14](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/1a26f14a9c987c05102624cfd76c40d243d01cfe))
+
 # [1.37.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.36.0...v1.37.0) (2024-05-09)
 
 
