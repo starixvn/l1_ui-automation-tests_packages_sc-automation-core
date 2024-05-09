@@ -14,6 +14,11 @@ export class NumberGameBase {
         test("Verify in game UI", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
+            const isInGame = await this.game.page.locator(commonControls.iconHome).isVisible();
+            if (!isInGame) {
+                await this.game.click(this.options.locators.lobbyGameIcon,3000);
+                await this.game.page.locator(commonControls.iconHome).waitFor({state:"visible"})  
+            }
             const inGameUi =
                 process.env.npm_config_android == "true" ? this.options.locators.inGameUIAndroid : this.options.locators.inGameUI;
 

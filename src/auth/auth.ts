@@ -192,6 +192,17 @@ const loginUAT = async (page: Page, accountId: string, pwd: string, langCode: st
             await page.waitForLoadState("load", { timeout });
         }
     }
+
+    if (projectCode === "gn") {
+        await page.fill("#txtID", accountId);
+        await page.fill("#txtPW", pwd);
+        await page.click("//button");
+        await page.waitForLoadState("load", { timeout });
+        await page.locator("//div[contains(@class,'c-dropdown--lang')]").click();
+        await page.locator("//span[contains(text(),'Tiếng Việt')]").click();
+        await page.waitForLoadState("load", { timeout });
+        await page.waitForTimeout(5000);
+    }
 };
 
 const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: string, projectCode: string, timeout: number = 15000) => {
@@ -232,7 +243,7 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
             });
         } else {
             await page.waitForLoadState("domcontentloaded", { timeout: timeout });
-            await page.locator(PRODLocator.usernameInput).waitFor();
+            await page.locator(PRODLocator.usernameInput).waitFor({ state: "visible" });
             await page.waitForTimeout(3000);
             await page.fill(PRODLocator.usernameInput, accountId);
             await page.fill(PRODLocator.passwordInput, pwd);
@@ -251,6 +262,7 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
                 await page.fill("id=validation", capcha);
                 await page.click(`//*[@data-tag="tabBtn"]`);
             }
+            await page.waitForTimeout(2000);
             await page.locator("id=__canvasContainer").waitFor({ state: "visible" });
             await page.waitForTimeout(20000);
         }
@@ -268,6 +280,17 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
         await page.waitForTimeout(2000);
         await page.waitForLoadState("domcontentloaded", { timeout });
         await page.waitForTimeout(10000);
+    }
+
+    if (projectCode === "gn") {
+        await page.fill("#txtID", accountId);
+        await page.fill("#txtPW", pwd);
+        await page.click("//button");
+        await page.waitForLoadState("load", { timeout });
+        await page.locator("//div[contains(@class,'c-dropdown--lang')]").click();
+        await page.locator("//span[contains(text(),'Tiếng Việt')]").click();
+        await page.waitForLoadState("load", { timeout });
+        await page.waitForTimeout(5000);
     }
 };
 

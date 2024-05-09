@@ -21,7 +21,7 @@ export class BasePlayer {
         const odds = await this.game.gnWaitUntilPlaceBet();
         await this.game.click(`#chip-${amount}`);
         await this.game.click(hedgeChoices[0],500);
-        await this.game.click(hedgeChoices[1],200);
+        await this.game.click(hedgeChoices[1],500);
         return odds
     }
 
