@@ -1,3 +1,10 @@
+# [1.37.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.36.0...v1.37.0) (2024-05-09)
+
+
+### Features
+
+* upgrade playwright core ([f03b986](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/f03b98686b998bb2bdf607b851e33c0d9cd1259e))
+
 # [1.36.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.35.1...v1.36.0) (2024-05-06)
 
 
