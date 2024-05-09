@@ -1,3 +1,10 @@
+## [1.38.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.38.0...v1.38.1) (2024-05-09)
+
+
+### Bug Fixes
+
+* add new account to config account list ([a7236c7](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/a7236c7ff609d6889b5377047ec60e38ecf2bd8d))
+
 # [1.38.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.37.0...v1.38.0) (2024-05-09)
 
 
