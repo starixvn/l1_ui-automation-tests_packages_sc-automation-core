@@ -8,7 +8,7 @@ export default {
     l2memberSiteMobile: "https://smart.spondemo.com",
     l2lobbyDomainMobile: "#ThirdPartyGame/vid=66&gid=",
     gnmemberSite: "https://www.viva88.net/login888.aspx",
-    gnlobbyDomain: "VendorGame/OpenSabaClub?GameID=",
+    gnlobbyDomain: "VendorGame/Open3rdPartyGame?deviceType=1&vendorId=86&sportTypeId=240&gmt=7",
     lobbyTimeout: 60000,
     enabledMsgPack: true,
     l1pwd: "1234aa",
