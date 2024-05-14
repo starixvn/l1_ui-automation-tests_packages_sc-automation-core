@@ -1,3 +1,10 @@
+## [1.38.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.38.2...v1.38.3) (2024-05-14)
+
+
+### Bug Fixes
+
+* update gnLobbydomain ([48cce18](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/48cce18c1420f42b2366c9e8e42556dc161dcf1f))
+
 ## [1.38.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.38.1...v1.38.2) (2024-05-14)
 
 
