@@ -63,9 +63,9 @@ export enum PRODLocator {
 }
 
 export enum GroupCurrencyLocator {
-    currencyGroupDropdown = '//*/select[@id="group"]',
+    currencyGroupDropdown = '#currencyGroupSelect',
     submitButton = '//input[@value="Submit"]',
-    specificCheckbox = "id=groupTypeSpecific",
+    specificCheckbox = "#groupTypeSpecific",
 }
 
 export enum AdminLogin {

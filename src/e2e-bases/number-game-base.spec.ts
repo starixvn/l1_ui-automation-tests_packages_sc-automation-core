@@ -77,7 +77,8 @@ export class NumberGameBase {
         test("Verify chip selected when open game @A_8", async () => {
             const chipLocators = this.options.locators.chip;
             for (const key in chipLocators) {
-                expect(await this.game.page.locator(key).screenshot(),{message: `Chip ${key} does not match expected snapshot`}).toMatchSnapshot(chipLocators[key]);
+                await expect(this.game.page.locator(key),{message: `Chip ${key} does not match expected snapshot`}).toHaveScreenshot(chipLocators[key],{animations :"disabled"});
+                
                 await this.game.click(commonControls.btnChipSliderNext, 500);
             }
             for (let index = 0; index < Object.keys(chipLocators).length; index++) {

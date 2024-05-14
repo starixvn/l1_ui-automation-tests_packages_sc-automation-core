@@ -516,7 +516,7 @@ export class BaseGame {
 
     async verifyImageLocators(expectSnapshot: object) {
         for (const key in expectSnapshot) {
-            await expect(this.page.locator(key),{message: `${key} does not match expected screenshot`}).toHaveScreenshot(expectSnapshot[key]);
+            await expect(this.page.locator(key),{message: `${key} does not match expected screenshot`}).toHaveScreenshot(expectSnapshot[key],{animations :"disabled"});
         }
     }
 
