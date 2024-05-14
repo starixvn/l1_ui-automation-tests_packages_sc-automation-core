@@ -1,3 +1,11 @@
+## [1.38.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.38.1...v1.38.2) (2024-05-14)
+
+
+### Bug Fixes
+
+* login l2 and xd game config ([cef2a47](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/cef2a474c12be82127c52c428bdc5ef10b1481a9))
+* login l2 and xd game config ([c59a5a4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/c59a5a4c84884e1288b21a8c817e14b5b2d8a335))
+
 ## [1.38.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.38.0...v1.38.1) (2024-05-09)
 
 
