@@ -1,3 +1,10 @@
+# [1.39.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.38.3...v1.39.0) (2024-05-23)
+
+
+### Features
+
+* enhance auth for quickly smoke test group game ([779e982](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/779e982c13adfe929d96af036bba78bf633f1307))
+
 ## [1.38.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.38.2...v1.38.3) (2024-05-14)
 
 
