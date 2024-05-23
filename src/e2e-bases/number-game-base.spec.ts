@@ -16,8 +16,8 @@ export class NumberGameBase {
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             const isInGame = await this.game.page.locator(commonControls.iconHome).isVisible();
             if (!isInGame) {
-                await this.game.click(this.options.locators.lobbyGameIcon,3000);
-                await this.game.page.locator(commonControls.iconHome).waitFor({state:"visible"})  
+                await this.game.click(this.options.locators.lobbyGameIcon, 3000);
+                await this.game.page.locator(commonControls.iconHome).waitFor({ state: "visible" });
             }
             await this.game.gnWaitUntilPlaceBet();
             const inGameUi =
@@ -53,7 +53,7 @@ export class NumberGameBase {
             const bfRandom = await this.game.page.locator("#random-seed").isChecked();
             await this.game.page.reload({ waitUntil: "domcontentloaded" });
             await this.game.page.waitForLoadState();
-            await this.game.click(commonControls.iconPF,1000);
+            await this.game.click(commonControls.iconPF, 1000);
             const afRandom = await this.game.page.locator("#random-seed").isChecked();
             expect(bfRandom).toBe(afRandom);
             await this.game.click(commonControls.iconClosePfSetting);
@@ -64,7 +64,7 @@ export class NumberGameBase {
             await this.game.click(commonControls.iconPF);
             const bfRandom = await this.game.page.locator("#random-seed").isChecked();
             await this.game.click(commonControls.iconClosePfSetting);
-            await this.game.click(commonControls.iconHome,3000);
+            await this.game.click(commonControls.iconHome, 3000);
             await this.game.click(this.options.locators.lobbyGameIcon, 3000);
             await this.game.click(commonControls.iconPF);
             const afRandom = await this.game.page.locator("#random-seed").isChecked();
@@ -77,8 +77,11 @@ export class NumberGameBase {
         test("Verify chip selected when open game @A_8", async () => {
             const chipLocators = this.options.locators.chip;
             for (const key in chipLocators) {
-                await expect(this.game.page.locator(key),{message: `Chip ${key} does not match expected snapshot`}).toHaveScreenshot(chipLocators[key],{animations :"disabled"});
-                
+                await expect(this.game.page.locator(key), { message: `Chip ${key} does not match expected snapshot` }).toHaveScreenshot(
+                    chipLocators[key],
+                    { animations: "disabled" },
+                );
+
                 await this.game.click(commonControls.btnChipSliderNext, 500);
             }
             for (let index = 0; index < Object.keys(chipLocators).length; index++) {
@@ -122,12 +125,14 @@ export class NumberGameBase {
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
             // Act
             await this.game.click(`#chip-${bet.amount}`);
-            await this.game.click(bet.locator,3000);
+            await this.game.click(bet.locator, 3000);
             let afbalance = await this.game.getText(commonControls.lblBalance);
             let settledResults = await this.game.gnWaitForSettlement();
 
             // Assert
-            expect(parseInt(bfbalance.replace(",", "")) - bet.amount,{message: `${bfbalance} and ${afbalance}`}).toBe(parseInt(afbalance.replace(",", "")));
+            expect(parseInt(bfbalance.replace(",", "")) - bet.amount, { message: `${bfbalance} and ${afbalance}` }).toBe(
+                parseInt(afbalance.replace(",", "")),
+            );
             expect(settledResults.settlementResult).toMatchBetOptions(this.options.gameConfiguration.choices);
         });
 
@@ -151,7 +156,9 @@ export class NumberGameBase {
             settledResults.odds = odds;
 
             // Assert
-            expect(parseInt(bfbalance.replace(",", "")) - amount * 2,{message: `${bfbalance} and ${afbalance}`}).toBe(parseInt(afbalance.replace(",", "")));
+            expect(parseInt(bfbalance.replace(",", "")) - amount * 2, { message: `${bfbalance} and ${afbalance}` }).toBe(
+                parseInt(afbalance.replace(",", "")),
+            );
             expect(settledResults.settlementResult).toMatchBetOptions(this.options.gameConfiguration.choices);
         });
     }
@@ -174,9 +181,9 @@ export class NumberGameBase {
                 await this.game.page.locator(commonControls.btnChipSliderNext).click({ clickCount: 10, delay: 100 });
                 await this.game.click(bet.locator, 200);
                 await this.game.waitForTimeout(1000);
-                await expect(this.game.page.locator(commonControls.dialog_confirm_submit),{message: `suggestion bet of ${bet.choice} is not correct`}).toContainText(
-                    this.options.locators.suggestionBets[key].toString(),
-                );
+                await expect(this.game.page.locator(commonControls.dialog_confirm_submit), {
+                    message: `suggestion bet of ${bet.choice} is not correct`,
+                }).toContainText(this.options.locators.suggestionBets[key].toString());
                 await this.game.click(commonControls.btn_no_submit_dialog);
                 await this.game.page.locator(commonControls.btnChipSliderPre).click({ clickCount: 10, delay: 100 });
             }
@@ -246,8 +253,8 @@ export class NumberGameBase {
             // Arrange
             const totalcellBIR = await this.game.page.$$eval(commonControls.cellsbigRoad, (elements) => elements.length);
             const totalcellBER = await this.game.page.$$eval(commonControls.cellsbeadRoad, (elements) => elements.length);
-            expect(totalcellBIR,{message: `totalcellBIR ${totalcellBIR}`}).toBe(108);
-            expect(totalcellBER,{message: `totalcellBER ${totalcellBER}`}).toBe(108);
+            expect(totalcellBIR, { message: `totalcellBIR ${totalcellBIR}` }).toBe(108);
+            expect(totalcellBER, { message: `totalcellBER ${totalcellBER}` }).toBe(108);
         });
 
         test("Verify statistic result data of the latest 108 rounds @A_16", async () => {
@@ -276,14 +283,16 @@ export class NumberGameBase {
             // Act
             await this.player.gnSettingPF("");
             const placeBetResponse = await this.player.gnQuickPlaceBet(bet.locator, bet.amount);
-            let turn = await this.game.getText(commonControls.lblTurn);
-            const match = turn.match(/\d+/);
-            turn = match ? match[0] : "";
             let settledResults = await this.game.gnWaitForSettlement();
+            if (this.options.gameConfiguration.isDraw) {
+                let turn = await this.game.getText(commonControls.lblTurn);
+                const match = turn.match(/\d+/);
+                turn = match ? match[0] : "";
+                settledResults.turn = turn;
+            }
             delete settledResults.result.time;
             delete settledResults.result.drawId;
             settledResults.odds = placeBetResponse.odds;
-            settledResults.turn = turn;
             global.settledResults = settledResults;
             global.placeBetResponse = placeBetResponse;
         });
@@ -303,7 +312,15 @@ export class NumberGameBase {
             }
 
             for (const key in global.settledResults.result) {
-                await this.game.textLocatorShouldBe(this.options.locators.ticketHistory[key], global.settledResults.result[key]);
+                if (this.options.gameConfiguration.isDraw) {
+                    await this.game.textLocatorShouldBe(this.options.locators.ticketHistory[key], global.settledResults.result[key]);
+                } else {
+                    const locator = this.options.locators.ticketHistory[key];
+                    const expectedValue = global.settledResults.result[key].join("").replace(/,/g, "");
+                    await expect(this.game.page.locator(locator), { message: `${locator} does not have text ${expectedValue}` }).toHaveText(
+                        expectedValue,
+                    );
+                }
             }
 
             expectedValue["odds"] = global.settledResults.odds[this.options.placeBetChoices[2]];
@@ -330,13 +347,15 @@ export class NumberGameBase {
                 commonControls.txtCombinedHash_Pf_HistoryDetail,
             ];
             await this.game.verifyLocatorsVisible(PFControls);
-            const drawIdTurn = await this.game.getText(commonControls.lbl_Pf_drawIdTurn_HistoryDetail);
             const serverSeed256 = await this.game.page.locator(commonControls.txtServerSeed256_Pf_HistoryDetail).getAttribute("value");
             const serverSeed = await this.game.page.locator(commonControls.txtServerSeed_Pf_HistoryDetail).getAttribute("value");
             const mergeClientSeed = await this.game.page.locator(commonControls.txtMergeClientSeed_Pf_HistoryDetail).getAttribute("value");
             const combinedHash = await this.game.page.locator(commonControls.txtCombinedHash_Pf_HistoryDetail).getAttribute("value");
             const settlePF = global.settledResults.pf;
-            expect(drawIdTurn.includes(global.settledResults.turn)).toBe(true);
+            if (this.options.gameConfiguration.isDraw) {
+                const drawIdTurn = await this.game.getText(commonControls.lbl_Pf_drawIdTurn_HistoryDetail);
+                expect(drawIdTurn.includes(global.settledResults.turn)).toBe(true);
+            }
             expect(serverSeed256).toBe(settlePF.serverSeedHash);
             expect(serverSeed).toBe(settlePF.serverSeed);
             expect(mergeClientSeed).toBe(settlePF.mergeClientSeed);
@@ -368,14 +387,16 @@ export class NumberGameBase {
             await this.player.gnSettingPF(manualSeed);
             await this.player.gnBetOn(bet.locator, bet.amount);
             const endBets = await this.game.waitForEndBet();
-            let turn = await this.game.getText(commonControls.lblTurn);
-            const match = turn.match(/\d+/);
-            turn = match ? match[0] : "";
             let settledResults = await this.game.gnWaitForSettlement();
+            if (this.options.gameConfiguration.isDraw) {
+                let turn = await this.game.getText(commonControls.lblTurn);
+                const match = turn.match(/\d+/);
+                turn = match ? match[0] : "";
+                settledResults.turn = turn;
+            }
             delete settledResults.result.time;
             delete settledResults.result.drawId;
             settledResults.odds = odds;
-            settledResults.turn = turn;
             global.settledResults = settledResults;
             global.placeBetResponse = endBets;
         });
@@ -395,7 +416,15 @@ export class NumberGameBase {
             }
 
             for (const key in global.settledResults.result) {
-                await this.game.textLocatorShouldBe(this.options.locators.ticketHistory[key], global.settledResults.result[key]);
+                if (this.options.gameConfiguration.isDraw) {
+                    await this.game.textLocatorShouldBe(this.options.locators.ticketHistory[key], global.settledResults.result[key]);
+                } else {
+                    const locator = this.options.locators.ticketHistory[key];
+                    const expectedValue = global.settledResults.result[key].join("").replace(/,/g, "");
+                    await expect(this.game.page.locator(locator), { message: `${locator} does not have text ${expectedValue}` }).toHaveText(
+                        expectedValue,
+                    );
+                }
             }
 
             expectedValue["odds"] = global.settledResults.odds[this.options.placeBetChoices[2]];
@@ -422,13 +451,15 @@ export class NumberGameBase {
                 commonControls.txtCombinedHash_Pf_HistoryDetail,
             ];
             await this.game.verifyLocatorsVisible(PFControls);
-            const drawIdTurn = await this.game.getText(commonControls.lbl_Pf_drawIdTurn_HistoryDetail);
             const serverSeed256 = await this.game.page.locator(commonControls.txtServerSeed256_Pf_HistoryDetail).getAttribute("value");
             const serverSeed = await this.game.page.locator(commonControls.txtServerSeed_Pf_HistoryDetail).getAttribute("value");
             const mergeClientSeed = await this.game.page.locator(commonControls.txtMergeClientSeed_Pf_HistoryDetail).getAttribute("value");
             const combinedHash = await this.game.page.locator(commonControls.txtCombinedHash_Pf_HistoryDetail).getAttribute("value");
             const settlePF = global.settledResults.pf;
-            expect(drawIdTurn.includes(global.settledResults.turn)).toBe(true);
+            if (this.options.gameConfiguration.isDraw) {
+                const drawIdTurn = await this.game.getText(commonControls.lbl_Pf_drawIdTurn_HistoryDetail);
+                expect(drawIdTurn.includes(global.settledResults.turn)).toBe(true);
+            }
             expect(serverSeed256).toBe(settlePF.serverSeedHash);
             expect(serverSeed).toBe(settlePF.serverSeed);
             expect(mergeClientSeed).toBe(settlePF.mergeClientSeed);
@@ -483,7 +514,7 @@ export class NumberGameBase {
 
     protected lobbyTests() {
         test("User go to game lobby @A_27", async () => {
-            await this.game.click(commonControls.iconHome);
+            await this.game.click(commonControls.iconHome,2000);
             const lobbyControls = [
                 this.options.locators.lobbyGameIcon,
                 this.options.locators.lobbyTimmer,
@@ -501,10 +532,8 @@ export class NumberGameBase {
 
         test("User can change their's avatar @A_27", async () => {
             const randomInterval = Math.floor(Math.random() * 14) + 2;
-            const indexAvatar = [
-                `//img[contains(@src,'F${randomInterval}.jpg')]/parent::div`,
-            ];
-            const avatar = [`//div[contains(@class,'user-info_avatar')]/img[contains(@src,'F${randomInterval}.jpg')]`]
+            const indexAvatar = [`//img[contains(@src,'F${randomInterval}.jpg')]/parent::div`];
+            const avatar = [`//div[contains(@class,'user-info_avatar')]/img[contains(@src,'F${randomInterval}.jpg')]`];
 
             for (const iterator of indexAvatar) {
                 await this.game.click(commonControls.imgAvatar);
@@ -555,10 +584,8 @@ export class NumberGameBase {
 
         test("User can change their's avatar @A_27", async () => {
             const randomInterval = Math.floor(Math.random() * 14) + 2;
-            const indexAvatar = [
-                `//img[contains(@src,'F${randomInterval}.jpg')]/parent::div`,
-            ];
-            const avatar = [`//div[contains(@class,'user-info_avatar')]/img[contains(@src,'F${randomInterval}.jpg')]`]
+            const indexAvatar = [`//img[contains(@src,'F${randomInterval}.jpg')]/parent::div`];
+            const avatar = [`//div[contains(@class,'user-info_avatar')]/img[contains(@src,'F${randomInterval}.jpg')]`];
 
             for (const iterator of indexAvatar) {
                 await this.game.click(commonControls.imgAvatar);
@@ -639,9 +666,9 @@ export class NumberGameBase {
             // Arrange
             await this.player.gnOpenGuide();
             const getGuideContent = await this.game.getGuideContent();
-            const expectedGuideContent1 = this.options.locators.vnguide1.replace(/[\n\r]/g, "").replace(/ /g, "");
-            const expectedGuideContent2 = this.options.locators.vnguide2.replace(/[\n\r]/g, "").replace(/ /g, "");
-            const cleanedGuideContent = getGuideContent.replace(/[\n\r]/g, "").replace(/ /g, "");
+            const expectedGuideContent1 = this.options.locators.vnguide1.replace(/\s/g, '');
+            const expectedGuideContent2 = this.options.locators.vnguide2.replace(/\s/g, '');
+            const cleanedGuideContent = getGuideContent.replace(/\s/g, '');
             // Act
             expect(cleanedGuideContent).toContain(expectedGuideContent1);
             expect(cleanedGuideContent).toContain(expectedGuideContent2);
@@ -694,7 +721,7 @@ export class NumberGameBase {
 
 const capturePfIntroContent = async (game: BaseGame) => {
     const images = new Array<ImageSnapshot>();
-    await game.page.frameLocator("iframe").locator("#container-guide").waitFor({state:"visible"});
+    await game.page.frameLocator("iframe").locator("#container-guide").waitFor({ state: "visible" });
     const guidepages = await game.getCountFrameLocator("//*[@id='container-guide']//div[@class='guide-item']");
 
     for (let index = 1; index <= guidepages; index++) {

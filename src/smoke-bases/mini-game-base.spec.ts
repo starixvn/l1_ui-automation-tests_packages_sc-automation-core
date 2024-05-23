@@ -107,8 +107,8 @@ export class MiniGameBase {
     }
 
     protected runScenario() {
-        this.inGameBetChoiceTests();
         this.inGameOddsTests();
+        this.inGameBetChoiceTests();
         this.placeBetAndSettleTests();
         this.hedgeBetTests();
         this.ticketHistoryTests();

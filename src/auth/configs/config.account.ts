@@ -63,6 +63,10 @@ export const l1prod = {
     88: "supertestte120201011",
     89: "supertestte120201012",
     90: "supertestte120201013",
+    2000: "SUPERTEST30102090",
+    2001: "SUPERTEST30102052",
+    2002: "supertestte120201012",
+    2003: "supertestte120201013",
 };
 
 export const l2prod = {
@@ -130,6 +134,10 @@ export const l2prod = {
     88: "QCTest22082304",
     89: "QCTest22082305",
     90: "QCTest22082317",
+    2000: "QCTest22082302",
+    2001: "QCTest22082304",
+    2002: "QCTest22082305",
+    2003: "QCTest22082317",
 };
 
 export const l1uat = {

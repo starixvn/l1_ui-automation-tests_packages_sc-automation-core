@@ -4,7 +4,7 @@ import { GameConfiguration } from "./game-configuration";
 import { BaseGame } from "./base-game";
 import { _android as android } from "playwright";
 global.logMsg = [];
-
+global.ssoLink
 
 type BaseFixtures = {
     gameConfigurations: GameConfiguration;
