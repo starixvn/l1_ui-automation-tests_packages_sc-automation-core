@@ -1,3 +1,10 @@
+# [1.40.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.39.0...v1.40.0) (2024-05-29)
+
+
+### Features
+
+* quick smoke test ([cceb4a3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/cceb4a3845ded16e167c2e04f4aa932bd68cae92))
+
 # [1.39.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.38.3...v1.39.0) (2024-05-23)
 
 
