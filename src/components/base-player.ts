@@ -61,10 +61,10 @@ export class BasePlayer {
         if (this.game.gameConfiguration.cardgame) {
             return this.betOnCard(choice, amount);
         } else {
-            await this.game.waitForTimeout(5000)
+            await this.game.waitForTimeout(6000)
             let placeBetResponse = await this.betOn(choice, amount, subGameName);
             if (placeBetResponse.endBet == -1 || placeBetResponse === 'undefined') {
-                console.log('retry place bet');
+                console.log('Wait until next round then place bet !');
                 await this.game.waitUntilPlaceBet(subGameName);
                 placeBetResponse = await this.betOn(choice, amount, subGameName);
             }

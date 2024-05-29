@@ -58,7 +58,6 @@ export class BaseGame {
         await ssoToGame(this.page, this.gameConfiguration.id, account, this.gameConfiguration.productId[projectCode], env, projectCode);
         this.msgpack = getConfig().enabledMsgPack;
         this.page.on("websocket", async (ws) => {
-            if (ws.url().includes(this.gameConfiguration.socketName ?? this.gameConfiguration.name.toLowerCase())) {
                 this.gameSocket = ws;
 
                 ws.on("framereceived", async (msg: any) => {
@@ -75,7 +74,6 @@ export class BaseGame {
                         }
                     });
                 });
-            }
         });
         await this.logConsole();
         if (this.gameConfiguration.id === 0) {
