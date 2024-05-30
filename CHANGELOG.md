@@ -1,3 +1,10 @@
+## [1.40.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.40.0...v1.40.1) (2024-05-30)
+
+
+### Bug Fixes
+
+* enhance socket helper to avoid wait ws msg until test timeout ([4afeb50](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/4afeb50f41bd4f9500e0273c7b221463a33bb7a8))
+
 # [1.40.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.39.0...v1.40.0) (2024-05-29)
 
 
