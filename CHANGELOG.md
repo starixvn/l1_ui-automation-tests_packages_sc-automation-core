@@ -1,3 +1,10 @@
+## [1.40.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.40.2...v1.40.3) (2024-06-03)
+
+
+### Bug Fixes
+
+* select ws channel by gamename ([14cda35](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/14cda358274e99cf136b7355ff4bcad664858b9c))
+
 ## [1.40.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.40.1...v1.40.2) (2024-06-03)
 
 
