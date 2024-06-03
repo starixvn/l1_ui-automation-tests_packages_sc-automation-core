@@ -58,6 +58,7 @@ export class BaseGame {
         await ssoToGame(this.page, this.gameConfiguration.id, account, this.gameConfiguration.productId[projectCode], env, projectCode);
         this.msgpack = getConfig().enabledMsgPack;
         this.page.on("websocket", async (ws) => {
+            if (ws.url().includes(this.gameConfiguration.socketName ?? this.gameConfiguration.name.toLowerCase())) {
                 this.gameSocket = ws;
 
                 ws.on("framereceived", async (msg: any) => {
@@ -74,7 +75,9 @@ export class BaseGame {
                         }
                     });
                 });
+            }
         });
+
         await this.logConsole();
         if (this.gameConfiguration.id === 0) {
             await this.waitUntilGameLobbyUiLoad();
@@ -507,31 +510,38 @@ export class BaseGame {
     }
 
     async click(locator: string, waittime = 500) {
-        await this.page.locator(locator).waitFor({state:"visible"})  
+        await this.page.locator(locator).waitFor({ state: "visible" });
         await this.page.locator(locator).first().click();
         await this.waitForTimeout(waittime);
     }
 
     async verifyImageLocators(expectSnapshot: object) {
         for (const key in expectSnapshot) {
-            await expect(this.page.locator(key),{message: `${key} does not match expected screenshot`}).toHaveScreenshot(expectSnapshot[key],{animations :"disabled"});
+            await expect(this.page.locator(key), { message: `${key} does not match expected screenshot` }).toHaveScreenshot(
+                expectSnapshot[key],
+                { animations: "disabled" },
+            );
         }
     }
 
     async verifyValueLocators(expectedValue?: object) {
         for (const key in expectedValue) {
-            expect(await this.page.locator(key).innerText(),{message: `${key} does not have text ${expectedValue}`}).toBe(expectedValue[key]);
+            expect(await this.page.locator(key).innerText(), { message: `${key} does not have text ${expectedValue}` }).toBe(
+                expectedValue[key],
+            );
         }
     }
 
     async verifyLocatorsVisible(locators: string[]) {
         for (const locator of locators) {
-            expect(await this.page.locator(locator).isVisible(),{message: `${locator} is not visible`}).toBe(true);
+            expect(await this.page.locator(locator).isVisible(), { message: `${locator} is not visible` }).toBe(true);
         }
     }
 
     async textLocatorShouldBe(locator: string, expectedValue: string) {
-        await expect(this.page.locator(locator),{message: `${locator} does not have text ${expectedValue}`}).toHaveText(expectedValue.toString());
+        await expect(this.page.locator(locator), { message: `${locator} does not have text ${expectedValue}` }).toHaveText(
+            expectedValue.toString(),
+        );
     }
 
     async getText(locator: string, datatype: string = "innerText") {

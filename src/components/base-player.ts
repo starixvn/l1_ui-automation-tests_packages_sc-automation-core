@@ -63,7 +63,7 @@ export class BasePlayer {
         } else {
             await this.game.waitForTimeout(6000)
             let placeBetResponse = await this.betOn(choice, amount, subGameName);
-            if (placeBetResponse.endBet == -1 || placeBetResponse === 'undefined') {
+            if (!placeBetResponse || placeBetResponse.endBet == -1) {
                 console.log('Wait until next round then place bet !');
                 await this.game.waitUntilPlaceBet(subGameName);
                 placeBetResponse = await this.betOn(choice, amount, subGameName);
