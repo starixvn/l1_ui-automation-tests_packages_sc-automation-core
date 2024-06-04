@@ -58,7 +58,7 @@ export class BaseGame {
         await ssoToGame(this.page, this.gameConfiguration.id, account, this.gameConfiguration.productId[projectCode], env, projectCode);
         this.msgpack = getConfig().enabledMsgPack;
         this.page.on("websocket", async (ws) => {
-            if (ws.url().includes(this.gameConfiguration.socketName ?? this.gameConfiguration.name.toLowerCase())) {
+            if (!ws.url().includes('notification')) {
                 this.gameSocket = ws;
 
                 ws.on("framereceived", async (msg: any) => {
