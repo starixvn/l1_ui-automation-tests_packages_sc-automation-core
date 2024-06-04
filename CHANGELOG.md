@@ -1,3 +1,10 @@
+## [1.40.4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.40.3...v1.40.4) (2024-06-04)
+
+
+### Bug Fixes
+
+* exclude ws notification ([61ff48f](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/61ff48f28e1b7e546028bb1af25f56025d871be5))
+
 ## [1.40.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.40.2...v1.40.3) (2024-06-03)
 
 
