@@ -212,6 +212,7 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
             await page.waitForLoadState();
             await page.waitForTimeout(5000);
             console.log(langCode);
+            global.authUrl = await page.url() //authorization url of member site support for SI tests only
         }
     }
     if (projectCode === "l2") {

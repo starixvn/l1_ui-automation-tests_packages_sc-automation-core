@@ -538,13 +538,13 @@ export class NumberGameBase {
             for (const iterator of indexAvatar) {
                 await this.game.click(commonControls.imgAvatar);
                 await this.game.click(iterator);
-                await this.game.click("//button[@class='btn-green']");
+                await this.game.click("//button[@class='btn-green']",2000);
             }
             await this.game.verifyLocatorsVisible(avatar);
         });
 
         test("User can go back to game success @A_27", async () => {
-            await this.game.click(this.options.locators.lobbyGameIcon);
+            await this.game.click(this.options.locators.lobbyGameIcon,5000);
             await this.game.verifyLocatorsVisible(this.options.locators.controlsE2E);
         });
 
@@ -590,13 +590,13 @@ export class NumberGameBase {
             for (const iterator of indexAvatar) {
                 await this.game.click(commonControls.imgAvatar);
                 await this.game.click(iterator);
-                await this.game.click("//button[@class='btn-green']");
+                await this.game.click("//button[@class='btn-green']",2000);
             }
             await this.game.verifyLocatorsVisible(avatar);
         });
 
         test("User can go back to game success @A_27", async () => {
-            await this.game.click(this.options.locators.lobbyGameIcon);
+            await this.game.click(this.options.locators.lobbyGameIcon,5000);
             await this.game.verifyLocatorsVisible(this.options.locators.controlsE2E);
         });
 
