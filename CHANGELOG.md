@@ -1,3 +1,10 @@
+# [1.41.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.40.4...v1.41.0) (2024-06-10)
+
+
+### Features
+
+* add SI smoke test ([2e081f6](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/2e081f677bc167077befe61fff12f3d4e4e9fd05))
+
 ## [1.40.4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.40.3...v1.40.4) (2024-06-04)
 
 
