@@ -10,18 +10,20 @@ const imgLocatorNames = ["imgdealer","imgGameName","imgB0","imgB1",  "imgB2","im
     "imgClientSeedManualModeDefault", "imgManualClientSeed1234", "imgManualClientSeed123", "imgManualClientSeed1234Inactive", "imgPFPopupHeader", "imgPFPopupRoundId", "imgPFPopupCrashPoint", "imgPFPopupServerSeedSHA256", "imgPFPopupServerSeed", 
     "imgPFPopupClientSeed", "imgPFPopupPlayer123", "imgPFPopupPlayer45", "imgPFPopupMergeClientSeed", "imgPFPopupCombinedHash", "imgPFPopupMessage", "imgVerificationHeader", "imgVerificationServerSeed", "imgVerificationMergeClientSeed", 
     "imgVerificationCombinedHash", "imgVerificationFinalResult", "imgGameGuidePF", "imgClientSeed1", "imgClientSeed102", "imgClientSeed102Inactive", "imgPFPopupResult", "imgVerifySuccessful", "imgPFPopup", "imgClientSeedTooltip",
-    "imgCombinedHashTooltip", "imgPFPopupRunning",  "imgBetAcceptedl1",  "imgBetAcceptedl2",]
+    "imgCombinedHashTooltip", "imgPFPopupRunning",  "imgBetAcceptedl1",  "imgBetAcceptedl2", "imgChipBoardDefaultl1", "imgChipBoardDefaultl2", "imgBetAmountCleared", "imgPresetStakeDefaultl1", "imgPresetStakeDefaultl2",
+    "imgPresetStakeFirstValuel1", "imgPresetStakeFirstValuel2"]
 
 const btnLocatorNames = ["btnRebet","btnHome","btnClosePopup","btnRightArrow","btnLeftArrow","btnHitCard", "btnCancel","btnSplit","btnDouble","btnNewbet",
     "btnPayline","btnAutoSpin","btnTurbo", "btnSpin", "btnAutoSpin10", "btnAutoSpinTurbo", "btnAutoSpinStart","btnPayline1", "btnAllPayline", "btnEvenPayline",
     "btnOddPayline","btnClearPayline", "btnConfirmPayline",  "btnSymbol","btnTotalStake","btnBetLevelIncrease", "btnBetLevelDecrease","btnCoinValueIncrease", 
     "btnCoinValueDecrease", "btnTotalBetIncrease", "btnTotalBetDecrease","btnTrialMode", "btnHistoryTrialmode","btnCancelChoice1",
     "btnCancelChoice2", "btnCancelChoice3", "btnCashOut", "btnCashOutHalf", "btnBetAmount", "btnMaxChip", "btnClearBetamount", "btnFirstChip", "btnConfirm",
-     "btnIncreaseBetAmount", "btnDecreaseBetAmount", "btnPlaceBet","btnPlaceEarlyBet", "btnEarlyBetAccepted","btnAutoPlay", "btnAutoPlayStart", "btnAutoPlay10", "btnAutoCashOut", "btnNumber1AutoCashout", "btnDotAutoCashout", 
-     "btnNumber2AutoCashout", "btnNumber0AutoCashout", "btnBackspace", "btnClearAutoCashout", "btnStatisticLastRound", "btnStatisticRunningRound",
-     "btnEnableAutoCashOut", "btnConfirmAutoCashout","btnConfirmAutoCashoutDisabled", "btnIncreaseAutoCashout", "btnDecreaseAutoCashout", "btnAutoPlay9Remaining", "btnAutoPlay10Remaining", "btnTooltipMd5", "btnConfirmStand",
+    "btnIncreaseBetAmount", "btnDecreaseBetAmount", "btnPlaceBet","btnPlaceEarlyBet", "btnEarlyBetAccepted","btnAutoPlay", "btnAutoPlayStart", "btnAutoPlay10", "btnAutoCashOut", "btnNumber1AutoCashout", "btnDotAutoCashout", 
+    "btnNumber2AutoCashout", "btnNumber0AutoCashout", "btnBackspace", "btnClearAutoCashout", "btnStatisticLastRound", "btnStatisticRunningRound",
+    "btnEnableAutoCashOut", "btnConfirmAutoCashout","btnConfirmAutoCashoutDisabled", "btnIncreaseAutoCashout", "btnDecreaseAutoCashout", "btnAutoPlay9Remaining", "btnAutoPlay10Remaining", "btnTooltipMd5", "btnConfirmStand",
     "btnClear", "btnDeal", "btnStand", "btnClientSeedClear", "btnClientSeed1", "btnClientSeed2", "btnClientSeed3", "btnClientSeed4", "btnClientSeed5", "btnClientSeedBackspace", "btnClientSeedSave",
-    "btnPFPopupVerify", "btnHistoryVerify", "btnIncreaseClientSeed", "btnDecreaseClientSeed", "btnClientSeed0", "btnChangeClienSeed", "btnPFPopupTooltip", "btnClientSeedTooltip", "btnCombinedHashTooltip", "btnEarlyBetAccepted"]
+    "btnPFPopupVerify", "btnHistoryVerify", "btnIncreaseClientSeed", "btnDecreaseClientSeed", "btnClientSeed0", "btnChangeClienSeed", "btnPFPopupTooltip", "btnClientSeedTooltip", "btnCombinedHashTooltip", "btnEarlyBetAccepted", "btnConfirmEnable", "btnConfirmDisable",
+    "btnChipBoardClose", "btnPresetStake", "btnPresetStakeFirstValue", "btnPresetStakeClear", "btnPresetStakeComfirm", "btnChipBoardClear", "btnPlaceBetChoice"]
 
 const popLocatorNames = ["popAutoSpin","popHistory", "popGuide","popGameGuide", "popAutoSpinTurbo",  "popBetControll1", "popBetControlMaxBetLevell1",
     "popBetControlMinBetLevell1", "popBetControlMaxCoinValuel1", "popBetControlMinCoinValuel1", "popBetControll2", "popBetControlMaxBetLevell2", 
@@ -445,4 +447,34 @@ export const CrashGameLocators = [
     new ImageLocator(baseLocatorNames.imgClientSeedTooltip, 270, 161, 525, 112),
     new ImageLocator(baseLocatorNames.imgCombinedHashTooltip, 340, 398, 525, 80),
     new ImageLocator(baseLocatorNames.imgPFPopupRunning, 166, 210, 965, 437),
+];
+
+export const MiniGameLocators= [
+    new ImageLocator(baseLocatorNames.icoHistory, 323, 317, 36, 34),
+    new ImageLocator(baseLocatorNames.icoGuide, 919, 320, 36, 35),
+    new ImageLocator(baseLocatorNames.btnPlaceBetChoice, 400, 371, 122, 29),
+    new ImageLocator(baseLocatorNames.btnFirstChip, 453, 501, 64, 24),
+    new ImageLocator(baseLocatorNames.imgChipBoardDefaultl1, 428, 482, 437, 159),
+    new ImageLocator(baseLocatorNames.imgChipBoardDefaultl2, 428, 482, 437, 159),
+    new ImageLocator(baseLocatorNames.imgBetAmountFirstChipl1, 430, 372, 66, 25),
+    new ImageLocator(baseLocatorNames.imgBetAmountFirstChipl2, 430, 372, 66, 25),
+    new ImageLocator(baseLocatorNames.btnConfirmEnable, 740, 603, 98, 27),
+    new ImageLocator(baseLocatorNames.btnChipBoardClear, 600, 609, 93, 19),
+    new ImageLocator(baseLocatorNames.btnConfirmDisable, 740, 603, 98, 27),
+    new ImageLocator(baseLocatorNames.imgBetAmountCleared, 430, 372, 66, 25),
+    new ImageLocator(baseLocatorNames.btnChipBoardClose, 460, 602, 83, 25),
+    new ImageLocator(baseLocatorNames.btnPresetStake, 338, 410, 36, 29),
+    new ImageLocator(baseLocatorNames.imgPresetStakeDefaultl1, 419, 212, 451, 277),
+    new ImageLocator(baseLocatorNames.imgPresetStakeDefaultl2, 419, 212, 451, 277),
+    new ImageLocator(baseLocatorNames.btnPresetStakeFirstValue, 455, 337, 61, 32),
+    new ImageLocator(baseLocatorNames.imgPresetStakeFirstValuel1, 802, 274, 53, 36),
+    new ImageLocator(baseLocatorNames.imgPresetStakeFirstValuel2, 802, 274, 53, 36),
+    new ImageLocator(baseLocatorNames.btnPresetStakeClear, 608, 452, 76, 28),
+    new ImageLocator(baseLocatorNames.btnPresetStakeComfirm, 747, 451, 91, 30),
+    new ImageLocator(baseLocatorNames.lblRoundIdOnTable, 443, 235, 96, 22),
+    new ImageLocator(baseLocatorNames.locHistoryBetDate, 246, 191, 90, 22),
+    new ImageLocator(baseLocatorNames.locHistoryRoundId, 340, 189, 106, 26),
+    new ImageLocator(baseLocatorNames.locHistoryTotalStake, 782, 189, 57, 26),
+    new ImageLocator(baseLocatorNames.locHistoryBetWin, 1000, 190, 55, 26),
+
 ];

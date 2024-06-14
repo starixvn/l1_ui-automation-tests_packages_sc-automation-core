@@ -11,4 +11,5 @@ export interface IBaseOptions {
     indexTicketHistory?: {totalbet: number, isIdLink: boolean};
     gameLobbyNavigation?: string[];
     barItems?: string[];
+    uiChecklist?: Array<string>;
 }
