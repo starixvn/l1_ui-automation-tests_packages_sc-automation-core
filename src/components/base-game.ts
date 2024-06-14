@@ -24,6 +24,7 @@ export class BaseGame {
     gameSocket: PlaywrightWs;
     capturedEvents: any;
     odds: any = null;
+    gameConfigs: any = null;
 
     constructor(page: Page, locators: Array<ImageLocator>, gameConfiguration: GameConfiguration, device?: any) {
         this.page = page;
@@ -67,6 +68,7 @@ export class BaseGame {
                     if (this.odds === null && payload.includes(GameEvent.GameConfig)) {
                         const ingameResponse = parseSocketPayload(payload, this.msgpack).message;
                         this.odds = ingameResponse.gameConfigs?.odds || ingameResponse.odds;
+                        this.gameConfigs = ingameResponse.gameConfigs;
                     }
 
                     Object.keys(this.capturedEvents)?.forEach((event) => {
@@ -354,6 +356,7 @@ export class BaseGame {
 
     async getGuideContent() {
         await this.page.locator("iframe").waitFor();
+        await this.page.frameLocator("iframe").locator("id=container-guide").waitFor()
         const getguidecontent = this.page.frameLocator("iframe").locator("id=container-guide").innerText();
         return getguidecontent;
     }

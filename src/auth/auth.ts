@@ -123,6 +123,7 @@ const selectCurrencyGroup = async (page: Page) => {
     if (frameExists) {
         await page.frameLocator("#frmGame").locator(GroupCurrencyLocator.submitButton).click();
     } else {
+        await page.locator(GroupCurrencyLocator.submitButton).waitFor()
         await page.click(GroupCurrencyLocator.submitButton);
     }
 };

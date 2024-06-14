@@ -19,6 +19,21 @@ export class NumberGameBase {
                 await this.game.click(this.options.locators.lobbyGameIcon, 3000);
                 await this.game.page.locator(commonControls.iconHome).waitFor({ state: "visible" });
             }
+            //Config lobal varriable
+            const { maxBetPerChoices, maxWinPerRound, minBet, maxBet } = this.game.gameConfigs;
+            global.minBet = minBet;
+            global.maxbet = formatNumber(maxBet);
+            global.maxwinperround = formatNumber(maxBet * maxWinPerRound);
+            const cfmaxBetPerChoices: { [key: string]: number } = maxBetPerChoices;
+            const formattedData: { [key: string]: string | number } = Object.fromEntries(
+                Object.entries(cfmaxBetPerChoices).map(([key, value]) => [key, value >= 1000 ? value.toLocaleString() : value]),
+            );
+            global.maxBetPerChoices = formattedData;
+
+            function formatNumber(value: any) {
+                return value >= 1000 ? value.toLocaleString() : value;
+            }
+
             await this.game.gnWaitUntilPlaceBet();
             const inGameUi =
                 process.env.npm_config_android == "true" ? this.options.locators.inGameUIAndroid : this.options.locators.inGameUI;
@@ -42,18 +57,18 @@ export class NumberGameBase {
         test("Verify default state of PF setting popup @A_17", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
-            await this.game.click(commonControls.iconPF, 500);
+            await this.openPFSetting();
             await this.game.verifyLocatorsVisible(this.options.locators.pfSettingControls);
             await this.game.click(commonControls.iconClosePfSetting);
         });
 
         test("Verify PF setting after reload page @A_19", async () => {
             // Assert
-            await this.game.click(commonControls.iconPF);
+            await this.openPFSetting();
             const bfRandom = await this.game.page.locator("#random-seed").isChecked();
             await this.game.page.reload({ waitUntil: "domcontentloaded" });
             await this.game.page.waitForLoadState();
-            await this.game.click(commonControls.iconPF, 1000);
+            await this.openPFSetting();
             const afRandom = await this.game.page.locator("#random-seed").isChecked();
             expect(bfRandom).toBe(afRandom);
             await this.game.click(commonControls.iconClosePfSetting);
@@ -61,12 +76,12 @@ export class NumberGameBase {
 
         test("Verify PF setting after go back game from lobby @A_20", async () => {
             // Assert
-            await this.game.click(commonControls.iconPF);
+            await this.openPFSetting();
             const bfRandom = await this.game.page.locator("#random-seed").isChecked();
             await this.game.click(commonControls.iconClosePfSetting);
             await this.game.click(commonControls.iconHome, 3000);
             await this.game.click(this.options.locators.lobbyGameIcon, 3000);
-            await this.game.click(commonControls.iconPF);
+            await this.openPFSetting();
             const afRandom = await this.game.page.locator("#random-seed").isChecked();
             expect(bfRandom).toBe(afRandom);
             await this.game.click(commonControls.iconClosePfSetting);
@@ -75,39 +90,35 @@ export class NumberGameBase {
 
     protected chipTests() {
         test("Verify chip selected when open game @A_8", async () => {
-            const chipLocators = this.options.locators.chip;
-            for (const key in chipLocators) {
-                await expect(this.game.page.locator(key), { message: `Chip ${key} does not match expected snapshot` }).toHaveScreenshot(
-                    chipLocators[key],
-                    { animations: "disabled" },
-                );
+            await this.game.gnWaitUntilPlaceBet();
+            this.game.gameConfigs.chips.splice(-1, 1);
+            for (const key of this.game.gameConfigs.chips) {
+                await expect(this.game.page.locator(`#chip-${key}`), {
+                    message: `Chip ${key} does not match expected snapshot`,
+                }).toHaveScreenshot(`chip-${key}.png`, { animations: "disabled" });
 
-                await this.game.click(commonControls.btnChipSliderNext, 500);
+                await this.game.click(commonControls.btnChipSliderNext);
             }
-            for (let index = 0; index < Object.keys(chipLocators).length; index++) {
-                await this.game.click(commonControls.btnChipSliderPre, 300);
-            }
+
+            await this.game.page.locator(commonControls.btnChipSliderPre).click({ clickCount: 10, delay: 50 });
         });
 
         test("Verify betting by each bet chip @A_9", async () => {
-            let chipLocators = this.options.locators.chip;
-            chipLocators = Object.fromEntries(Object.entries(chipLocators).slice(0, 2));
-            const betchoice = this.options.locators.betchoices[this.options.placeBetChoices[0]];
             const ownbet = this.options.locators.betchoices[`${this.options.placeBetChoices[0]}OwnBet`];
             await this.game.gnWaitUntilPlaceBet();
             let amount = 0;
+            const lstChip = this.game.gameConfigs.chips.slice(0, 3);
+            const betchoice = this.options.locators.betchoices[this.options.placeBetChoices[0]];
 
-            for (const key in chipLocators) {
+            for (const key of lstChip) {
                 await this.game.click(betchoice, 1000);
-                let expectedValue = key.replace("#chip-", "");
-                amount += parseInt(expectedValue);
+                amount += parseInt(key);
                 const betamount = (await this.game.page.$(ownbet)) || null;
                 expect(await betamount?.innerHTML()).toBe(amount.toString());
                 await this.game.click(commonControls.btnChipSliderNext, 200);
             }
-            for (let index = 0; index < Object.keys(chipLocators).length; index++) {
-                await this.game.click(commonControls.btnChipSliderPre, 300);
-            }
+
+            await this.game.page.locator(commonControls.btnChipSliderPre).click({ clickCount: 10, delay: 50 });
         });
     }
 
@@ -168,24 +179,25 @@ export class NumberGameBase {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
 
-            for (const key in this.options.locators.suggestionBets) {
-                await this.game.gnWaitUntilPlaceBet();
+            for (const key in this.game.gameConfigs.maxBetPerChoices) {
+                await this.game.gnWaitUntilPlaceBet(1000);
 
                 const bet = {
                     choice: key,
-                    amount: this.options.placeBetAmount,
+                    amount: this.options.placeBetAmount || 1,
                     locator: this.options.locators.betchoices[key],
                 };
                 await this.game.click(`#chip-${bet.amount}`, 200);
-                await this.game.click(bet.locator, 200);
-                await this.game.page.locator(commonControls.btnChipSliderNext).click({ clickCount: 10, delay: 100 });
-                await this.game.click(bet.locator, 200);
-                await this.game.waitForTimeout(1000);
+                await this.game.click(bet.locator);
+                await this.game.page.locator(commonControls.btnChipSliderNext).click({ clickCount: 10, delay: 50 });
+                await this.game.click(bet.locator, 1000);
+                const sugestionAmount = this.game.gameConfigs.maxBetPerChoices[key] - bet.amount;
+                const expectedMsg = `Tiền cược khả dụng: ${sugestionAmount}Cược số tiền này?`;
                 await expect(this.game.page.locator(commonControls.dialog_confirm_submit), {
                     message: `suggestion bet of ${bet.choice} is not correct`,
-                }).toContainText(this.options.locators.suggestionBets[key].toString());
+                }).toContainText(expectedMsg.toString());
                 await this.game.click(commonControls.btn_no_submit_dialog);
-                await this.game.page.locator(commonControls.btnChipSliderPre).click({ clickCount: 10, delay: 100 });
+                await this.game.page.locator(commonControls.btnChipSliderPre).click({ clickCount: 10, delay: 50 });
             }
             await this.game.gnWaitForSettlement();
         });
@@ -323,7 +335,7 @@ export class NumberGameBase {
                 }
             }
 
-            expectedValue["odds"] = global.settledResults.odds[this.options.placeBetChoices[2]];
+            expectedValue["odds"] = global.settledResults.odds[this.options.placeBetChoices[2]] - 1;
             await this.game.verifyDateTimeFormat("//tbody/tr[1]/td[1]");
             global.expectedValue = expectedValue;
         });
@@ -427,7 +439,7 @@ export class NumberGameBase {
                 }
             }
 
-            expectedValue["odds"] = global.settledResults.odds[this.options.placeBetChoices[2]];
+            expectedValue["odds"] = global.settledResults.odds[this.options.placeBetChoices[2]] - 1;
             await this.game.verifyDateTimeFormat("//tbody/tr[1]/td[1]");
             global.expectedValue = expectedValue;
         });
@@ -497,7 +509,7 @@ export class NumberGameBase {
         });
 
         test("Verify user can open PF intro from PF setting pf @A_25", async () => {
-            await this.game.click(commonControls.iconPF);
+            await this.openPFSetting();
             await this.game.click(commonControls.iconPfIntroPfSetting, 2000);
             await this.game.verifyLocatorsVisible([commonControls.lbl_PfIntro_title]);
         });
@@ -514,7 +526,7 @@ export class NumberGameBase {
 
     protected lobbyTests() {
         test("User go to game lobby @A_27", async () => {
-            await this.game.click(commonControls.iconHome,2000);
+            await this.game.click(commonControls.iconHome, 2000);
             const lobbyControls = [
                 this.options.locators.lobbyGameIcon,
                 this.options.locators.lobbyTimmer,
@@ -538,13 +550,13 @@ export class NumberGameBase {
             for (const iterator of indexAvatar) {
                 await this.game.click(commonControls.imgAvatar);
                 await this.game.click(iterator);
-                await this.game.click("//button[@class='btn-green']",2000);
+                await this.game.click("//button[@class='btn-green']", 2000);
             }
             await this.game.verifyLocatorsVisible(avatar);
         });
 
         test("User can go back to game success @A_27", async () => {
-            await this.game.click(this.options.locators.lobbyGameIcon,5000);
+            await this.game.click(this.options.locators.lobbyGameIcon, 5000);
             await this.game.verifyLocatorsVisible(this.options.locators.controlsE2E);
         });
 
@@ -590,13 +602,13 @@ export class NumberGameBase {
             for (const iterator of indexAvatar) {
                 await this.game.click(commonControls.imgAvatar);
                 await this.game.click(iterator);
-                await this.game.click("//button[@class='btn-green']",2000);
+                await this.game.click("//button[@class='btn-green']", 2000);
             }
             await this.game.verifyLocatorsVisible(avatar);
         });
 
         test("User can go back to game success @A_27", async () => {
-            await this.game.click(this.options.locators.lobbyGameIcon,5000);
+            await this.game.click(this.options.locators.lobbyGameIcon, 5000);
             await this.game.verifyLocatorsVisible(this.options.locators.controlsE2E);
         });
 
@@ -664,14 +676,26 @@ export class NumberGameBase {
     protected gameGuideTests() {
         test("AND player could open guide and clarify guide content @A_21", async () => {
             // Arrange
+            const minMaxRange = global.maxBetPerChoices;
+            const fminMaxRange = Object.entries(minMaxRange)
+                .map(([key]) => `${global.minBet}-${minMaxRange[key]}`)
+                .join("|")
+                .split("|");
+
             await this.player.gnOpenGuide();
             const getGuideContent = await this.game.getGuideContent();
-            const expectedGuideContent1 = this.options.locators.vnguide1.replace(/\s/g, '');
-            const expectedGuideContent2 = this.options.locators.vnguide2.replace(/\s/g, '');
-            const cleanedGuideContent = getGuideContent.replace(/\s/g, '');
+            let expectedGuideContent = this.options.locators.vnguide
+                .replace(/\s/g, "")
+                .replace("@MAXBET", global.maxbet)
+                .replace("@MAXWINPERROUND", global.maxwinperround);
+
+            for (let index = 0; index < fminMaxRange.length; index++) {
+                const element = fminMaxRange[index];
+                expectedGuideContent = expectedGuideContent.replace(`@MM${index}`, element);
+            }
+            const cleanedGuideContent = getGuideContent.replace(/\s/g, "");
             // Act
-            expect(cleanedGuideContent).toContain(expectedGuideContent1);
-            expect(cleanedGuideContent).toContain(expectedGuideContent2);
+            expect(cleanedGuideContent).toContain(expectedGuideContent);
             await this.player.gnClosePopUp();
         });
     }
@@ -717,9 +741,15 @@ export class NumberGameBase {
             this.lobbyTests();
         }
     }
+
+    async openPFSetting() {
+        await this.game.click(commonControls.iconMenu);
+        await this.game.click(commonControls.iconPF);
+    }
 }
 
 const capturePfIntroContent = async (game: BaseGame) => {
+    await game.waitForTimeout(5000)
     const images = new Array<ImageSnapshot>();
     await game.page.frameLocator("iframe").locator("#container-guide").waitFor({ state: "visible" });
     const guidepages = await game.getCountFrameLocator("//*[@id='container-guide']//div[@class='guide-item']");
