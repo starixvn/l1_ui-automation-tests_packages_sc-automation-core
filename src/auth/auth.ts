@@ -23,7 +23,7 @@ export const ssoToGame = async (
 ): Promise<void> => {
     const config = getConfig();
     const langCode = process.env.npm_config_langCode ?? "vn";
-
+    let ssoLink;
     if (playerId === "" || productId === "") {
         throw new Error(`Missing Test Account or ProductId for game id ${gameId}!!!`);
     }
@@ -43,12 +43,12 @@ export const ssoToGame = async (
         await page.click(LobbyLocator.tokenBtn);
         await page.waitForTimeout(500);
         if (projectCode == "gn") {
-            const ssoLink = (await page.locator("#link-local").textContent()) ?? "";
-            await page.goto(`${ssoLink.replace("gameId=0", `gameId=${gameId}`)}`);
+            ssoLink = (await page.locator("#link-local").textContent()) ?? "";
         } else {
-            const ssoLink = (await page.locator(LobbyLocator.ssoLink).textContent()) ?? "";
-            await page.goto(`${ssoLink.replace("gameId=0", `gameId=${gameId}`)}`);
+            ssoLink = (await page.locator(LobbyLocator.ssoLink).textContent()) ?? "";
         }
+        await page.goto(`${ssoLink.replace("gameId=0", `gameId=${gameId}`)}`);
+        global.ssoLink = `${ssoLink.replace("gameId=0", `gameId=${gameId}`)}`;
         const isCurrencyForm = await page.$$("id=currency");
         if (isCurrencyForm.length > 0) {
             await page.click("text=Submit");
@@ -80,7 +80,6 @@ const loginMemberSite = async (
     const pwd = config[`${projectCode}pwd`];
     const lobbyDomain =
         process.env.npm_config_mobile === "true" ? config[`${projectCode}lobbyDomainMobile`] : config[`${projectCode}lobbyDomain`];
-
     if (memberSiteLink.includes("@")) {
         // Handle basic authentication popup for desktop membersite
         const username = "demo";
@@ -114,16 +113,17 @@ const loginMemberSite = async (
     } else {
         await goToGameLobby(page, lobbyDomain, productId);
     }
-
     await selectCurrencyGroup(page);
 };
 
 const selectCurrencyGroup = async (page: Page) => {
     await page.waitForTimeout(2000);
+    global.ssoLink = page.url();
     const frameExists = await page.$("#frmGame");
     if (frameExists) {
         await page.frameLocator("#frmGame").locator(GroupCurrencyLocator.submitButton).click();
     } else {
+        await page.locator(GroupCurrencyLocator.submitButton).waitFor()
         await page.click(GroupCurrencyLocator.submitButton);
     }
 };
@@ -213,6 +213,7 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
             await page.waitForLoadState();
             await page.waitForTimeout(5000);
             console.log(langCode);
+            global.authUrl = await page.url() //authorization url of member site support for SI tests only
         }
     }
     if (projectCode === "l2") {

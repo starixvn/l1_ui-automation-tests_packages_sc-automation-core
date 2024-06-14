@@ -21,15 +21,15 @@ export const monitoring = {
     1002: "//*/td[text()='Bac Ball 2']//following::a[1]",
     1003: "//*/td[text()='Lucky Next 1']//following::a[1]",
     1004: "//*/td[text()='Lucky Next 2']//following::a[1]",
+    1005: "//*/td[text()='Se Ball']//following::a[1]",
 };
 
 
 export const commonUiResult = {
     lblroundId: "//*[contains(@class,'round-num')]",
     lblTimmer: "//*[contains(@class,'time-counter')]/span",
-    gnlblroundId: "//*[contains(text(),'Next Draw:')]",
+    gnlblroundId: "//*[contains(text(),'Next')]",
     btnSubmit: "//button" ,
-
 };
 
 export const commonUiBetDetails = {

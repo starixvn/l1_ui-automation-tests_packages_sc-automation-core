@@ -21,4 +21,5 @@ export class GameConfiguration {
     rebet?: boolean;
     qualifiedPoint?: number;
     isDoubleFunction?: boolean;
+    isDraw?: boolean; //Xd games stand for game type has Draw round
 }

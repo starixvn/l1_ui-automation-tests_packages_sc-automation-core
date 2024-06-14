@@ -1,3 +1,52 @@
+# [1.41.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.40.4...v1.41.0) (2024-06-10)
+
+
+### Features
+
+* add SI smoke test ([2e081f6](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/2e081f677bc167077befe61fff12f3d4e4e9fd05))
+
+## [1.40.4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.40.3...v1.40.4) (2024-06-04)
+
+
+### Bug Fixes
+
+* exclude ws notification ([61ff48f](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/61ff48f28e1b7e546028bb1af25f56025d871be5))
+
+## [1.40.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.40.2...v1.40.3) (2024-06-03)
+
+
+### Bug Fixes
+
+* select ws channel by gamename ([14cda35](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/14cda358274e99cf136b7355ff4bcad664858b9c))
+
+## [1.40.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.40.1...v1.40.2) (2024-06-03)
+
+
+### Bug Fixes
+
+* timeout socket helper ([983f787](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/983f787bdfdae4bb306b0c310a9f733572af09bf))
+
+## [1.40.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.40.0...v1.40.1) (2024-05-30)
+
+
+### Bug Fixes
+
+* enhance socket helper to avoid wait ws msg until test timeout ([4afeb50](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/4afeb50f41bd4f9500e0273c7b221463a33bb7a8))
+
+# [1.40.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.39.0...v1.40.0) (2024-05-29)
+
+
+### Features
+
+* quick smoke test ([cceb4a3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/cceb4a3845ded16e167c2e04f4aa932bd68cae92))
+
+# [1.39.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.38.3...v1.39.0) (2024-05-23)
+
+
+### Features
+
+* enhance auth for quickly smoke test group game ([779e982](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/779e982c13adfe929d96af036bba78bf633f1307))
+
 ## [1.38.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.38.2...v1.38.3) (2024-05-14)
 
 

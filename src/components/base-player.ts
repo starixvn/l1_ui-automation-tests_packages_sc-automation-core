@@ -61,9 +61,14 @@ export class BasePlayer {
         if (this.game.gameConfiguration.cardgame) {
             return this.betOnCard(choice, amount);
         } else {
-            await this.game.waitUntilPlaceBet(subGameName);
-
-            return this.betOn(choice, amount, subGameName);
+            await this.game.waitForTimeout(6000)
+            let placeBetResponse = await this.betOn(choice, amount, subGameName);
+            if (!placeBetResponse || placeBetResponse.endBet == -1) {
+                console.log('Wait until next round then place bet !');
+                await this.game.waitUntilPlaceBet(subGameName);
+                placeBetResponse = await this.betOn(choice, amount, subGameName);
+            }
+            return placeBetResponse
         }
     }
 

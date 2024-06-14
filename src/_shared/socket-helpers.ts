@@ -4,6 +4,7 @@ import { decodeJson } from "./socket-parser";
 
 export async function waitForMessage(socket: PlaywrightWs, key: string, gameName: string, msgpack: boolean = false): Promise<any> {
     let resolve: (payload: any) => any;
+    let timeoutId: NodeJS.Timeout;
 
     const promise = new Promise<any>((_resolve) => {
         resolve = _resolve;
@@ -14,10 +15,13 @@ export async function waitForMessage(socket: PlaywrightWs, key: string, gameName
         const jsonMsg = parseSocketPayload(payload, msgpack);
 
         if (payload.includes(key) && jsonMsg.eventName?.toLocaleLowerCase() === gameName?.toLocaleLowerCase()) {
+            clearTimeout(timeoutId);
             resolve(jsonMsg.message);
         }
     });
-
+    timeoutId = setTimeout(() => {
+        resolve(undefined); 
+      }, 80 * 1000);
     return promise;
 }
 
@@ -25,9 +29,10 @@ export async function waitForSpecificMessage(
     socket: PlaywrightWs,
     checkMsg: Function,
     gameName: string,
-    msgpack: boolean = false
+    msgpack: boolean = false,
 ): Promise<any> {
     let resolve: (payload: any) => any;
+    let timeoutId: NodeJS.Timeout;
 
     const promise = new Promise<any>((_resolve) => {
         resolve = _resolve;
@@ -38,10 +43,14 @@ export async function waitForSpecificMessage(
         const jsonMsg = parseSocketPayload(payload, msgpack);
 
         if (checkMsg(jsonMsg.message) && jsonMsg.eventName?.toLocaleLowerCase() === gameName?.toLocaleLowerCase()) {
+            clearTimeout(timeoutId);
             resolve(jsonMsg.message);
         }
     });
 
+    timeoutId = setTimeout(() => {
+        resolve(undefined); 
+      }, 80 * 1000);
     return promise;
 }
 

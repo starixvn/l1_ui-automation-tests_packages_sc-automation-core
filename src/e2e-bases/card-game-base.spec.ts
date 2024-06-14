@@ -429,10 +429,10 @@ export class CardGameBase {
         await this.game.clickLocator(baseLocatorNames.btnHitCard, timeout*3);
         let endDeal = await this.game.latestCaptureEvent(GameEvent.Deal).deal;
         const isUnder16 = endDeal.hands[0].total.every((item) => item <= 16);
-        const isdealerPontoon =  endDeal.dealer.length == 0 ? false : true;
-        const playertotal = Math.max(endDeal.hands[0].total[0], endDeal.hands[0].total[1])
+        const isDealer21 = await this.isDealer21(endDeal);
+        const playertotal = Math.max(endDeal.hands[0].total[0], endDeal.hands[0].total[1] ?? 0)
 
-        if (playertotal < 21 && isdealerPontoon === false) {
+        if (playertotal < 21 && isDealer21 === false) {
             if (isUnder16) {
                 await this.game.clickLocator(baseLocatorNames.btnHitCard, timeout);
                 playercard = (await this.game.latestCaptureEvent(GameEvent.HitCard)).hit;
@@ -457,7 +457,7 @@ export class CardGameBase {
             winningHands: settled.winningHands[0] ?? 0,
             totalAmount: playercard?.bet ?? endDeal.deal.hands[0].bet,
             betwin: settled.winningHands[0]?.betwin ?? 0,
-            playerTotal: Math.max(playercard.total[0], playercard.total[1]) ?? 0,
+            playerTotal: Math.max(playercard.total[0], playercard.total[1] ?? 0) ?? 0,
             handid: playercard.id,
         };
     }
@@ -473,10 +473,10 @@ export class CardGameBase {
 
         await this.game.clickLocator(baseLocatorNames.btnHitCard, timeout*3);
         let endDeal = await this.game.latestCaptureEvent(GameEvent.Deal).deal;
-        const isdealerPontoon = endDeal.dealer.length == 0 ? false : true;
+        const isDealer21 = await this.isDealer21(endDeal);
         const playertotal = Math.max(endDeal.hands[0].total[0], endDeal.hands[0].total[1] ?? 0);
 
-        if (playertotal < 21 && isdealerPontoon === false) {
+        if (playertotal < 21 && isDealer21 === false) {
             await this.game.clickLocator(baseLocatorNames.btnCancel);
             if(this.game.locator(baseLocatorNames.btnConfirmStand)){
                 await this.game.clickLocator(baseLocatorNames.btnConfirmStand)
@@ -513,11 +513,11 @@ export class CardGameBase {
 
         await this.game.clickLocator(baseLocatorNames.btnHitCard, timeout*3);
         let endDeal = await this.game.latestCaptureEvent(GameEvent.Deal).deal;
-        const isdealerPontoon =  endDeal.dealer.length == 0 ? false : true;
+        const isDealer21 = await this.isDealer21(endDeal);
         const playertotal = Math.max(endDeal.hands[0].total[0])
         const isPlayerPontoon =  playertotal == 21 ? true : false;
 
-        if (playertotal < 21 && isdealerPontoon === false) {
+        if (playertotal < 21 && isDealer21 === false) {
             await this.game.clickLocator(baseLocatorNames.btnDouble, timeout*3);
             playercard = (await this.game.latestCaptureEvent(GameEvent.Double)).double;
             if (Math.max(playercard.total[0])<=21) {
@@ -531,7 +531,7 @@ export class CardGameBase {
         let settled = await this.game.latestCaptureEvent(GameEvent.Settlement).finish;
 
         return {
-            dealerPontoon: isdealerPontoon,
+            dealerPontoon: isDealer21,
             playerPontoon: isPlayerPontoon,
             dealerTotal: settled.settlementResult,
             winningHands: settled.winningHands[0] ?? 0,
@@ -551,10 +551,10 @@ export class CardGameBase {
         await this.game.waitForTimeout(timeout);
         await this.game.clickLocator(baseLocatorNames.btnHitCard, timeout*3);
         let endDeal = await this.game.latestCaptureEvent(GameEvent.Deal).deal;
-        const isdealerPontoon =  endDeal.dealer.length == 0 ? false : true;
+        const isDealer21 = await this.isDealer21(endDeal);
         const playertotal = Math.max(endDeal.hands[0].total[0], endDeal.hands[0].total[1] ?? 0)
 
-        if (playertotal < 21 && isdealerPontoon === false) {
+        if (playertotal < 21 && isDealer21 === false) {
             await this.game.clickLocator(baseLocatorNames.btnCancel);
             if(this.game.locator(baseLocatorNames.btnConfirmStand)){
                 await this.game.clickLocator(baseLocatorNames.btnConfirmStand)
@@ -590,10 +590,10 @@ export class CardGameBase {
 
         await this.game.clickLocator(baseLocatorNames.btnHitCard, timeout*4);
         let endDeal = await this.game.latestCaptureEvent(GameEvent.Deal).deal;
-        const isdealerPontoon = endDeal.dealer.length == 0 ? false : true;
+        const isDealer21 = await this.isDealer21(endDeal);
         let playerresults:any =[]
 
-        if (isdealerPontoon === false) {
+        if (isDealer21 === false) {
             let data:any
           
               for (let index = 0; index < choices.length; index++) {
@@ -635,6 +635,15 @@ export class CardGameBase {
             expect(settledResults.betwin > 0).toBe(true);
         } else {
             expect(settledResults.betwin == 0).toBe(true);
+        }
+    }
+
+    protected async isDealer21(endDeal: any){
+        if(endDeal.dealer.length == 0){
+            return false
+        }
+        else{
+            return true
         }
     }
 
