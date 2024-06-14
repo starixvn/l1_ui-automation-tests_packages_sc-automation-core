@@ -1,3 +1,10 @@
+# [1.42.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.41.0...v1.42.0) (2024-06-14)
+
+
+### Features
+
+* enhance number game base ([c498aec](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/c498aec7d87ca7158f8c24e753fe24c04b965efa))
+
 # [1.41.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.40.4...v1.41.0) (2024-06-10)
 
 
