@@ -1,3 +1,10 @@
+## [1.42.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.42.0...v1.42.1) (2024-06-24)
+
+
+### Bug Fixes
+
+* enhance hedge bet msg and remove some hard sleep in login ([ca0a140](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/ca0a140010f3d18c68dc789879f7cdd35300d864))
+
 # [1.42.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.41.0...v1.42.0) (2024-06-14)
 
 
