@@ -19,31 +19,20 @@ export const test = base.extend<BaseFixtures>({
     baseGame: async ({ browser, locators, gameConfigurations }, use) => {
         const context = await browser.newContext();
         const page = await context.newPage();
-        try {
             if (process.env.npm_config_android) {
                 const [device] = await android.devices();
-                console.log(`Model: ${device.model()}`);
-                console.log(`Serial: ${device.serial()}`);
-    
+                console.log(`Model: ${device.model()} - Serial: ${device.serial()}`);
                 const browser = await device.launchBrowser();
                 const [page] = browser.pages();
                 const game = new BaseGame(page, locators, gameConfigurations,device );
                 await game.login();
                 await use(game);
             } else {
-                await context.tracing.start({ screenshots: true, snapshots: true });
                 const game = new BaseGame(page, locators, gameConfigurations);
                 await game.login();
                 await use(game);
             }
-        } catch (error) {
-            await context.tracing.stop({
-                path: './test-results/failed-setup-trace.zip',
-              });
-            await browser.close();
-            throw error;
-        }
-       
+      
     },
 });
 

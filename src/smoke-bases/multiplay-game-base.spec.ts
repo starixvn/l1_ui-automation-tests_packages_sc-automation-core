@@ -61,11 +61,10 @@ export class MultiplayGameBase {
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
 
             // Act
-            await this.player.placeHedgeBet(this.options.gameConfiguration.hedgeBetGroups[0], 1);
-            const error = await this.game.captureErrorMessage();
-
+            const endBetMsg = await this.player.placeHedgeBet(this.options.gameConfiguration.hedgeBetGroups[0], this.options.placeBetAmount ?? 1);
+            
             // Assert
-            expect(error.image).toMatchSnapshot(error.name, { maxDiffPixelRatio: 0.3 });
+            expect(endBetMsg).toMatchObject({ endBet: -1, betChoice: this.options.gameConfiguration.hedgeBetGroups[0][1]});
         });
     }
 

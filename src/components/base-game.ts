@@ -91,7 +91,8 @@ export class BaseGame {
     }
 
     async waitUntilGameUiLoad() {
-        if (process.env.npm_config_project != "gn") {
+        await this.page.screenshot({path:`./test-results/beforeInGame.png`})
+        if (process.env.npm_config_project !== "gn") {
             const waitRange = process.env.npm_config_project === "ultra888" ? 1 : 2;
             await this.page.waitForTimeout(1000);
             let filterA: string[] = [];
@@ -103,14 +104,15 @@ export class BaseGame {
             });
 
             while (filterA.length < waitRange) {
-                await this.page.waitForTimeout(3000);
+                await this.page.waitForTimeout(500);
             }
         } else if (process.env.npm_config_project === "gn") {
             await this.page.locator(numberGameLocator.commonControls.lblUserName).waitFor();
         }
 
-        await this.page.waitForTimeout(3000);
+        await this.page.waitForTimeout(1000);
         console.log("Game UI ready for testing");
+        await this.page.screenshot({path:`./test-results/afterInGame.png`})
     }
 
     async waitUntilGameLobbyUiLoad() {

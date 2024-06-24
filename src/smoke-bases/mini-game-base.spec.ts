@@ -59,12 +59,10 @@ export class MiniGameBase {
             test.setTimeout(maxTimeout);
 
             // Act
-            await this.player.placeHedgeBet(hedgeBetGroups[0], this.options.placeBetAmount ?? 1);
-            await this.game.waitForTimeout(500)
-            const error = await this.game.captureErrorMessage();
+            const endBetMsg = await this.player.placeHedgeBet(hedgeBetGroups[0], this.options.placeBetAmount ?? 1);
 
             // Assert
-            expect(error.image).toMatchSnapshot(error.name, { maxDiffPixelRatio: 0.3 });
+            expect(endBetMsg).toMatchObject({ endBet: -1, betChoice: hedgeBetGroups[0][1] });
         });
     }
 

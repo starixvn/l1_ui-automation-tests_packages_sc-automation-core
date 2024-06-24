@@ -126,6 +126,7 @@ const selectCurrencyGroup = async (page: Page) => {
         await page.locator(GroupCurrencyLocator.submitButton).waitFor()
         await page.click(GroupCurrencyLocator.submitButton);
     }
+    await page.waitForLoadState()
 };
 
 const loginUAT = async (page: Page, accountId: string, pwd: string, langCode: string, projectCode: string, timeout: number = 15000) => {
@@ -248,7 +249,7 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
             }
             await page.waitForTimeout(2000);
             await page.locator("#sportsFrame").waitFor({ state: "visible" });
-            await page.waitForTimeout(20000);
+            await page.waitForTimeout(5000);
         }
     }
     if (projectCode === "ultra888") {

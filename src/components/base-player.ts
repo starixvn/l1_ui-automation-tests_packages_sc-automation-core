@@ -14,7 +14,7 @@ export class BasePlayer {
         await this.game.waitUntilPlaceBet(subGameName);
 
         await this.betOn(hedgeChoices[0], amount, subGameName);
-        await this.betOn(hedgeChoices[1], amount, subGameName);
+        return await this.betOn(hedgeChoices[1], amount, subGameName);
     }
 
     async gnPlaceHedgeBet(hedgeChoices: string[], amount: number = 1): Promise<void> {
@@ -52,6 +52,7 @@ export class BasePlayer {
             }
             await this.game.clickToChoice(choice);
         }
+        return this.game.waitForEndBet(subGameName);
     }
 
     async placeBet(choice: string, amount = 1, subGameName?: string): Promise<any> {
