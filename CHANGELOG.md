@@ -1,3 +1,10 @@
+# [1.43.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.42.1...v1.43.0) (2024-06-27)
+
+
+### Features
+
+* add config account game xd ([2e3210f](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/2e3210f792e28741a1b488e5c4f5c219724b3238))
+
 ## [1.42.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.42.0...v1.42.1) (2024-06-24)
 
 
