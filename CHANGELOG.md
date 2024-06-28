@@ -1,3 +1,10 @@
+## [1.43.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.43.0...v1.43.1) (2024-06-28)
+
+
+### Bug Fixes
+
+* remove hard sleep place bet, and some update e2e numbergame ([062d466](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/062d466388f2a8c83d256eef55612beebf09de03))
+
 # [1.43.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.42.1...v1.43.0) (2024-06-27)
 
 
