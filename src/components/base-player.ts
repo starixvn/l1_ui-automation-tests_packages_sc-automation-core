@@ -62,7 +62,6 @@ export class BasePlayer {
         if (this.game.gameConfiguration.cardgame) {
             return this.betOnCard(choice, amount);
         } else {
-            await this.game.waitForTimeout(6000)
             let placeBetResponse = await this.betOn(choice, amount, subGameName);
             if (!placeBetResponse || placeBetResponse.endBet == -1) {
                 console.log('Wait until next round then place bet !');
@@ -135,6 +134,7 @@ export class BasePlayer {
     }
 
     async gnSettingPF(clientseed: string ): Promise<any> {
+        await this.game.click(numberGameLocator.commonControls.iconMenu,1000);
         await this.game.click(numberGameLocator.commonControls.iconPF,1000);
         if (clientseed) {
             await this.game.click(numberGameLocator.commonControls.chkManualSeed,1000);

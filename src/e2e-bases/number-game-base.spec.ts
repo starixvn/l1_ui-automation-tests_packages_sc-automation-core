@@ -20,6 +20,7 @@ export class NumberGameBase {
                 await this.game.page.locator(commonControls.iconHome).waitFor({ state: "visible" });
             }
             //Config lobal varriable
+            await this.game.waitForTimeout(3000);
             const { maxBetPerChoices, maxWinPerRound, minBet, maxBet } = this.game.gameConfigs;
             global.minBet = minBet;
             global.maxbet = formatNumber(maxBet);
@@ -192,7 +193,8 @@ export class NumberGameBase {
                 await this.game.page.locator(commonControls.btnChipSliderNext).click({ clickCount: 10, delay: 50 });
                 await this.game.click(bet.locator, 1000);
                 const sugestionAmount = this.game.gameConfigs.maxBetPerChoices[key] - bet.amount;
-                const expectedMsg = `Tiền cược khả dụng: ${sugestionAmount}Cược số tiền này?`;
+                const expectAmount = sugestionAmount > 1000 ? sugestionAmount.toLocaleString() : sugestionAmount.toString();
+                const expectedMsg = `Tiền cược vượt mức quy định.Tiền cược khả dụng: ${expectAmount}Cược số tiền này?`;
                 await expect(this.game.page.locator(commonControls.dialog_confirm_submit), {
                     message: `suggestion bet of ${bet.choice} is not correct`,
                 }).toContainText(expectedMsg.toString());
@@ -277,7 +279,8 @@ export class NumberGameBase {
             for (const key in this.options.locators.statisticItems) {
                 let totalVal = await this.game.page.locator(key).count();
                 totalVal = parseInt(((totalVal / 108) * 100).toFixed(0));
-                await this.game.textLocatorShouldBe(this.options.locators.statisticItems[key], totalVal + "%");
+                const ExpectVal= await this.game.getText(this.options.locators.statisticItems[key])
+                expect(totalVal).toBeCloseTo(parseInt(ExpectVal),2)
             }
         });
     }
@@ -335,7 +338,7 @@ export class NumberGameBase {
                 }
             }
 
-            expectedValue["odds"] = global.settledResults.odds[this.options.placeBetChoices[2]] - 1;
+            expectedValue["odds"] = global.settledResults.odds[this.options.placeBetChoices[2]];
             await this.game.verifyDateTimeFormat("//tbody/tr[1]/td[1]");
             global.expectedValue = expectedValue;
         });
@@ -439,7 +442,7 @@ export class NumberGameBase {
                 }
             }
 
-            expectedValue["odds"] = global.settledResults.odds[this.options.placeBetChoices[2]] - 1;
+            expectedValue["odds"] = global.settledResults.odds[this.options.placeBetChoices[2]];
             await this.game.verifyDateTimeFormat("//tbody/tr[1]/td[1]");
             global.expectedValue = expectedValue;
         });

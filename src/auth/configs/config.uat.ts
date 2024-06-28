@@ -1,5 +1,5 @@
 export default {
-    l1memberSite: "@http://casinoqavm2.viva88.com:6133/login",
+    l1memberSite: "@http://casinoqavm2.viva88.com:6103/login",
     l1lobbyDomain: "VendorGame/OpenSabaClub?deviceType=1&GameID=",
     l1memberSiteMobile: "http://casinoqavm2.viva88.com:6201/",
     l1lobbyDomainMobile: "VendorGame/OpenSabaClub?deviceType=1&GameID=",

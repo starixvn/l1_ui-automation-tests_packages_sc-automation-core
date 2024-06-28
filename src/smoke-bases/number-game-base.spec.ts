@@ -16,7 +16,7 @@ export class NumberGameBase {
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             const isInGame = await this.game.page.locator(commonControls.iconHome).isVisible();
             if (!isInGame) {
-                await this.game.click(this.options.locators.lobbyGameIcon,3000);
+                await this.game.click(this.options.locators.lobbyGameIcon,5000);
                 await this.game.page.locator(commonControls.iconHome).waitFor({state:"visible"})  
             }
             const inGameUi =
