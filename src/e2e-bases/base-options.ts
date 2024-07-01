@@ -12,4 +12,5 @@ export interface IBaseOptions {
     gameLobbyNavigation?: string[];
     barItems?: string[];
     uiChecklist?: Array<string>;
+    isBalanceBettingGame?: boolean;
 }

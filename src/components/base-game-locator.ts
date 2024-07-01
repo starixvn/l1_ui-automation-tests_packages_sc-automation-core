@@ -11,7 +11,7 @@ const imgLocatorNames = ["imgdealer","imgGameName","imgB0","imgB1",  "imgB2","im
     "imgPFPopupClientSeed", "imgPFPopupPlayer123", "imgPFPopupPlayer45", "imgPFPopupMergeClientSeed", "imgPFPopupCombinedHash", "imgPFPopupMessage", "imgVerificationHeader", "imgVerificationServerSeed", "imgVerificationMergeClientSeed", 
     "imgVerificationCombinedHash", "imgVerificationFinalResult", "imgGameGuidePF", "imgClientSeed1", "imgClientSeed102", "imgClientSeed102Inactive", "imgPFPopupResult", "imgVerifySuccessful", "imgPFPopup", "imgClientSeedTooltip",
     "imgCombinedHashTooltip", "imgPFPopupRunning",  "imgBetAcceptedl1",  "imgBetAcceptedl2", "imgChipBoardDefaultl1", "imgChipBoardDefaultl2", "imgBetAmountCleared", "imgPresetStakeDefaultl1", "imgPresetStakeDefaultl2",
-    "imgPresetStakeFirstValuel1", "imgPresetStakeFirstValuel2"]
+    "imgPresetStakeFirstValuel1", "imgPresetStakeFirstValuel2", "imgPFSettingInactive"]
 
 const btnLocatorNames = ["btnRebet","btnHome","btnClosePopup","btnRightArrow","btnLeftArrow","btnHitCard", "btnCancel","btnSplit","btnDouble","btnNewbet",
     "btnPayline","btnAutoSpin","btnTurbo", "btnSpin", "btnAutoSpin10", "btnAutoSpinTurbo", "btnAutoSpinStart","btnPayline1", "btnAllPayline", "btnEvenPayline",

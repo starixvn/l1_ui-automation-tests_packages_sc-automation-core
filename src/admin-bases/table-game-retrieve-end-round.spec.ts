@@ -17,6 +17,7 @@ export class TableRERGameBase {
         admintest("Verify RER on roundId is running", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount ?? 1 };
+            await this.game.waitUntilPlaceBet();
             await this.player.placeBet(bet.choice, bet.amount);
             let currentRoundID = Number(await this.getClientRunningRound());
             let getRER = await this.admin.getRetrieveEndRound(
@@ -47,6 +48,7 @@ export class TableRERGameBase {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount ?? 1 };
             // Act
+            await this.game.waitUntilPlaceBet();
             await this.player.placeBet(bet.choice, bet.amount);
             let currentRoundID = Number(await this.getClientRunningRound());
             global.settleRoundID = currentRoundID;
@@ -55,7 +57,7 @@ export class TableRERGameBase {
         admintest("Set result win for the bet choice", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             await this.setUIGameResult(this.admin.page.context(), this.dataSet["settle_win"])
-            await this.game.waitForSettlement();
+            await this.game.waitForEvent(GameEvent.Settlement);
         });
 
         admintest("Verify RER placebet 1 choice and win", async () => {
@@ -75,6 +77,7 @@ export class TableRERGameBase {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             const bet = { choice: this.options.placeBetChoices[1], amount: this.options.placeBetAmount ?? 1 };
             // Act
+            await this.game.waitUntilPlaceBet();
             await this.player.placeBet(bet.choice, bet.amount);
             let currentRoundID = Number(await this.getClientRunningRound());
             global.settleRoundID = currentRoundID;
@@ -83,7 +86,7 @@ export class TableRERGameBase {
         admintest("Set result lose for the bet choice", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             await this.setUIGameResult(this.admin.page.context(), this.dataSet["settle_lose"])
-            await this.game.waitForSettlement();
+            await this.game.waitForEvent(GameEvent.Settlement);
         });
 
         admintest("Verify RER placebet 1 choice and lose", async () => {
@@ -114,7 +117,7 @@ export class TableRERGameBase {
         admintest("Set result lose for all bet choices", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             await this.setUIGameResult(this.admin.page.context(), this.dataSet["settle_lose_multiple_choices"])
-            await this.game.waitForSettlement();
+            await this.game.waitForEvent(GameEvent.Settlement);
         });
 
         admintest("Verify RER place bet multiple choices and lose all", async () => {
@@ -134,6 +137,7 @@ export class TableRERGameBase {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             const bet = { choice: this.options.placeBetChoices[1], amount: this.options.placeBetAmount ?? 1 };
             // Act
+            await this.game.waitUntilPlaceBet();
             await this.player.placeBet(bet.choice, bet.amount);
             let currentRoundID = Number(await this.getClientRunningRound());
             global.settleRoundID = currentRoundID;
@@ -142,7 +146,7 @@ export class TableRERGameBase {
         admintest("Set result draw", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             await this.setUIGameResult(this.admin.page.context(), this.dataSet["settle_draw"])
-            await this.game.waitForSettlement();
+            await this.game.waitForEvent(GameEvent.Settlement);
         });
 
         admintest("Verify RER placebet and result is draw", async () => {
@@ -205,6 +209,7 @@ export class TableRERGameBase {
         let currentRoundID = Number(await this.getClientRunningRound());
         if (currentRoundID < roundId && isWaitForSettlement) {
             // Act
+            await this.game.waitUntilPlaceBet();
             await this.player.placeBet(bet.choice, bet.amount);
             await this.game.waitForEvent(GameEvent.Settlement);
         }
