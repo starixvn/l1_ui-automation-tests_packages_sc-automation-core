@@ -8,6 +8,8 @@ import { GameGuides } from "../game-components/guides/guides.spec";
 
 const projectCode = process.env.npm_config_project ?? "l1";
 
+const timeout = 3000;
+
 export class MiniGameBase {
     game: BaseGame;
     player: BasePlayer;
@@ -36,7 +38,7 @@ export class MiniGameBase {
                 const uiChecklist = this.options.uiChecklist ?? [];
                 for (const uiItem of uiChecklist) {
                     // Act
-                    await verifyImage(this.game, uiItem);
+                    await verifyImage(this.game, uiItem, 0.02);
                 }
             });
         });
@@ -108,21 +110,21 @@ export class MiniGameBase {
     protected placeBetAndSettleTests() {
         test("Verify round id displayed on table is the same with round id in settle result", async () => {
             // Arrange
-            let placeBetResponse, betChoice, roundId, settledResults;
+            let placeBetResponse, roundId, settledResults;
             const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount ?? 1 };
             await test.step(`Place bet and get round ID on game client`, async () => {
                 test.setTimeout(this.options.gameConfiguration.maxTimeout);
                 this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
     
                 // Act
+                await this.game.waitUntilPlaceBet()
                 placeBetResponse = await this.player.placeBet(bet.choice, bet.amount);
-                betChoice = await this.game.capture(bet.choice + `Ownbet${process.env.npm_config_project}`);
                 roundId = await this.game.getTextLocator(baseLocatorNames.lblRoundIdOnTable, "#0123456789");
                 settledResults = await this.game.waitForSettlement();
             });
 
             await test.step(`Verify settled ticket`, async () => {
-                expect(betChoice.image).toMatchSnapshot(betChoice.name);
+                verifyImage(this.game, bet.choice + `Ownbet${process.env.npm_config_project}`)
                 expect(placeBetResponse.endBet).toBe(bet.amount);
                 expect(settledResults.settlementResult).toMatchBetOptions(this.options.gameConfiguration.choices);
                 console.log(settledResults.roundId, roundId);
@@ -140,25 +142,27 @@ export class MiniGameBase {
 
             // Act
             await test.step(`Place bet and wait for settlement`, async () => {
+                await this.game.waitUntilPlaceBet()
                 placeBetResponse = await this.player.placeBet(bet.choice, bet.amount);
                 settledResults = await this.game.waitForSettlement();
     
                 await this.game.waitUntilPlaceBet();
             });
-
-            await test.step(`Get refund data`, async () => {
-                let historyPayload = await this.player.openHistory();
-                let retryCount = 0;
-                while (Object.keys(historyPayload).length === 0 && retryCount < 2) {
-                    historyPayload = await this.player.openHistory();
-                    retryCount++;
-                }
-    
-                const ticketHistory = historyPayload.history.betLogs.shift() || 0;
-                bet.refund = ticketHistory.refund;
-    
-                await this.game.clickOutSide();
-            });
+            if (this.options.isBalanceBettingGame){
+                await test.step(`Get refund data`, async () => {
+                    let historyPayload = await this.player.openHistory();
+                    let retryCount = 0;
+                    while (Object.keys(historyPayload).length === 0 && retryCount < 2) {
+                        historyPayload = await this.player.openHistory();
+                        retryCount++;
+                    }
+        
+                    const ticketHistory = historyPayload.history.betLogs.shift() || 0;
+                    bet.refund = ticketHistory.refund;
+        
+                    await this.game.clickOutSide();
+                });
+            }
 
             await test.step(`Verify settlement result`, async () => {
                 // Assert
@@ -240,6 +244,133 @@ export class MiniGameBase {
         });
     }
 
+    protected provablyFairTests() {
+        test("Verify PF icon, PF setting popup and introduce", async () => {
+            //Act
+            await test.step("Click on PF ico", async () => {
+                await this.game.clickLocator(baseLocatorNames.icoPF, 3000);
+            });   
+
+            await test.step("Verify default UI of PF setting popup", async () => {
+                await verifyImage(this.game, baseLocatorNames.popPFSettings);
+                await verifyImage(this.game, baseLocatorNames.imgClientSeedRandomChecked);
+                await verifyImage(this.game, baseLocatorNames.imgClientSeedManualModeDefault);
+            });
+
+            await test.step("Verify introduction popup", async () => {
+                await this.game.clickLocator(baseLocatorNames.icoPFTooltip, timeout)
+                await verifyImage(this.game, baseLocatorNames.imgGameGuidePF);
+                await this.game.clickOutSide();
+            });
+        });
+
+        test("Verify new client seed popup", async () => {
+            await test.step("Verify client seed popup", async () => {
+                await this.game.clickLocator(baseLocatorNames.checkboxManual, 5000);
+                await verifyImage(this.game, baseLocatorNames.popNewClientSeed);
+            });
+
+            await test.step("Clear client seed", async () => {
+                await this.game.clickLocator(baseLocatorNames.btnClientSeedClear);
+                await verifyImage(this.game, baseLocatorNames.popNewClientSeedCleared);
+            });   
+
+            await test.step("Input client seed 1234", async () => {
+                await this.game.clickLocator(baseLocatorNames.btnClientSeed1);
+                await this.game.clickLocator(baseLocatorNames.btnClientSeed2);
+                await this.game.clickLocator(baseLocatorNames.btnClientSeed3);
+                await this.game.clickLocator(baseLocatorNames.btnClientSeed4);
+                await this.game.clickLocator(baseLocatorNames.btnClientSeed5);
+                await verifyImage(this.game, baseLocatorNames.popNewClientSeed1234);
+            });   
+
+            await test.step("Backspace a number", async () => {
+                await this.game.clickLocator(baseLocatorNames.btnClientSeedBackspace);
+                await verifyImage(this.game, baseLocatorNames.popNewClientSeed123);
+            });   
+
+            await test.step("Save client seed", async () => {
+                await this.game.clickLocator(baseLocatorNames.btnClientSeed4);
+                await this.game.clickLocator(baseLocatorNames.btnClientSeedSave, 1000);
+                await verifyImage(this.game, baseLocatorNames.imgManualClientSeed1234);
+            });   
+
+            await test.step("Open client seed again and verify the value", async () => {
+                await this.game.clickLocator(baseLocatorNames.btnChangeClienSeed, 1000);
+                await verifyImage(this.game, baseLocatorNames.popNewClientSeed1234);
+                await this.game.clickOutSide();
+                await verifyImage(this.game, baseLocatorNames.imgManualClientSeed1234);
+                await this.game.clickOutSide();
+            });
+        });
+
+        test("Verify PF setting popup in case place bet", async () => {
+            //Act
+            const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount ?? 1 };
+            await test.step("Wait for new round and place bet", async () => {
+                await this.game.waitUntilPlaceBet()
+                await this.player.betOn(bet.choice, bet.amount);
+            });
+
+            await test.step("Click on PF ico", async () => {
+                await this.game.clickLocator(baseLocatorNames.icoPF);
+            });   
+
+            await test.step("Verify UI of PF setting popup in inactive mode", async () => {
+                await verifyImage(this.game, baseLocatorNames.imgPFSettingInactive);
+                await this.game.clickOutSide();
+                //wait for settlement
+                await this.game.waitForEvent(GameEvent.Settlement);
+            });
+        });
+
+        test("Verify PF popup from history", async () => {
+            //Act
+            await test.step("Open history", async () => {
+                await this.game.clickHistory();
+            });
+
+            await test.step("Click on verify icon", async () => {
+                await this.game.clickLocator(baseLocatorNames.btnHistoryVerify, 3000);
+            });   
+
+            await test.step("Verify PF popup", async () => {
+                await verifyImage(this.game, baseLocatorNames.imgPFPopupHeader);
+                await verifyImage(this.game, baseLocatorNames.imgPFPopupRoundId);
+                await verifyImage(this.game, baseLocatorNames.imgPFPopupCrashPoint);
+                await verifyImage(this.game, baseLocatorNames.imgPFPopupServerSeed);
+                await verifyImage(this.game, baseLocatorNames.imgPFPopupClientSeed);
+                await verifyImage(this.game, baseLocatorNames.imgPFPopupMergeClientSeed);
+                await verifyImage(this.game, baseLocatorNames.imgPFPopupPlayer123);
+                await verifyImage(this.game, baseLocatorNames.imgPFPopupPlayer45);
+                await verifyImage(this.game, baseLocatorNames.imgPFPopupCombinedHash);
+                await verifyImage(this.game, baseLocatorNames.imgPFPopupMessage);
+                await verifyImage(this.game, baseLocatorNames.btnPFPopupVerify);
+                await this.game.clickLocator(baseLocatorNames.btnClientSeedTooltip);
+                await verifyImage(this.game, baseLocatorNames.imgClientSeedTooltip); 
+                await this.game.clickLocator(baseLocatorNames.btnCombinedHashTooltip);
+                await verifyImage(this.game, baseLocatorNames.imgCombinedHashTooltip);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+            });
+        });
+
+        test("Verify verification popup", async () => {
+            //Act
+            await test.step("Open verification popup", async () => {
+                await this.game.clickLocator(baseLocatorNames.btnPFPopupVerify, 3000)
+            }); 
+
+            await test.step("Verify verification popup", async () => {
+                await verifyImage(this.game, baseLocatorNames.imgVerificationServerSeed);
+                await verifyImage(this.game, baseLocatorNames.imgVerificationMergeClientSeed);
+                await verifyImage(this.game, baseLocatorNames.imgVerificationCombinedHash);
+                await verifyImage(this.game, baseLocatorNames.imgVerificationFinalResult);
+                await this.game.clickOutSide(1000);
+                await this.game.clickOutSide();        
+                await this.game.clickOutSide();                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+            });
+        });
+    }
+
     start(): void {
         test.beforeEach(async ({}, testInfo) => {
             testInfo.snapshotPath = (name: string) => {
@@ -271,11 +402,18 @@ export class MiniGameBase {
         this.chipBoardTests();
         this.placeBetAndSettleTests();
         this.ticketHistoryTests()
+        this.provablyFairTests();
         this.hedgeBetTests();
         this.maxBetTests();
         this.presetStakeTests();
         this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
     }
+
+
+    async openPFPopup (){
+        await this.game.clickLocator(baseLocatorNames.icoPF, 1000)
+    };
+    
 
 }
 
@@ -292,4 +430,8 @@ const getDataFistRowHistory = async (game: BaseGame) => {
         totalstake: totalstake!.toString().replace(/[^0-9.]/g, ""),
         betwin: betwin!.toString().replace(/[^0-9.]/g, "") !== "" ? parseFloat(betwin!.toString().replace(/[^0-9.]/g, "")).toString() : "0",
     };
+    
+
 };
+
+

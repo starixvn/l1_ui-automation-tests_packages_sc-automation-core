@@ -50,7 +50,7 @@ export class TableTicketDetailGameBase {
         admintest("Set result win for the bet choice", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             await this.setUIGameResult(this.admin.page.context(), this.dataSet["settle_win"])
-            await this.game.waitForSettlement();
+            await this.game.waitForEvent(GameEvent.Settlement);
         });
 
         admintest("Verify BetDetails of case placebet 1 choice and win", async () => {
@@ -74,7 +74,7 @@ export class TableTicketDetailGameBase {
         admintest("Set result lose for the bet choice", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             await this.setUIGameResult(this.admin.page.context(), this.dataSet["settle_lose"])
-            await this.game.waitForSettlement();
+            await this.game.waitForEvent(GameEvent.Settlement);
         });
 
         admintest("Verify BetDetails of case placebet 1 choice and lose", async () => {
@@ -101,7 +101,7 @@ export class TableTicketDetailGameBase {
         admintest("Set result lose for all bet choices", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             await this.setUIGameResult(this.admin.page.context(), this.dataSet["settle_lose_multiple_choices"])
-            await this.game.waitForSettlement();
+            await this.game.waitForEvent(GameEvent.Settlement);
         });
 
         admintest("Verify BetDetails of case placebet multiple bet choices and lose", async () => {
@@ -125,7 +125,7 @@ export class TableTicketDetailGameBase {
         admintest("Set result draw", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             await this.setUIGameResult(this.admin.page.context(), this.dataSet["settle_draw"])
-            await this.game.waitForSettlement();
+            await this.game.waitForEvent(GameEvent.Settlement);
         });
 
         admintest("Verify bet details placebet and result is draw", async () => {
