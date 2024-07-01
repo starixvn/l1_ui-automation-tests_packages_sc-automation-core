@@ -1,3 +1,10 @@
+## [1.43.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.43.1...v1.43.2) (2024-07-01)
+
+
+### Bug Fixes
+
+* core number game ([eeaea33](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/eeaea3366a2009a5ec668e4c56b62276bef6fa59))
+
 ## [1.43.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.43.0...v1.43.1) (2024-06-28)
 
 
