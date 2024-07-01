@@ -22,7 +22,7 @@ export class NumberGameBase {
             const inGameUi =
                 process.env.npm_config_android == "true" ? this.options.locators.inGameUIAndroid : this.options.locators.inGameUI;
 
-            await this.game.verifyImageLocators(inGameUi);
+            await this.game.verifyLocatorsVisible(inGameUi);
         });
 
         test("Verify menu list items", async () => {
@@ -106,7 +106,7 @@ export class NumberGameBase {
                 process.env.npm_config_android == "true" ? this.options.locators.statisticbarAndroid : this.options.locators.statisticbar;
 
             // Arrange
-            await this.game.verifyImageLocators(statisticbar);
+            await this.game.verifyLocatorsVisible(statisticbar);
         });
 
         test("Verify user can slide left/right to switch road", async () => {

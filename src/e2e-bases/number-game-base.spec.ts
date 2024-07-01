@@ -35,10 +35,9 @@ export class NumberGameBase {
                 return value >= 1000 ? value.toLocaleString() : value;
             }
 
-            await this.game.gnWaitUntilPlaceBet();
             const inGameUi =
                 process.env.npm_config_android == "true" ? this.options.locators.inGameUIAndroid : this.options.locators.inGameUI;
-            await this.game.verifyImageLocators(inGameUi);
+            await this.game.verifyLocatorsVisible(inGameUi);
         });
 
         test("Verify controls are visible @A_2", async () => {
@@ -250,7 +249,7 @@ export class NumberGameBase {
             // Arrange
             const statisticbar =
                 process.env.npm_config_android == "true" ? this.options.locators.statisticbarAndroid : this.options.locators.statisticbar;
-            await this.game.verifyImageLocators(statisticbar);
+            await this.game.verifyLocatorsVisible(statisticbar);
         });
 
         test("Verify user can slide left/right to switch road @A_15", async () => {
