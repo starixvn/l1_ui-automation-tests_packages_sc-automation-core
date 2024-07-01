@@ -1,3 +1,38 @@
+## [1.43.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.43.1...v1.43.2) (2024-07-01)
+
+
+### Bug Fixes
+
+* core number game ([eeaea33](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/eeaea3366a2009a5ec668e4c56b62276bef6fa59))
+
+## [1.43.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.43.0...v1.43.1) (2024-06-28)
+
+
+### Bug Fixes
+
+* remove hard sleep place bet, and some update e2e numbergame ([062d466](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/062d466388f2a8c83d256eef55612beebf09de03))
+
+# [1.43.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.42.1...v1.43.0) (2024-06-27)
+
+
+### Features
+
+* add config account game xd ([2e3210f](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/2e3210f792e28741a1b488e5c4f5c219724b3238))
+
+## [1.42.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.42.0...v1.42.1) (2024-06-24)
+
+
+### Bug Fixes
+
+* enhance hedge bet msg and remove some hard sleep in login ([ca0a140](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/ca0a140010f3d18c68dc789879f7cdd35300d864))
+
+# [1.42.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.41.0...v1.42.0) (2024-06-14)
+
+
+### Features
+
+* enhance number game base ([c498aec](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/c498aec7d87ca7158f8c24e753fe24c04b965efa))
+
 # [1.41.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.40.4...v1.41.0) (2024-06-10)
 
 

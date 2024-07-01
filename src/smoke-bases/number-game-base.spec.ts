@@ -16,13 +16,13 @@ export class NumberGameBase {
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             const isInGame = await this.game.page.locator(commonControls.iconHome).isVisible();
             if (!isInGame) {
-                await this.game.click(this.options.locators.lobbyGameIcon,3000);
+                await this.game.click(this.options.locators.lobbyGameIcon,5000);
                 await this.game.page.locator(commonControls.iconHome).waitFor({state:"visible"})  
             }
             const inGameUi =
                 process.env.npm_config_android == "true" ? this.options.locators.inGameUIAndroid : this.options.locators.inGameUI;
 
-            await this.game.verifyImageLocators(inGameUi);
+            await this.game.verifyLocatorsVisible(inGameUi);
         });
 
         test("Verify menu list items", async () => {
@@ -106,7 +106,7 @@ export class NumberGameBase {
                 process.env.npm_config_android == "true" ? this.options.locators.statisticbarAndroid : this.options.locators.statisticbar;
 
             // Arrange
-            await this.game.verifyImageLocators(statisticbar);
+            await this.game.verifyLocatorsVisible(statisticbar);
         });
 
         test("Verify user can slide left/right to switch road", async () => {

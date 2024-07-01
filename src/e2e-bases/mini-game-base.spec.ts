@@ -195,7 +195,6 @@ export class MiniGameBase {
                 expect(ticketdata.betdate, "verify bet date").toEqual(global.settledata.betdate.replace(/[^0-9.]/g, ""));
                 expect(ticketdata.roundId, "verify round id").toEqual(global.settledata.roundId);
                 expect(ticketdata.totalstake, "verify total stake").toEqual(global.settledata.bet);
-                //expect(ticketdata.betwin, "verify bet win").toEqual(global.settledata.betwin);
     
                 //Post-Act
                 await this.game.clickOutSide();
@@ -211,14 +210,10 @@ export class MiniGameBase {
             test.setTimeout(maxTimeout);
             let error
             // Act
-            await test.step(`Place bet on hedge bet options`, async () => {
-                await this.player.placeHedgeBet(hedgeBetGroups[0], this.options.placeBetAmount ?? 1);
-                error = await this.game.captureErrorMessage();
-            });
+            const endBetMsg = await this.player.placeHedgeBet(hedgeBetGroups[0], this.options.placeBetAmount ?? 1);
+
             // Assert
-            await test.step(`Verify error message`, async () => {
-               expect(error.image).toMatchSnapshot(error.name, { maxDiffPixelRatio: 0.3 });    
-            });
+            expect(endBetMsg).toMatchObject({ endBet: -1, betChoice: hedgeBetGroups[0][1]});
         });
     }
 
@@ -229,14 +224,10 @@ export class MiniGameBase {
             const bet = { choice: this.options.placeBetChoices[0], amount: [this.options.placeBetAmount ?? 1, 1000] };
 
             // Act
-            await test.step(`Place bet to reach max bet`, async () => {
-                await this.player.placeMaxBet(bet.choice, bet.amount);
-            });
+            const endBetMsg =  await this.player.placeMaxBet(bet.choice, bet.amount);
 
             // Assert
-            await test.step(`Verify error message`, async () => {
-                await verifyImage(this.game, `msgMaxbetLimit${projectCode}`, 0.3);
-            });
+            expect(endBetMsg).toMatchObject({ endBet: -1, betChoice: bet.choice});
         });
     }
 
