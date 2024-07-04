@@ -21,7 +21,7 @@ export async function waitForMessage(socket: PlaywrightWs, key: string, gameName
     });
     timeoutId = setTimeout(() => {
         resolve(undefined); 
-      }, 80 * 1000);
+      }, 35 * 1000);
     return promise;
 }
 

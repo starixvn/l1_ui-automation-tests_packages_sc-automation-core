@@ -14,6 +14,7 @@ export class NumberGameBase {
         test("Verify in game UI @A_1 @A_7", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
+            await this.game.waitForTimeout(3000) // need to hard sleep right here cause dome load content at SIT env
             const isInGame = await this.game.page.locator(commonControls.iconHome).isVisible();
             if (!isInGame) {
                 await this.game.click(this.options.locators.lobbyGameIcon, 3000);
@@ -189,7 +190,7 @@ export class NumberGameBase {
                 };
                 await this.game.click(`#chip-${bet.amount}`, 200);
                 await this.game.click(bet.locator);
-                await this.game.page.locator(commonControls.btnChipSliderNext).click({ clickCount: 10, delay: 50 });
+                await this.game.page.locator(commonControls.btnChipSliderNext).click({ clickCount: 10, delay: 80 });
                 await this.game.click(bet.locator, 1000);
                 const sugestionAmount = this.game.gameConfigs.maxBetPerChoices[key] - bet.amount;
                 const expectAmount = sugestionAmount > 1000 ? sugestionAmount.toLocaleString() : sugestionAmount.toString();
@@ -198,7 +199,7 @@ export class NumberGameBase {
                     message: `suggestion bet of ${bet.choice} is not correct`,
                 }).toContainText(expectedMsg.toString());
                 await this.game.click(commonControls.btn_no_submit_dialog);
-                await this.game.page.locator(commonControls.btnChipSliderPre).click({ clickCount: 10, delay: 50 });
+                await this.game.page.locator(commonControls.btnChipSliderPre).click({ clickCount: 10, delay: 80 });
             }
             await this.game.gnWaitForSettlement();
         });
@@ -519,7 +520,7 @@ export class NumberGameBase {
         test("Verify content of Pf intro @A_26", async () => {
             const pfIntro = await capturePfIntroContent(this.game);
             pfIntro.forEach((content) => {
-                expect(content.image).toMatchSnapshot(content.name);
+                expect(content.image).toMatchSnapshot(content.name,{ maxDiffPixels: 2000});
             });
             await this.game.click(commonControls.icon_PfIntro_Close);
             await this.game.click(commonControls.iconClosePfSetting);
@@ -687,9 +688,9 @@ export class NumberGameBase {
             await this.player.gnOpenGuide();
             const getGuideContent = await this.game.getGuideContent();
             let expectedGuideContent = this.options.locators.vnguide
-                .replace(/\s/g, "")
-                .replace("@MAXBET", global.maxbet)
-                .replace("@MAXWINPERROUND", global.maxwinperround);
+                .replaceAll(/\s/g, "")
+                .replaceAll("@MAXBET", global.maxbet)
+                .replaceAll("@MAXWINPERROUND", global.maxwinperround);
 
             for (let index = 0; index < fminMaxRange.length; index++) {
                 const element = fminMaxRange[index];

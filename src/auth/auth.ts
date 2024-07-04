@@ -247,6 +247,7 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
                 await page.waitForTimeout(5000);
                 await loginWithCaptcha(page, accountId, pwd);
             }
+            global.authUrl = await page.url(); //authorization url of member site support for SI tests only
             await page.waitForTimeout(2000);
             await page.locator("#sportsFrame").waitFor({ state: "visible" });
             await page.waitForTimeout(5000);
