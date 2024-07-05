@@ -1,3 +1,10 @@
+## [1.43.4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.43.3...v1.43.4) (2024-07-05)
+
+
+### Bug Fixes
+
+* increase timeout socket ([c01c545](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/c01c54543bf2e0b1ccbcf68b7b0bb0e3fc22234e))
+
 ## [1.43.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.43.2...v1.43.3) (2024-07-04)
 
 
