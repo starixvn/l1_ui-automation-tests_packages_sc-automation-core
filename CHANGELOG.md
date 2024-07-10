@@ -1,3 +1,18 @@
+# [1.44.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.43.4...v1.44.0) (2024-07-10)
+
+
+### Bug Fixes
+
+* error build core ([6f1733e](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/6f1733e1ffe4635308b5a96b8515b6d3ef297e6b))
+* package-lock ([5196c80](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/5196c80e441a48c19da666f9159ff3552996614e))
+* publish_npm ([67e04a5](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/67e04a54207d030525e5eb95475e1713ba20e5f9))
+* rimraf@6.00 ([9834db3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/9834db38765daf0ab272ed1538f8147554c23bde))
+
+
+### Features
+
+* handle case failure to login member site then add environment WARNING for log message ([d4c2e99](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/d4c2e99231d31867a45ae88edb5327f7429b83f0))
+
 ## [1.43.4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.43.3...v1.43.4) (2024-07-05)
 
 
