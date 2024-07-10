@@ -5,6 +5,7 @@ import { BaseGame } from "./base-game";
 import { _android as android } from "playwright";
 global.logMsg = [];
 global.ssoLink;
+const fs = require("fs");
 
 type BaseFixtures = {
     gameConfigurations: GameConfiguration;
@@ -33,6 +34,7 @@ export const test = base.extend<BaseFixtures>({
                 await game.login();
                 await use(game);
             } catch (error) {
+                fs.writeFileSync("./test-results/Warning.txt", "true");
                 throw new Error(`************ Login member site failed ********** ${error}`); // Explicitly fail the test
             }
         }
