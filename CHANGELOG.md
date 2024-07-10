@@ -1,3 +1,10 @@
+# [1.45.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.44.0...v1.45.0) (2024-07-10)
+
+
+### Features
+
+*   NPM_LANG_TS: 'true' ([48b9d04](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/48b9d045aa4a8b46c827253bc41f479b2ea44b07))
+
 # [1.44.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.43.4...v1.44.0) (2024-07-10)
 
 
