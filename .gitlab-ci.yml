@@ -1,7 +1,18 @@
 variables:
     PROJECT_NAME: sc-automation-core
 
+stages:  
+    - test
+    - post-test
+    - publish
+
 include:
-  - project: ci/core-cicd
-    ref: main
-    file: luminet.gitlab-ci.yml
+    - project: "ci/common-ci"
+      ref: rocketor
+      file: "unit-test/js-unit-test.gitlab-ci.yml"
+    - project: "ci/common-ci"
+      ref: rocketor
+      file: "sonarqube/sonarqube.js-unittest.gitlab-ci.yml"
+    - project: "ci/common-ci"
+      ref: master
+      file: "npm/publish-npm-ts.gitlab-ci.yml"
