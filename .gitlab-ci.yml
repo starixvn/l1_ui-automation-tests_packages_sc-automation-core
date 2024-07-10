@@ -1,7 +1,7 @@
 variables:
   PUBLISH_NPM_IMAGE: $DOCKER_REG_LOCAL_URL/docker-hub/library/node:20.15.1-slim
-  PUBLISH_NPM: true
-  ENABLE_TEST_JS: true
+  PUBLISH_NPM: 'true'
+  ENABLE_TEST_JS: 'true'
   SRC_PATH: ./src
   TEST_PATH: ./src
   PROJECT_NAME: sc-automation-core
