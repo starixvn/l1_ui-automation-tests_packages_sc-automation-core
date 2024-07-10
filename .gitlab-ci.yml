@@ -1,18 +1,12 @@
 variables:
-    PROJECT_NAME: sc-automation-core
-
-stages:  
-    - test
-    - post-test
-    - publish
+  PUBLISH_NPM_IMAGE: $DOCKER_REG_LOCAL_URL/docker-hub/library/node:20.15.1-slim
+  PUBLISH_NPM: true
+  ENABLE_TEST_JS: true
+  SRC_PATH: ./src
+  TEST_PATH: ./src
+  PROJECT_NAME: sc-automation-core
 
 include:
-    - project: "ci/common-ci"
-      ref: rocketor
-      file: "unit-test/js-unit-test.gitlab-ci.yml"
-    - project: "ci/common-ci"
-      ref: rocketor
-      file: "sonarqube/sonarqube.js-unittest.gitlab-ci.yml"
-    - project: "ci/common-ci"
-      ref: master
-      file: "npm/publish-npm-ts.gitlab-ci.yml"
+  - project: ci/core-cicd
+    ref: main
+    file: luminet.gitlab-ci.yml
