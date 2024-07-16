@@ -1,3 +1,15 @@
+# [1.46.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.45.0...v1.46.0) (2024-07-16)
+
+
+### Bug Fixes
+
+* yml file ([67cb167](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/67cb16770c9059a624aa7e85ff02749408375b5d))
+
+
+### Features
+
+* sso direct xd games ([dd91d5e](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/dd91d5e275110d6251e8260e7e90349c4fad4db8))
+
 # [1.45.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.44.0...v1.45.0) (2024-07-10)
 
 
