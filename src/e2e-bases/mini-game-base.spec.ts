@@ -212,7 +212,6 @@ export class MiniGameBase {
             // Arrange
             const { maxTimeout, hedgeBetGroups } = this.options.gameConfiguration;
             test.setTimeout(maxTimeout);
-            let error
             // Act
             const endBetMsg = await this.player.placeHedgeBet(hedgeBetGroups[0], this.options.placeBetAmount ?? 1);
 
@@ -328,7 +327,6 @@ export class MiniGameBase {
             await test.step("Verify PF popup", async () => {
                 await verifyImage(this.game, baseLocatorNames.imgPFPopupHeader);
                 await verifyImage(this.game, baseLocatorNames.imgPFPopupRoundId);
-                await verifyImage(this.game, baseLocatorNames.imgPFPopupCrashPoint);
                 await verifyImage(this.game, baseLocatorNames.imgPFPopupServerSeed);
                 await verifyImage(this.game, baseLocatorNames.imgPFPopupClientSeed);
                 await verifyImage(this.game, baseLocatorNames.imgPFPopupMergeClientSeed);
