@@ -30,9 +30,11 @@ export const ssoToGame = async (
 
     if (env.includes("local")) {
         const memberSiteLink = config[`${projectCode}memberSite`] + `?obCustId=${playerId}&balance=200000`;
+        const appType = projectCode === 'mobi' ? 2 : projectCode === 'keno' ? 4 : 1;
         await page.goto(memberSiteLink);
         console.log("Login Local", memberSiteLink);
         await page.click(LobbyLocator.advancelbl);
+        await page.click(`//input[@id=${appType}]`);
         await page.locator(LobbyLocator.langDropdown).selectOption(LobbyLocator[`${langCode}LangOption`]);
         if (projectCode == "gn") {
             const env =

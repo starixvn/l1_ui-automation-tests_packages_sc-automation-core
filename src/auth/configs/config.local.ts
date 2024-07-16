@@ -10,5 +10,7 @@ export default {
     guideLinkL2: "https://l2-guide.lumigame.com",
     l1admin: "http://admin.lumigame.com",
     l2admin: "http://l2-admin.lumigame.com",
-    gnadmin: "https://gn-admin.lumigame.com"
+    gnadmin: "https://gn-admin.lumigame.com",
+    mobimemberSite: "https://gamelobby-simulator.lumigame.com/signin",
+    kenomemberSite: "https://gamelobby-simulator.lumigame.com/signin",
 };

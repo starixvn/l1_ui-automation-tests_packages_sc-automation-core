@@ -11,14 +11,14 @@ export class NumberGameBase {
     constructor(protected options: IBaseOptions) {}
 
     protected inGameUITests() {
-        test("Verify in game UI", async () => {
+        test("Verify SSO direct to 1st game success", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const isInGame = await this.game.page.locator(commonControls.iconHome).isVisible();
-            if (!isInGame) {
-                await this.game.click(this.options.locators.lobbyGameIcon,5000);
-                await this.game.page.locator(commonControls.iconHome).waitFor({state:"visible"})  
-            }
+            await this.game.waitForTimeout(3000)
+            await this.game.click(commonControls.iconHome,5000);
+            await this.game.click(this.options.locators.lobbyGameIcon,5000);
+            await this.game.page.locator(commonControls.iconHome).waitFor({state:"visible"})  
+
             const inGameUi =
                 process.env.npm_config_android == "true" ? this.options.locators.inGameUIAndroid : this.options.locators.inGameUI;
 

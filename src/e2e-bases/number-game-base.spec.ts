@@ -14,13 +14,11 @@ export class NumberGameBase {
         test("Verify in game UI @A_1 @A_7", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
-            await this.game.waitForTimeout(3000) // need to hard sleep right here cause dome load content at SIT env
-            const isInGame = await this.game.page.locator(commonControls.iconHome).isVisible();
-            if (!isInGame) {
-                await this.game.click(this.options.locators.lobbyGameIcon, 3000);
-                await this.game.page.locator(commonControls.iconHome).waitFor({ state: "visible" });
-            }
             //Config lobal varriable
+            await this.game.waitForTimeout(3000)
+            await this.game.click(commonControls.iconHome,5000);
+            await this.game.click(this.options.locators.lobbyGameIcon,5000);
+            await this.game.page.locator(commonControls.iconHome).waitFor({state:"visible"})  
             await this.game.waitForTimeout(3000);
             const { maxBetPerChoices, maxWinPerRound, minBet, maxBet } = this.game.gameConfigs;
             global.minBet = minBet;
