@@ -1,3 +1,10 @@
+# [1.47.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.46.0...v1.47.0) (2024-07-22)
+
+
+### Features
+
+* smoke test mobi&keno ([4189329](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/4189329e6f95a8adb3f3ffdf04c5e819048785d3))
+
 # [1.46.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.45.0...v1.46.0) (2024-07-16)
 
 
