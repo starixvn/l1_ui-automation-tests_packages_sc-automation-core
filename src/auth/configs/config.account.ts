@@ -420,3 +420,29 @@ export const gnprod = {
     1009: "SUPERTEST30102148",
     1010: "SUPERTEST30102149",
 };
+
+export const l1mobiprod = {
+    1: "supertestte120201002",
+    2: "supertestte120201003",
+    3: "supertestte120201004",
+    4: "supertestte120201006",
+    7: "supertestte120201009",
+    8: "supertestte120201011",
+    9: "supertestte120201012",
+    10: "supertestte120201013",
+    22: "supertestte120201002",
+    24: "supertestte120201006",
+    27: "supertestte120201011",
+    35: "supertestte120201004",
+};
+
+export const l1kenoprod = {
+    52: "SUPERTEST30102090",
+    53: "SUPERTEST30102052",
+    14: "supertestte120201012",
+    15: "supertestte120201013",
+    16: "SUPERTEST30102090",
+    17: "SUPERTEST30102052",
+    18: "supertestte120201012",
+    19: "supertestte120201013",
+};

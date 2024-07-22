@@ -7,6 +7,6 @@ export default {
     guideLinkL1: "https://l1-guide-3.lumigame.com",
     l1admin: "http://l1-admin3.lumigame.com",
     l2admin: "http://l2-admin3.lumigame.com",
-    mobimemberSite: "https://l1-glbs3.lumigame.com/signin",
-    kenomemberSite: "https://l1-glbs3.lumigame.com/signin",
+    l1mobimemberSite: "https://l1-glbs3.lumigame.com/signin",
+    l1kenomemberSite: "https://l1-glbs3.lumigame.com/signin",
 };

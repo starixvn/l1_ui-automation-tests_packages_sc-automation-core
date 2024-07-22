@@ -30,7 +30,7 @@ export const ssoToGame = async (
 
     if (env.includes("local")) {
         const memberSiteLink = config[`${projectCode}memberSite`] + `?obCustId=${playerId}&balance=200000`;
-        const appType = projectCode === 'mobi' ? 2 : projectCode === 'keno' ? 4 : 1;
+        const appType = projectCode.includes('mobi') ? 2 : projectCode.includes('keno') ? 4 : 1;
         await page.goto(memberSiteLink);
         console.log("Login Local", memberSiteLink);
         await page.click(LobbyLocator.advancelbl);
@@ -79,7 +79,7 @@ const loginMemberSite = async (
     const timeout = config.lobbyTimeout;
     const memberSiteLink =
         process.env.npm_config_mobile === "true" ? config[`${projectCode}memberSiteMobile`] : config[`${projectCode}memberSite`];
-    const pwd = config[`${projectCode}pwd`];
+    const pwd = config[`${projectCode}pwd`] || config[`l1pwd`];
     const lobbyDomain =
         process.env.npm_config_mobile === "true" ? config[`${projectCode}lobbyDomainMobile`] : config[`${projectCode}lobbyDomain`];
     if (memberSiteLink.includes("@")) {
@@ -96,18 +96,18 @@ const loginMemberSite = async (
 
     console.log(`Login ${playerId} - ${gameId} Member Site: ${memberSiteLink}`);
     await page.waitForLoadState("domcontentloaded", { timeout });
-
+    const subPcode = projectCode.match(/^l[12]/)?.[0] ?? "l1"
     switch (env) {
         case Environment.UAT:
-            await loginUAT(page, playerId, pwd, langCode, projectCode, timeout);
+            await loginUAT(page, playerId, pwd, langCode, subPcode, timeout);
             break;
 
         case Environment.PROD:
-            await loginPROD(page, playerId, pwd, langCode, projectCode, timeout);
+            await loginPROD(page, playerId, pwd, langCode, subPcode, timeout);
             break;
 
         default:
-            await loginSIT(page, playerId, pwd, projectCode, timeout);
+            await loginSIT(page, playerId, pwd, subPcode, timeout);
     }
 
     if (projectCode === "ultra888") {
