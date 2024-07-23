@@ -20,7 +20,7 @@ export class MobiGameBase {
                 await this.game.verifyFrameLocatorsVisible("#frmGame",this.options.locators.inGameUI);
             }else{
                 await this.game.verifyLocatorsVisible(this.options.locators.inGameUI);
-                await this.game.page.reload(); // PRO issue only: need to be reload page for capturing web socket data, by default on framerecived do not have any channel
+                await this.game.page.reload(); // L1 PRO issue only: need to be reload page for capturing web socket data, by default on framerecived do not have any channel
             }
         });
     }
