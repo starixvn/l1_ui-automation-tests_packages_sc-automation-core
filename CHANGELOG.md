@@ -1,3 +1,19 @@
+# [1.48.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.47.0...v1.48.0) (2024-07-23)
+
+
+### Bug Fixes
+
+* build core ([192a2b5](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/192a2b5717182515049d66dcd8897c6a20011d7f))
+* https://npm.lumigame.com ([b9cebb4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/b9cebb49465ae2d5e9f5eb4109191e36d97dffad))
+* npm.lumigame.com ([23cfe5b](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/23cfe5b315e67df7c97815406c7ce252b55bb00d))
+* npm2.lumigame.com ([ccd5013](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/ccd50133e30f6da2ee4fdd0ccbafcc50887f4b97))
+* package-lock ([b274f2b](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/b274f2b1058836930986dc422e0134e436c70980))
+
+
+### Features
+
+* add acc l2 mobi and keno ([242c9cb](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/242c9cb83ac1252c1ed95187bf85660dc5fbe1c8))
+
 # [1.47.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.46.0...v1.47.0) (2024-07-22)
 
 
