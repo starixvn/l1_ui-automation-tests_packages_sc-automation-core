@@ -30,7 +30,7 @@ export const ssoToGame = async (
 
     if (env.includes("local")) {
         const memberSiteLink = config[`${projectCode}memberSite`] + `?obCustId=${playerId}&balance=200000`;
-        const appType = projectCode.includes('mobi') ? 2 : projectCode.includes('keno') ? 4 : 1;
+        const appType = projectCode.includes("mobi") ? 2 : projectCode.includes("keno") ? 4 : 1;
         await page.goto(memberSiteLink);
         console.log("Login Local", memberSiteLink);
         await page.click(LobbyLocator.advancelbl);
@@ -79,7 +79,8 @@ const loginMemberSite = async (
     const timeout = config.lobbyTimeout;
     const memberSiteLink =
         process.env.npm_config_mobile === "true" ? config[`${projectCode}memberSiteMobile`] : config[`${projectCode}memberSite`];
-    const pwd = config[`${projectCode}pwd`] || config[`l1pwd`];
+    const pwd = projectCode.includes("l1") ? config["l1pwd"] : projectCode.includes("l2") ? config["l2pwd"] : config[`${projectCode}pwd`];
+
     const lobbyDomain =
         process.env.npm_config_mobile === "true" ? config[`${projectCode}lobbyDomainMobile`] : config[`${projectCode}lobbyDomain`];
     if (memberSiteLink.includes("@")) {
@@ -96,7 +97,7 @@ const loginMemberSite = async (
 
     console.log(`Login ${playerId} - ${gameId} Member Site: ${memberSiteLink}`);
     await page.waitForLoadState("domcontentloaded", { timeout });
-    const subPcode = projectCode.match(/^l[12]/)?.[0] ?? "l1"
+    const subPcode = projectCode.match(/^l[12]/)?.[0] ?? "l1";
     switch (env) {
         case Environment.UAT:
             await loginUAT(page, playerId, pwd, langCode, subPcode, timeout);
@@ -125,10 +126,10 @@ const selectCurrencyGroup = async (page: Page) => {
     if (frameExists) {
         await page.frameLocator("#frmGame").locator(GroupCurrencyLocator.submitButton).click();
     } else {
-        await page.locator(GroupCurrencyLocator.submitButton).waitFor()
+        await page.locator(GroupCurrencyLocator.submitButton).waitFor();
         await page.click(GroupCurrencyLocator.submitButton);
     }
-    await page.waitForLoadState()
+    await page.waitForLoadState();
 };
 
 const loginUAT = async (page: Page, accountId: string, pwd: string, langCode: string, projectCode: string, timeout: number = 15000) => {
@@ -216,7 +217,7 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
             await page.waitForLoadState();
             await page.waitForTimeout(5000);
             console.log(langCode);
-            global.authUrl = await page.url() //authorization url of member site support for SI tests only
+            global.authUrl = await page.url(); //authorization url of member site support for SI tests only
         }
     }
     if (projectCode === "l2") {

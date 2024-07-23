@@ -90,7 +90,7 @@ export class BaseGame {
                     break;
                 default:
                     if (projectCode.includes("mobi") || projectCode.includes("keno")) {
-                        await this.waitUntilMobiGameUiLoad();
+                        await this.waitUntilMobiGameUiLoad(projectCode);
                     } else {
                         await this.waitUntilGameUiLoad();
                     }
@@ -121,8 +121,13 @@ export class BaseGame {
         await this.page.screenshot({ path: `./test-results/afterInGame.png` });
     }
 
-    async waitUntilMobiGameUiLoad() {
-        await this.page.locator("//div[contains(@class,'games_game-list')]").waitFor();
+    async waitUntilMobiGameUiLoad(projectCode:string) {
+        if (projectCode.includes("l2")) {
+            await this.page.locator("//iframe[@id='frmGame']").waitFor();
+        }
+        else{
+            await this.page.locator("//div[contains(@class,'games_game-list')]").waitFor();
+        }
         console.log("Game UI ready for testing");
         await this.page.screenshot({ path: `./test-results/afterInGame.png` });
     }
@@ -556,6 +561,13 @@ export class BaseGame {
     async verifyLocatorsVisible(locators: string[]) {
         for (const locator of locators) {
             expect(await this.page.locator(locator).isVisible(), { message: `${locator} is not visible` }).toBe(true);
+        }
+    }
+
+    async verifyFrameLocatorsVisible(frame: string, locators: string[]) {
+        const iframe = await this.page.frameLocator(frame);
+        for (const locator of locators) {
+            expect(await iframe.locator(locator).isVisible(), { message: `${locator} is not visible` }).toBe(true);
         }
     }
 

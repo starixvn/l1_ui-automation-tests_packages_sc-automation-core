@@ -21,4 +21,8 @@ export default {
     l1mobilobbyDomain: "VendorGame/OpenSabaClubLobby?deviceType=1&IsMobi=true&test=",
     l1kenomemberSite: "https://www.viva88.net/login888.aspx",
     l1kenolobbyDomain: "VendorGame/OpenSabaClub?deviceType=1&GameID=1657&test=",
+    l2mobimemberSite: "http://www.spondemo.com/NewIndex?lang=vn&webskintype=3",
+    l2mobilobbyDomain: "VendorGame/GamePageLoading?Game=VGamingMobi&refer=&GameID=",
+    l2kenomemberSite: "http://www.spondemo.com/NewIndex?lang=vn&webskintype=3",
+    l2kenolobbyDomain: "VendorGame/GamePageLoading?Game=VGamingMobi&refer=&GameID=",
 };

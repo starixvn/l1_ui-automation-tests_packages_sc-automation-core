@@ -26,10 +26,20 @@ export class BasePlayer {
     }
 
     async mbPlaceHedgeBet(hedgeChoices: string[], amount: number = 1): Promise<void> {
-        const betChip = `//span[contains(@class,'chip-slider_value')][text()='${amount}']`
-        await this.game.click(betChip);
-        await this.game.click(hedgeChoices[0],500);
-        await this.game.click(hedgeChoices[1],500);
+        const isFrame = await this.game.page.$("#frmGame")
+        if (isFrame) {
+            const framelocator =  this.game.page.frameLocator("#frmGame")
+            await framelocator.locator(`//span[contains(@class,'chip-slider_value')][text()='${amount}']`).click({delay: 500});
+            await framelocator.locator(hedgeChoices[0]).click();
+            await this.game.waitForTimeout(500)
+            await framelocator.locator(hedgeChoices[1]).click();
+        }
+        else{
+            const betChip = `//span[contains(@class,'chip-slider_value')][text()='${amount}']`
+            await this.game.click(betChip);
+            await this.game.click(hedgeChoices[0],500);
+            await this.game.click(hedgeChoices[1],500);
+        }
 
     }
 
@@ -175,9 +185,18 @@ export class BasePlayer {
     }
 
     async mbBetOn(choice: string, amount: number,subGameName?: string): Promise<any> {
-        const betChip = `//span[contains(@class,'chip-slider_value')][text()='${amount}']`
-        await this.game.click(betChip,500);
-        await this.game.click(choice,0);
+        const isFrame = await this.game.page.$("#frmGame")
+        if (isFrame) {
+            const framelocator =  this.game.page.frameLocator("#frmGame")
+            await framelocator.locator(`//span[contains(@class,'chip-slider_value')][text()='${amount}']`).click({delay: 500});
+            await framelocator.locator(choice).click();
+        }
+        else{
+            const betChip = `//span[contains(@class,'chip-slider_value')][text()='${amount}']`
+            await this.game.click(betChip,500);
+            await this.game.click(choice,0);
+        }
+        
         return this.game.waitForEndBet(subGameName);
     }
 

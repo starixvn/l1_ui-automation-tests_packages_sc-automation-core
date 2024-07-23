@@ -15,9 +15,13 @@ export class MobiGameBase {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             await this.game.waitForTimeout(this.options.waitBetTimeout);
-
-            await this.game.verifyLocatorsVisible(this.options.locators.inGameUI);
-            await this.game.page.reload(); // PRO issue only: need to be reload page for capturing web socket data, by default on framerecived do not have any channel
+            const isFrame = await this.game.page.$("#frmGame")
+            if (isFrame) {
+                await this.game.verifyFrameLocatorsVisible("#frmGame",this.options.locators.inGameUI);
+            }else{
+                await this.game.verifyLocatorsVisible(this.options.locators.inGameUI);
+                await this.game.page.reload(); // PRO issue only: need to be reload page for capturing web socket data, by default on framerecived do not have any channel
+            }
         });
     }
 
@@ -56,7 +60,14 @@ export class MobiGameBase {
             // Act
             await this.player.mbPlaceHedgeBet(hedgeBetLocators, this.options.placeBetAmount ?? 1);
             const hedgeBetError = this.options.locators.hedgeBetError 
-            await expect(this.game.page.locator((Object.keys(hedgeBetError)).toString())).toContainText(Object.values(hedgeBetError))
+            const isFrame = await this.game.page.$("#frmGame")
+            if (isFrame) {
+                const framelocator =  this.game.page.frameLocator("#frmGame")
+                await expect(framelocator.locator((Object.keys(hedgeBetError)).toString())).toContainText(Object.values(hedgeBetError))
+            }else{
+                await expect(this.game.page.locator((Object.keys(hedgeBetError)).toString())).toContainText(Object.values(hedgeBetError))
+            }
+            
 
         });
     }
