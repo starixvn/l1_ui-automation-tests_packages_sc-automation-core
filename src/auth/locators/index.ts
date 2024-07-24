@@ -73,3 +73,12 @@ export enum AdminLogin {
     pwdInput = 'id=Password',
     loginButton = "//*[@class='btn-submit']",
 }
+
+
+export const MemberSiteLocators = {
+    rightCollapseMenu: '#right-bar-collapse-buttonIcon',
+    instantPlayIcon: "//div[@id='rightBar']//div[@title='Instant Play'][@class='c-widget__icon-collapse']",
+    MiniGamesbtn: "//div[contains(@class,'mini-casino')]/div[2]/span",
+    MiniSeDiegame: "//div[contains(@style,'SBC_SeDie')]",
+  }
+  

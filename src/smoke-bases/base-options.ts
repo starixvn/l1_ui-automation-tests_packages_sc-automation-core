@@ -7,4 +7,5 @@ export interface IBaseOptions {
     snapshotFolderPath: string;
     placeBetChoices: string[];
     placeBetAmount?: number;
+    isconfig?: any;
 }

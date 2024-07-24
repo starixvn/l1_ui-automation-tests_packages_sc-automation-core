@@ -13,6 +13,7 @@ export default {
     enabledMsgPack: true,
     l1pwd: "1234aa",
     l2pwd: "1q2w3e4r",
+    gnpwd: "1234aa",
     guideLinkL1: "https://guides.sabagame.com",
     guideLinkL2: "https://guides.vgaming.win",
     ultra888memberSite: "https://www.ultra888-lobby.com/",
@@ -25,4 +26,5 @@ export default {
     l2mobilobbyDomain: "VendorGame/GamePageLoading?Game=VGamingMobi&refer=&GameID=",
     l2kenomemberSite: "http://www.spondemo.com/NewIndex?lang=vn&webskintype=3",
     l2kenolobbyDomain: "VendorGame/GamePageLoading?Game=VGamingMobi&refer=&GameID=",
+    l1ismemberSite: "https://www.viva88.net/login888.aspx",
 };

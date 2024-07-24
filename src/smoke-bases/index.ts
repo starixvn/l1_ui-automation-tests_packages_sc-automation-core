@@ -9,6 +9,8 @@ import { CrashGameBase } from "./crash-game-base.spec";
 import { GameGuideBase } from "../game-components/guides/game-guide-by-language-base.spec";
 import { NumberGameBase } from "./number-game-base.spec";
 import { MobiGameBase } from "./mobi-game-base.spec";
+import { ISGameBase } from "./is-game-base.spec";
+
 
 export {
     IBaseOptions,
@@ -22,5 +24,6 @@ export {
     GameGuideBase,
     CrashGameBase,
     NumberGameBase,
-    MobiGameBase
+    MobiGameBase,
+    ISGameBase
 };

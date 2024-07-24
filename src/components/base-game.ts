@@ -54,7 +54,7 @@ export class BaseGame {
             account = this.gameConfiguration.accounts[env];
         } else {
             account = projectCode != "ultra888" ? accounts[`${projectCode}${env}`][this.gameConfiguration.id] : this.gameConfiguration.id;
-                }
+        }
         const startTime = performance.now(); // Measure start time
         await ssoToGame(this.page, this.gameConfiguration.id, account, this.gameConfiguration.productId[projectCode], env, projectCode);
         this.msgpack = getConfig().enabledMsgPack;
@@ -91,7 +91,7 @@ export class BaseGame {
                 default:
                     if (projectCode.includes("mobi") || projectCode.includes("keno")) {
                         await this.waitUntilMobiGameUiLoad(projectCode);
-                    } else {
+                    } else if (!projectCode.includes("is")) {
                         await this.waitUntilGameUiLoad();
                     }
                     break;
@@ -121,11 +121,10 @@ export class BaseGame {
         await this.page.screenshot({ path: `./test-results/afterInGame.png` });
     }
 
-    async waitUntilMobiGameUiLoad(projectCode:string) {
+    async waitUntilMobiGameUiLoad(projectCode: string) {
         if (projectCode.includes("l2")) {
             await this.page.locator("//iframe[@id='frmGame']").waitFor();
-        }
-        else{
+        } else {
             await this.page.locator("//div[contains(@class,'games_game-list')]").waitFor();
         }
         console.log("Game UI ready for testing");

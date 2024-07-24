@@ -472,3 +472,14 @@ export const l2kenoprod = {
     18: "QCTest22082313",
     19: "QCTest22082305",
 };
+
+export const l1isprod = {
+    9: "supertestte120201001",
+    7: "supertestte120201002",
+    3: "supertestte120201001",
+    45: "supertestte120201001",
+    10: "supertestte120201002",
+    25: "supertestte120201001",
+    71: "supertestte120201002",
+    80: "supertestte120201001",
+};
