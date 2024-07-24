@@ -1,3 +1,10 @@
+# [1.49.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.48.0...v1.49.0) (2024-07-24)
+
+
+### Features
+
+* base instant play game ([cce03f4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/cce03f495535b6d7d923214cb5a2e764434778fd))
+
 # [1.48.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.47.0...v1.48.0) (2024-07-23)
 
 
