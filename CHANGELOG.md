@@ -1,3 +1,10 @@
+## [1.49.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.49.0...v1.49.1) (2024-07-25)
+
+
+### Bug Fixes
+
+* is games ([8af9cfe](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/8af9cfecb910a035e3d57894c77e2548c732659b))
+
 # [1.49.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.48.0...v1.49.0) (2024-07-24)
 
 
