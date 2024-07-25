@@ -101,9 +101,8 @@ export class BaseGame {
         console.log(`Total login time: ${endTime - startTime} ms`);
     }
 
-    async waitUntilGameUiLoad() {
+    async waitUntilGameUiLoad(waitRange: number = 2) {
         await this.page.screenshot({ path: `./test-results/beforeInGame.png` });
-        const waitRange = process.env.npm_config_project === "ultra888" ? 1 : 2;
         await this.page.waitForTimeout(1000);
         let filterA: string[] = [];
         const searchString = "LoadScene";

@@ -474,6 +474,7 @@ export const l2kenoprod = {
 };
 
 export const l1isprod = {
+    1: "supertestte120201002",
     9: "supertestte120201001",
     7: "supertestte120201002",
     3: "supertestte120201001",

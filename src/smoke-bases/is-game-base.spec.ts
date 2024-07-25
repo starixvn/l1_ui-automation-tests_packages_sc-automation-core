@@ -46,14 +46,14 @@ export class ISGameBase {
 
                 if (this.options.isconfig.gameIndex == 2) {
                     await this.game.page.mouse.click(1120, 290);
+                    await this.game.waitForTimeout(3000);
                 } else if (this.options.isconfig.gameIndex > 2) {
                     for (let index = 1; index < this.options.isconfig.clickCount; index++) {
                         await this.game.page.mouse.click(1180, 290);
-                        await this.game.waitForTimeout(1000);
+                        await this.game.waitForTimeout(3000);
                     }
+                    await this.game.waitForTimeout(10000);
                 }
-
-                await this.game.waitUntilGameUiLoad();
             });
         });
     }
