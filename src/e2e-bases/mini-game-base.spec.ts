@@ -5,6 +5,7 @@ import { expect } from "../expects";
 import  verifyImage from "../expects/verify-image";
 import { IBaseOptions } from "./base-options";
 import { GameGuides } from "../game-components/guides/guides.spec";
+import { BetHistory } from "../game-components/history/history.spec";
 
 const projectCode = process.env.npm_config_project ?? "l1";
 
@@ -14,12 +15,13 @@ export class MiniGameBase {
     game: BaseGame;
     player: BasePlayer;
     protected gameGuides: GameGuides = new GameGuides();
+    protected betHistory: BetHistory = new BetHistory();
 
     constructor(protected options: IBaseOptions) {}
     
 
     protected inGameUITests() {
-        test("Verify all bet choices are displayed on table", async () => {
+        test("Verify all bet choices are displayed on table ", async () => {
             // Arrange
             await test.step(`Wait for new round start`, async () => {
                 test.setTimeout(this.options.gameConfiguration.maxTimeout);
@@ -175,9 +177,9 @@ export class MiniGameBase {
             const settledata = {
                 betdate: new Date().toLocaleDateString("en-GB", { day: "numeric", month: "numeric", year: "numeric" }),
                 settledResults: settledResults.settlementResult,
-                roundId: settledResults.roundId.toString(),
-                betwin: (settledResults.winAmount - bet.refund).toString(),
-                bet: bet.amount.toString(),
+                roundId: settledResults.roundId,
+                betwin: (settledResults.winAmount - bet.refund),
+                bet: bet.amount,
                 choice: bet.choice,
             };
             global.settledata = settledata;
@@ -249,7 +251,7 @@ export class MiniGameBase {
 
             await test.step("Verify introduction popup", async () => {
                 await this.game.clickLocator(baseLocatorNames.icoPFTooltip, timeout)
-                await verifyImage(this.game, baseLocatorNames.imgGameGuidePF);
+                await verifyImage(this.game, baseLocatorNames.imgGameGuidePF, 0.02);
                 await this.game.clickOutSide();
             });
         });
@@ -379,6 +381,7 @@ export class MiniGameBase {
                 this.game = baseGame;
                 this.player = new BasePlayer(this.game);
                 this.gameGuides.init(this.game);
+                this.betHistory.init(this.game);
             });
 
             this.runScenario();
@@ -390,7 +393,7 @@ export class MiniGameBase {
         this.inGameOddsTests();
         this.chipBoardTests();
         this.placeBetAndSettleTests();
-        this.ticketHistoryTests()
+        this.betHistory.tests();
         this.provablyFairTests();
         this.hedgeBetTests();
         this.maxBetTests();

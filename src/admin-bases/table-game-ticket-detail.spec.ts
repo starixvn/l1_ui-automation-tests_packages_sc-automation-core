@@ -42,6 +42,7 @@ export class TableTicketDetailGameBase {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount ?? 1 };
             // Act
+            await this.game.waitUntilPlaceBet();
             await this.player.placeBet(bet.choice, bet.amount);
             let currentRoundID = Number(await this.getClientRunningRound());
             global.settleRoundID = currentRoundID;
@@ -66,6 +67,7 @@ export class TableTicketDetailGameBase {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             const bet = { choice: this.options.placeBetChoices[1], amount: this.options.placeBetAmount ?? 1 };
             // Act
+            await this.game.waitUntilPlaceBet();
             await this.player.placeBet(bet.choice, bet.amount);
             let currentRoundID = Number(await this.getClientRunningRound());
             global.settleRoundID = currentRoundID;
@@ -117,6 +119,7 @@ export class TableTicketDetailGameBase {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             const bet = { choice: this.options.placeBetChoices[1], amount: this.options.placeBetAmount ?? 1 };
             // Act
+            await this.game.waitUntilPlaceBet();
             await this.player.placeBet(bet.choice, bet.amount);
             let currentRoundID = Number(await this.getClientRunningRound());
             global.settleRoundID = currentRoundID;

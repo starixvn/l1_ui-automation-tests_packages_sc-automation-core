@@ -4,6 +4,7 @@ import { IBaseOptions } from "./base-options";
 import { GameEvent } from "../_shared";
 import { GameGuides } from "../game-components/guides/guides.spec";
 import { baseLocatorNames } from "../components/base-game-locator";
+import { BetHistory } from "../game-components/history/history.spec";
 
 const timeout = 4000;
 
@@ -11,6 +12,7 @@ export class TableGameBase {
     game: BaseGame;
     player: BasePlayer;
     protected gameGuides: GameGuides = new GameGuides();
+    protected betHistory: BetHistory = new BetHistory();
 
     constructor(protected options: IBaseOptions) {}
 
@@ -98,9 +100,9 @@ export class TableGameBase {
             // Post-Act
             const settledata = {
                 settledResults: settledResults.settlementResult,
-                roundId: settledResults.roundId.toString(),
-                betwin: settledResults.winAmount.toString(),
-                bet: bet.amount.toString(),
+                roundId: settledResults.roundId,
+                betwin: settledResults.winAmount,
+                bet: bet.amount,
                 choice: bet.choice,
             };
             global.settledata = settledata;
@@ -108,6 +110,7 @@ export class TableGameBase {
     }
 
     protected ticketHistoryTests() {
+        this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
         test("Verify data of history of above round @TC07", async () => {
             // Act 1
             await this.game.clickHistory(timeout);
@@ -319,6 +322,7 @@ export class TableGameBase {
                 this.game = baseGame;
                 this.player = new BasePlayer(this.game);
                 this.gameGuides.init(this.game);
+                this.betHistory.init(this.game);
             });
 
             this.runScenario();
@@ -328,7 +332,7 @@ export class TableGameBase {
     protected runScenario(): void {
         this.inGameUiTests();
         this.placeBetAndSettleTests();
-        this.ticketHistoryTests();
+        this.betHistory.tests();
         this.LedBarTests();
         if (this.options.gameConfiguration.rebet) {
             this.reBet();

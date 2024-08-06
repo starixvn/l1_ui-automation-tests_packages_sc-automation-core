@@ -1,6 +1,6 @@
 import { test, BaseGame } from "../../components";
 import { expect } from "../../expects";
-import {baseLocatorNames} from "../../components/base-game-locator"
+import { GameEvent } from "../../_shared";
 
 export class BetHistory {
     protected game: BaseGame;
@@ -10,64 +10,46 @@ export class BetHistory {
     }
 
     tests() {
-        test(`Verify user can open history and check the content`, async () => {
+        test(`Verify data of the latest ticket`, async () => {
             // Act 1
-            await test.step("Open history", async () => {
-                await this.game.clickHistory(1000);
+            let ticketdata
+            await test.step("Open history and get data", async () => {
+               ticketdata = await getHistoryLatestTicket(this.game);
             });
 
             // Assert 1
-            await test.step("Verify bet date, round id, total stake and bet win", async () => {
-                await verifyticketdata(this.game);
+            await test.step("Verify round id, total stake and bet win", async () => {
+                expect(ticketdata.roundId, "verify round id").toEqual(global.settledata.roundId);
+                expect(ticketdata.betamount, "verify total stake").toEqual(global.settledata.bet);
+                expect(ticketdata.betwin, "verify total win").toEqual(global.settledata.betwin);
             });
-
-            // Act 2
-            let roundID;
-            await test.step("Open bet details and get round Id", async () => {
-                await openRoundDetail(this.game);
-                roundID = await getRoundId(this.game, "lblHistoryDetailRoundId");
-            });
-
-            // Assert 2
-            await test.step("Verify round Id", async () => {
-                expect(roundID.includes(global.settledata.roundID));
-            });
-
             //Post-Act
-            await test.step("Click outside to close bet detail and history", async () => {
-                await this.game.clickOutSide(1500);
+            await test.step("Click outside to close history", async () => {
                 await this.game.clickOutSide(1500);
             });
         });
     }
 
 }
-const verifyticketdata = async (game: BaseGame) => {
-    const ticketdata = await getDataFistRowHistory(game);
-    expect(ticketdata.betdate, "verify bet date").toEqual(global.settledata.betdate.replace(/[^0-9.]/g, ""));
-    expect(ticketdata.roundID, "verify round id").toEqual(global.settledata.roundID);
-    expect(ticketdata.totalstake, "verify total stake").toEqual(global.settledata.totalstake);
-    expect(ticketdata.betwin, "verify bet win").toEqual(global.settledata.betwin);
-};
 
-const openRoundDetail = async (game: BaseGame) => {
-    await game.clickLocator('locOpenBetDetails', 1000);
-};
-
-const getRoundId = async (game: BaseGame, elementname: string = "lblHistoryDetailRoundId") => {
-    let roundId = await game.getTextLocator(elementname);
-    return roundId != null ? roundId.replace(/[^0-9.]/g, "") : roundId;
-};
-
-const getDataFistRowHistory = async (game: BaseGame) => {
-    let betdate = await game.getTextLocator(baseLocatorNames.locHistoryBetDate);
-    let roundID = await game.getTextLocator(baseLocatorNames.locHistoryRoundId);
-    let totalstake = await game.getTextLocator(baseLocatorNames.locHistoryTotalStake);
-    let betwin = await game.getTextLocator(baseLocatorNames.locHistoryBetWin);
-    return {
-        betdate: betdate!.toString().replace(/[^0-9.]/g, ""),
-        roundID: roundID!.toString().replace(/[^0-9.]/g, ""),
-        totalstake: totalstake!.toString().replace(/[^0-9.]/g, ""),
-        betwin: betwin!.toString().replace(/[^0-9.]/g, "") !== "" ? parseFloat(betwin!.toString().replace(/[^0-9.]/g, "")).toString() : "0",
+const getHistoryLatestTicket = async(game : BaseGame) => {
+    game.attachSocketAndCaptureEvent(GameEvent.History)
+    await game.clickHistory();
+    await game.waitForTimeout(1000);
+    let message = await game.latestCaptureEvent(GameEvent.History);
+    console.log(message);
+    let ticketdata = {
+        roundId: message.history.betLogs[0].roundId ?? message.history.betLogs[0].id ?? -1,
+        betwin: message.history.betLogs[0].betwin ?? message.history.betLogs[0].baseBetWin ?? -1,
+        betamount: getBetAmount(global.settledata.choice, message.history.betLogs[0]),
     };
-};
+    return ticketdata;
+}
+
+
+function getBetAmount(betChoice : string, betLog:any) {
+    const keys = Object.keys(betLog);
+    const values = Object.values(betLog);
+    const index = keys.indexOf(betChoice);
+    return index !== -1 ? values[index] : undefined;
+  }

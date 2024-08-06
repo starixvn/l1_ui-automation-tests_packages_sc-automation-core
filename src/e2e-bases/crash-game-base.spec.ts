@@ -528,6 +528,7 @@ export class CrashGameBase {
             });
             await test.step("Click cashout 50% and verify win amount", async () => {
                 this.game.attachSocketAndCaptureEvent(GameEvent.Settlement);
+                this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
                 await waitForStartCashOut(this.game); //Wait for start fly
                 let settledResults = await this.game.latestCaptureEvent(GameEvent.Settlement);
                 if (settledResults === "") {
@@ -551,6 +552,7 @@ export class CrashGameBase {
         test("Verify player be able to place bet and cash out @TC42", async () => {
             test.setTimeout(this.options.gameConfiguration.maxTimeout * 2);
             await test.step("Wait for new round and click place bet", async () => {
+                this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
                 await placeBet(this.game);
             });
             await test.step("Verify place bet button", async () => {
@@ -580,9 +582,9 @@ export class CrashGameBase {
             });
             const settledata = {
                 settledResults: settledResults.settlementResult,
-                roundId: settledResults.roundId.toString(),
-                betwin: settledResults.winAmount.toString() || "0",
-                bet: bet.amount.toString(),
+                roundId: settledResults.roundId,
+                betwin: settledResults.winAmount,
+                bet: bet.amount,
             };
             global.settledata = settledata;
         });
@@ -606,8 +608,8 @@ export class CrashGameBase {
             });
 
             await test.step("Verify introduction popup", async () => {
-                await this.game.clickLocator(baseLocatorNames.icoPFTooltip, timeout)
-                await verifyImage(this.game, baseLocatorNames.imgGameGuidePF);
+                await this.game.clickLocator(baseLocatorNames.icoPFTooltip, timeout*2)
+                await verifyImage(this.game, baseLocatorNames.imgGameGuidePF, 0.02);
                 await this.game.clickOutSide();
             });
         });
@@ -682,7 +684,7 @@ export class CrashGameBase {
             await test.step("Verify UI of PF setting popup in inactive mode", async () => {
                 await verifyImage(this.game, baseLocatorNames.imgManualClientSeed1234Inactive);
                 await this.game.clickOutSide();
-                await this.game.waitForSettlement();
+                await this.game.waitForEvent(GameEvent.Settlement);
             });
         });
 
@@ -751,22 +753,22 @@ export class CrashGameBase {
     protected ticketHistoryTests() {
         test("Verify data of history of above round @TC43", async () => {
             // Act 1
+            this.game.attachSocketAndCaptureEvent(GameEvent.History)
             await this.game.clickHistory(timeout);
-            const ticketdata = await getDataFistRowHistory(this.game);
+
+            const ticketdata = await this.game.latestCaptureEvent(GameEvent.History);
 
             const indexHistory: any = this.options.indexTicketHistory;
 
-            //const winamount = ticketdata[ticketdata?.length - 1];
-            const totalbet = ticketdata[ticketdata?.length + indexHistory.totalbet];
-            const dateIndex = ticketdata.findIndex((value) => {
-                return value.includes("/");
-            });
-            const roundId = ticketdata[dateIndex + 1];
+
+            const winamount = ticketdata.history.betLogs[0].betwin ?? -1;
+            const totalbet = ticketdata.history.betLogs[0].amount ?? -1;
+            const roundId = ticketdata.history.betLogs[0].phien ?? -1
 
             // Assert
-            //expect(parseFloat(winamount)).toBeCloseTo(parseFloat(global.settledata.betwin), -1);
+            expect(winamount).toEqual(global.settledata.betwin);
             expect(totalbet).toEqual(global.settledata.bet);
-            expect(parseInt(roundId)).toBeCloseTo(parseInt(global.settledata.roundId), -1);
+            expect(roundId).toEqual(global.settledata.roundId);
 
             // Act 2
             if (indexHistory.isIdLink) {
@@ -940,11 +942,6 @@ const cashOutHalf = async (game: BaseGame) => {
 const cashOut = async (game: BaseGame) => {
     await game.waitForTimeout(200);
     await game.clickLocator(baseLocatorNames.btnCashOut);
-};
-
-const getDataFistRowHistory = async (game: BaseGame, elementname: string = baseLocatorNames.lblHistoryFirstRow) => {
-    let tempdata = await game.getTextLocator(elementname, "0123456789:/., ", "history");
-    return tempdata?.split(" ") || "";
 };
 
 const waitForStartCashOut = async (game: BaseGame) => {

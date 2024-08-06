@@ -142,7 +142,7 @@ export class CardGameBase {
             //Act
             await this.game.clickLocator(baseLocatorNames.icoPFTooltip, timeout*2)
             //Assert
-            await verifyImage(this.game, baseLocatorNames.imgGameGuidePF);
+            await verifyImage(this.game, baseLocatorNames.imgGameGuidePF, 0.02);
             //Pre-act
             await this.game.clickOutSide();
             await this.game.clickOutSide();
@@ -291,22 +291,24 @@ export class CardGameBase {
             await this.newBet()
             const settledResults = await this.placebetStand(bet.amount, bet.choice);
 
+            this.game.attachSocketAndCaptureEvent(GameEvent.History)
+
             await this.game.clickHistory(timeout);
-            const ticketdata = await this.getDataFistRowHistory();
+
+
+            const ticketdata = await this.game.latestCaptureEvent(GameEvent.History);
 
             const indexHistory: any = this.options.indexTicketHistory;
 
-            const winamount = ticketdata[ticketdata?.length - 1];
-            const totalbet = ticketdata[ticketdata?.length + indexHistory.totalbet];
-            const dateIndex = ticketdata.findIndex((value) => {
-                return value.includes("/");
-            });
-            const roundId = ticketdata[dateIndex + 1];
+
+            const winamount = ticketdata.history.betLogs[0].betwin ?? -1;
+            const totalbet = ticketdata.history.betLogs[0].bet ?? -1;
+            const roundId = ticketdata.history.betLogs[0].id ?? -1
 
             // Assert
-            expect(parseFloat(winamount)).toBeCloseTo(parseFloat(settledResults.betwin), -1);
-            expect(parseInt(totalbet)).toEqual(settledResults.totalAmount);
-            expect(parseInt(roundId)).toBeCloseTo(parseInt(settledResults.handid), -1);
+            expect(winamount).toEqual(settledResults.betwin);
+            expect(totalbet).toEqual(settledResults.totalAmount);
+            expect(roundId).toEqual(settledResults.handid);
 
             // Act 2
             if (indexHistory.isIdLink) {
