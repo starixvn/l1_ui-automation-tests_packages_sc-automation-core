@@ -1,3 +1,10 @@
+# [1.50.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.49.1...v1.50.0) (2024-08-07)
+
+
+### Features
+
+* add project name for report base smoke tests ([880ca29](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/880ca29b7f020169c82672df1b6b6c4e26527fae))
+
 ## [1.49.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.49.0...v1.49.1) (2024-07-25)
 
 
