@@ -7,6 +7,7 @@ const stakeLevel = {
     imgStakeLevell1: "imgStakeLevell1",
     imgStakeLevell2: "imgStakeLevell2",
 };
+const projectName = process.env.npm_config_project?.includes("l1")? "Saba" : process.env.npm_config_project?.includes("l2")? "VG" : process.env.npm_config_project;
 
 export interface SlotGameOptions extends IBaseOptions {
     placeBetChoices: string[];
@@ -117,7 +118,7 @@ export class SlotGameBase {
             locators: this.options.locators,
         });
 
-        test.describe.serial(`${this.options.gameConfiguration.name} Smoke Tests`, () => {
+        test.describe.serial(`${projectName} - ${this.options.gameConfiguration.name} Smoke Tests`, () => {
             this.runScenario();
         });
     }

@@ -1,6 +1,7 @@
 import { GameEvent } from "../_shared";
 import { test, BasePlayer, BaseGame } from "../components";
 import { expect } from "../expects";
+const projectName = process.env.npm_config_project?.includes("l1")? "Saba" : process.env.npm_config_project?.includes("l2")? "VG" : process.env.npm_config_project;
 
 import { IBaseOptions } from "./base-options";
 
@@ -14,7 +15,7 @@ export class MobiGameBase {
         test("Verify Game Name and Bet Locators", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
-            await this.game.waitForTimeout(this.options.waitBetTimeout);
+            await this.game.waitForTimeout(8000);
             const isFrame = await this.game.page.$("#frmGame")
             if (isFrame) {
                 await this.game.verifyFrameLocatorsVisible("#frmGame",this.options.locators.inGameUI);
@@ -86,7 +87,7 @@ export class MobiGameBase {
             locators: this.options.locators,
         });
 
-        test.describe.serial(`${this.options.gameConfiguration.name} Smoke Tests`, () => {
+        test.describe.serial(`${projectName} - ${this.options.gameConfiguration.name} Smoke Tests`, () => {
             test.beforeAll(async ({ baseGame }) => {
                 this.game = baseGame;
                 this.player = new BasePlayer(this.game);

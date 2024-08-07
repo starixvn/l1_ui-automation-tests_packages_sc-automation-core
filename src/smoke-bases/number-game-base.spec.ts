@@ -154,7 +154,7 @@ export class NumberGameBase {
             locators: this.options.locators,
         });
 
-        test.describe.serial(`${this.options.gameConfiguration.name} Smoke Tests`, () => {
+        test.describe.serial(`SaBa Xd ${this.options.gameConfiguration.name} Smoke Tests`, () => {
             test.beforeAll(async ({ baseGame }) => {
                 this.game = baseGame;
                 this.player = new BasePlayer(this.game);

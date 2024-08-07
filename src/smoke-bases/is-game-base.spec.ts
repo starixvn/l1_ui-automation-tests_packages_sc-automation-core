@@ -4,6 +4,7 @@ import { expect } from "../expects";
 import { IBaseOptions } from "./base-options";
 import { MemberSiteLocators } from "./../auth/locators";
 let skipTests = false;
+const projectName = process.env.npm_config_project?.includes("l1")? "Saba" : process.env.npm_config_project?.includes("l2")? "VG" : process.env.npm_config_project;
 
 export class ISGameBase {
     protected game: BaseGame;
@@ -90,7 +91,7 @@ export class ISGameBase {
             locators: this.options.locators,
         });
 
-        test.describe.serial(`${this.options.gameConfiguration.name} Smoke Tests`, () => {
+        test.describe.serial(`${projectName} - ${this.options.gameConfiguration.name} Smoke Tests`, () => {
             test.beforeAll(async ({ baseGame }) => {
                 this.game = baseGame;
                 this.player = new BasePlayer(this.game);
