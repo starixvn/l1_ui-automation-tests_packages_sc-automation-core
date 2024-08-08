@@ -1,3 +1,10 @@
+## [1.50.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.50.0...v1.50.1) (2024-08-08)
+
+
+### Bug Fixes
+
+* change saba to SG ([643d482](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/643d482517fa51534fa143eb2caca7fbf4c4c530))
+
 # [1.50.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.49.1...v1.50.0) (2024-08-07)
 
 
