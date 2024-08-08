@@ -7,7 +7,7 @@ const stakeLevel = {
     imgStakeLevell1: "imgStakeLevell1",
     imgStakeLevell2: "imgStakeLevell2",
 };
-const projectName = process.env.npm_config_project?.includes("l1")? "Saba" : process.env.npm_config_project?.includes("l2")? "VG" : process.env.npm_config_project;
+const projectName = process.env.npm_config_project?.includes("l1")? "SG" : process.env.npm_config_project?.includes("l2")? "VG" : process.env.npm_config_project;
 
 export interface SlotGameOptions extends IBaseOptions {
     placeBetChoices: string[];
