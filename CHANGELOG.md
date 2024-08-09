@@ -1,3 +1,102 @@
+## [1.50.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.50.0...v1.50.1) (2024-08-08)
+
+
+### Bug Fixes
+
+* change saba to SG ([643d482](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/643d482517fa51534fa143eb2caca7fbf4c4c530))
+
+# [1.50.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.49.1...v1.50.0) (2024-08-07)
+
+
+### Features
+
+* add project name for report base smoke tests ([880ca29](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/880ca29b7f020169c82672df1b6b6c4e26527fae))
+
+## [1.49.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.49.0...v1.49.1) (2024-07-25)
+
+
+### Bug Fixes
+
+* is games ([8af9cfe](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/8af9cfecb910a035e3d57894c77e2548c732659b))
+
+# [1.49.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.48.0...v1.49.0) (2024-07-24)
+
+
+### Features
+
+* base instant play game ([cce03f4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/cce03f495535b6d7d923214cb5a2e764434778fd))
+
+# [1.48.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.47.0...v1.48.0) (2024-07-23)
+
+
+### Bug Fixes
+
+* build core ([192a2b5](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/192a2b5717182515049d66dcd8897c6a20011d7f))
+* https://npm.lumigame.com ([b9cebb4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/b9cebb49465ae2d5e9f5eb4109191e36d97dffad))
+* npm.lumigame.com ([23cfe5b](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/23cfe5b315e67df7c97815406c7ce252b55bb00d))
+* npm2.lumigame.com ([ccd5013](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/ccd50133e30f6da2ee4fdd0ccbafcc50887f4b97))
+* package-lock ([b274f2b](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/b274f2b1058836930986dc422e0134e436c70980))
+
+
+### Features
+
+* add acc l2 mobi and keno ([242c9cb](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/242c9cb83ac1252c1ed95187bf85660dc5fbe1c8))
+
+# [1.47.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.46.0...v1.47.0) (2024-07-22)
+
+
+### Features
+
+* smoke test mobi&keno ([4189329](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/4189329e6f95a8adb3f3ffdf04c5e819048785d3))
+
+# [1.46.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.45.0...v1.46.0) (2024-07-16)
+
+
+### Bug Fixes
+
+* yml file ([67cb167](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/67cb16770c9059a624aa7e85ff02749408375b5d))
+
+
+### Features
+
+* sso direct xd games ([dd91d5e](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/dd91d5e275110d6251e8260e7e90349c4fad4db8))
+
+# [1.45.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.44.0...v1.45.0) (2024-07-10)
+
+
+### Features
+
+*   NPM_LANG_TS: 'true' ([48b9d04](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/48b9d045aa4a8b46c827253bc41f479b2ea44b07))
+
+# [1.44.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.43.4...v1.44.0) (2024-07-10)
+
+
+### Bug Fixes
+
+* error build core ([6f1733e](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/6f1733e1ffe4635308b5a96b8515b6d3ef297e6b))
+* package-lock ([5196c80](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/5196c80e441a48c19da666f9159ff3552996614e))
+* publish_npm ([67e04a5](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/67e04a54207d030525e5eb95475e1713ba20e5f9))
+* rimraf@6.00 ([9834db3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/9834db38765daf0ab272ed1538f8147554c23bde))
+
+
+### Features
+
+* handle case failure to login member site then add environment WARNING for log message ([d4c2e99](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/d4c2e99231d31867a45ae88edb5327f7429b83f0))
+
+## [1.43.4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.43.3...v1.43.4) (2024-07-05)
+
+
+### Bug Fixes
+
+* increase timeout socket ([c01c545](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/c01c54543bf2e0b1ccbcf68b7b0bb0e3fc22234e))
+
+## [1.43.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.43.2...v1.43.3) (2024-07-04)
+
+
+### Bug Fixes
+
+* some bug from number game core ([18ceb92](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/18ceb92ab1f7693008c58660d25473aeaa15c444))
+
 ## [1.43.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.43.1...v1.43.2) (2024-07-01)
 
 

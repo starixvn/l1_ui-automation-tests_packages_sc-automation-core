@@ -2,6 +2,7 @@ import { GameEvent } from "../_shared";
 import { test, BasePlayer, BaseGame } from "../components";
 import { expect } from "../expects";
 import { IBaseOptions } from "./base-options";
+const projectName = process.env.npm_config_project?.includes("l1")? "SG" : process.env.npm_config_project?.includes("l2")? "VG" : process.env.npm_config_project;
 
 export interface CardGameOptions extends IBaseOptions {
     placeBetChoices: string[];
@@ -90,7 +91,7 @@ export class CardGameBase {
             locators: this.options.locators,
         });
 
-        test.describe.serial(`${this.options.gameConfiguration.name} Smoke Tests`, () => {
+        test.describe.serial(`${projectName} - ${this.options.gameConfiguration.name} Smoke Tests`, () => {
             test.beforeAll(async ({ baseGame }) => {
                 this.game = baseGame;
                 this.player = new BasePlayer(this.game);

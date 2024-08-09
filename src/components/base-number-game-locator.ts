@@ -9,7 +9,7 @@ export const commonControls = {
     btnCancelbet: "//button[@data-testid='btn-cancel-bet']",
     lblTurn: "//div[@id='countdown-timer']/div[2]/span",
     iconPF: "#icon-pf",
-    iconHome: "#icon-home",
+    iconHome: "#icon-list-game",
     iconMenu: "#icon-menu",
     iconMusicOn: "#icon-music-on",
     iconMusicOff: "#icon-music-off",

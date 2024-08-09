@@ -59,7 +59,7 @@ export class BaseGame {
         await ssoToGame(this.page, this.gameConfiguration.id, account, this.gameConfiguration.productId[projectCode], env, projectCode);
         this.msgpack = getConfig().enabledMsgPack;
         this.page.on("websocket", async (ws) => {
-            if (!ws.url().includes('notification')) {
+            if (!ws.url().includes("notification")) {
                 this.gameSocket = ws;
 
                 ws.on("framereceived", async (msg: any) => {
@@ -84,35 +84,54 @@ export class BaseGame {
         if (this.gameConfiguration.id === 0) {
             await this.waitUntilGameLobbyUiLoad();
         } else {
-            await this.waitUntilGameUiLoad();
+            switch (projectCode) {
+                case "gn":
+                    await this.waitUntilXdGameUiLoad();
+                    break;
+                default:
+                    if (projectCode.includes("mobi") || projectCode.includes("keno")) {
+                        await this.waitUntilMobiGameUiLoad(projectCode);
+                    } else if (!projectCode.includes("is")) {
+                        await this.waitUntilGameUiLoad();
+                    }
+                    break;
+            }
         }
         const endTime = performance.now(); // Measure end time
         console.log(`Total login time: ${endTime - startTime} ms`);
     }
 
-    async waitUntilGameUiLoad() {
-        await this.page.screenshot({path:`./test-results/beforeInGame.png`})
-        if (process.env.npm_config_project !== "gn") {
-            const waitRange = process.env.npm_config_project === "ultra888" ? 1 : 2;
-            await this.page.waitForTimeout(1000);
-            let filterA: string[] = [];
-            const searchString = "LoadScene";
-            this.page.on("console", (msg) => {
-                if (msg.text().includes(searchString) && !msg.text().includes(searchString + " db")) {
-                    filterA.push(msg.text());
-                }
-            });
-
-            while (filterA.length < waitRange) {
-                await this.page.waitForTimeout(500);
+    async waitUntilGameUiLoad(waitRange: number = 2) {
+        await this.page.screenshot({ path: `./test-results/beforeInGame.png` });
+        await this.page.waitForTimeout(1000);
+        let filterA: string[] = [];
+        const searchString = "LoadScene";
+        this.page.on("console", (msg) => {
+            if (msg.text().includes(searchString) && !msg.text().includes(searchString + " db")) {
+                filterA.push(msg.text());
             }
-        } else if (process.env.npm_config_project === "gn") {
-            await this.page.locator(numberGameLocator.commonControls.lblUserName).waitFor();
-        }
+        });
 
+        while (filterA.length < waitRange) {
+            await this.page.waitForTimeout(500);
+        }
         await this.page.waitForTimeout(1000);
         console.log("Game UI ready for testing");
-        await this.page.screenshot({path:`./test-results/afterInGame.png`})
+        await this.page.screenshot({ path: `./test-results/afterInGame.png` });
+    }
+
+    async waitUntilMobiGameUiLoad(projectCode: string) {
+        if (projectCode.includes("l2")) {
+            await this.page.locator("//iframe[@id='frmGame']").waitFor();
+        } else {
+            await this.page.locator("//div[contains(@class,'games_game-list')]").waitFor();
+        }
+        console.log("Game UI ready for testing");
+        await this.page.screenshot({ path: `./test-results/afterInGame.png` });
+    }
+
+    async waitUntilXdGameUiLoad() {
+        await this.page.locator(numberGameLocator.commonControls.lblUserName).waitFor();
     }
 
     async waitUntilGameLobbyUiLoad() {
@@ -358,7 +377,7 @@ export class BaseGame {
 
     async getGuideContent() {
         await this.page.locator("iframe").waitFor();
-        await this.page.frameLocator("iframe").locator("id=container-guide").waitFor()
+        await this.page.frameLocator("iframe").locator("id=container-guide").waitFor();
         const getguidecontent = this.page.frameLocator("iframe").locator("id=container-guide").innerText();
         return getguidecontent;
     }
@@ -540,6 +559,13 @@ export class BaseGame {
     async verifyLocatorsVisible(locators: string[]) {
         for (const locator of locators) {
             expect(await this.page.locator(locator).isVisible(), { message: `${locator} is not visible` }).toBe(true);
+        }
+    }
+
+    async verifyFrameLocatorsVisible(frame: string, locators: string[]) {
+        const iframe = await this.page.frameLocator(frame);
+        for (const locator of locators) {
+            expect(await iframe.locator(locator).isVisible(), { message: `${locator} is not visible` }).toBe(true);
         }
     }
 

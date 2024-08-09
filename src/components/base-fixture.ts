@@ -4,13 +4,14 @@ import { GameConfiguration } from "./game-configuration";
 import { BaseGame } from "./base-game";
 import { _android as android } from "playwright";
 global.logMsg = [];
-global.ssoLink
+global.ssoLink;
+const fs = require("fs");
 
 type BaseFixtures = {
     gameConfigurations: GameConfiguration;
     locators: Array<ImageLocator>;
     baseGame: BaseGame;
-    device: any
+    device: any;
 };
 
 export const test = base.extend<BaseFixtures>({
@@ -19,20 +20,24 @@ export const test = base.extend<BaseFixtures>({
     baseGame: async ({ browser, locators, gameConfigurations }, use) => {
         const context = await browser.newContext();
         const page = await context.newPage();
-            if (process.env.npm_config_android) {
-                const [device] = await android.devices();
-                console.log(`Model: ${device.model()} - Serial: ${device.serial()}`);
-                const browser = await device.launchBrowser();
-                const [page] = browser.pages();
-                const game = new BaseGame(page, locators, gameConfigurations,device );
-                await game.login();
-                await use(game);
-            } else {
+        if (process.env.npm_config_android) {
+            const [device] = await android.devices();
+            console.log(`Model: ${device.model()} - Serial: ${device.serial()}`);
+            const browser = await device.launchBrowser();
+            const [page] = browser.pages();
+            const game = new BaseGame(page, locators, gameConfigurations, device);
+            await game.login();
+            await use(game);
+        } else {
+            try {
                 const game = new BaseGame(page, locators, gameConfigurations);
                 await game.login();
                 await use(game);
+            } catch (error) {
+                fs.writeFileSync("./test-results/Warning.txt", "true");
+                throw new Error(`************ Login member site failed ********** ${error}`); // Explicitly fail the test
             }
-      
+        }
     },
 });
 
@@ -41,5 +46,5 @@ test.beforeEach(async ({}, testInfo) => {
 });
 
 test.afterAll(async ({ browser }) => {
-        await browser.close();
+    await browser.close();
 });

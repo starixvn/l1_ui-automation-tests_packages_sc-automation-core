@@ -25,6 +25,24 @@ export class BasePlayer {
         return odds
     }
 
+    async mbPlaceHedgeBet(hedgeChoices: string[], amount: number = 1): Promise<void> {
+        const isFrame = await this.game.page.$("#frmGame")
+        if (isFrame) {
+            const framelocator =  this.game.page.frameLocator("#frmGame")
+            await framelocator.locator(`//span[contains(@class,'chip-slider_value')][text()='${amount}']`).click({delay: 500});
+            await framelocator.locator(hedgeChoices[0]).click();
+            await this.game.waitForTimeout(500)
+            await framelocator.locator(hedgeChoices[1]).click();
+        }
+        else{
+            const betChip = `//span[contains(@class,'chip-slider_value')][text()='${amount}']`
+            await this.game.click(betChip);
+            await this.game.click(hedgeChoices[0],500);
+            await this.game.click(hedgeChoices[1],500);
+        }
+
+    }
+
     async placeMaxBet(choice: string, maxBetAmount: number[], subGameName?: string): Promise<void> {
         if (!this.game.gameConfiguration.cardgame) {
             await this.game.waitUntilPlaceBet(subGameName);
@@ -77,6 +95,20 @@ export class BasePlayer {
         await this.gnBetOn(choice, amount);
         const endBets =await this.game.waitForEndBet();
         return {endBet: endBets.endBet, odds: odds};
+    }
+
+    async mbQuickPlaceBet(choice: string, amount: number,subGameName?: string): Promise<any> {
+        const isQuickBet = await this.game.page.locator("//button[contains(@class,'btn-red')]").count();
+        if (isQuickBet > 0) {
+            await this.game.click("//button[contains(@class,'btn-red')]",500);
+        }
+        let placeBetResponse = await this.mbBetOn(choice, amount,subGameName);;
+        if (!placeBetResponse || placeBetResponse.endBet == -1) {
+            console.log('Wait until next round then place bet !');
+            await this.game.waitUntilPlaceBet(subGameName);
+            placeBetResponse = await this.mbBetOn(choice, amount,subGameName);;
+        }
+        return placeBetResponse
     }
 
     async gnSlowPlaceBet(choice: string, amount: number): Promise<any> {
@@ -150,6 +182,22 @@ export class BasePlayer {
         const betChip = `#chip-${amount}`
         await this.game.click(betChip);
         await this.game.click(choice,0);
+    }
+
+    async mbBetOn(choice: string, amount: number,subGameName?: string): Promise<any> {
+        const isFrame = await this.game.page.$("#frmGame")
+        if (isFrame) {
+            const framelocator =  this.game.page.frameLocator("#frmGame")
+            await framelocator.locator(`//span[contains(@class,'chip-slider_value')][text()='${amount}']`).click({delay: 500});
+            await framelocator.locator(choice).click();
+        }
+        else{
+            const betChip = `//span[contains(@class,'chip-slider_value')][text()='${amount}']`
+            await this.game.click(betChip,500);
+            await this.game.click(choice,0);
+        }
+        
+        return this.game.waitForEndBet(subGameName);
     }
 
     async betOnSlot(choice: string, amount = 1): Promise<any> {

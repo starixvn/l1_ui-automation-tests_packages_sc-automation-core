@@ -420,3 +420,67 @@ export const gnprod = {
     1009: "SUPERTEST30102148",
     1010: "SUPERTEST30102149",
 };
+
+export const l1mobiprod = {
+    1: "supertestte120201002",
+    2: "supertestte120201003",
+    3: "supertestte120201004",
+    4: "supertestte120201006",
+    7: "supertestte120201009",
+    8: "supertestte120201011",
+    9: "supertestte120201012",
+    10: "supertestte120201013",
+    22: "supertestte120201002",
+    24: "supertestte120201006",
+    27: "supertestte120201011",
+    35: "supertestte120201004",
+};
+
+export const l1kenoprod = {
+    52: "SUPERTEST30102090",
+    53: "SUPERTEST30102052",
+    14: "supertestte120201012",
+    15: "supertestte120201013",
+    16: "SUPERTEST30102090",
+    17: "SUPERTEST30102052",
+    18: "supertestte120201012",
+    19: "supertestte120201013",
+};
+
+export const l2mobiprod = {
+    1: "QCTest22082317",
+    2: "QCTest22082318",
+    3: "QCTest22082302",
+    4: "QCTest22082304",
+    7: "QCTest22082305",
+    8: "QCTest22082317",
+    9: "QCTest22082318",
+    10: "QCTest22082302",
+    22: "QCTest22082304",
+    24: "QCTest22082305",
+    27: "QCTest22082317",
+    35: "QCTest22082318",
+};
+
+export const l2kenoprod = {
+    52: "QCTest22082313",
+    53: "QCTest22082305",
+    14: "QCTest22082313",
+    15: "QCTest22082305",
+    16: "QCTest22082313",
+    17: "QCTest22082305",
+    18: "QCTest22082313",
+    19: "QCTest22082305",
+};
+
+export const l1isprod = {
+    1: "supertestte120201002",
+    9: "supertestte120201001",
+    7: "supertestte120201002",
+    3: "supertestte120201001",
+    45: "supertestte120201001",
+    10: "supertestte120201002",
+    25: "supertestte120201001",
+    71: "supertestte120201002",
+    80: "supertestte120201001",
+};
