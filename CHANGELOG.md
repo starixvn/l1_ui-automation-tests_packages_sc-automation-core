@@ -1,3 +1,17 @@
+# [1.51.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.50.1...v1.51.0) (2024-08-12)
+
+
+### Bug Fixes
+
+* update e2e mini game base ([212e045](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/212e045373d521b633f886f23da53683a044fe0c))
+* update e2e mini game base ([07131bc](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/07131bc01a10f30bb3de1227d618feacc730da7d))
+* update e2e tests ([6ee8301](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/6ee83018a191a9ff06034b9b0063760c08a9463e))
+
+
+### Features
+
+* e2e game base for mini games ([cbfdf7a](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/cbfdf7a637e86583baab72bac74e02c1033a5db7))
+
 ## [1.50.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.50.0...v1.50.1) (2024-08-08)
 
 
