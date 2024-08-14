@@ -1,3 +1,10 @@
+## [1.51.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.51.1...v1.51.2) (2024-08-14)
+
+
+### Bug Fixes
+
+* xd games ([d493acc](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/d493acc7c323d700c529f25260b9174fd9406187))
+
 ## [1.51.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.51.0...v1.51.1) (2024-08-14)
 
 
