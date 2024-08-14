@@ -1,3 +1,10 @@
+## [1.51.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.51.0...v1.51.1) (2024-08-14)
+
+
+### Bug Fixes
+
+* increase maxDiffPixelRatio = 0.04 for verifyImage ([71a40d4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/71a40d45fddb7034f1ac800576f3ad7aeb5d05d3))
+
 # [1.51.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.50.1...v1.51.0) (2024-08-12)
 
 
