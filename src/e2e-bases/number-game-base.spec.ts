@@ -14,12 +14,17 @@ export class NumberGameBase {
         test("Verify in game UI @A_1 @A_7", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
+            this.game.attachSocketAndCaptureEvent(GameEvent.GameConfig);
+
             //Config lobal varriable
-            await this.game.waitForTimeout(3000)
-            await this.game.click(commonControls.iconHome,5000);
-            await this.game.click(this.options.locators.lobbyGameIcon,5000);
-            await this.game.page.locator(commonControls.iconHome).waitFor({state:"visible"})  
             await this.game.waitForTimeout(3000);
+            await this.game.click(commonControls.iconHome, 5000);
+            await this.game.click(this.options.locators.lobbyGameIcon, 5000);
+            await this.game.page.locator(commonControls.iconHome).waitFor({ state: "visible" });
+            const gameconfig = await this.game.latestCaptureEvent(GameEvent.GameConfig);
+            this.game.gameConfigs = gameconfig.gameConfigs;
+            await this.game.waitForTimeout(3000);
+
             const { maxBetPerChoices, maxWinPerRound, minBet, maxBet } = this.game.gameConfigs;
             global.minBet = minBet;
             global.maxbet = formatNumber(maxBet);
@@ -277,8 +282,8 @@ export class NumberGameBase {
             for (const key in this.options.locators.statisticItems) {
                 let totalVal = await this.game.page.locator(key).count();
                 totalVal = parseInt(((totalVal / 108) * 100).toFixed(0));
-                const ExpectVal= await this.game.getText(this.options.locators.statisticItems[key])
-                expect(totalVal).toBeCloseTo(parseInt(ExpectVal),2)
+                const ExpectVal = await this.game.getText(this.options.locators.statisticItems[key]);
+                expect(totalVal).toBeCloseTo(parseInt(ExpectVal), 2);
             }
         });
     }
@@ -518,7 +523,7 @@ export class NumberGameBase {
         test("Verify content of Pf intro @A_26", async () => {
             const pfIntro = await capturePfIntroContent(this.game);
             pfIntro.forEach((content) => {
-                expect(content.image).toMatchSnapshot(content.name,{ maxDiffPixels: 2000});
+                expect(content.image).toMatchSnapshot(content.name, { maxDiffPixels: 2000 });
             });
             await this.game.click(commonControls.icon_PfIntro_Close);
             await this.game.click(commonControls.iconClosePfSetting);
@@ -750,7 +755,7 @@ export class NumberGameBase {
 }
 
 const capturePfIntroContent = async (game: BaseGame) => {
-    await game.waitForTimeout(5000)
+    await game.waitForTimeout(5000);
     const images = new Array<ImageSnapshot>();
     await game.page.frameLocator("iframe").locator("#container-guide").waitFor({ state: "visible" });
     const guidepages = await game.getCountFrameLocator("//*[@id='container-guide']//div[@class='guide-item']");
