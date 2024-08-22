@@ -1,3 +1,10 @@
+# [1.52.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.51.2...v1.52.0) (2024-08-22)
+
+
+### Features
+
+* add Prometheus for performance tracking data ([5b776ce](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/5b776ce8997ed37a946556f71c3cd6f485f0facc))
+
 ## [1.51.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.51.1...v1.51.2) (2024-08-14)
 
 
