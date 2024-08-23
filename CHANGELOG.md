@@ -1,3 +1,10 @@
+## [1.52.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.52.0...v1.52.1) (2024-08-23)
+
+
+### Bug Fixes
+
+* enhance log sso time ([3f8bcca](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/3f8bcca4dcd56f581c1762d7da91ec4afa0919ef))
+
 # [1.52.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.51.2...v1.52.0) (2024-08-22)
 
 
