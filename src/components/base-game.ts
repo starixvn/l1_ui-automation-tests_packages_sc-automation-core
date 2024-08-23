@@ -10,14 +10,14 @@ import { baseLocatorNames } from "./base-game-locator";
 import * as accounts from "../auth/configs/config.account";
 import * as numberGameLocator from "./base-number-game-locator";
 import fs from "fs";
-const promClient = require('prom-client');
+const promClient = require("prom-client");
 const PNG = require("pngjs").PNG;
-const gatewayUrl = 'http://10.70.70.120:9091'; 
+const gatewayUrl = "http://10.70.70.120:9091";
 const gauge = new promClient.Gauge({
-    name: 'performanceTest',
-    help: 'Game load time in seconds',
-    labelNames: ['gameName'],
-  });
+    name: "performanceTest",
+    help: "Game load time in seconds",
+    labelNames: ["gameName"],
+});
 
 export class BaseGame {
     readonly BetBoardPostfix: string = "BetBoard";
@@ -105,18 +105,19 @@ export class BaseGame {
             }
         }
         const endTime = performance.now(); // Measure end time
-        const totalSSOTimeSeconds = ((endTime - startTime) / 1000).toFixed(2);
-        if (env === 'prod' && (projectCode === 'l1' || projectCode === 'l2')) {
-            console.log(`Total login time: ${totalSSOTimeSeconds} s`,this.gameConfiguration.name);
+        const totalSSOTimeSeconds =
+            projectCode === "l1" ? ((endTime - startTime - 5000) / 1000).toFixed(2) : ((endTime - startTime - 10000) / 1000).toFixed(2);
+        if (env === "prod" && (projectCode === "l1" || projectCode === "l2")) {
+            console.log(`Total login time: ${totalSSOTimeSeconds} s`, this.gameConfiguration.name);
             const gateway = new promClient.Pushgateway(gatewayUrl, { timeout: 5000 });
             const gaugeLabel = `${projectCode}-${this.gameConfiguration.name}`;
 
             gauge.labels(gaugeLabel).set(parseFloat(totalSSOTimeSeconds));
-            gateway.pushAdd({ jobName: 'game_load_time' }, (err) => {
+            gateway.pushAdd({ jobName: "game_load_time" }, (err) => {
                 if (err) {
                     console.log(err);
-                } 
-           });  
+                }
+            });
         }
     }
 

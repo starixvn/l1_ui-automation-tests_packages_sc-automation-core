@@ -215,7 +215,7 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
             await page.fill(PRODLocator.usernameInput, accountId);
             await page.fill(PRODLocator.passwordInput, pwd);
             await page.click(PRODLocator.submitLoginbtn);
-            await page.waitForLoadState();
+            await page.waitForLoadState("domcontentloaded");
             await page.waitForTimeout(5000);
             console.log(langCode);
         }
@@ -250,6 +250,7 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
                 await page.waitForTimeout(5000);
                 await loginWithCaptcha(page, accountId, pwd);
             }
+            await page.waitForLoadState("domcontentloaded");
             await page.waitForTimeout(2000);
             await page.locator("#sportsFrame").waitFor({ state: "visible" });
             await page.waitForTimeout(5000);

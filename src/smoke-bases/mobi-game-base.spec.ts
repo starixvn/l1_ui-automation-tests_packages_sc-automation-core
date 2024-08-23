@@ -15,7 +15,7 @@ export class MobiGameBase {
         test("Verify Game Name and Bet Locators", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
-            await this.game.waitForTimeout(8000);
+            await this.game.waitForTimeout(10000);
             const isFrame = await this.game.page.$("#frmGame")
             if (isFrame) {
                 await this.game.verifyFrameLocatorsVisible("#frmGame",this.options.locators.inGameUI);
