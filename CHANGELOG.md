@@ -1,3 +1,11 @@
+## [1.52.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.52.1...v1.52.2) (2024-08-28)
+
+
+### Bug Fixes
+
+* optimized history component ([3a04ea8](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/3a04ea8adc5922830caff9f079ef0c05ab5bd034))
+* update history test ([c1a3bf0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/c1a3bf0597cc893b28769f167409b898b1e83e6e))
+
 ## [1.52.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.52.0...v1.52.1) (2024-08-23)
 
 
