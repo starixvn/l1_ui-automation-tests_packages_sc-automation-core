@@ -1,3 +1,10 @@
+## [1.52.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.52.2...v1.52.3) (2024-08-28)
+
+
+### Bug Fixes
+
+* update e2e game base ([1454329](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/14543293bb018eaccf44066b3b371198579530fb))
+
 ## [1.52.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.52.1...v1.52.2) (2024-08-28)
 
 
