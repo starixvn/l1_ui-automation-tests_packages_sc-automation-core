@@ -13,4 +13,5 @@ export interface IBaseOptions {
     barItems?: string[];
     uiChecklist?: Array<string>;
     isBalanceBettingGame?: boolean;
+    historyItems?: {roundid: string, betamount: string, betwin: string};
 }

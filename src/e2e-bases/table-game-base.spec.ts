@@ -12,7 +12,7 @@ export class TableGameBase {
     game: BaseGame;
     player: BasePlayer;
     protected gameGuides: GameGuides = new GameGuides();
-    protected betHistory: BetHistory = new BetHistory();
+    protected betHistory: BetHistory = new BetHistory(this.options);
 
     constructor(protected options: IBaseOptions) {}
 

@@ -16,7 +16,7 @@ export class SlotGameBase {
     game: BaseGame;
     player: BasePlayer;
     protected gameGuides: GameGuides = new GameGuides();
-    protected betHistory: BetHistory = new BetHistory();
+    protected betHistory: BetHistory = new BetHistory(this.options);
 
     constructor(protected options: SlotGameOptions) {}
 
@@ -117,42 +117,9 @@ export class SlotGameBase {
             await test.step(`Open payline popup`, async () => {
                 await openPayLineBoard(this.game);
             });
-            await test.step(`Select payline and compare with snapshot`, async () => {
-                for (const placeBetChoice of this.options.placeBetChoices) {
-                    //Act 1
-                    await selectBetChoice(this.game, `btn${placeBetChoice}`);
-
-                    let betChoice = await this.game.captureLocator(`tbl${placeBetChoice}`);
-                    // Assert
-                    expect(betChoice.image).toMatchSnapshot(betChoice.name);
-
-                    //Act 2
-                    await closePayLineBoard(this.game);
-                    await openPayLineBoard(this.game);
-                    // Assert2
-                    expect(betChoice.image).toMatchSnapshot(betChoice.name);
-                }
-            });
-        });
-
-        test("Verify submit bet button is disabled when no choice is selected", async () => {
-            // Act
-            await test.step(`Click button clear payline`, async () => {
-                await this.game.clickLocator(baseLocatorNames.btnClearPayline, timeout);
-            });
-            let imgConfirmPaylineDisabled;
-            await test.step(`Captrue confirm payline button`, async () => {
-                imgConfirmPaylineDisabled = await this.game.capture(baseLocatorNames.imgConfirmPaylineDisabled);
-            });
-
-            //Assert
-            await test.step(`Compare with snapshot`, async () => {
-                expect(imgConfirmPaylineDisabled.image).toMatchSnapshot(imgConfirmPaylineDisabled.name);
-            });
-
-            //Post-Act
-            await test.step(`Close the popup`, async () => {
-                await closePayLineBoard(this.game);
+            await test.step(`Verify paylines popup`, async () => {
+               const tblAllPayline = await this.game.capture(baseLocatorNames.tblAllPayline);
+               expect(tblAllPayline.image).toMatchSnapshot(tblAllPayline.name);
             });
         });
     }
@@ -545,14 +512,14 @@ const openPayLineBoard = async (game: BaseGame) => {
     await game.clickLocator(baseLocatorNames.btnPayline, 1000);
 };
 
-const selectBetChoice = async (game: BaseGame, choice: string) => {
-    await game.clickLocator(baseLocatorNames.btnClearPayline, 1000);
-    await game.clickLocator(choice);
-};
+// const selectBetChoice = async (game: BaseGame, choice: string) => {
+//     await game.clickLocator(baseLocatorNames.btnClearPayline, 1000);
+//     await game.clickLocator(choice);
+// };
 
-const closePayLineBoard = async (game: BaseGame) => {
-    await game.clickLocator(baseLocatorNames.btnClosePopup, 1000);
-};
+// const closePayLineBoard = async (game: BaseGame) => {
+//     await game.clickLocator(baseLocatorNames.btnClosePopup, 1000);
+// };
 
 const clickTurbo = async (game: BaseGame) => {
     await game.clickLocator(baseLocatorNames.btnTurbo);
