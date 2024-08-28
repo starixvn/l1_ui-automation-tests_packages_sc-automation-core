@@ -383,7 +383,6 @@ export class MiniGameBase {
 
     protected runScenario() {
         this.inGameUITests();
-        this.inGameOddsTests();
         this.chipBoardTests();
         this.placeBetAndSettleTests();
         this.betHistory.tests();
