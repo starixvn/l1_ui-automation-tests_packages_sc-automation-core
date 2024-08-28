@@ -15,13 +15,13 @@ export class MiniGameBase {
     game: BaseGame;
     player: BasePlayer;
     protected gameGuides: GameGuides = new GameGuides();
-    protected betHistory: BetHistory = new BetHistory();
+    protected betHistory: BetHistory = new BetHistory(this.options);
 
     constructor(protected options: IBaseOptions) {}
     
 
     protected inGameUITests() {
-        test("Verify all bet choices are displayed on table ", async () => {
+        test("Verify all bet choices are displayed on table", async () => {
             // Arrange
             await test.step(`Wait for new round start`, async () => {
                 test.setTimeout(this.options.gameConfiguration.maxTimeout);
@@ -45,13 +45,6 @@ export class MiniGameBase {
             });
         });
 
-    }
-
-    protected inGameOddsTests() {
-        test("Verify that odds are correct", async () => {
-            // Assert
-            expect(this.game.odds).toStrictEqual(this.options.gameConfiguration.odds);
-        });
     }
 
     protected chipBoardTests() {

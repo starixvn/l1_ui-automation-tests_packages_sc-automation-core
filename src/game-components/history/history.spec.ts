@@ -1,6 +1,7 @@
 import { test, BaseGame } from "../../components";
 import { expect } from "../../expects";
 import { GameEvent } from "../../_shared";
+import { IBaseOptions } from "../../e2e-bases";
 
 export class BetHistory {
     protected game: BaseGame;
@@ -8,13 +9,17 @@ export class BetHistory {
     init(game: BaseGame) {
         this.game = game;
     }
+    constructor(protected options: IBaseOptions) {}
 
     tests() {
-        test(`Verify data of the latest ticket`, async () => {
+        test(`Verify data of the latest ticket @TC_history`, async () => {
             // Act 1
             let ticketdata
+            let roundid = this.options.historyItems?.roundid ?? "roundId";
+            let betamount = this.options.historyItems?.betamount ?? "amount";
+            let betwin = this.options.historyItems?.betwin ?? "betwin";
             await test.step("Open history and get data", async () => {
-               ticketdata = await getHistoryLatestTicket(this.game);
+               ticketdata = await getHistoryLatestTicket(this.game, roundid, betamount, betwin);
             });
 
             // Assert 1
@@ -32,22 +37,21 @@ export class BetHistory {
 
 }
 
-const getHistoryLatestTicket = async(game : BaseGame) => {
+const getHistoryLatestTicket = async(game : BaseGame, roundid : string, betamount : string, betwin : string ) => {
     game.attachSocketAndCaptureEvent(GameEvent.History)
     await game.clickHistory();
     await game.waitForTimeout(1000);
     let message = await game.latestCaptureEvent(GameEvent.History);
-    console.log(message);
     let ticketdata = {
-        roundId: message.history.betLogs[0].roundId ?? message.history.betLogs[0].id ?? -1,
-        betwin: message.history.betLogs[0].betwin ?? message.history.betLogs[0].baseBetWin ?? -1,
-        betamount: getBetAmount(global.settledata.choice, message.history.betLogs[0]),
+        roundid: getDataBetLog(roundid, message.history.betLogs[0]),
+        betwin: getDataBetLog(betwin, message.history.betLogs[0]),
+        betamount: getDataBetLog(betamount, message.history.betLogs[0]),
     };
     return ticketdata;
 }
 
 
-function getBetAmount(betChoice : string, betLog:any) {
+function getDataBetLog(betChoice : string, betLog:any) {
     const keys = Object.keys(betLog);
     const values = Object.values(betLog);
     const index = keys.indexOf(betChoice);
