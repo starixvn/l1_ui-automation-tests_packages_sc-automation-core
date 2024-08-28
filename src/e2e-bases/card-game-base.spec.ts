@@ -16,20 +16,20 @@ export class CardGameBase {
     constructor(protected options: IBaseOptions) {}
 
     protected inGameUiTests() {
-        test("Verify the in-game UI should be displayed correctly on table: game name, buttons, hands, chips,Stake: 0 and no button display", async () => {
+        test("Verify the in-game UI should be displayed correctly on table: game name, buttons, hands, chips,Stake: 0 and no button display @UI01", async () => {
             // Act
             const gameUi = await this.game.capture(baseLocatorNames.imgGameName);
             // Assert
             expect(gameUi.image).toMatchSnapshot(gameUi.name);
         });
 
-        test("Verify default state of chip bar", async () => {
+        test("Verify default state of chip bar @UI02", async () => {
             const chipbar = await this.game.capture(`defaultChipBar${process.env.npm_config_project}`);
             // Assert
             expect(chipbar.image).toMatchSnapshot(chipbar.name);
         });
 
-        test("Verify list items after clicking on hambuger menu", async () => {
+        test("Verify list items after clicking on hambuger menu @UI03", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             await this.game.clickLocator(baseLocatorNames.hamburgerMenu);
@@ -44,7 +44,7 @@ export class CardGameBase {
     }
 
     protected gamePlayButtonsTests() {
-        test("Verify button Deal and Clear", async () => {
+        test("Verify button Deal and Clear @UI04", async () => {
             // Act
             const betchoices = this.options.placeBetChoices;
             await this.selectChoices(betchoices);
@@ -53,7 +53,7 @@ export class CardGameBase {
             await verifyImage(this.game, baseLocatorNames.btnDeal)
         });
 
-        test("Verify button Hit and Stand", async () => {
+        test("Verify button Hit and Stand @UI05", async () => {
             // Act
             await this.game.clickLocator(baseLocatorNames.btnDeal, timeout*3)
             //Assert
@@ -61,12 +61,12 @@ export class CardGameBase {
             await verifyImage(this.game, baseLocatorNames.btnStand);
         });
         
-        test("Verify chip bar is hidden after deal", async () => {
+        test("Verify chip bar is hidden after deal @UI06", async () => {
             //Assert
             await verifyImage(this.game, baseLocatorNames.imgChipBarHidden);
         });
 
-        test("Verify button Rebet and New Bet", async () => {
+        test("Verify button Rebet and New Bet @UI07", async () => {
             // Act
             await this.game.clickLocator(baseLocatorNames.btnStand); 
             if(this.game.locator(baseLocatorNames.btnConfirmStand)){
@@ -82,7 +82,7 @@ export class CardGameBase {
     }
 
     protected provablyFairTests() {
-        test("Verify PF icon and UI of PF popup before deal", async () => {
+        test("Verify PF icon and UI of PF popup before deal @PF01", async () => {
             await verifyImage(this.game, baseLocatorNames.icoPF);
             // Act
             await this.openPFPopup();
@@ -90,7 +90,7 @@ export class CardGameBase {
             await verifyImage(this.game, baseLocatorNames.imgPFPopup);
         });
 
-        test("Verify client seed popup", async () => {
+        test("Verify client seed popup @PF02", async () => {
             await test.step("Verify client seed popup", async () => {
                 await this.game.clickLocator(baseLocatorNames.lblClientSeed, 5000);
                 await verifyImage(this.game, baseLocatorNames.popNewClientSeed);
@@ -138,7 +138,7 @@ export class CardGameBase {
             });
         });
 
-        test("Verify opening game guide when click on tooltip icon", async () => {
+        test("Verify opening game guide when click on tooltip icon @PF03", async () => {
             //Act
             await this.game.clickLocator(baseLocatorNames.icoPFTooltip, timeout*2)
             //Assert
@@ -148,7 +148,7 @@ export class CardGameBase {
             await this.game.clickOutSide();
         });
 
-        test("Verify PF setting popup in case place bet", async () => {
+        test("Verify PF setting popup in case place bet @PF04", async () => {
             //Act
             await this.selectChoices(this.options.placeBetChoices);
             await this.game.clickLocator(baseLocatorNames.btnHitCard, timeout*3);
@@ -166,7 +166,7 @@ export class CardGameBase {
         });
 
         
-        test("Verify PF popup from history", async () => {
+        test("Verify PF popup from history @PF05", async () => {
             //Act
             await this.game.clickHistory();
             await this.game.clickLocator(baseLocatorNames.btnHistoryVerify, 1000);
@@ -186,7 +186,7 @@ export class CardGameBase {
 
 
     protected placebetandCancelBehaviours() {
-        test("Verify user can place bet and cancel bet on one hand", async () => {
+        test("Verify user can place bet and cancel bet on one hand @PlaceBet01", async () => {
             const betchoices = this.options.placeBetChoices;
             // Act
             await this.selectChoices(betchoices);
@@ -201,7 +201,7 @@ export class CardGameBase {
             await this.cancelbet();
         });
 
-        test("Verify user can place bet and cancel bet on multiple hands", async () => {
+        test("Verify user can place bet and cancel bet on multiple hands @PlaceBet02", async () => {
             // Act
             const lblDefaultTotalBet = await this.game.capture(baseLocatorNames.lblDefaultTotalBet);
             const betchoices = this.options.multiPlaceBetChoices;
@@ -226,7 +226,7 @@ export class CardGameBase {
     protected placebetandsettlement(): void {
         const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount };
 
-        test("Verify player able to placebet and Stand Card after deal", async () => {
+        test("Verify player able to placebet and Stand Card after deal @Settlement01", async () => {
             // Act 1
             const settledResults = await this.placebetStand(bet.amount, bet.choice);
 
@@ -236,7 +236,7 @@ export class CardGameBase {
 
         });
 
-        test("Verify player can start a new bet on one hand and stand card if total >= 16", async () => {
+        test("Verify player can start a new bet on one hand and stand card if total >= 16 @Settlement02", async () => {
             // Act 1
             await this.newBet();
 
@@ -247,7 +247,7 @@ export class CardGameBase {
             await this.verifySetlementResults(settledResults, bet);
         });
 
-        test("Verify player can start a new bet with double amount after deal", async () => {
+        test("Verify player can start a new bet with double amount after deal @Settlement03", async () => {
             test.skip(this.game.gameConfiguration.isDoubleFunction === false, "This game don't have double function")
             const betdouble = { choice: bet.choice, amount: (bet.amount as number) * 2 };
             await this.newBet();
@@ -264,7 +264,7 @@ export class CardGameBase {
         });
 
 
-        test("Verify player can rebet", async () => {
+        test("Verify player can rebet @Rebet", async () => {
             // Act 1
             const settledResults = await this.reBet();
 
@@ -272,7 +272,7 @@ export class CardGameBase {
             await this.verifySetlementResults(settledResults, bet);
         });
 
-        test("Verify player can place bet on multiple hands", async () => {
+        test("Verify player can place bet on multiple hands @Settlement04", async () => {
             const multiplebets = { choices: this.options.multiPlaceBetChoices, amount: bet.amount };
             await this.newBet();
             // Act 1
@@ -285,7 +285,7 @@ export class CardGameBase {
     }
     
     protected ticketHistoryTests() {
-        test("Verify history data after placebet and settle", async () => {
+        test("Verify history data after placebet and settle @History", async () => {
             // Act 1
             const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount };
             await this.newBet()
@@ -325,7 +325,7 @@ export class CardGameBase {
     }
 
     protected returnGameLobby(): void {
-        test("Verify player redirect to gamelooby after clicking home icon", async () => {
+        test("Verify player redirect to gamelooby after clicking home icon @Lobby01", async () => {
             // Act 1
             await this.game.waitForTimeout(timeout);
             await this.game.clickHome(timeout / 2, baseLocatorNames.btnHome);
@@ -336,7 +336,7 @@ export class CardGameBase {
     }
 
     protected turnbackGame(): void {
-        test("Verify player able to go back game by clicking on game icon", async () => {
+        test("Verify player able to go back game by clicking on game icon @Lobby02", async () => {
             // Act 1.
             await this.game.waitForTimeout(timeout / 2);
 
@@ -353,7 +353,7 @@ export class CardGameBase {
 
     
     protected jackPotBanner(): void {
-        test("Verify JackPot banner still displayed when user return game lobby", async () => {
+        test("Verify JackPot banner still displayed when user return game lobby @JackPot", async () => {
             // Act 1
             await this.game.waitForTimeout(2000);
             await this.game.clickHome(timeout / 2, baseLocatorNames.btnHome);

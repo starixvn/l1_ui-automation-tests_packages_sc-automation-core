@@ -12,7 +12,7 @@ export class BetHistory {
     constructor(protected options: IBaseOptions) {}
 
     tests() {
-        test(`Verify data of the latest ticket @TC_history`, async () => {
+        test(`Verify data of the latest ticket @History`, async () => {
             // Act 1
             let ticketdata
             let roundid = this.options.historyItems?.roundid ?? "roundId";
@@ -24,7 +24,7 @@ export class BetHistory {
 
             // Assert 1
             await test.step("Verify round id, total stake and bet win", async () => {
-                expect(ticketdata.roundId, "verify round id").toEqual(global.settledata.roundId);
+                expect(ticketdata.roundid, "verify round id").toEqual(global.settledata.roundId);
                 expect(ticketdata.betamount, "verify total stake").toEqual(global.settledata.bet);
                 expect(ticketdata.betwin, "verify total win").toEqual(global.settledata.betwin);
             });
