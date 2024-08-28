@@ -17,7 +17,7 @@ export class TableGameBase {
     constructor(protected options: IBaseOptions) {}
 
     protected inGameUiTests() {
-        test("Verify the dealer image appears @TC01", async () => {
+        test("Verify the dealer image appears @UI01", async () => {
             // Act
             await this.game.waitUntilNextRound();
             await this.game.waitForTimeout(this.options.waitBetTimeout);
@@ -26,7 +26,7 @@ export class TableGameBase {
             expect(dealerSnapshot.image).toMatchSnapshot(dealerSnapshot.name, { maxDiffPixelRatio: 0.3 });
         });
 
-        test("Verify all bet choices display correctly @TC02", async () => {
+        test("Verify all bet choices display correctly @UI02", async () => {
             for (const iterator of this.options.placeBetChoices) {
                 // Act
                 const choiceSnapshot = await this.game.capture(iterator + "Choice");
@@ -34,13 +34,13 @@ export class TableGameBase {
                 expect(choiceSnapshot.image).toMatchSnapshot(choiceSnapshot.name);
             }
         });
-        test("Verify default state of chip bar @TC03", async () => {
+        test("Verify default state of chip bar @UI03", async () => {
             const chipbar = await this.game.capture(`defaultChipBar${process.env.npm_config_project}`);
             // Assert
             expect(chipbar.image).toMatchSnapshot(chipbar.name);
         });
         if (this.options.gameConfiguration.rebet) {
-            test("Verify Rebet button is disabled @TC04", async () => {
+            test("Verify Rebet button is disabled @UI04", async () => {
                 const btnrebet = await this.game.capture(baseLocatorNames.btnRebet);
                 // Assert
                 expect(btnrebet.image).toMatchSnapshot(btnrebet.name);
@@ -49,7 +49,7 @@ export class TableGameBase {
     }
 
     protected placeBetAndSettleTests() {
-        test("Verify the roundId displayed on table is the same in round settle result @TC05", async () => {
+        test("Verify the roundId displayed on table is the same in round settle result @Settlement01", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount ?? 1 };
@@ -76,7 +76,7 @@ export class TableGameBase {
             expect(roundId.includes(settledResults.roundId)).toBe(true);
         });
 
-        test("Verify that player able to place bet and return settlement data for comparing history ticket detail @TC06", async () => {
+        test("Verify that player able to place bet and return settlement data for comparing history ticket detail @Settlement02", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             const bet = { choice: this.options.placeBetChoices[1], amount: this.options.placeBetAmount ?? 1 };
@@ -111,7 +111,7 @@ export class TableGameBase {
 
     protected ticketHistoryTests() {
         this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
-        test("Verify data of history of above round @TC07", async () => {
+        test("Verify data of history of above round", async () => {
             // Act 1
             await this.game.clickHistory(timeout);
             const ticketdata = await getDataFistRowHistory(this.game);
@@ -145,7 +145,7 @@ export class TableGameBase {
     }
 
     protected LedBarTests() {
-        test("Verify the latest result in bar should be displayed correctly @TC08", async () => {
+        test("Verify the latest result in bar should be displayed correctly @LedBar", async () => {
             // Act 1
             const barItems: any = this.options.barItems;
             const latestBarItem = barItems.filter((item) => global.settledata.settledResults[item] === true);
@@ -158,7 +158,7 @@ export class TableGameBase {
     }
 
     protected maxBetTests() {
-        test("Verify that player should get error when they reach max bet @TC09", async () => {
+        test("Verify that player should get error when they reach max bet @MaxBet", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             this.game.attachSocketAndCaptureEvent(GameEvent.Settlement);
@@ -193,7 +193,7 @@ export class TableGameBase {
     }
 
     protected reBet() {
-        test("Verify player able to place bet other choice then get data for next rebet @TC10", async () => {
+        test("Verify player able to place bet other choice then get data for next rebet @Rebet01", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             const bet = { choice: this.options.placeBetChoices[1], amount: this.options.placeBetAmount ?? 1 };
@@ -207,7 +207,7 @@ export class TableGameBase {
             expect(placeBetResponse.endBet).toBe(bet.amount);
             expect(settledResults.settlementResult).toMatchBetOptions(this.options.gameConfiguration.choices);
         });
-        test("Verify player can rebet all bet choice and amount of previous placebet @TC11", async () => {
+        test("Verify player can rebet all bet choice and amount of previous placebet @Rebet02", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             const bet = { choice: this.options.placeBetChoices[1], amount: this.options.placeBetAmount ?? 1 };
@@ -230,7 +230,7 @@ export class TableGameBase {
     }
 
     protected multipleBetChoices() {
-        test("Verify player able to placebet multiple choices in 1 round @TC12", async () => {
+        test("Verify player able to placebet multiple choices in 1 round @Settlement03", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             this.game.attachSocketAndCaptureEvent(GameEvent.OwnBets);
@@ -266,7 +266,7 @@ export class TableGameBase {
     }
 
     protected returnGameLobby(): void {
-        test("Verify player redirect to gamelooby after clicking home icon @TC14", async () => {
+        test("Verify player redirect to gamelooby after clicking home icon @Lobby01", async () => {
             // Act 1
             await this.game.waitForTimeout(2000);
             await this.game.clickHome(timeout / 2, baseLocatorNames.btnHome);
@@ -277,7 +277,7 @@ export class TableGameBase {
     }
 
     protected turnbackGame(): void {
-        test("Verify player able to go back game by clicking on game icon @TC15", async () => {
+        test("Verify player able to go back game by clicking on game icon @Lobby02", async () => {
             // Act 1.
             await this.game.waitForTimeout(timeout / 2);
 
@@ -293,7 +293,7 @@ export class TableGameBase {
     }
 
     protected jackPotBanner(): void {
-        test("Verify JackPot banner still displayed when user return game lobby @TC16", async () => {
+        test("Verify JackPot banner still displayed when user return game lobby @JackPot", async () => {
             // Act 1
             await this.game.waitForTimeout(2000);
             await this.game.clickHome(timeout / 2, baseLocatorNames.btnHome);

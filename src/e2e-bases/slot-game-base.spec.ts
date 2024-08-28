@@ -21,7 +21,7 @@ export class SlotGameBase {
     constructor(protected options: SlotGameOptions) {}
 
     protected inGameTests() {
-        test("Verify received websocket Odds of game should be the same with game's config ", async () => {
+        test("Verify received websocket Odds of game should be the same with game's config @Odds", async () => {
             // Assert
             await test.step(`Verify ODDs should be correct`, async () => {
                 expect(this.game.odds).toStrictEqual(this.options.gameConfiguration.odds);
@@ -30,7 +30,7 @@ export class SlotGameBase {
     }
 
     protected mainUITests() {
-        test("Verify game name", async () => {
+        test("Verify game name @UI01", async () => {
             //Act
             let gamename;
             await test.step(`Capture game name`, async () => {
@@ -43,7 +43,7 @@ export class SlotGameBase {
             });
         });
 
-        test("Verify symbols board in first load game", async () => {
+        test("Verify symbols board in first load game @UI02", async () => {
             //Act
             const boardID = await getBoardID();
             await test.step(`Click on symbol`, async () => {
@@ -67,7 +67,7 @@ export class SlotGameBase {
                 });
         });
 
-        test("Verify roundID is null in first load game", async () => {
+        test("Verify roundID is null in first load game @UI03", async () => {
             //Act
             let defaultRoundID;
             await test.step(`Capture round ID`, async () => {
@@ -80,7 +80,7 @@ export class SlotGameBase {
             });
         });
 
-        test("Verify payline number in right & left column", async () => {
+        test("Verify payline number in right & left column @UI04", async () => {
             await test.step("Capture left payline column and compare with snapshot", async () => {
                 //Act
                 const imgLeftNumbersColumn = await this.game.capture(baseLocatorNames.imgLeftNumbersColumn);
@@ -99,7 +99,7 @@ export class SlotGameBase {
     }
 
     protected paylineTests() {
-        test("Verify default paylines (25 lines) in first load game", async () => {
+        test("Verify default paylines (25 lines) in first load game @UI05", async () => {
             //Act
             let btnPayline;
             await test.step(`Capture default paylines`, async () => {
@@ -112,7 +112,7 @@ export class SlotGameBase {
             });
         });
 
-        test("Verify Payline Popup", async () => {
+        test("Verify Payline Popup @UI06", async () => {
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             await test.step(`Open payline popup`, async () => {
                 await openPayLineBoard(this.game);
@@ -125,7 +125,7 @@ export class SlotGameBase {
     }
 
     protected betTotalBetTests() {
-        test("Verify list bet stake", async () => {
+        test("Verify list bet stake @StakeLevel01", async () => {
             // Act
             let cboBetLevel;
             await test.step(`Capture bet level`, async () => {
@@ -143,7 +143,7 @@ export class SlotGameBase {
             });
         });
 
-        test("Verify selected bet stake value and total bet amount", async () => {
+        test("Verify selected bet stake value and total bet amount @StakeLevel02", async () => {
             const betStake = process.env.npm_config_project === "l2" ? ["BetLevel5", "BetLevel10"] : ["BetLevel0_1", "BetLevel0_2"];
             const totalStake = process.env.npm_config_project === "l2" ? ["Totalbet5", "Totalbet10"] : ["Totalbet0_1", "Totalbet0_2"];
             let imgBetStake, imgTotalStake;
@@ -168,7 +168,7 @@ export class SlotGameBase {
     }
 
     protected autoSpinTests() {
-        test("Verify default UI of AutoSpin popup", async () => {
+        test("Verify default UI of AutoSpin popup @AutoSpin01", async () => {
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             // Arrange
             await test.step(`Open autospin popup`, async () => {
@@ -191,7 +191,7 @@ export class SlotGameBase {
             });
         });
 
-        test("Verify case user select 10 auto spins then wait for finishing 10 auto spins", async () => {
+        test("Verify case user select 10 auto spins then wait for finishing 10 auto spins @AutoSpin02" , async () => {
             // Arrange
             let settledResultsAutoSpin: Array<string> = [];
             const totalAutoSpin = 10;
@@ -233,7 +233,7 @@ export class SlotGameBase {
             });
         });
 
-        test("Verify user can stop auto spin process by clicking on autospin button", async () => {
+        test("Verify user can stop auto spin process by clicking on autospin button @AutoSpin03", async () => {
             let settledResultsAutoSpin: Array<string> = [];
             const totalAutoSpin = 10;
             await test.step(`Start 10 auto spin`, async () => {
@@ -264,7 +264,7 @@ export class SlotGameBase {
     }
 
     protected turboTests() {
-        test("Verify default state of turbo button is OFF", async () => {
+        test("Verify default state of turbo button is OFF @Turbo01", async () => {
             // Verify default turbo off state
             let turboOff;
             await test.step(`Capture default turbo mode`, async () => {
@@ -277,7 +277,7 @@ export class SlotGameBase {
             });
         });
 
-        test("Verify user can turn On turbo mode", async () => {
+        test("Verify user can turn On turbo mode @Turbo02", async () => {
             // Turbo ON
             await test.step(`Click turbo button`, async () => {
                 await clickTurbo(this.game);
@@ -293,7 +293,7 @@ export class SlotGameBase {
             });
         });
 
-        test("Verify user can turn OFF turbo mode", async () => {
+        test("Verify user can turn OFF turbo mode @Turbo03", async () => {
             // Act
             await test.step(`Click turbo button`, async () => {
                 await clickTurbo(this.game);
@@ -312,7 +312,7 @@ export class SlotGameBase {
     }
 
     protected spinByKeys() {
-        test("Verify user able spin by space with turbo mode OFF", async () => {
+        test("Verify user able spin by space with turbo mode OFF @Spin01", async () => {
             //Arrange
             await test.step(`Attach web socket and capture event`, async () => {
                 this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
@@ -350,7 +350,7 @@ export class SlotGameBase {
             });
         });
 
-        test("Verify user able spin by enter key with turbo mode OFF", async () => {
+        test("Verify user able spin by enter key with turbo mode OFF @Spin02", async () => {
             //Arrange
             let bet = { choice: `btn${this.options.placeBetChoices[0]}`, amount: this.options.placeBetAmount ?? 1 };
 
@@ -379,7 +379,7 @@ export class SlotGameBase {
             });
         });
 
-        test("Verify user able spin by space with turbo mode ON", async () => {
+        test("Verify user able spin by space with turbo mode ON @Spin03", async () => {
             //Arrange
             const bet = { choice: `btn${this.options.placeBetChoices[0]}`, amount: this.options.placeBetAmount ?? 1 };
             await test.step(`Click turbo`, async () => {
@@ -414,7 +414,7 @@ export class SlotGameBase {
     }
 
     protected placeBetAndSettleTests() {
-        test("Verify that player be able to place a bet and settle", async () => {
+        test("Verify that player be able to place a bet and settle @Settlement", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             const today = new Date().toLocaleDateString("en-GB", { day: "numeric", month: "numeric", year: "numeric" });

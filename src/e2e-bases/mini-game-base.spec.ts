@@ -21,7 +21,7 @@ export class MiniGameBase {
     
 
     protected inGameUITests() {
-        test("Verify all bet choices are displayed on table", async () => {
+        test("Verify all bet choices are displayed on table @UI01", async () => {
             // Arrange
             await test.step(`Wait for new round start`, async () => {
                 test.setTimeout(this.options.gameConfiguration.maxTimeout);
@@ -35,7 +35,7 @@ export class MiniGameBase {
             });
         });
 
-        test("Verify main UI of the game", async () => {
+        test("Verify main UI of the game @UI02", async () => {
             await test.step(`Verify image of UI items checklist`, async () => {
                 const uiChecklist = this.options.uiChecklist ?? [];
                 for (const uiItem of uiChecklist) {
@@ -48,7 +48,7 @@ export class MiniGameBase {
     }
 
     protected chipBoardTests() {
-        test("Verify that chip board works correctly", async () => {
+        test("Verify that chip board works correctly @ChipBoard", async () => {
             // Assert
             await test.step(`Open chip board and verify default UI of chip board`, async () => {
                 await this.game.clickLocator(baseLocatorNames.btnPlaceBetChoice)
@@ -74,7 +74,7 @@ export class MiniGameBase {
     }
 
     protected presetStakeTests() {
-        test("Verify that preset stake works correctly", async () => {
+        test("Verify that preset stake works correctly @PresetStake", async () => {
             test.skip(this.game.gameConfiguration.betBoard =! true, "This game do not have preset stake function")
             // Assert
             await test.step(`Open preset stake popup and verify default UI`, async () => {
@@ -103,7 +103,7 @@ export class MiniGameBase {
     }
 
     protected placeBetAndSettleTests() {
-        test("Verify round id displayed on table is the same with round id in settle result", async () => {
+        test("Verify round id displayed on table is the same with round id in settle result @Settlement01", async () => {
             // Arrange
             let placeBetResponse, roundId, settledResults;
             const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount ?? 1 };
@@ -128,7 +128,7 @@ export class MiniGameBase {
 
         });
 
-        test("Verify that player able to place bet and return settlement data for comparing history ticket detail", async () => {
+        test("Verify that player able to place bet and return settlement data for comparing history ticket detail @Settlement02", async () => {
             // Arrange
             let placeBetResponse, settledResults;
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
@@ -203,7 +203,7 @@ export class MiniGameBase {
     }
 
     protected hedgeBetTests() {
-        test("Verify error message in case player place on hedge bets", async () => {
+        test("Verify error message in case player place on hedge bets @HedgeBet", async () => {
             // Arrange
             const { maxTimeout, hedgeBetGroups } = this.options.gameConfiguration;
             test.setTimeout(maxTimeout);
@@ -216,7 +216,7 @@ export class MiniGameBase {
     }
 
     protected maxBetTests() {
-        test("Verify error message in case player reach max bet", async () => {
+        test("Verify error message in case player reach max bet @MaxBet", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             const bet = { choice: this.options.placeBetChoices[0], amount: [this.options.placeBetAmount ?? 1, 1000] };
@@ -230,7 +230,7 @@ export class MiniGameBase {
     }
 
     protected provablyFairTests() {
-        test("Verify PF icon, PF setting popup and introduce", async () => {
+        test("Verify PF icon, PF setting popup and introduce @PF01", async () => {
             //Act
             await test.step("Click on PF ico", async () => {
                 await this.game.clickLocator(baseLocatorNames.icoPF, 3000);
@@ -249,7 +249,7 @@ export class MiniGameBase {
             });
         });
 
-        test("Verify new client seed popup", async () => {
+        test("Verify new client seed popup @PF02", async () => {
             await test.step("Verify client seed popup", async () => {
                 await this.game.clickLocator(baseLocatorNames.checkboxManual, 5000);
                 await verifyImage(this.game, baseLocatorNames.popNewClientSeed);
@@ -289,7 +289,7 @@ export class MiniGameBase {
             });
         });
 
-        test("Verify PF setting popup in case place bet", async () => {
+        test("Verify PF setting popup in case place bet @PF03", async () => {
             //Act
             const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount ?? 1 };
             await test.step("Wait for new round and place bet", async () => {
@@ -309,7 +309,7 @@ export class MiniGameBase {
             });
         });
 
-        test("Verify PF popup from history", async () => {
+        test("Verify PF popup from history @PF04", async () => {
             //Act
             await test.step("Open history", async () => {
                 await this.game.clickHistory();
@@ -337,7 +337,7 @@ export class MiniGameBase {
             });
         });
 
-        test("Verify verification popup", async () => {
+        test("Verify verification popup @PF05", async () => {
             //Act
             await test.step("Open verification popup", async () => {
                 await this.game.clickLocator(baseLocatorNames.btnPFPopupVerify, 3000)
