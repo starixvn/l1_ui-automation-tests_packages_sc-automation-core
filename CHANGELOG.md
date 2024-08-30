@@ -1,3 +1,10 @@
+# [1.53.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.52.3...v1.53.0) (2024-08-30)
+
+
+### Features
+
+* performance test ([c5f7012](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/c5f701238cea4828f9e36bea3aef8cab2fd49f98))
+
 ## [1.52.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.52.2...v1.52.3) (2024-08-28)
 
 
