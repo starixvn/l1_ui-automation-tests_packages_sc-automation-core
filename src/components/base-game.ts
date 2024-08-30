@@ -10,6 +10,7 @@ import { baseLocatorNames } from "./base-game-locator";
 import * as accounts from "../auth/configs/config.account";
 import * as numberGameLocator from "./base-number-game-locator";
 import fs from "fs";
+import { DownloadReport } from "./download-report";
 const promClient = require("prom-client");
 const PNG = require("pngjs").PNG;
 const gatewayUrl = "http://10.70.70.120:9091";
@@ -21,7 +22,6 @@ const gauge = new promClient.Gauge({
 
 export class BaseGame {
     readonly BetBoardPostfix: string = "BetBoard";
-
     readonly page: Page;
     readonly locators: Array<ImageLocator>;
     readonly gameConfiguration: GameConfiguration;
@@ -32,13 +32,20 @@ export class BaseGame {
     capturedEvents: any;
     odds: any = null;
     gameConfigs: any = null;
+    totalDownloadSize: number = 0;
+    trackDownload: boolean;
+    files: Array<any>;
+    trackDownloadReport: DownloadReport;
 
-    constructor(page: Page, locators: Array<ImageLocator>, gameConfiguration: GameConfiguration, device?: any) {
+    constructor(page: Page, locators: Array<ImageLocator>, gameConfiguration: GameConfiguration, device?: any,trackDownload: boolean = false) {
         this.page = page;
         this.locators = locators;
         this.gameConfiguration = gameConfiguration;
         this.capturedEvents = {};
         this.device = device;
+        this.trackDownload = trackDownload;
+        this.files = [];
+        this.trackDownloadReport = new DownloadReport();
     }
 
     async swipeLocator(fromLocator: string, toLocator: string): Promise<void> {
@@ -65,6 +72,9 @@ export class BaseGame {
         const startTime = performance.now(); // Measure start time
         await ssoToGame(this.page, this.gameConfiguration.id, account, this.gameConfiguration.productId[projectCode], env, projectCode);
         this.msgpack = getConfig().enabledMsgPack;
+        if (this.trackDownload) {
+            await this.trackDownloadResources(this.page);
+        }
         this.page.on("websocket", async (ws) => {
             if (!ws.url().includes("notification")) {
                 this.gameSocket = ws;
@@ -103,6 +113,14 @@ export class BaseGame {
                     }
                     break;
             }
+        }
+        if (this.trackDownload) {
+            this.trackDownloadReport.addFirstLoad({
+                duration: performance.now() - startTime,
+                files: this.files,
+                size: this.totalDownloadSize,
+            });
+            this.trackDownloadReport.saveCSV();
         }
         const endTime = performance.now(); // Measure end time
         const totalSSOTimeSeconds =
@@ -606,6 +624,51 @@ export class BaseGame {
     async verifyDateTimeFormat(locator: string) {
         const isTrue = isDateTimeFormat(await this.getText(locator));
         expect(isTrue).toBeTruthy();
+    }
+
+    async trackDownloadResources(page: Page) {
+        page.on("request", async (request) => {
+            try {
+                const response = await request.response();
+
+                if (response) {
+                    const content = await response.body();
+                    const resourceSize = content.byteLength;
+                    const contentType = response.headers()["content-type"];
+
+                    this.files.push([
+                        request.url(),
+                        contentType,
+                        this.convertToMb(resourceSize),
+                        new Date(request.timing().startTime).toString(),
+                    ]);
+
+                    this.totalDownloadSize += resourceSize;
+                }
+            } catch (error) {
+                // console.log(`Error load file ${request.url()}`);
+            }
+        });
+    }
+
+    convertToMb(size: number) {
+        return size / 1000 / 1000;
+    }
+
+    async checkDuplicatedFileName(inputlist: string[]) {
+        const duplicateFiles: string[] = [];
+        const encounteredFileNames: Set<string> = new Set();
+
+        for (const file of inputlist) {
+            const filename = file.substring(file.lastIndexOf("/") + 1).split(".");
+            const fileNameWithExtension = filename[filename.length - 2] + "." + filename[filename.length - 1];
+            if (encounteredFileNames.has(fileNameWithExtension)) {
+                duplicateFiles.push(fileNameWithExtension);
+            } else {
+                encounteredFileNames.add(fileNameWithExtension);
+            }
+        }
+        return duplicateFiles;
     }
 }
 

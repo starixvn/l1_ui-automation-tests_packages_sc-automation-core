@@ -2,11 +2,14 @@ import { GameEvent } from "../_shared";
 import { test, BasePlayer, BaseGame } from "../components";
 import { expect } from "../expects";
 import { IBaseOptions } from "./base-options";
+import { performanceTest } from "../game-components/performance/performance";
+
 const projectName = process.env.npm_config_project?.includes("l1")? "SG" : process.env.npm_config_project?.includes("l2")? "VG" : process.env.npm_config_project;
 
 export class MiniGameBase {
     protected game: BaseGame;
     protected player: BasePlayer;
+    protected performanceTest: performanceTest = new performanceTest();
 
     constructor(protected options: IBaseOptions) {}
 
@@ -98,6 +101,8 @@ export class MiniGameBase {
             test.beforeAll(async ({ baseGame }) => {
                 this.game = baseGame;
                 this.player = new BasePlayer(this.game);
+                this.performanceTest.init(this.game);
+
             });
 
             this.runScenario();
@@ -105,6 +110,9 @@ export class MiniGameBase {
     }
 
     protected runScenario() {
+        if (process.env.npm_config_trackdownload) {
+            this.performanceTest.tests(this.options.gameConfiguration.ssoTime??35000);
+        }
         this.inGameOddsTests();
         this.inGameBetChoiceTests();
         this.placeBetAndSettleTests();

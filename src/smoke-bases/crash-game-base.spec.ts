@@ -3,6 +3,7 @@ import { test, BasePlayer, BaseGame } from "../components";
 import { baseLocatorNames } from "../components/base-game-locator";
 import { expect } from "../expects";
 import { IBaseOptions } from "./base-options";
+import { performanceTest } from "../game-components/performance/performance";
 const projectName = process.env.npm_config_project?.includes("l1")? "SG" : process.env.npm_config_project?.includes("l2")? "VG" : process.env.npm_config_project;
 
 export interface CrashGameOptions extends IBaseOptions {
@@ -17,6 +18,7 @@ const  CrashGameEvent = {
 export class CrashGameBase {
     game: BaseGame;
     player: BasePlayer;
+    performanceTest: performanceTest = new performanceTest();
 
     constructor(protected options: CrashGameOptions) {}
 
@@ -88,6 +90,7 @@ export class CrashGameBase {
             test.beforeAll(async ({ baseGame }) => {
                 this.game = baseGame;
                 this.player = new BasePlayer(this.game);
+                this.performanceTest.init(this.game);
             });
 
             this.runScenario();
@@ -95,6 +98,9 @@ export class CrashGameBase {
     }
 
     protected runScenario() {
+        if (process.env.npm_config_trackdownload) {
+            this.performanceTest.tests(this.options.gameConfiguration.ssoTime??35000);
+        }
         this.inGameUITests();
         this.placeBetAndSettleTests();
         this.ticketHistoryTests();

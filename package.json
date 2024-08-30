@@ -59,6 +59,7 @@
         }
     },
     "dependencies": {
+        "csv-stringify": "^6.5.0",
         "glob": "10.4.5",
         "pngjs": "^7.0.0",
         "prettier": "^3.2.5",

@@ -30,7 +30,8 @@ export const test = base.extend<BaseFixtures>({
             await use(game);
         } else {
             try {
-                const game = new BaseGame(page, locators, gameConfigurations);
+                const trackDownload = process.env.npm_config_trackdownload == "true";
+                const game = new BaseGame(page, locators, gameConfigurations,null, trackDownload);
                 await game.login();
                 await use(game);
             } catch (error) {

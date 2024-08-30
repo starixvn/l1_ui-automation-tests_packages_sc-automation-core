@@ -2,6 +2,7 @@ import { GameEvent } from "../_shared";
 import { test, BasePlayer, BaseGame, GameConfiguration } from "../components";
 import { expect } from "../expects";
 import { IBaseOptions } from "./base-options";
+import { performanceTest } from "../game-components/performance/performance";
 const projectName = process.env.npm_config_project?.includes("l1")? "SG" : process.env.npm_config_project?.includes("l2")? "VG" : process.env.npm_config_project;
 
 export interface MultiplayGameOptions extends IBaseOptions {
@@ -12,6 +13,7 @@ export interface MultiplayGameOptions extends IBaseOptions {
 export class MultiplayGameBase {
     game: BaseGame;
     player: BasePlayer;
+    performanceTest: performanceTest = new performanceTest();
 
     constructor(protected options: MultiplayGameOptions) {}
 
@@ -101,8 +103,12 @@ export class MultiplayGameBase {
             test.beforeAll(async ({ baseGame }) => {
                 this.game = baseGame;
                 this.player = new BasePlayer(this.game);
-            });
+                this.performanceTest.init(this.game);
 
+            });
+            if (process.env.npm_config_trackdownload) {
+                this.performanceTest.tests(this.options.gameConfiguration.ssoTime??35000);
+            }
             this.inGameBetChoiceTests();
             this.inGameOddsTests();
             this.placeBetAndSettleTests();

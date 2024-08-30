@@ -2,6 +2,8 @@ import { GameEvent } from "../_shared";
 import { test, BasePlayer, BaseGame } from "../components";
 import { expect } from "../expects";
 import { IBaseOptions } from "./base-options";
+import { performanceTest } from "../game-components/performance/performance";
+
 const stakeLevel = {
     stakemenu: "stakeMenu",
     imgStakeLevell1: "imgStakeLevell1",
@@ -17,6 +19,7 @@ export interface SlotGameOptions extends IBaseOptions {
 export class SlotGameBase {
     protected game: BaseGame;
     protected player: BasePlayer;
+    performanceTest: performanceTest = new performanceTest();
 
     constructor(protected options: SlotGameOptions) {}
 
@@ -105,6 +108,7 @@ export class SlotGameBase {
         test.beforeAll(async ({ baseGame }) => {
             this.game = baseGame;
             this.player = new BasePlayer(this.game);
+            this.performanceTest.init(this.game);
         });
 
         test.beforeEach(async ({}, testInfo) => {
@@ -124,6 +128,9 @@ export class SlotGameBase {
     }
 
     protected runScenario() {
+        if (process.env.npm_config_trackdownload) {
+            this.performanceTest.tests(this.options.gameConfiguration.ssoTime??35000);
+        }
         this.inGameOddsTests();
         if (process.env.npm_config_jackpot) {
             this.jackpotTests();

@@ -1,6 +1,8 @@
 import { GameEvent } from "../_shared";
 import { test, BasePlayer, BaseGame } from "../components";
 import { expect } from "../expects";
+import { performanceTest } from "../game-components/performance/performance";
+
 const projectName = process.env.npm_config_project?.includes("l1")? "SG" : process.env.npm_config_project?.includes("l2")? "VG" : process.env.npm_config_project;
 
 import { IBaseOptions } from "./base-options";
@@ -8,6 +10,7 @@ import { IBaseOptions } from "./base-options";
 export class MobiGameBase {
     protected game: BaseGame;
     protected player: BasePlayer;
+    performanceTest: performanceTest = new performanceTest();
 
     constructor(protected options: IBaseOptions) {}
 
@@ -91,6 +94,7 @@ export class MobiGameBase {
             test.beforeAll(async ({ baseGame }) => {
                 this.game = baseGame;
                 this.player = new BasePlayer(this.game);
+                this.performanceTest.init(this.game);
             });
 
             this.runScenario();
@@ -98,6 +102,9 @@ export class MobiGameBase {
     }
 
     protected runScenario() {
+        if (process.env.npm_config_trackdownload) {
+            this.performanceTest.tests(this.options.gameConfiguration.ssoTime??35000);
+        }
         this.inGameUITests()
         this.placeBetAndSettleTests();
         this.hedgeBetTests();

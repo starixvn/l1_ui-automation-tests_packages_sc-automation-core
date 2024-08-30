@@ -2,6 +2,7 @@ import { GameEvent } from "../_shared";
 import { test, BasePlayer, BaseGame } from "../components";
 import { expect } from "../expects";
 import { IBaseOptions } from "./base-options";
+import { performanceTest } from "../game-components/performance/performance";
 const projectName = process.env.npm_config_project?.includes("l1")? "SG" : process.env.npm_config_project?.includes("l2")? "VG" : process.env.npm_config_project;
 
 export interface CardGameOptions extends IBaseOptions {
@@ -12,6 +13,7 @@ export interface CardGameOptions extends IBaseOptions {
 export class CardGameBase {
     game: BaseGame;
     player: BasePlayer;
+    performanceTest: performanceTest = new performanceTest();
 
     constructor(protected options: CardGameOptions) {}
 
@@ -95,6 +97,7 @@ export class CardGameBase {
             test.beforeAll(async ({ baseGame }) => {
                 this.game = baseGame;
                 this.player = new BasePlayer(this.game);
+                this.performanceTest.init(this.game);
             });
 
             this.runScenario();
@@ -102,6 +105,9 @@ export class CardGameBase {
     }
 
     protected runScenario() {
+        if (process.env.npm_config_trackdownload) {
+            this.performanceTest.tests(this.options.gameConfiguration.ssoTime??35000);
+        }
         this.inGameBetChoiceTests();
         this.inGameOddsTests();
         this.placeBetAndSettleTests();

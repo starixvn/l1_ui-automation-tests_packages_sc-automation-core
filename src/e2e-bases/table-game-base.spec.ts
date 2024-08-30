@@ -210,6 +210,7 @@ export class TableGameBase {
         test("Verify player can rebet all bet choice and amount of previous placebet @Rebet02", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
+            this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
             const bet = { choice: this.options.placeBetChoices[1], amount: this.options.placeBetAmount ?? 1 };
             await this.game.waitUntilPlaceBet();
             await this.game.clickLocator(baseLocatorNames.btnRebet);
