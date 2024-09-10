@@ -1,3 +1,10 @@
+## [1.53.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.53.0...v1.53.1) (2024-09-10)
+
+
+### Bug Fixes
+
+* update account for new games ([4cb7c74](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/4cb7c74379555d8d273293caece22ed587d9aaa6))
+
 # [1.53.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.52.3...v1.53.0) (2024-08-30)
 
 
