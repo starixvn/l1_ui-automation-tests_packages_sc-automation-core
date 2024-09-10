@@ -593,9 +593,9 @@ export class CascadingSlotGameBase {
             // Post-Act
             const settledata = {
                 betdate: today,
-                roundID: settledResults.roundId.toString(),
-                totalstake: bet.amount.toString(),
-                betwin: settledResults.winAmount.toString(),
+                roundID: settledResults.roundId,
+                totalstake: bet.amount,
+                betwin: settledResults.winAmount,
             };
             global.settledata = settledata;
         });
