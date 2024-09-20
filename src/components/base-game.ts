@@ -484,12 +484,20 @@ export class BaseGame {
     }
 
     async getCountFrameLocator(locator: string) {
+
         const countframecocos2 = await this.page.frameLocator("iframe").locator(locator).count();
-        const returnvalue =
-            countframecocos2 == 0
-                ? await this.page.frameLocator("iframe").frameLocator("#webview").locator(locator).count()
-                : countframecocos2;
-        return returnvalue;
+        if (countframecocos2 == 0){
+            if (await this.page.frameLocator('#frmGame').frameLocator('#microsite').frameLocator('#webview').locator(`${locator}[1]`).isVisible()){
+                return await this.page.frameLocator('#frmGame').frameLocator('#microsite').frameLocator('#webview').locator(locator).count();
+            } 
+            else if (await this.page.frameLocator('#frmGame').frameLocator('iframe').locator(`${locator}[1]`).isVisible()){
+                return await this.page.frameLocator('#frmGame').frameLocator('iframe').locator(locator).count();
+            }          
+            else if (await this.page.frameLocator("iframe").frameLocator("#webview").locator(`${locator}[1]`).isVisible()){
+                return await this.page.frameLocator("iframe").frameLocator("#webview").locator(locator).count()
+            }
+        }
+        return countframecocos2;
     }
 
     async keyboardPress(key: string) {

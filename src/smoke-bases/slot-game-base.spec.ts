@@ -3,6 +3,7 @@ import { test, BasePlayer, BaseGame } from "../components";
 import { expect } from "../expects";
 import { IBaseOptions } from "./base-options";
 import { performanceTest } from "../game-components/performance/performance";
+import { GameGuides } from "../game-components/guides/guides.spec";
 
 const stakeLevel = {
     stakemenu: "stakeMenu",
@@ -20,6 +21,7 @@ export class SlotGameBase {
     protected game: BaseGame;
     protected player: BasePlayer;
     performanceTest: performanceTest = new performanceTest();
+    protected gameGuides: GameGuides = new GameGuides();
 
     constructor(protected options: SlotGameOptions) {}
 
@@ -103,12 +105,16 @@ export class SlotGameBase {
             await this.game.clickOutSide();
         });
     }
+    protected gameGuideTests() {
+        this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
+    }
 
     start(): void {
         test.beforeAll(async ({ baseGame }) => {
             this.game = baseGame;
             this.player = new BasePlayer(this.game);
             this.performanceTest.init(this.game);
+            this.gameGuides.init(this.game);
         });
 
         test.beforeEach(async ({}, testInfo) => {
@@ -138,5 +144,7 @@ export class SlotGameBase {
         this.betStakeLevelTests(process.env.npm_config_project);
         this.placeBetAndSettleTests();
         this.ticketHistoryTests();
+        this.gameGuideTests();
+
     }
 }
