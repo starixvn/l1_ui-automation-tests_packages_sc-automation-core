@@ -1,3 +1,10 @@
+## [1.53.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.53.1...v1.53.2) (2024-09-20)
+
+
+### Bug Fixes
+
+* update game guide base ([584a280](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/584a28074c4c8e80b0ae5e787e1e980df3476367))
+
 ## [1.53.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.53.0...v1.53.1) (2024-09-10)
 
 
