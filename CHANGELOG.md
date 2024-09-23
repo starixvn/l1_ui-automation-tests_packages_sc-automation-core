@@ -1,3 +1,10 @@
+## [1.53.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.53.2...v1.53.3) (2024-09-23)
+
+
+### Bug Fixes
+
+* update guide base ([63c4dc0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/63c4dc006b826f963f83743a3514675591bb04a6))
+
 ## [1.53.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.53.1...v1.53.2) (2024-09-20)
 
 
