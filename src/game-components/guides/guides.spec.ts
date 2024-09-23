@@ -18,7 +18,7 @@ export class GameGuides {
             // Arrange
             test.setTimeout(timeout);
             await test.step("Open game guide", async () => {
-                await this.game.clickGuide(4000, isJackpot);
+                await this.game.clickGuide(10000, isJackpot);
             });
 
             // Act
