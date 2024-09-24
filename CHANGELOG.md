@@ -1,3 +1,10 @@
+# [1.54.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.53.3...v1.54.0) (2024-09-24)
+
+
+### Features
+
+* add game guide test for mini games ([1e58146](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/1e58146b9a1286444dc34b92e580cf1e276b8374))
+
 ## [1.53.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.53.2...v1.53.3) (2024-09-23)
 
 
