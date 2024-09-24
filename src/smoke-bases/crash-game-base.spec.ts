@@ -4,6 +4,7 @@ import { baseLocatorNames } from "../components/base-game-locator";
 import { expect } from "../expects";
 import { IBaseOptions } from "./base-options";
 import { performanceTest } from "../game-components/performance/performance";
+import { GameGuides } from "../game-components/guides/guides.spec";
 const projectName = process.env.npm_config_project?.includes("l1")? "SG" : process.env.npm_config_project?.includes("l2")? "VG" : process.env.npm_config_project;
 
 export interface CrashGameOptions extends IBaseOptions {
@@ -19,6 +20,7 @@ export class CrashGameBase {
     game: BaseGame;
     player: BasePlayer;
     performanceTest: performanceTest = new performanceTest();
+    protected gameGuides: GameGuides = new GameGuides();
 
     constructor(protected options: CrashGameOptions) {}
 
@@ -69,7 +71,13 @@ export class CrashGameBase {
 
             // Assert
             expect(historySnapshot.image).toMatchSnapshot(historySnapshot.name);
+
+            //Post-Act
+            await this.game.clickOutSide(3000);
         });
+    }
+    protected gameGuideTests() {
+        this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
     }
 
     start(): void {
@@ -91,6 +99,7 @@ export class CrashGameBase {
                 this.game = baseGame;
                 this.player = new BasePlayer(this.game);
                 this.performanceTest.init(this.game);
+                this.gameGuides.init(this.game);
             });
 
             this.runScenario();
@@ -104,6 +113,7 @@ export class CrashGameBase {
         this.inGameUITests();
         this.placeBetAndSettleTests();
         this.ticketHistoryTests();
+        this.gameGuideTests();
     }
 }
 const cashOut = async (game: BaseGame) => {

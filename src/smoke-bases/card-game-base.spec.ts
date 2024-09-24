@@ -3,6 +3,7 @@ import { test, BasePlayer, BaseGame } from "../components";
 import { expect } from "../expects";
 import { IBaseOptions } from "./base-options";
 import { performanceTest } from "../game-components/performance/performance";
+import { GameGuides } from "../game-components/guides/guides.spec";
 const projectName = process.env.npm_config_project?.includes("l1")? "SG" : process.env.npm_config_project?.includes("l2")? "VG" : process.env.npm_config_project;
 
 export interface CardGameOptions extends IBaseOptions {
@@ -14,6 +15,7 @@ export class CardGameBase {
     game: BaseGame;
     player: BasePlayer;
     performanceTest: performanceTest = new performanceTest();
+    protected gameGuides: GameGuides = new GameGuides();
 
     constructor(protected options: CardGameOptions) {}
 
@@ -76,7 +78,14 @@ export class CardGameBase {
             // Assert
             expect(historyPayload.history.betLogs.length).toBeGreaterThan(0);
             expect(historySnapshot.image).toMatchSnapshot(historySnapshot.name);
+
+            //Post-act
+            await this.game.clickOutSide();
         });
+    }
+
+    protected gameGuideTests() {
+        this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
     }
 
     start(): void {
@@ -98,6 +107,7 @@ export class CardGameBase {
                 this.game = baseGame;
                 this.player = new BasePlayer(this.game);
                 this.performanceTest.init(this.game);
+                this.gameGuides.init(this.game);
             });
 
             this.runScenario();
@@ -112,5 +122,6 @@ export class CardGameBase {
         this.inGameOddsTests();
         this.placeBetAndSettleTests();
         this.ticketHistoryTests();
+        this.gameGuideTests()
     }
 }

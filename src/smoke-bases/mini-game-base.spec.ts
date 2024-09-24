@@ -3,6 +3,7 @@ import { test, BasePlayer, BaseGame } from "../components";
 import { expect } from "../expects";
 import { IBaseOptions } from "./base-options";
 import { performanceTest } from "../game-components/performance/performance";
+import { GameGuides } from "../game-components/guides/guides.spec";
 
 const projectName = process.env.npm_config_project?.includes("l1")? "SG" : process.env.npm_config_project?.includes("l2")? "VG" : process.env.npm_config_project;
 
@@ -10,6 +11,7 @@ export class MiniGameBase {
     protected game: BaseGame;
     protected player: BasePlayer;
     protected performanceTest: performanceTest = new performanceTest();
+    protected gameGuides: GameGuides = new GameGuides();
 
     constructor(protected options: IBaseOptions) {}
 
@@ -80,7 +82,11 @@ export class MiniGameBase {
             // Assert
             expect(historyPayload.history.betLogs.length).toBeGreaterThan(0);
             expect(historySnapshot.image).toMatchSnapshot(historySnapshot.name);
+            await this.game.clickOutSide(3000); //close popup
         });
+    }    
+    protected gameGuideTests() {
+        this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
     }
 
     start(): void {
@@ -102,7 +108,7 @@ export class MiniGameBase {
                 this.game = baseGame;
                 this.player = new BasePlayer(this.game);
                 this.performanceTest.init(this.game);
-
+                this.gameGuides.init(this.game);
             });
 
             this.runScenario();
@@ -118,5 +124,6 @@ export class MiniGameBase {
         this.placeBetAndSettleTests();
         this.hedgeBetTests();
         this.ticketHistoryTests();
+        this.gameGuideTests();
     }
 }

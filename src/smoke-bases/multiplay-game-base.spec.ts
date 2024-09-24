@@ -3,6 +3,7 @@ import { test, BasePlayer, BaseGame, GameConfiguration } from "../components";
 import { expect } from "../expects";
 import { IBaseOptions } from "./base-options";
 import { performanceTest } from "../game-components/performance/performance";
+import { GameGuides } from "../game-components/guides/guides.spec";
 const projectName = process.env.npm_config_project?.includes("l1")? "SG" : process.env.npm_config_project?.includes("l2")? "VG" : process.env.npm_config_project;
 
 export interface MultiplayGameOptions extends IBaseOptions {
@@ -14,6 +15,7 @@ export class MultiplayGameBase {
     game: BaseGame;
     player: BasePlayer;
     performanceTest: performanceTest = new performanceTest();
+    protected gameGuides: GameGuides = new GameGuides();
 
     constructor(protected options: MultiplayGameOptions) {}
 
@@ -87,6 +89,9 @@ export class MultiplayGameBase {
             await this.player.clickOutSide();
         });
     }
+    protected gameGuideTests() {
+        this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
+    }
 
     start(): void {
         test.beforeEach(async ({}, testInfo) => {
@@ -104,6 +109,7 @@ export class MultiplayGameBase {
                 this.game = baseGame;
                 this.player = new BasePlayer(this.game);
                 this.performanceTest.init(this.game);
+                this.gameGuides.init(this.game);
 
             });
             if (process.env.npm_config_trackdownload) {
@@ -115,6 +121,8 @@ export class MultiplayGameBase {
             this.hedgeBetTests();
             this.ticketHistoryTests();
             this.subGameplaceBetAndSettleTests();
+            this.gameGuideTests();
+
         });
     }
 
