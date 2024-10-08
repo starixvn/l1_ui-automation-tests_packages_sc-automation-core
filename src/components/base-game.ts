@@ -140,6 +140,7 @@ export class BaseGame {
     }
 
     async waitUntilGameUiLoad(waitRange: number = 2) {
+        if (this.gameConfiguration.id == 102) {waitRange = 1} //handle baccarat lobby
         await this.page.screenshot({ path: `./test-results/beforeInGame.png` });
         await this.page.waitForTimeout(100);
         let filterA: string[] = [];
