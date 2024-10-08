@@ -1,3 +1,10 @@
+## [1.54.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.54.0...v1.54.1) (2024-10-08)
+
+
+### Bug Fixes
+
+* enhance place bet by bet board ([7792edd](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/7792eddb287655e3e67d233c827a30cb3068de0f))
+
 # [1.54.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.53.3...v1.54.0) (2024-09-24)
 
 
