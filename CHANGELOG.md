@@ -1,3 +1,10 @@
+## [1.54.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.54.1...v1.54.2) (2024-10-09)
+
+
+### Bug Fixes
+
+* update placing bet on slot games ([f8b3295](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/f8b3295bf5632662e8aaa7ab5bfb0b33192a4e25))
+
 ## [1.54.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.54.0...v1.54.1) (2024-10-08)
 
 
