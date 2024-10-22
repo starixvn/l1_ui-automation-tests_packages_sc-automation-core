@@ -2,6 +2,7 @@ import { LobbyLocator, UATLocator, PRODLocator, GroupCurrencyLocator, AdminLogin
 import { configs } from "./configs/config";
 import { Page } from "@playwright/test";
 import { createWorker } from "tesseract.js";
+import fetch from "node-fetch";
 
 export enum Environment {
     LOCAL = "local",
@@ -20,6 +21,7 @@ export const ssoToGame = async (
     productId: string,
     env: string,
     projectCode: string,
+    currencyGroup?: string
 ): Promise<void> => {
     const config = getConfig();
     const langCode = process.env.npm_config_langCode ?? "vn";
@@ -42,6 +44,9 @@ export const ssoToGame = async (
             await page.click(env);
             await page.waitForTimeout(500);
         }
+        if (currencyGroup){
+            await page.fill(LobbyLocator.currencyInput, currencyGroup);
+        }
         await page.click(LobbyLocator.tokenBtn);
         await page.waitForTimeout(500);
         if (projectCode == "gn") {
@@ -56,7 +61,7 @@ export const ssoToGame = async (
             await page.click("text=Submit");
         }
     } else {
-        await loginMemberSite(page, config, env, playerId, productId, langCode, projectCode, gameId);
+        await loginMemberSite(page, config, env, playerId, productId, langCode, projectCode, gameId, currencyGroup);
     }
 };
 
@@ -71,10 +76,11 @@ const loginMemberSite = async (
     config: any,
     env: string,
     playerId: string,
-    productId: string,
+    //productId: string,
     langCode: string,
     projectCode: string,
     gameId: number,
+    currencyGroup?: string
 ) => {
     const timeout = config.lobbyTimeout;
     const memberSiteLink =
@@ -114,20 +120,25 @@ const loginMemberSite = async (
         if (projectCode === "ultra888") {
             await goToUltra888GameLobby(page, gameId);
         } else {
-            await goToGameLobby(page, lobbyDomain, productId);
+            await goToGameLobby(page, lobbyDomain, gameId);
         }
-        await selectCurrencyGroup(page);
+        await selectCurrencyGroup(page, currencyGroup);
     }
 };
 
-const selectCurrencyGroup = async (page: Page) => {
+const selectCurrencyGroup = async (page: Page, currencyGroup? : string) => {
     await page.waitForTimeout(2000);
     global.ssoLink = page.url();
     const frameExists = await page.$("#frmGame");
     if (frameExists) {
+        if (currencyGroup){
+            await page.frameLocator("#frmGame").locator(GroupCurrencyLocator.specificCheckbox).click();
+            page.frameLocator("#frmGame").locator(GroupCurrencyLocator.currencyGroupDropdown).selectOption(currencyGroup)
+        }
         await page.frameLocator("#frmGame").locator(GroupCurrencyLocator.submitButton).click();
     } else {
         await page.locator(GroupCurrencyLocator.submitButton).waitFor();
+        
         await page.click(GroupCurrencyLocator.submitButton);
     }
     await page.waitForLoadState();
@@ -368,16 +379,52 @@ const goToUltra888GameLobby = async (page: Page, productId: any, timeout = 15000
     await page.waitForLoadState("load", { timeout });
 };
 
-const goToGameLobby = async (page: Page, lobbyDomain: string, productId: string, timeout: number = 15000) => {
-    await page.goto(formatGameLobbyUrl(page.url(), lobbyDomain, productId));
+const goToGameLobby = async (page: Page, lobbyDomain: string, gameId: number, timeout: number = 15000) => {
+    await page.goto(await formatGameLobbyUrl(page.url(), page, lobbyDomain, gameId));
     await page.waitForLoadState("load", { timeout });
 };
 
-const formatGameLobbyUrl = (url: string, lobbyDomain: string, productId: string): string => {
+const formatGameLobbyUrl = async (url: string, page: Page, lobbyDomain: string, gameId: number): Promise<string> => {
     const domain = url.split("/");
-    if (url.includes("athena") || url.includes("qa") || url.includes("/m.")) {
-        return `http://${domain[2]}/${lobbyDomain}${productId}`;
-    } else return `https://${domain[2]}/${lobbyDomain}${productId}`;
+    // if (url.includes("athena") || url.includes("qa") || url.includes("/m.")) {
+    //     return `http://${domain[2]}/${lobbyDomain}${productId}`;
+    // } else return `https://${domain[2]}/${lobbyDomain}${productId}`;
+    if(process.env.npm_config_project == "l2"){
+        const userAgent = await page.evaluate(() => navigator.userAgent); // Get User-Agent
+        //console.log("User-Agent:", userAgent); // Log User-Agent
+        const cookies = await page.context().cookies();
+        const sessionId = cookies.find(cookie => cookie.name === 'ASP.NET_SessionId' && cookie.domain === domain[2] )?.value;
+        //console.log(sessionId);
+        
+        const response = await fetch(`http://${domain[2]}/GamePage.aspx?Game=VGaming&refer=&betFrom=x&timeZone=7`, {
+            method: 'GET',
+            headers: {
+                'User-Agent': userAgent,
+                'Cookie': `ASP.NET_SessionId=${sessionId}`, 
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.text(); 
+        const srcMatch = data.match(/<iframe[^>]+id=["']frmGame["'][^>]+src=["']([^"']+)["']/);
+        const iframeSrc = srcMatch ? srcMatch[1] : ""; // Get the src value or null if not found
+        const tokenMatch = iframeSrc.match(/token=([^&]+)/); // Extract token value
+        const token = tokenMatch ? tokenMatch[1] : null; // Get the token value or null if not found
+        console.log(token);
+        if(process.env.npm_config_env == "prod"){
+            return(`https://proxy.vgames88.com/user/CurrencyGroup?&token=${token}&language=vi-VN&gameId=7&ref=&rurl=&partnerId=ONEworksVGCash&appType=&op=`);
+        } else
+            return(`https://l2uatproxy.sgamesuat.com/uat/user/CurrencyGroup?&token=${token}&language=vi-VN&gameId=7&ref=&rurl=&partnerId=ONEworksVGCash&appType=&op=`);
+    }
+    else { 
+        await page.goto(`https://${domain[2]}/${lobbyDomain}1612`);
+        await page.waitForLoadState();
+        return page.url().replace("gameId=1", `gameId=${gameId}`)
+    }
+
 };
 
 export const loginAdmin = async (page: Page, projectCode: string) => {

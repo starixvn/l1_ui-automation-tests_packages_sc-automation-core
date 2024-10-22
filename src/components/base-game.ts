@@ -70,7 +70,8 @@ export class BaseGame {
             account = projectCode != "ultra888" ? accounts[`${projectCode}${env}`][this.gameConfiguration.id] : this.gameConfiguration.id;
         }
         const startTime = performance.now(); // Measure start time
-        await ssoToGame(this.page, this.gameConfiguration.id, account, this.gameConfiguration.productId[projectCode], env, projectCode);
+        
+        await ssoToGame(this.page, this.gameConfiguration.id, account, this.gameConfiguration.productId[projectCode], env, projectCode, this.gameConfiguration.currencyGroup);
         this.msgpack = getConfig().enabledMsgPack;
         if (this.trackDownload) {
             await this.trackDownloadResources(this.page);

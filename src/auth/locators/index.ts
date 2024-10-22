@@ -12,6 +12,8 @@ export enum LobbyLocator {
     idLangOption = "id-ID",
     cnLangOption = "zh-CN",
     twLangOption = "zh-TW",
+    currencyInput = "input[id=currency]"
+
 }
 
 export enum SITLocator {

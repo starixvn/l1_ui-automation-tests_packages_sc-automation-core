@@ -72,7 +72,6 @@ export class TableGameBase {
             } else {
                 expect(bet).toMatchWinning(settledResults);
             }
-            console.log(settledResults.roundId, roundId);
             expect(roundId.includes(settledResults.roundId)).toBe(true);
         });
 
@@ -83,6 +82,7 @@ export class TableGameBase {
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
 
             // Act
+            await this.game.waitUntilPlaceBet();
             const placeBetResponse = await this.player.placeBet(bet.choice, bet.amount);
             const settledResults = await this.game.waitForSettlement();
 

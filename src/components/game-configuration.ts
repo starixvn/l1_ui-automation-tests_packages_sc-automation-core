@@ -23,4 +23,5 @@ export class GameConfiguration {
     isDoubleFunction?: boolean;
     isDraw?: boolean; //Xd games stand for game type has Draw round
     ssoTime?: number //sso time in seconds for performance test only
+    currencyGroup?: string;
 }
