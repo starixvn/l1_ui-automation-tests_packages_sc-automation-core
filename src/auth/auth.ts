@@ -76,7 +76,7 @@ const loginMemberSite = async (
     config: any,
     env: string,
     playerId: string,
-    //productId: string,
+    productId: string,
     langCode: string,
     projectCode: string,
     gameId: number,
@@ -120,7 +120,7 @@ const loginMemberSite = async (
         if (projectCode === "ultra888") {
             await goToUltra888GameLobby(page, gameId);
         } else {
-            await goToGameLobby(page, lobbyDomain, gameId);
+            await goToGameLobby(page, lobbyDomain, gameId, productId);
         }
         await selectCurrencyGroup(page, currencyGroup);
     }
@@ -379,12 +379,12 @@ const goToUltra888GameLobby = async (page: Page, productId: any, timeout = 15000
     await page.waitForLoadState("load", { timeout });
 };
 
-const goToGameLobby = async (page: Page, lobbyDomain: string, gameId: number, timeout: number = 15000) => {
-    await page.goto(await formatGameLobbyUrl(page.url(), page, lobbyDomain, gameId));
+const goToGameLobby = async (page: Page, lobbyDomain: string, gameId: number, productId,  timeout: number = 15000) => {
+    await page.goto(await formatGameLobbyUrl(page.url(), page, lobbyDomain, gameId, productId));
     await page.waitForLoadState("load", { timeout });
 };
 
-const formatGameLobbyUrl = async (url: string, page: Page, lobbyDomain: string, gameId: number): Promise<string> => {
+const formatGameLobbyUrl = async (url: string, page: Page, lobbyDomain: string, gameId: number, productId: number): Promise<string> => {
     const domain = url.split("/");
     // if (url.includes("athena") || url.includes("qa") || url.includes("/m.")) {
     //     return `http://${domain[2]}/${lobbyDomain}${productId}`;
@@ -415,14 +415,26 @@ const formatGameLobbyUrl = async (url: string, page: Page, lobbyDomain: string, 
         const token = tokenMatch ? tokenMatch[1] : null; // Get the token value or null if not found
         console.log(token);
         if(process.env.npm_config_env == "prod"){
-            return(`https://proxy.vgames88.com/user/CurrencyGroup?&token=${token}&language=vi-VN&gameId=7&ref=&rurl=&partnerId=ONEworksVGCash&appType=&op=`);
+            return(`https://proxy.vgames88.com/user/CurrencyGroup?&token=${token}&language=vi-VN&gameId=${gameId}&ref=&rurl=&partnerId=ONEworksVGCash&appType=&op=`);
         } else
-            return(`https://l2uatproxy.sgamesuat.com/uat/user/CurrencyGroup?&token=${token}&language=vi-VN&gameId=7&ref=&rurl=&partnerId=ONEworksVGCash&appType=&op=`);
+            return(`https://l2uatproxy.sgamesuat.com/uat/user/CurrencyGroup?&token=${token}&language=vi-VN&gameId=${gameId}&ref=&rurl=&partnerId=ONEworksVGCash&appType=&op=`);
     }
-    else { 
-        await page.goto(`https://${domain[2]}/${lobbyDomain}1612`);
+    else if (process.env.npm_config_project == "l1"){ 
+        if (url.includes("athena") || url.includes("qa") || url.includes("/m.")) {
+            await page.goto (`http://${domain[2]}/${lobbyDomain}1612}`);
+        }
+        else {
+            await page.goto(`https://${domain[2]}/${lobbyDomain}1612`);
+        }
         await page.waitForLoadState();
         return page.url().replace("gameId=1", `gameId=${gameId}`)
+    }
+    else {
+        if (url.includes("athena") || url.includes("qa") || url.includes("/m.")) {
+            return `http://${domain[2]}/${lobbyDomain}${productId}`;
+        }
+        else
+            return `https://${domain[2]}/${lobbyDomain}${productId}`;
     }
 
 };
