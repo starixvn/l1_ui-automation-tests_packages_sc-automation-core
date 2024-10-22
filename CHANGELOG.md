@@ -1,3 +1,15 @@
+# [1.55.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.54.2...v1.55.0) (2024-10-22)
+
+
+### Bug Fixes
+
+* update auth ([272c2a7](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/272c2a79bb0595c2e4634473d8196ec4fca086fe))
+
+
+### Features
+
+* sso to game by game id ([fc105ab](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/fc105ab58e159ee2ad5bd4fab178d2de7af3a694))
+
 ## [1.54.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.54.1...v1.54.2) (2024-10-09)
 
 
