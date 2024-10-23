@@ -1,3 +1,10 @@
+# [1.56.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.55.0...v1.56.0) (2024-10-23)
+
+
+### Features
+
+* skip game guide test ([399889b](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/399889bee36be40442cf64e2770483d9884e1883))
+
 # [1.55.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.54.2...v1.55.0) (2024-10-22)
 
 
