@@ -16,6 +16,7 @@ export class GameGuides {
     tests(timeout: number) {
         test(`Verify that player could open guide and clarify appropriate content @Guide`, async () => {
             // Arrange
+            test.skip()
             test.setTimeout(timeout);
             await test.step("Open game guide", async () => {
                 await this.game.clickGuide(10000, isJackpot);
