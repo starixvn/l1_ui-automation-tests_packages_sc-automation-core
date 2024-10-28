@@ -1,10 +1,10 @@
 import { Page } from "@playwright/test";
-import { formatName, formatScreenshotFile } from "../../_shared";
-import { test, BaseGame, ImageSnapshot } from "../../components";
+import { formatScreenshotFile } from "../../_shared";
+import { test, BaseGame } from "../../components";
 import { expect } from "../../expects";
 import { GuideLocator } from "./guides-locators";
+import verifyImage from "../../expects/verify-image";
 const isJackpot = process.env.npm_config_jackpot ? true : false
-const projectCode = process.env.npm_config_project ?? "l1"
 
 export class GameGuides {
     protected game: BaseGame;
@@ -16,23 +16,14 @@ export class GameGuides {
     tests(timeout: number) {
         test(`Verify that player could open guide and clarify appropriate content @Guide`, async () => {
             // Arrange
-            test.skip()
             test.setTimeout(timeout);
             await test.step("Open game guide", async () => {
                 await this.game.clickGuide(10000, isJackpot);
             });
 
             // Act
-            let guideContents;
-            await test.step("Get guide content", async () => {
-                guideContents = await this.captureGuideContent();
-            });
-
-            // Assert
             await test.step("Verify guide content", async () => {
-                guideContents.forEach((content) => { 
-                    expect(content.image).toMatchSnapshot(content.name, {maxDiffPixelRatio:0.05});
-                });
+                await this.captureGuideContent();
             });
 
             //Post-Act
@@ -42,22 +33,25 @@ export class GameGuides {
         });
     }
 
-    async captureGuideContent(): Promise<ImageSnapshot[]> {
-        const images = new Array<ImageSnapshot>();
-        const guidepages = await this.game.getCountFrameLocator(GuideLocator.xpathItem);
+    async captureGuideContent() {
+        let guidepages = await this.game.getCountFrameLocator(GuideLocator.xpathItem);
+        if (guidepages == 0){ //reopen guide if guide hasn't been load
+            await this.game.clickOutSide(2000);
+            await this.game.clickGuide(10000, isJackpot);
+            guidepages = await this.game.getCountFrameLocator(GuideLocator.xpathItem);
+        }
         expect(guidepages).toBeGreaterThan(0);
         for (let index = 1; index <= guidepages; index++) {
-            const filename = isJackpot == true ? `guide-JP-${index}` : `guide${projectCode}-${index}`
+            const filename = isJackpot == true ? `guide-JP-${index}` : `guide-${index}`
             const element = `${GuideLocator.xpathItem}[${index}]`;
-            const contentImage = await this.snapshot(this.game.page, filename, element);
-            images.push(contentImage);
+            await this.snapshot(this.game.page, filename, element);
+            await verifyImage(this.game, filename, 0.03)
         }
 
-        return images;
     }
 
-    async snapshot(page: Page, name : string, element: string): Promise<ImageSnapshot> {
-        const imageName = formatName(name);
+    async snapshot(page: Page, name : string, element: string) {
+        //const imageName = formatName(name);
         let root:any = page;
         if (await page.frameLocator('#frmGame').frameLocator('#microsite').frameLocator('#webview').locator(`${GuideLocator.xpathItem}[1]`).isVisible()){
             root =  page.frameLocator('#frmGame').frameLocator('#microsite').frameLocator('#webview');
@@ -71,8 +65,6 @@ export class GameGuides {
         else {
             root = page.frameLocator("iframe")
         }
-        const image = await root.locator(element).screenshot({ path: formatScreenshotFile(name) });
-
-        return { name: imageName, image };
+        await root.locator(element).screenshot({ path: formatScreenshotFile(name)});
     }
 }
