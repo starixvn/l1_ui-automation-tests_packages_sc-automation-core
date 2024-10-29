@@ -1,3 +1,10 @@
+## [1.57.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.57.0...v1.57.1) (2024-10-29)
+
+
+### Bug Fixes
+
+* update guide test handle jackpot ([ee6cabd](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/ee6cabd0d64c91c83902ac5d2597d4f098d537e0))
+
 # [1.57.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.56.0...v1.57.0) (2024-10-29)
 
 
