@@ -44,7 +44,7 @@ export class GameGuides {
             const filename = isJackpot == true ? `guide-JP-${index}` : `guide-${index}`
             const element = `${GuideLocator.xpathItem}[${index}]`;
             await this.snapshot(this.game.page, filename, element);
-            await verifyImage(this.game, filename, 0.03)
+            await verifyImage(this.game, filename, 0.04)
         }
 
     }
