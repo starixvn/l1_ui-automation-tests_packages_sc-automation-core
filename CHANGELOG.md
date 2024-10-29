@@ -1,3 +1,10 @@
+## [1.57.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.57.1...v1.57.2) (2024-10-29)
+
+
+### Bug Fixes
+
+* update max diff ratio for guide test ([8d9e8f7](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/8d9e8f78b358f467381c9d3e5221faa4e700fca5))
+
 ## [1.57.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.57.0...v1.57.1) (2024-10-29)
 
 
