@@ -8,4 +8,5 @@ export interface IBaseOptions {
     placeBetChoices: string[];
     placeBetAmount?: number;
     isconfig?: any;
+    isJackpot?: boolean;
 }

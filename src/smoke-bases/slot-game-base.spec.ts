@@ -106,7 +106,7 @@ export class SlotGameBase {
         });
     }
     protected gameGuideTests() {
-        this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
+        this.gameGuides.tests(this.options.gameConfiguration.maxTimeout, this.options.isJackpot);
     }
 
     start(): void {

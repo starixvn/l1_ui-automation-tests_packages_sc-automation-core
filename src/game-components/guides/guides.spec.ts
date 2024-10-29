@@ -4,7 +4,6 @@ import { test, BaseGame } from "../../components";
 import { expect } from "../../expects";
 import { GuideLocator } from "./guides-locators";
 import verifyImage from "../../expects/verify-image";
-const isJackpot = process.env.npm_config_jackpot ? true : false
 
 export class GameGuides {
     protected game: BaseGame;
@@ -13,7 +12,7 @@ export class GameGuides {
         this.game = game;
     }
 
-    tests(timeout: number) {
+    tests(timeout: number, isJackpot : boolean = false) {
         test(`Verify that player could open guide and clarify appropriate content @Guide`, async () => {
             // Arrange
             test.setTimeout(timeout);
@@ -23,7 +22,7 @@ export class GameGuides {
 
             // Act
             await test.step("Verify guide content", async () => {
-                await this.captureGuideContent();
+                await this.captureGuideContent(isJackpot);
             });
 
             //Post-Act
@@ -33,7 +32,7 @@ export class GameGuides {
         });
     }
 
-    async captureGuideContent() {
+    async captureGuideContent(isJackpot : boolean = false) {
         let guidepages = await this.game.getCountFrameLocator(GuideLocator.xpathItem);
         if (guidepages == 0){ //reopen guide if guide hasn't been load
             await this.game.clickOutSide(2000);
