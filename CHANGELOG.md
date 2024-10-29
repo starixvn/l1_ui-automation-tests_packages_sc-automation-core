@@ -1,3 +1,17 @@
+# [1.57.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.56.0...v1.57.0) (2024-10-29)
+
+
+### Bug Fixes
+
+* update error ([55af3c5](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/55af3c59b959acf63c84b2606c35abd0275c3697))
+* update error ([a4bdc07](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/a4bdc07eb813d196cb96b0e109cb9d2646575b97))
+* update version ([3644a6b](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/3644a6b5fdf7b15d65502bee000621d61b40dd72))
+
+
+### Features
+
+* update game guide test ([1574812](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/1574812d74f4d31aa72a7656f1694d46cf9fb3da))
+
 # [1.56.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.55.0...v1.56.0) (2024-10-23)
 
 
