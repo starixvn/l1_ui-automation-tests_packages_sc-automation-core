@@ -1,3 +1,10 @@
+## [1.57.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.57.2...v1.57.3) (2024-10-30)
+
+
+### Bug Fixes
+
+* update login script ([e87c551](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/e87c551fd44ef83ecf6537bd4958e965368fedeb))
+
 ## [1.57.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.57.1...v1.57.2) (2024-10-29)
 
 
