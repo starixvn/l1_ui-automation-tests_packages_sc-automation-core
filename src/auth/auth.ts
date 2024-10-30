@@ -413,11 +413,7 @@ const formatGameLobbyUrl = async (url: string, page: Page, lobbyDomain: string, 
         const iframeSrc = srcMatch ? srcMatch[1] : ""; // Get the src value or null if not found
         const tokenMatch = iframeSrc.match(/token=([^&]+)/); // Extract token value
         const token = tokenMatch ? tokenMatch[1] : null; // Get the token value or null if not found
-        console.log(token);
-        if(process.env.npm_config_env == "prod"){
-            return(`https://proxy.vgames88.com/user/CurrencyGroup?&token=${token}&language=vi-VN&gameId=${gameId}&ref=&rurl=&partnerId=ONEworksVGCash&appType=&op=`);
-        } else
-            return(`https://l2uatproxy.sgamesuat.com/uat/user/CurrencyGroup?&token=${token}&language=vi-VN&gameId=${gameId}&ref=&rurl=&partnerId=ONEworksVGCash&appType=&op=`);
+            return(`${lobbyDomain}/user/CurrencyGroup?&token=${token}&language=vi-VN&gameId=${gameId}&ref=&rurl=&partnerId=ONEworksVGCash&appType=&op=`)
     }
     else if (process.env.npm_config_project == "l1"){ 
         if (url.includes("athena") || url.includes("qa") || url.includes("/m.")) {

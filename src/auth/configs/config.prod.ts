@@ -4,7 +4,8 @@ export default {
     l1memberSiteMobile: "https://m.viva88.com/",
     l1lobbyDomainMobile: "#ThirdPartyGame/vid=66&gid=",
     l2memberSite: "http://www.spondemo.com/NewIndex?lang=vn&webskintype=3",
-    l2lobbyDomain: "VendorGame/GamePageLoading?Game=VGaming&refer=&GameID=",
+    //l2lobbyDomain: "VendorGame/GamePageLoading?Game=VGaming&refer=&GameID=",
+    l2lobbyDomain: "https://proxy.vgames88.com",
     l2memberSiteMobile: "https://smart.spondemo.com",
     l2lobbyDomainMobile: "#ThirdPartyGame/vid=66&gid=",
     gnmemberSite: "https://www.viva88.net/login888.aspx",
@@ -27,4 +28,5 @@ export default {
     l2kenomemberSite: "http://www.spondemo.com/NewIndex?lang=vn&webskintype=3",
     l2kenolobbyDomain: "VendorGame/GamePageLoading?Game=VGamingMobi&refer=&GameID=",
     l1ismemberSite: "https://www.viva88.net/login888.aspx",
+    
 };
