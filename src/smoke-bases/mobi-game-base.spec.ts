@@ -3,7 +3,11 @@ import { test, BasePlayer, BaseGame } from "../components";
 import { expect } from "../expects";
 import { performanceTest } from "../game-components/performance/performance";
 
-const projectName = process.env.npm_config_project?.includes("l1")? "SG" : process.env.npm_config_project?.includes("l2")? "VG" : process.env.npm_config_project;
+const projectName = process.env.npm_config_project?.includes("l1")
+    ? "SG"
+    : process.env.npm_config_project?.includes("l2")
+      ? "VG"
+      : process.env.npm_config_project;
 
 import { IBaseOptions } from "./base-options";
 
@@ -18,20 +22,21 @@ export class MobiGameBase {
         test("Verify Game Name and Bet Locators", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
-            await this.game.waitForTimeout(10000);
-            const isFrame = await this.game.page.$("#frmGame")
-            if (isFrame) {
-                await this.game.verifyFrameLocatorsVisible("#frmGame",this.options.locators.inGameUI);
-            }else{
-                await this.game.verifyLocatorsVisible(this.options.locators.inGameUI);
-                await this.game.page.reload(); // L1 PRO issue only: need to be reload page for capturing web socket data, by default on framerecived do not have any channel
-            }
+            await test.step("Verify that the Game Name and Bet Locators are displayed correctly on the screen.", async () => {
+                await this.game.waitForTimeout(10000);
+                const isFrame = await this.game.page.$("#frmGame");
+                if (isFrame) {
+                    await this.game.verifyFrameLocatorsVisible("#frmGame", this.options.locators.inGameUI);
+                } else {
+                    await this.game.verifyLocatorsVisible(this.options.locators.inGameUI);
+                    await this.game.page.reload(); // L1 PRO issue only: need to be reload page for capturing web socket data, by default on framerecived do not have any channel
+                }
+            });
         });
     }
 
-
     protected placeBetAndSettleTests() {
-        test("THEN player able to place a bet and settle", async () => {
+        test("Place a bet on a valid bet choice.", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             await this.game.waitForTimeout(this.options.waitBetTimeout);
@@ -42,37 +47,40 @@ export class MobiGameBase {
             };
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
             // Act
-            const placeBetResponse = await this.player.mbQuickPlaceBet(bet.locator, bet.amount,this.options.gameConfiguration.name);
-            let settledResults = await this.game.waitForSettlement(this.options.gameConfiguration.name);
-
+            const { placeBetResponse, settledResults } = await test.step("Verify that the bet is successfully placed.", async () => {
+                const placeBetResponse = await this.player.mbQuickPlaceBet(bet.locator, bet.amount, this.options.gameConfiguration.name);
+                let settledResults = await this.game.waitForSettlement(this.options.gameConfiguration.name);
+                return { placeBetResponse, settledResults };
+            });
             // Assert
-
-            expect(placeBetResponse.endBet).toBe(bet.amount);
-            expect(settledResults.settlementResult).toMatchBetOptions(this.options.gameConfiguration.choices);
+            await test.step("Confirm that the bet is settled correctly.", async () => {
+                expect(placeBetResponse.endBet).toBe(bet.amount);
+                expect(settledResults.settlementResult).toMatchBetOptions(this.options.gameConfiguration.choices);
+            });
         });
     }
 
     protected hedgeBetTests() {
-        test("THEN player should get error when they hedge their bets", async () => {
+        test("Attempt to place a bet that would result in a hedged position.", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
-            await this.game.waitUntilPlaceBet(this.options.gameConfiguration.name)
+            await this.game.waitUntilPlaceBet(this.options.gameConfiguration.name);
             const hedgeBetLocators = [
                 this.options.locators.betchoices[this.options.placeBetChoices[1]],
                 this.options.locators.betchoices[this.options.placeBetChoices[0]],
             ];
             // Act
             await this.player.mbPlaceHedgeBet(hedgeBetLocators, this.options.placeBetAmount ?? 1);
-            const hedgeBetError = this.options.locators.hedgeBetError 
-            const isFrame = await this.game.page.$("#frmGame")
-            if (isFrame) {
-                const framelocator =  this.game.page.frameLocator("#frmGame")
-                await expect(framelocator.locator((Object.keys(hedgeBetError)).toString())).toContainText(Object.values(hedgeBetError))
-            }else{
-                await expect(this.game.page.locator((Object.keys(hedgeBetError)).toString())).toContainText(Object.values(hedgeBetError))
-            }
-            
-
+            const hedgeBetError = this.options.locators.hedgeBetError;
+            await test.step("Verify that an error message is displayed to prevent the bet from being placed.", async () => {
+                const isFrame = await this.game.page.$("#frmGame");
+                if (isFrame) {
+                    const framelocator = this.game.page.frameLocator("#frmGame");
+                    await expect(framelocator.locator(Object.keys(hedgeBetError).toString())).toContainText(Object.values(hedgeBetError));
+                } else {
+                    await expect(this.game.page.locator(Object.keys(hedgeBetError).toString())).toContainText(Object.values(hedgeBetError));
+                }
+            });
         });
     }
 
@@ -103,9 +111,9 @@ export class MobiGameBase {
 
     protected runScenario() {
         if (process.env.npm_config_trackdownload) {
-            this.performanceTest.tests(this.options.gameConfiguration.ssoTime??35000);
+            this.performanceTest.tests(this.options.gameConfiguration.ssoTime ?? 35000);
         }
-        this.inGameUITests()
+        this.inGameUITests();
         this.placeBetAndSettleTests();
         this.hedgeBetTests();
     }

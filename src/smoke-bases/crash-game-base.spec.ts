@@ -5,17 +5,21 @@ import { expect } from "../expects";
 import { IBaseOptions } from "./base-options";
 import { performanceTest } from "../game-components/performance/performance";
 import { GameGuides } from "../game-components/guides/guides.spec";
-const projectName = process.env.npm_config_project?.includes("l1")? "SG" : process.env.npm_config_project?.includes("l2")? "VG" : process.env.npm_config_project;
+const projectName = process.env.npm_config_project?.includes("l1")
+    ? "SG"
+    : process.env.npm_config_project?.includes("l2")
+      ? "VG"
+      : process.env.npm_config_project;
 
 export interface CrashGameOptions extends IBaseOptions {
     placeBetChoices: string[];
     placeBetAmount?: number;
 }
-const  CrashGameEvent = {
+const CrashGameEvent = {
     StartCashOut: (msg) => msg?.c?.t == 0,
-    CashOut : (msg) => msg?.cashOut,
-    HalfCashOut : (msg) => msg?.halfCashOut,
-}
+    CashOut: (msg) => msg?.cashOut,
+    HalfCashOut: (msg) => msg?.halfCashOut,
+};
 export class CrashGameBase {
     game: BaseGame;
     player: BasePlayer;
@@ -27,9 +31,12 @@ export class CrashGameBase {
     protected inGameUITests() {
         test("Verify default control area", async () => {
             // Arrange
+            await test.step("Verify default controls are displayed correctly on the screen.", async () => {
+
             const imgControlArea = await this.game.capture(`imgControlArea${process.env.npm_config_project}`);
             expect(imgControlArea.image).toMatchSnapshot(imgControlArea.name, { maxDiffPixelRatio: 0 });
         });
+    });
     }
 
     protected placeBetAndSettleTests() {
@@ -40,38 +47,40 @@ export class CrashGameBase {
             expect(btnPlaceBet.image).toMatchSnapshot(btnPlaceBet.name);
             this.game.attachSocketAndCaptureEvent(GameEvent.Settlement);
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
-            await this.game.waitForSpecificEvent(CrashGameEvent.StartCashOut); 
+            await this.game.waitForSpecificEvent(CrashGameEvent.StartCashOut);
             let settledResults = await this.game.latestCaptureEvent(GameEvent.Settlement);
-            if (settledResults === "") {
-                //Have not crash yet
-                cashOut(this.game); //click cash out
-                let cashOutResult = await this.game.waitForSpecificEvent(CrashGameEvent.CashOut);
-                settledResults = await waitForSettlement(this.game);
-                expect(settledResults.winAmount).toEqual(cashOutResult.cashOut.cashOutWin);
-            } else {
-                // If crash at base, place bet again
-                await placeBet(this.game);
-                await this.game.waitForSpecificEvent(CrashGameEvent.StartCashOut); //wait for start cash out
-                await cashOut(this.game); //click cash out
-                let cashOutResult = await this.game.waitForSpecificEvent(CrashGameEvent.CashOut);
-                settledResults = await waitForSettlement(this.game);
-                expect(settledResults.winAmount).toEqual(cashOutResult.cashOut.cashOutWin);
-            }
+            await test.step("Confirm that the bet is settled correctly.", async () => {
+                if (settledResults === "") {
+                    //Have not crash yet
+                    cashOut(this.game); //click cash out
+                    let cashOutResult = await this.game.waitForSpecificEvent(CrashGameEvent.CashOut);
+                    settledResults = await waitForSettlement(this.game);
+                    expect(settledResults.winAmount).toEqual(cashOutResult.cashOut.cashOutWin);
+                } else {
+                    // If crash at base, place bet again
+                    await placeBet(this.game);
+                    await this.game.waitForSpecificEvent(CrashGameEvent.StartCashOut); //wait for start cash out
+                    await cashOut(this.game); //click cash out
+                    let cashOutResult = await this.game.waitForSpecificEvent(CrashGameEvent.CashOut);
+                    settledResults = await waitForSettlement(this.game);
+                    expect(settledResults.winAmount).toEqual(cashOutResult.cashOut.cashOutWin);
+                }
+            });
         });
     }
 
     protected ticketHistoryTests() {
-        test("AND player could open history popup", async () => {
+        test("Access the history popup.", async () => {
             // Arrange
             await this.game.clickHistory();
             await this.game.waitForTimeout(2000);
 
             // Act
             const historySnapshot = await this.game.captureHistory();
-
-            // Assert
-            expect(historySnapshot.image).toMatchSnapshot(historySnapshot.name);
-
+            await test.step("Verify that the history popup is displayed correctly and contains accurate betting history information.", async () => {
+                // Assert
+                expect(historySnapshot.image).toMatchSnapshot(historySnapshot.name);
+            });
             //Post-Act
             await this.game.clickOutSide(3000);
         });
@@ -108,7 +117,7 @@ export class CrashGameBase {
 
     protected runScenario() {
         if (process.env.npm_config_trackdownload) {
-            this.performanceTest.tests(this.options.gameConfiguration.ssoTime??35000);
+            this.performanceTest.tests(this.options.gameConfiguration.ssoTime ?? 35000);
         }
         this.inGameUITests();
         this.placeBetAndSettleTests();

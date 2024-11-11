@@ -21,7 +21,7 @@ export const ssoToGame = async (
     productId: string,
     env: string,
     projectCode: string,
-    currencyGroup?: string
+    currencyGroup?: string,
 ): Promise<void> => {
     const config = getConfig();
     const langCode = process.env.npm_config_langCode ?? "vn";
@@ -44,7 +44,7 @@ export const ssoToGame = async (
             await page.click(env);
             await page.waitForTimeout(500);
         }
-        if (currencyGroup){
+        if (currencyGroup) {
             await page.fill(LobbyLocator.currencyInput, currencyGroup);
         }
         await page.click(LobbyLocator.tokenBtn);
@@ -80,7 +80,7 @@ const loginMemberSite = async (
     langCode: string,
     projectCode: string,
     gameId: number,
-    currencyGroup?: string
+    currencyGroup?: string,
 ) => {
     const timeout = config.lobbyTimeout;
     const memberSiteLink =
@@ -126,19 +126,19 @@ const loginMemberSite = async (
     }
 };
 
-const selectCurrencyGroup = async (page: Page, currencyGroup? : string) => {
+const selectCurrencyGroup = async (page: Page, currencyGroup?: string) => {
     await page.waitForTimeout(2000);
     global.ssoLink = page.url();
     const frameExists = await page.$("#frmGame");
     if (frameExists) {
-        if (currencyGroup){
+        if (currencyGroup) {
             await page.frameLocator("#frmGame").locator(GroupCurrencyLocator.specificCheckbox).click();
-            page.frameLocator("#frmGame").locator(GroupCurrencyLocator.currencyGroupDropdown).selectOption(currencyGroup)
+            page.frameLocator("#frmGame").locator(GroupCurrencyLocator.currencyGroupDropdown).selectOption(currencyGroup);
         }
         await page.frameLocator("#frmGame").locator(GroupCurrencyLocator.submitButton).click();
     } else {
         await page.locator(GroupCurrencyLocator.submitButton).waitFor();
-        
+
         await page.click(GroupCurrencyLocator.submitButton);
     }
     await page.waitForLoadState();
@@ -379,60 +379,42 @@ const goToUltra888GameLobby = async (page: Page, productId: any, timeout = 15000
     await page.waitForLoadState("load", { timeout });
 };
 
-const goToGameLobby = async (page: Page, lobbyDomain: string, gameId: number, productId,  timeout: number = 15000) => {
+const goToGameLobby = async (page: Page, lobbyDomain: string, gameId: number, productId, timeout: number = 15000) => {
     await page.goto(await formatGameLobbyUrl(page.url(), page, lobbyDomain, gameId, productId));
     await page.waitForLoadState("load", { timeout });
 };
 
 const formatGameLobbyUrl = async (url: string, page: Page, lobbyDomain: string, gameId: number, productId: number): Promise<string> => {
     const domain = url.split("/");
-    // if (url.includes("athena") || url.includes("qa") || url.includes("/m.")) {
-    //     return `http://${domain[2]}/${lobbyDomain}${productId}`;
-    // } else return `https://${domain[2]}/${lobbyDomain}${productId}`;
-    if(process.env.npm_config_project == "l2"){
+    const isAthenaOrQA = url.includes("athena") || url.includes("qa") || url.includes("/m.");
+
+    if (process.env.npm_config_project == "l2") {
         const userAgent = await page.evaluate(() => navigator.userAgent); // Get User-Agent
-        //console.log("User-Agent:", userAgent); // Log User-Agent
         const cookies = await page.context().cookies();
-        const sessionId = cookies.find(cookie => cookie.name === 'ASP.NET_SessionId' && cookie.domain === domain[2] )?.value;
-        //console.log(sessionId);
-        
+        const sessionId = cookies.find((cookie) => cookie.name === "ASP.NET_SessionId" && cookie.domain === domain[2])?.value;
+
         const response = await fetch(`http://${domain[2]}/GamePage.aspx?Game=VGaming&refer=&betFrom=x&timeZone=7`, {
-            method: 'GET',
+            method: "GET",
             headers: {
-                'User-Agent': userAgent,
-                'Cookie': `ASP.NET_SessionId=${sessionId}`, 
-            }
+                "User-Agent": userAgent,
+                Cookie: `ASP.NET_SessionId=${sessionId}`,
+            },
         });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.text(); 
+        const data = await response.text();
         const srcMatch = data.match(/<iframe[^>]+id=["']frmGame["'][^>]+src=["']([^"']+)["']/);
         const iframeSrc = srcMatch ? srcMatch[1] : ""; // Get the src value or null if not found
         const tokenMatch = iframeSrc.match(/token=([^&]+)/); // Extract token value
         const token = tokenMatch ? tokenMatch[1] : null; // Get the token value or null if not found
-            return(`${lobbyDomain}/user/CurrencyGroup?&token=${token}&language=vi-VN&gameId=${gameId}&ref=&rurl=&partnerId=ONEworksVGCash&appType=&op=`)
-    }
-    else if (process.env.npm_config_project == "l1"){ 
-        if (url.includes("athena") || url.includes("qa") || url.includes("/m.")) {
-            await page.goto (`http://${domain[2]}/${lobbyDomain}1612}`);
-        }
-        else {
-            await page.goto(`https://${domain[2]}/${lobbyDomain}1612`);
-        }
+        return `${lobbyDomain}/user/CurrencyGroup?&token=${token}&language=vi-VN&gameId=${gameId}&ref=&rurl=&partnerId=ONEworksVGCash&appType=&op=`;
+    } else if (process.env.npm_config_project == "l1") {
+        const protocol = isAthenaOrQA ? "http" : "https";
+        await page.goto(`${protocol}://${domain[2]}/${lobbyDomain}1612`);
         await page.waitForLoadState();
-        return page.url().replace("gameId=1", `gameId=${gameId}`)
+        return page.url().replace("gameId=1", `gameId=${gameId}`);
+    } else {
+        const protocol = isAthenaOrQA ? "http" : "https";
+        return `${protocol}://${domain[2]}/${lobbyDomain}${productId}`;
     }
-    else {
-        if (url.includes("athena") || url.includes("qa") || url.includes("/m.")) {
-            return `http://${domain[2]}/${lobbyDomain}${productId}`;
-        }
-        else
-            return `https://${domain[2]}/${lobbyDomain}${productId}`;
-    }
-
 };
 
 export const loginAdmin = async (page: Page, projectCode: string) => {

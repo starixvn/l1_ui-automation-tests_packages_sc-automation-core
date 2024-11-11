@@ -12,13 +12,14 @@ export class TableGameBase extends MiniGameBase {
     }
 
     protected inGameDealerTests() {
-        test("GIVEN player joined game and saw dealer", async () => {
+        test("Ensure player joined game and saw dealer", async () => {
             // Act
             const dealerSnapshot = await this.game.captureDealer();
-
+            test.step("Verify dealer's image", async () => {
             // Assert
             expect(dealerSnapshot.image).toMatchSnapshot(dealerSnapshot.name);
         });
+    });
     }
 
     protected override runScenario(): void {

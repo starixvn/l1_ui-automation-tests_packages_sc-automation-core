@@ -10,7 +10,11 @@ const stakeLevel = {
     imgStakeLevell1: "imgStakeLevell1",
     imgStakeLevell2: "imgStakeLevell2",
 };
-const projectName = process.env.npm_config_project?.includes("l1")? "SG" : process.env.npm_config_project?.includes("l2")? "VG" : process.env.npm_config_project;
+const projectName = process.env.npm_config_project?.includes("l1")
+    ? "SG"
+    : process.env.npm_config_project?.includes("l2")
+      ? "VG"
+      : process.env.npm_config_project;
 
 export interface SlotGameOptions extends IBaseOptions {
     placeBetChoices: string[];
@@ -26,83 +30,90 @@ export class SlotGameBase {
     constructor(protected options: SlotGameOptions) {}
 
     protected inGameOddsTests() {
-        test("AND odds should be correct", async () => {
-            await this.game.waitForTimeout(this.options.waitBetTimeout);
-            // Assert
-            expect(this.game.odds).toStrictEqual(this.options.gameConfiguration.odds);
+        test("Ensure that the odds displayed for each bet choice are accurate.", async () => {
+            await test.step("Ensure that the odds displayed for each bet choice are accurate.", async () => {
+                // Assert
+                expect(this.game.odds).toStrictEqual(this.options.gameConfiguration.odds);
+            });
         });
     }
 
     protected jackpotTests() {
-        test("AND Jackpot banner should be displayed in game ", async () => {
-            // Act
-            const jackpotbanner = await this.game.capture(`imgJackpot`);
+        test("Verify that the Jackpot banner should be displayed in game ", async () => {
+            await test.step("Verify that the Jackpot banner is displayed correctly on the screen.", async () => {
+                // Act
+                const jackpotbanner = await this.game.capture(`imgJackpot`);
 
-            // Assert
-            expect(jackpotbanner.image).toMatchSnapshot(jackpotbanner.name);
-        });
+                // Assert
+                expect(jackpotbanner.image).toMatchSnapshot(jackpotbanner.name);
+            });
+            await test.step("Verify that the Hall of Fame popup should be displayed after clickking on icon in menu list", async () => {
+                await this.game.clickJackpot(1000);
 
-        test("AND Hall of Fame popup should be displayed after clickking on icon in menu list", async () => {
-            await this.game.clickJackpot(1000);
+                // Act
+                const jackpotPopup = await this.game.capture(`jackpotPopup`);
 
-            // Act
-            const jackpotPopup = await this.game.capture(`jackpotPopup`);
+                // Assert
+                expect(jackpotPopup.image).toMatchSnapshot(jackpotPopup.name);
 
-            // Assert
-            expect(jackpotPopup.image).toMatchSnapshot(jackpotPopup.name);
-
-            //Post-Act
-            await this.game.clickOutSide();
+                //Post-Act
+                await this.game.clickOutSide();
+            });
         });
     }
 
     protected betStakeLevelTests(projectCode = "l1") {
-        test("AND stake level should be correct", async () => {
+        test("Verify stake level should be correct", async () => {
             // Arrange
             await this.game.clickLocator(stakeLevel.stakemenu);
+            await test.step("Verify that the stake level is displayed correctly on the screen.", async () => {
+                // Act
+                const stakelevelSnapshot = await this.game.capture(stakeLevel[`imgStakeLevel${projectCode}`]);
 
-            // Act
-            const stakelevelSnapshot = await this.game.capture(stakeLevel[`imgStakeLevel${projectCode}`]);
-
-            // Assert
-            expect(stakelevelSnapshot.image).toMatchSnapshot(stakelevelSnapshot.name);
-            //Post Act
+                // Assert
+                expect(stakelevelSnapshot.image).toMatchSnapshot(stakelevelSnapshot.name);
+                //Post Act
+            });
             await this.game.clickLocator(stakeLevel.stakemenu);
         });
     }
 
     protected placeBetAndSettleTests() {
-        test("THEN player able to place a bet and settle", async () => {
+        test("Place a bet on a valid bet choice.", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount ?? 1 };
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
+            const { placeBetResponse, settledResults } = await test.step("Verify that the bet is successfully placed.", async () => {
+                // Act
+                const placeBetResponse = await this.player.placeBet(bet.choice, bet.amount);
+                const settledResults = await this.game.waitForSettlement();
+                return { placeBetResponse, settledResults };
+            });
+            await test.step("Confirm that the bet is settled correctly.", async () => {
+                // Assert
+                expect(placeBetResponse.endBet).toBe(bet.amount * parseInt(bet.choice));
+                expect(bet).toMatchWinningSymbols(settledResults);
 
-            // Act
-            const placeBetResponse = await this.player.placeBet(bet.choice, bet.amount);
-            const settledResults = await this.game.waitForSettlement();
-
-            // Assert
-            expect(placeBetResponse.endBet).toBe(bet.amount * parseInt(bet.choice));
-            expect(bet).toMatchWinningSymbols(settledResults);
-
-            await this.game.waitForFreeSpin(settledResults)
+                await this.game.waitForFreeSpin(settledResults);
+            });
         });
     }
 
     protected ticketHistoryTests() {
-        test("AND player could open history popup", async () => {
+        test("Access the history popup.", async () => {
             // Arrange
             const historyPayload = await this.player.openHistory();
 
             // Act
             const historySnapshot = await this.game.captureHistory();
-
-            // Assert
-            expect(historyPayload.history.betLogs.length).toBeGreaterThan(0);
-            expect(historySnapshot.image).toMatchSnapshot(historySnapshot.name);
-            //Close history
-            await this.game.clickOutSide();
+            await test.step("Verify that the history popup is displayed correctly and contains accurate betting history information.", async () => {
+                // Assert
+                expect(historyPayload.history.betLogs.length).toBeGreaterThan(0);
+                expect(historySnapshot.image).toMatchSnapshot(historySnapshot.name);
+                //Close history
+                await this.game.clickOutSide();
+            });
         });
     }
     protected gameGuideTests() {
@@ -135,7 +146,7 @@ export class SlotGameBase {
 
     protected runScenario() {
         if (process.env.npm_config_trackdownload) {
-            this.performanceTest.tests(this.options.gameConfiguration.ssoTime??35000);
+            this.performanceTest.tests(this.options.gameConfiguration.ssoTime ?? 35000);
         }
         this.inGameOddsTests();
         if (process.env.npm_config_jackpot) {
@@ -145,6 +156,5 @@ export class SlotGameBase {
         this.placeBetAndSettleTests();
         this.ticketHistoryTests();
         this.gameGuideTests();
-
     }
 }
