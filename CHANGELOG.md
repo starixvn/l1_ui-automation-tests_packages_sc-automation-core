@@ -1,3 +1,10 @@
+# [1.58.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.57.3...v1.58.0) (2024-11-11)
+
+
+### Features
+
+* optimized auth- formatGameLobbyUrl and base smoke test description ([b614dad](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/b614dadd4eaaee5836ab76691dc030cb1bdd1531))
+
 ## [1.57.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.57.2...v1.57.3) (2024-10-30)
 
 
