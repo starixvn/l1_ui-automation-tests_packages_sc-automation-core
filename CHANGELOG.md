@@ -1,3 +1,12 @@
+# [1.59.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.58.0...v1.59.0) (2024-11-26)
+
+
+### Features
+
+* docker-hub/library/node:22.11.0-slim ([5844160](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/584416035a6258b84c21f6c46ee7b4d5a70a2ab7))
+* l2 promotion popup ([cb4e22b](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/cb4e22b461d7cfb17ccdd29773ec33f21d6a587f))
+* upgrade node version to 22 ([dbdba3d](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/dbdba3d77b1d03720c7428bad1853858817edd40))
+
 # [1.58.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.57.3...v1.58.0) (2024-11-11)
 
 
