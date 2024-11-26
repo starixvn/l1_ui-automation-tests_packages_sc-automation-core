@@ -153,6 +153,9 @@ export class BaseGame {
         });
 
         while (filterA.length < waitRange) {
+            if (filterA.length==1) { //handle case promotion popup
+                await this.page.mouse.click(5,5,{delay:100})
+            }
             await this.page.waitForTimeout(100);
         }
         await this.page.waitForTimeout(100);
