@@ -1,3 +1,10 @@
+## [1.59.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.59.0...v1.59.1) (2024-11-27)
+
+
+### Bug Fixes
+
+* add mouse click for l2 promotion popup on mobi and lobby ([1e3ed48](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/1e3ed48303c96fa0cc3dec468c09afda04c6b6b5))
+
 # [1.59.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.58.0...v1.59.0) (2024-11-26)
 
 
