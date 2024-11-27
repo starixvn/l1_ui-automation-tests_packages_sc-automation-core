@@ -170,6 +170,8 @@ export class BaseGame {
             await this.page.locator("//div[contains(@class,'games_game-list')]").waitFor();
         }
         console.log("Game UI ready for testing");
+        await this.waitForTimeout(3000)
+        await this.page.mouse.click(5, 5, { delay: 100 });
         await this.page.screenshot({ path: `./test-results/afterInGame.png` });
     }
 
@@ -187,9 +189,10 @@ export class BaseGame {
         });
 
         while (filterA.length < 1) {
-            await this.page.waitForTimeout(3000);
+            await this.page.waitForTimeout(100);
         }
         await this.page.waitForTimeout(3000);
+        await this.page.mouse.click(5, 5, { delay: 100 });
         console.log("GameLobby UI load success");
     }
 
