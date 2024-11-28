@@ -1,3 +1,10 @@
+## [1.59.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.59.1...v1.59.2) (2024-11-28)
+
+
+### Bug Fixes
+
+* add a condition for listened ws channel ([ca49794](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/ca497942ba09ef5c4a9710b1260b7f217e2a9132))
+
 ## [1.59.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.59.0...v1.59.1) (2024-11-27)
 
 
