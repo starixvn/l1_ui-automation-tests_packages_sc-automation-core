@@ -77,7 +77,8 @@ export class BaseGame {
             await this.trackDownloadResources(this.page);
         }
         this.page.on("websocket", async (ws) => {
-            if (!ws.url().includes("notification")) {
+            const wsUrl = ws.url(); 
+            if (!wsUrl.includes("notification") && wsUrl.includes(this.gameConfiguration.socketName ?? this.gameConfiguration.name.toLowerCase())) {
                 this.gameSocket = ws;
 
                 ws.on("framereceived", async (msg: any) => {
