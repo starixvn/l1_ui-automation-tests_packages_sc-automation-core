@@ -1,3 +1,10 @@
+# [1.60.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.59.2...v1.60.0) (2024-12-23)
+
+
+### Features
+
+* marble game base and new instant game mode ([d24f4ba](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/d24f4ba9577aee92ef8290120bdb69ee66c4dc5e))
+
 ## [1.59.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.59.1...v1.59.2) (2024-11-28)
 
 
