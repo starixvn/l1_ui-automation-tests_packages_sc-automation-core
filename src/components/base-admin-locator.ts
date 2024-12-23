@@ -24,6 +24,7 @@ export const monitoring = {
     1003: "//*/td[text()='Lucky Next 1']//following::a[1]",
     1004: "//*/td[text()='Lucky Next 2']//following::a[1]",
     1005: "//*/td[text()='Se Ball']//following::a[1]",
+    104: "//*/td[text()='Marble Football']//following::a[1]"
 };
 
 

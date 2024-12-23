@@ -2,7 +2,7 @@ export enum LobbyLocator {
     memberIdInput = "input[type='number']",
     tokenBtn = "text=Get Token",
     tokenInput = "input[id=token]",
-    ssoLink = "a:has-text('token')",
+    ssoLink = "#redirect",
     advancelbl = "text=Advance",
     langDropdown = "id=language",
     vnLangOption = "vi-VN",

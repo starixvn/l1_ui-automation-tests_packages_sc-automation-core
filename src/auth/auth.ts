@@ -218,19 +218,20 @@ const loginUAT = async (page: Page, accountId: string, pwd: string, langCode: st
 };
 
 const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: string, projectCode: string, timeout: number = 15000) => {
+    console.log(langCode);
     if (projectCode === "l1") {
         if (process.env.npm_config_mobile === "true") {
-            // will be implemented later
-        } else {
+            await page.click("//div[@class='header-option']/div[1]");
+            await page.click("//div[@class='header-option']/div[1]/div//span[text()='Mobile']");
+        } 
             await page.click(PRODLocator.openLoginFormbtn);
             await page.fill(PRODLocator.usernameInput, accountId);
             await page.fill(PRODLocator.passwordInput, pwd);
             await page.click(PRODLocator.submitLoginbtn);
             await page.waitForLoadState("domcontentloaded");
             await page.waitForTimeout(5000);
-            console.log(langCode);
-        }
     }
+
     if (projectCode === "l2") {
         if (process.env.npm_config_mobile === "true") {
             await page.setViewportSize({

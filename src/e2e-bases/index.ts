@@ -8,6 +8,8 @@ import { BalancedBettingGameBase } from "./balanced-betting-game-base.spec";
 import { CascadingSlotGameBase } from "./cascading-slot-game-base.spec";
 import { CrashGameBase } from "./crash-game-base.spec";
 import { NumberGameBase } from "./number-game-base.spec";
+import { MarbalGameBase } from "./marbal-game-base.spec";
+
 
 export {
     IBaseOptions,
@@ -20,5 +22,6 @@ export {
     CardGameBase,
     CascadingSlotGameBase,
     CrashGameBase,
-    NumberGameBase
+    NumberGameBase,
+    MarbalGameBase
 };

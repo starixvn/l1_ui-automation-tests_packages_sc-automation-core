@@ -76,27 +76,53 @@ export class BaseGame {
         if (this.trackDownload) {
             await this.trackDownloadResources(this.page);
         }
+
+        const isQuickBet = process.env.npm_config_quickbet ?? false
+
         this.page.on("websocket", async (ws) => {
             const wsUrl = ws.url(); 
-            if (!wsUrl.includes("notification") && wsUrl.includes(this.gameConfiguration.socketName ?? this.gameConfiguration.name.toLowerCase())) {
-                this.gameSocket = ws;
-
-                ws.on("framereceived", async (msg: any) => {
-                    const { payload } = msg ?? "";
-
-                    if (this.odds === null && payload.includes(GameEvent.GameConfig)) {
-                        const ingameResponse = parseSocketPayload(payload, this.msgpack).message;
-                        this.odds = ingameResponse.gameConfigs?.odds || ingameResponse.odds;
-                        this.gameConfigs = ingameResponse.gameConfigs;
-                    }
-
-                    Object.keys(this.capturedEvents)?.forEach((event) => {
-                        if (payload.includes(event)) {
-                            this.capturedEvents[event] = parseSocketPayload(payload, this.msgpack).message;
+            if (!isQuickBet) {
+                if (!wsUrl.includes("notification") && wsUrl.includes(this.gameConfiguration.socketName ?? this.gameConfiguration.name.toLowerCase())) {
+                    this.gameSocket = ws;
+    
+                    ws.on("framereceived", async (msg: any) => {
+                        const { payload } = msg ?? "";
+    
+                        if (this.odds === null && payload.includes(GameEvent.GameConfig)) {
+                            const ingameResponse = parseSocketPayload(payload, this.msgpack).message;
+                            this.odds = ingameResponse.gameConfigs?.odds || ingameResponse.odds;
+                            this.gameConfigs = ingameResponse.gameConfigs;
                         }
+    
+                        Object.keys(this.capturedEvents)?.forEach((event) => {
+                            if (payload.includes(event)) {
+                                this.capturedEvents[event] = parseSocketPayload(payload, this.msgpack).message;
+                            }
+                        });
                     });
-                });
+                }
             }
+            else{
+                if (!wsUrl.includes("notification")) {
+                    this.gameSocket = ws;
+                    ws.on("framereceived", async (msg: any) => {
+                        const { payload } = msg ?? "";
+    
+                        if (this.odds === null && payload.includes(GameEvent.GameConfig)) {
+                            const ingameResponse = parseSocketPayload(payload, this.msgpack).message;
+                            this.odds = ingameResponse.gameConfigs?.odds || ingameResponse.odds;
+                            this.gameConfigs = ingameResponse.gameConfigs;
+                        }
+    
+                        Object.keys(this.capturedEvents)?.forEach((event) => {
+                            if (payload.includes(event)) {
+                                this.capturedEvents[event] = parseSocketPayload(payload, this.msgpack).message;
+                            }
+                        });
+                    });
+                }
+            }
+
         });
 
         await this.logConsole();
