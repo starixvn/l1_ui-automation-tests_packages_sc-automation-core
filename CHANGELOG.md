@@ -1,3 +1,10 @@
+## [1.61.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.61.0...v1.61.1) (2024-12-26)
+
+
+### Bug Fixes
+
+* handle alert dialog on SG ([8a4df16](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/8a4df1654436ce69e4757f493b2554b47e8b047b))
+
 # [1.61.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.60.0...v1.61.0) (2024-12-26)
 
 
