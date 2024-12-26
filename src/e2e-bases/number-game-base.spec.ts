@@ -717,7 +717,7 @@ export class NumberGameBase {
 
         test.use({
             gameConfigurations: this.options.gameConfiguration,
-            locators: this.options.locators,
+            locators: [this.options.locators],
         });
 
         test.describe.serial(`${this.options.gameConfiguration.name} E2E Tests`, () => {

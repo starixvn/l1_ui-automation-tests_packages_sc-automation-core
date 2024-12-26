@@ -147,7 +147,7 @@ export class TicketDetailGameBase {
 
         admintest.use({
             gameConfigurations: this.options.gameConfiguration,
-            locators: this.options.locators,
+            locators: [this.options.locators],
         });
 
         admintest.describe.serial(`${this.options.gameConfiguration.name} Ticket Detail Tests`, () => {

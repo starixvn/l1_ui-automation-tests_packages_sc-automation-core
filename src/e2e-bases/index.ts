@@ -8,7 +8,7 @@ import { BalancedBettingGameBase } from "./balanced-betting-game-base.spec";
 import { CascadingSlotGameBase } from "./cascading-slot-game-base.spec";
 import { CrashGameBase } from "./crash-game-base.spec";
 import { NumberGameBase } from "./number-game-base.spec";
-import { MarbalGameBase } from "./marbal-game-base.spec";
+import { MarbleGameBase } from "./marble-game-base.spec";
 
 
 export {
@@ -23,5 +23,5 @@ export {
     CascadingSlotGameBase,
     CrashGameBase,
     NumberGameBase,
-    MarbalGameBase
+    MarbleGameBase
 };

@@ -95,7 +95,7 @@ export class MobiGameBase {
 
         test.use({
             gameConfigurations: this.options.gameConfiguration,
-            locators: this.options.locators,
+            locators: [this.options.locators],
         });
 
         test.describe.serial(`${projectName} - ${this.options.gameConfiguration.name} Smoke Tests`, () => {

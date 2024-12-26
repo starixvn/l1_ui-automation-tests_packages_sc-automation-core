@@ -5,7 +5,7 @@ import { GameEvent } from "../_shared";
 
 const timeout = 4000;
 
-export class MarbalGameBase {
+export class MarbleGameBase {
     game: BaseGame;
     player: BasePlayer;
     constructor(protected options: IBaseOptions) {}
@@ -162,7 +162,7 @@ export class MarbalGameBase {
 
         test.use({
             gameConfigurations: this.options.gameConfiguration,
-            locators: this.options.locators,
+            locators: [this.options.locators],
         });
 
         test.describe.serial(`${this.options.gameConfiguration.name} E2E Tests`, () => {

@@ -32,28 +32,25 @@ export const ssoToGame = async (
 
     if (env.includes("local")) {
         const memberSiteLink = config[`${projectCode}memberSite`] + `?obCustId=${playerId}&balance=200000`;
-        const appType = projectCode.includes("mobi") ? 2 : projectCode.includes("keno") ? 4 : 1;
+        const appTypeMap: { [key: string]: number } = {
+            mobi: 2,
+            keno: 4,
+            dedirect: 6,
+            modirect: 7
+            
+        };
+        const appType = appTypeMap[projectCode] || 1;
         await page.goto(memberSiteLink);
         console.log("Login Local", memberSiteLink);
         await page.click(LobbyLocator.advancelbl);
         await page.click(`//input[@id=${appType}]`);
         await page.locator(LobbyLocator.langDropdown).selectOption(LobbyLocator[`${langCode}LangOption`]);
-        if (projectCode == "gn") {
-            const env =
-                process.env.npm_config_env == "local" ? "#local-0" : "#local-" + (process.env.npm_config_env ?? "local1").split("").pop();
-            await page.click(env);
-            await page.waitForTimeout(500);
-        }
         if (currencyGroup) {
             await page.fill(LobbyLocator.currencyInput, currencyGroup);
         }
         await page.click(LobbyLocator.tokenBtn);
         await page.waitForTimeout(500);
-        if (projectCode == "gn") {
-            ssoLink = (await page.locator("#link-local").textContent()) ?? "";
-        } else {
-            ssoLink = (await page.locator(LobbyLocator.ssoLink).textContent()) ?? "";
-        }
+        ssoLink = (await page.locator(LobbyLocator.ssoLink).textContent()) ?? "";
         await page.goto(`${ssoLink.replace("gameId=0", `gameId=${gameId}`)}`);
         global.ssoLink = `${ssoLink.replace("gameId=0", `gameId=${gameId}`)}`;
         const isCurrencyForm = await page.$$("id=currency");
@@ -223,13 +220,13 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
         if (process.env.npm_config_mobile === "true") {
             await page.click("//div[@class='header-option']/div[1]");
             await page.click("//div[@class='header-option']/div[1]/div//span[text()='Mobile']");
-        } 
-            await page.click(PRODLocator.openLoginFormbtn);
-            await page.fill(PRODLocator.usernameInput, accountId);
-            await page.fill(PRODLocator.passwordInput, pwd);
-            await page.click(PRODLocator.submitLoginbtn);
-            await page.waitForLoadState("domcontentloaded");
-            await page.waitForTimeout(5000);
+        }
+        await page.click(PRODLocator.openLoginFormbtn);
+        await page.fill(PRODLocator.usernameInput, accountId);
+        await page.fill(PRODLocator.passwordInput, pwd);
+        await page.click(PRODLocator.submitLoginbtn);
+        await page.waitForLoadState("domcontentloaded");
+        await page.waitForTimeout(5000);
     }
 
     if (projectCode === "l2") {

@@ -11,7 +11,7 @@ const projectName = process.env.npm_config_project?.includes("l1")
       ? "VG"
       : process.env.npm_config_project;
 
-export class MarbalGameBase {
+export class MarbleGameBase {
     protected game: BaseGame;
     protected player: BasePlayer;
     protected performanceTest: performanceTest = new performanceTest();
@@ -107,7 +107,7 @@ export class MarbalGameBase {
 
         test.use({
             gameConfigurations: this.options.gameConfiguration,
-            locators: this.options.locators,
+            locators: [this.options.locators],
         });
 
         test.describe.serial(`${projectName} - ${this.options.gameConfiguration.name} Smoke Tests`, () => {

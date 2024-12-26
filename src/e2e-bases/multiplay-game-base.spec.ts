@@ -114,7 +114,7 @@ export class MultiplayGameBase {
     protected useTestFixtures() {
         test.use({
             gameConfigurations: this.options.gameConfiguration,
-            locators: this.options.locators,
+            locators: [this.options.locators],
         });
     }
 

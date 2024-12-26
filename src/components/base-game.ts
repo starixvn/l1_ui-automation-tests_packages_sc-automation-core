@@ -23,7 +23,7 @@ const gauge = new promClient.Gauge({
 export class BaseGame {
     readonly BetBoardPostfix: string = "BetBoard";
     readonly page: Page;
-    readonly locators: Array<ImageLocator>;
+    readonly locators: any;
     readonly gameConfiguration: GameConfiguration;
     readonly device: any;
 
@@ -37,9 +37,9 @@ export class BaseGame {
     files: Array<any>;
     trackDownloadReport: DownloadReport;
 
-    constructor(page: Page, locators: Array<ImageLocator>, gameConfiguration: GameConfiguration, device?: any,trackDownload: boolean = false) {
+    constructor(page: Page, locators: any, gameConfiguration: GameConfiguration, device?: any,trackDownload: boolean = false) {
         this.page = page;
-        this.locators = locators;
+        this.locators = locators[0];
         this.gameConfiguration = gameConfiguration;
         this.capturedEvents = {};
         this.device = device;
@@ -449,10 +449,9 @@ export class BaseGame {
     }
 
     async getGuideContent() {
-        await this.page.locator("iframe").waitFor();
-        await this.page.frameLocator("iframe").locator("id=container-guide").waitFor();
-        const getguidecontent = this.page.frameLocator("iframe").locator("id=container-guide").innerText();
-        return getguidecontent;
+        const gameguide = this.page.locator('#game-guide iframe').contentFrame().locator('#container-guide');
+        await gameguide.waitFor(); 
+        return await gameguide.innerText(); 
     }
 
     async captureErrorMessage(): Promise<ImageSnapshot> {

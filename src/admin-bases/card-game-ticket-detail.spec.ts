@@ -151,7 +151,7 @@ export class CardTicketDetailsGameBase {
 
         admintest.use({
             gameConfigurations: this.options.gameConfiguration,
-            locators: this.options.locators,
+            locators: [this.options.locators],
         });
 
         admintest.describe.serial(`${this.options.gameConfiguration.name} Admin 1W Bet Details Tests`, () => {
