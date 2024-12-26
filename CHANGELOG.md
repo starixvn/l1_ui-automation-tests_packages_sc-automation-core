@@ -1,3 +1,10 @@
+# [1.61.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.60.0...v1.61.0) (2024-12-26)
+
+
+### Features
+
+* upgrade playwright version and fix some naming error for marble games ([d88d3af](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/d88d3af6f713d0cb0b95b0cf01b6e125af8c8f3a))
+
 # [1.60.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.59.2...v1.60.0) (2024-12-23)
 
 
