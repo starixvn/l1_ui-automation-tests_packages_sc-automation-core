@@ -221,6 +221,11 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
             await page.click("//div[@class='header-option']/div[1]");
             await page.click("//div[@class='header-option']/div[1]/div//span[text()='Mobile']");
         }
+        const alertDialogSelector = "//div[@class='modal modal--alert']//div[1]/a";
+        const alertDialogExists = await page.$(alertDialogSelector);
+        if (alertDialogExists) {
+            await page.click(alertDialogSelector);
+        }
         await page.click(PRODLocator.openLoginFormbtn);
         await page.fill(PRODLocator.usernameInput, accountId);
         await page.fill(PRODLocator.passwordInput, pwd);
