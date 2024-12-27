@@ -32,14 +32,15 @@ export const ssoToGame = async (
 
     if (env.includes("local")) {
         const memberSiteLink = config[`${projectCode}memberSite`] + `?obCustId=${playerId}&balance=200000`;
-        const appTypeMap: { [key: string]: number } = {
-            mobi: 2,
-            keno: 4,
-            dedirect: 6,
-            modirect: 7
-            
-        };
-        const appType = appTypeMap[projectCode] || 1;
+        const appType = projectCode.includes("mobi")
+            ? 2
+            : projectCode.includes("keno")
+              ? 4
+              : projectCode.includes("dedirect")
+                ? 6
+                : projectCode.includes("modirect")
+                  ? 7
+                  : 1;
         await page.goto(memberSiteLink);
         console.log("Login Local", memberSiteLink);
         await page.click(LobbyLocator.advancelbl);
@@ -126,16 +127,17 @@ const loginMemberSite = async (
 const selectCurrencyGroup = async (page: Page, currencyGroup?: string) => {
     await page.waitForTimeout(2000);
     global.ssoLink = page.url();
-    const frameExists = await page.$("#frmGame");
-    if (frameExists) {
+    const frameLocator = page.frameLocator("#frmGame");
+
+    if (await page.$("#frmGame")) {
+        // If currencyGroup is provided, select it
         if (currencyGroup) {
-            await page.frameLocator("#frmGame").locator(GroupCurrencyLocator.specificCheckbox).click();
-            page.frameLocator("#frmGame").locator(GroupCurrencyLocator.currencyGroupDropdown).selectOption(currencyGroup);
+            await frameLocator.locator(GroupCurrencyLocator.specificCheckbox).click();
+            await frameLocator.locator(GroupCurrencyLocator.currencyGroupDropdown).selectOption(currencyGroup);
         }
-        await page.frameLocator("#frmGame").locator(GroupCurrencyLocator.submitButton).click();
+        await frameLocator.locator(GroupCurrencyLocator.submitButton).click();
     } else {
         await page.locator(GroupCurrencyLocator.submitButton).waitFor();
-
         await page.click(GroupCurrencyLocator.submitButton);
     }
     await page.waitForLoadState();
@@ -216,15 +218,18 @@ const loginUAT = async (page: Page, accountId: string, pwd: string, langCode: st
 
 const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: string, projectCode: string, timeout: number = 15000) => {
     console.log(langCode);
+    const alertDialogSelector = "//div[@class='modal modal--alert']//div[1]/a";
+    await page.waitForSelector(alertDialogSelector, { timeout: 5000 }).catch(() => {
+        console.log("Alert dialog not found within the timeout period.");
+    });
+    const alertDialogExists = await page.$(alertDialogSelector);
+    if (alertDialogExists) {
+        await page.click(alertDialogSelector);
+    }
     if (projectCode === "l1") {
         if (process.env.npm_config_mobile === "true") {
             await page.click("//div[@class='header-option']/div[1]");
             await page.click("//div[@class='header-option']/div[1]/div//span[text()='Mobile']");
-        }
-        const alertDialogSelector = "//div[@class='modal modal--alert']//div[1]/a";
-        const alertDialogExists = await page.$(alertDialogSelector);
-        if (alertDialogExists) {
-            await page.click(alertDialogSelector);
         }
         await page.click(PRODLocator.openLoginFormbtn);
         await page.fill(PRODLocator.usernameInput, accountId);
@@ -233,7 +238,6 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
         await page.waitForLoadState("domcontentloaded");
         await page.waitForTimeout(5000);
     }
-
     if (projectCode === "l2") {
         if (process.env.npm_config_mobile === "true") {
             await page.setViewportSize({

@@ -25,9 +25,11 @@ export class MobiGameBase {
             await test.step("Verify that the Game Name and Bet Locators are displayed correctly on the screen.", async () => {
                 await this.game.waitForTimeout(10000);
                 const isFrame = await this.game.page.$("#frmGame");
+                await this.game.page.mouse.click(5, 5);
                 if (isFrame) {
                     await this.game.verifyFrameLocatorsVisible("#frmGame", this.options.locators.inGameUI);
-                } else {
+                } 
+                 else {
                     await this.game.verifyLocatorsVisible(this.options.locators.inGameUI);
                     await this.game.page.reload(); // L1 PRO issue only: need to be reload page for capturing web socket data, by default on framerecived do not have any channel
                 }
