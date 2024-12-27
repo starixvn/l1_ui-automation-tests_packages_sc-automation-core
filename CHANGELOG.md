@@ -1,3 +1,10 @@
+## [1.61.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.61.1...v1.61.2) (2024-12-27)
+
+
+### Bug Fixes
+
+* handle promotion dialog on VG ([4aec368](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/4aec3689026caf12fd0ce7939523786d63d2d71c))
+
 ## [1.61.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.61.0...v1.61.1) (2024-12-26)
 
 
