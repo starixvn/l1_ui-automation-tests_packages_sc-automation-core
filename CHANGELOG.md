@@ -1,3 +1,10 @@
+## [1.61.4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.61.3...v1.61.4) (2025-01-02)
+
+
+### Bug Fixes
+
+* socket hekpers ([33eb62e](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/33eb62e0c81d58ed8f69e9dc781ac74c6c8c28fc))
+
 ## [1.61.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.61.2...v1.61.3) (2025-01-02)
 
 
