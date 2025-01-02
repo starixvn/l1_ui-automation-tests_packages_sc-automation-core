@@ -1,3 +1,10 @@
+## [1.61.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.61.2...v1.61.3) (2025-01-02)
+
+
+### Bug Fixes
+
+* some bug related to ws and number game footer, add new tap game base ([ff489d5](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/ff489d5039d36012da222ba9a1d9b70595884ed7))
+
 ## [1.61.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.61.1...v1.61.2) (2024-12-27)
 
 
