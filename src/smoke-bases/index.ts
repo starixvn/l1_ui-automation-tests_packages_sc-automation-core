@@ -11,7 +11,7 @@ import { NumberGameBase } from "./number-game-base.spec";
 import { MobiGameBase } from "./mobi-game-base.spec";
 import { ISGameBase } from "./is-game-base.spec";
 import { MarbleGameBase } from "./marble-game-base";
-
+import { TapGameBase } from "./tap-game-base.spec";
 
 export {
     IBaseOptions,
@@ -27,5 +27,6 @@ export {
     NumberGameBase,
     MobiGameBase,
     ISGameBase,
-    MarbleGameBase
+    MarbleGameBase,
+    TapGameBase,
 };

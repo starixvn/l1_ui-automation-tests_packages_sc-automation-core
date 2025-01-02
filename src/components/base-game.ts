@@ -185,7 +185,7 @@ export class BaseGame {
             }
             await this.page.waitForTimeout(100);
         }
-        await this.page.waitForTimeout(100);
+        await this.page.waitForTimeout(500);
         console.log("Game UI ready for testing");
         await this.page.screenshot({ path: `./test-results/afterInGame.png` });
     }

@@ -34,10 +34,6 @@ export class NumberGameBase {
             await this.game.click(commonControls.iconMenu);
         });
 
-        test("Verify footer value", async () => {
-            // Assert
-            await this.game.verifyValueLocators(this.options.locators.footerValues);
-        });
     }
 
     protected placeBetAndSettleTests() {

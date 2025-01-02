@@ -14,14 +14,24 @@ export async function waitForMessage(socket: PlaywrightWs, key: string, gameName
         const { payload } = msg ?? "";
         const jsonMsg = parseSocketPayload(payload, msgpack);
 
-        if (payload.includes(key) && jsonMsg.eventName?.toLocaleLowerCase() === gameName?.toLocaleLowerCase()) {
+        const isPayloadString = typeof payload === 'string';
+        const isPayloadObject = typeof payload === 'object' && payload !== null;
+
+        if ((isPayloadString && payload.includes(key)) || (isPayloadObject && key in payload) && jsonMsg.eventName?.toLocaleLowerCase() === gameName?.toLocaleLowerCase()) {
             clearTimeout(timeoutId);
             resolve(jsonMsg.message);
         }
     });
+
     timeoutId = setTimeout(() => {
-        resolve(undefined); 
-      }, 150 * 1000);
+        resolve("");
+    }, 80 * 1000);
+
+    socket.on("socketerror", (error) => {
+        console.error("Socket error:", error);
+        clearTimeout(timeoutId);
+        resolve("");
+    });
     return promise;
 }
 
@@ -49,8 +59,8 @@ export async function waitForSpecificMessage(
     });
 
     timeoutId = setTimeout(() => {
-        resolve(undefined); 
-      }, 80 * 1000);
+        resolve(undefined);
+    }, 80 * 1000);
     return promise;
 }
 
