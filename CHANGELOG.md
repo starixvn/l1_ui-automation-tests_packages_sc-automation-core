@@ -1,3 +1,10 @@
+## [1.61.5](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.61.4...v1.61.5) (2025-01-03)
+
+
+### Bug Fixes
+
+* hedgebet ([584f2e2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/584f2e205fa269bf3f217a195613f7c9e2331e92))
+
 ## [1.61.4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.61.3...v1.61.4) (2025-01-02)
 
 
