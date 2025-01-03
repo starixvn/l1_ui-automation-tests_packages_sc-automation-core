@@ -12,8 +12,7 @@ export class BasePlayer {
 
     async placeHedgeBet(hedgeChoices: string[], amount: number = 1, subGameName?: string): Promise<void> {
         await this.game.waitUntilPlaceBet(subGameName);
-        await this.game.clickToChoice(hedgeChoices[0]);
-        await this.game.waitForTimeout(500);
+        await this.betOn(hedgeChoices[0], amount, subGameName);
         return await this.betOn(hedgeChoices[1], amount, subGameName);
     }
 
