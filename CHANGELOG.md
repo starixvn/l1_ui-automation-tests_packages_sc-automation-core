@@ -1,3 +1,10 @@
+# [1.62.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.61.5...v1.62.0) (2025-01-08)
+
+
+### Features
+
+* add e2e tabgame base ([0d3114b](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/0d3114bf6aadfd5cda6a8725eb24f7a926c15a13))
+
 ## [1.61.5](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.61.4...v1.61.5) (2025-01-03)
 
 
