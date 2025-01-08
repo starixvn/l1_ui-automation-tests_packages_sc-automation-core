@@ -431,10 +431,10 @@ export class BaseGame {
     }
 
     async clickGuide(waitTime: number = 500, isJP: boolean = false): Promise<void> {
-        const hamburgerMenu = this.locator("hamburgerMenu") || this.locator(baseLocatorNames.mnuHamburger);
-        let guideMenu = this.locator("guideMenu") || this.locator(baseLocatorNames.icoGuide);
+        const hamburgerMenu = this.locator("hamburgerMenu");
+        let guideMenu = this.locator("guideMenu") 
         if (isJP) {
-            guideMenu = this.locator(baseLocatorNames.icoGuideJP);
+            guideMenu = this.locator("icoGuideJP");
         }
         if (hamburgerMenu) {
             await hamburgerMenu.click(this.page);
@@ -493,7 +493,7 @@ export class BaseGame {
     }
 
     async clickOutSide(timeout = 500): Promise<void> {
-        const locator = this.locator("outside") || this.locator(baseLocatorNames.btnClosePopup);
+        const locator = this.locator("outside");
         if (locator) {
             await locator.click(this.page);
         }

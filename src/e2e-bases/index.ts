@@ -9,6 +9,7 @@ import { CascadingSlotGameBase } from "./cascading-slot-game-base.spec";
 import { CrashGameBase } from "./crash-game-base.spec";
 import { NumberGameBase } from "./number-game-base.spec";
 import { MarbleGameBase } from "./marble-game-base.spec";
+import { TapGameBase } from "./tap-game-base.spec";
 
 
 export {
@@ -23,5 +24,6 @@ export {
     CascadingSlotGameBase,
     CrashGameBase,
     NumberGameBase,
-    MarbleGameBase
+    MarbleGameBase,
+    TapGameBase
 };
