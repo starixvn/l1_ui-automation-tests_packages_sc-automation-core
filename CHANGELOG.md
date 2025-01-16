@@ -1,3 +1,10 @@
+# [1.63.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.62.0...v1.63.0) (2025-01-16)
+
+
+### Features
+
+* add bac game base and enhance  waitUntilGameUiLoad ([d35f313](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/d35f313c86d8a4e48ecf11c03bcacb4acc12955b))
+
 # [1.62.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.61.5...v1.62.0) (2025-01-08)
 
 
