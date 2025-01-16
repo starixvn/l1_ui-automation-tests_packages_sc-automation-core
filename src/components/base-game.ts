@@ -37,7 +37,7 @@ export class BaseGame {
     files: Array<any>;
     trackDownloadReport: DownloadReport;
 
-    constructor(page: Page, locators: any, gameConfiguration: GameConfiguration, device?: any,trackDownload: boolean = false) {
+    constructor(page: Page, locators: any, gameConfiguration: GameConfiguration, device?: any, trackDownload: boolean = false) {
         this.page = page;
         this.locators = locators[0];
         this.gameConfiguration = gameConfiguration;
@@ -70,30 +70,41 @@ export class BaseGame {
             account = projectCode != "ultra888" ? accounts[`${projectCode}${env}`][this.gameConfiguration.id] : this.gameConfiguration.id;
         }
         const startTime = performance.now(); // Measure start time
-        
-        await ssoToGame(this.page, this.gameConfiguration.id, account, this.gameConfiguration.productId[projectCode], env, projectCode, this.gameConfiguration.currencyGroup);
+
+        await ssoToGame(
+            this.page,
+            this.gameConfiguration.id,
+            account,
+            this.gameConfiguration.productId[projectCode],
+            env,
+            projectCode,
+            this.gameConfiguration.currencyGroup,
+        );
         this.msgpack = getConfig().enabledMsgPack;
         if (this.trackDownload) {
             await this.trackDownloadResources(this.page);
         }
 
-        const isQuickBet = process.env.npm_config_quickbet ?? false
+        const isQuickBet = process.env.npm_config_quickbet ?? false;
 
         this.page.on("websocket", async (ws) => {
-            const wsUrl = ws.url(); 
+            const wsUrl = ws.url();
             if (!isQuickBet) {
-                if (!wsUrl.includes("notification") && wsUrl.includes(this.gameConfiguration.socketName ?? this.gameConfiguration.name.toLowerCase())) {
+                if (
+                    !wsUrl.includes("notification") &&
+                    wsUrl.includes(this.gameConfiguration.socketName ?? this.gameConfiguration.name.toLowerCase())
+                ) {
                     this.gameSocket = ws;
-    
+
                     ws.on("framereceived", async (msg: any) => {
                         const { payload } = msg ?? "";
-    
+
                         if (this.odds === null && payload.includes(GameEvent.GameConfig)) {
                             const ingameResponse = parseSocketPayload(payload, this.msgpack).message;
                             this.odds = ingameResponse.gameConfigs?.odds || ingameResponse.odds;
                             this.gameConfigs = ingameResponse.gameConfigs;
                         }
-    
+
                         Object.keys(this.capturedEvents)?.forEach((event) => {
                             if (payload.includes(event)) {
                                 this.capturedEvents[event] = parseSocketPayload(payload, this.msgpack).message;
@@ -101,19 +112,18 @@ export class BaseGame {
                         });
                     });
                 }
-            }
-            else{
+            } else {
                 if (!wsUrl.includes("notification")) {
                     this.gameSocket = ws;
                     ws.on("framereceived", async (msg: any) => {
                         const { payload } = msg ?? "";
-    
+
                         if (this.odds === null && payload.includes(GameEvent.GameConfig)) {
                             const ingameResponse = parseSocketPayload(payload, this.msgpack).message;
                             this.odds = ingameResponse.gameConfigs?.odds || ingameResponse.odds;
                             this.gameConfigs = ingameResponse.gameConfigs;
                         }
-    
+
                         Object.keys(this.capturedEvents)?.forEach((event) => {
                             if (payload.includes(event)) {
                                 this.capturedEvents[event] = parseSocketPayload(payload, this.msgpack).message;
@@ -122,7 +132,6 @@ export class BaseGame {
                     });
                 }
             }
-
         });
 
         await this.logConsole();
@@ -168,20 +177,30 @@ export class BaseGame {
     }
 
     async waitUntilGameUiLoad(waitRange: number = 2) {
-        if (this.gameConfiguration.id == 102) {waitRange = 1} //handle baccarat lobby
+        if (this.gameConfiguration.id == 102) {
+            waitRange = 1;
+        } //handle baccarat lobby
         await this.page.screenshot({ path: `./test-results/beforeInGame.png` });
         await this.page.waitForTimeout(100);
         let filterA: string[] = [];
         const searchString = "LoadScene";
         this.page.on("console", (msg) => {
-            if (msg.text().includes(searchString) && !msg.text().includes(searchString + " db")) {
-                filterA.push(msg.text());
+            const msgText = msg.text();
+            const isRelevantMessage =
+                msgText.includes(searchString) &&
+                !msgText.includes(searchString + " db") &&
+                !msgText.includes(searchString + " microsite-game") &&
+                !msgText.includes(searchString + " gateway-102");
+
+            if (isRelevantMessage) {
+                filterA.push(msgText);
             }
         });
 
         while (filterA.length < waitRange) {
-            if (filterA.length==1) { //handle case promotion popup
-                await this.page.mouse.click(5,5,{delay:100})
+            if (filterA.length == 1) {
+                //handle case promotion popup
+                await this.page.mouse.click(5, 5, { delay: 100 });
             }
             await this.page.waitForTimeout(100);
         }
@@ -197,7 +216,7 @@ export class BaseGame {
             await this.page.locator("//div[contains(@class,'games_game-list')]").waitFor();
         }
         console.log("Game UI ready for testing");
-        await this.waitForTimeout(3000)
+        await this.waitForTimeout(3000);
         await this.page.mouse.click(5, 5, { delay: 100 });
         await this.page.screenshot({ path: `./test-results/afterInGame.png` });
     }
@@ -432,7 +451,7 @@ export class BaseGame {
 
     async clickGuide(waitTime: number = 500, isJP: boolean = false): Promise<void> {
         const hamburgerMenu = this.locator("hamburgerMenu");
-        let guideMenu = this.locator("guideMenu") 
+        let guideMenu = this.locator("guideMenu");
         if (isJP) {
             guideMenu = this.locator("icoGuideJP");
         }
@@ -449,9 +468,9 @@ export class BaseGame {
     }
 
     async getGuideContent() {
-        const gameguide = this.page.locator('#game-guide iframe').contentFrame().locator('#container-guide');
-        await gameguide.waitFor(); 
-        return await gameguide.innerText(); 
+        const gameguide = this.page.locator("#game-guide iframe").contentFrame().locator("#container-guide");
+        await gameguide.waitFor();
+        return await gameguide.innerText();
     }
 
     async captureErrorMessage(): Promise<ImageSnapshot> {
@@ -518,17 +537,26 @@ export class BaseGame {
     }
 
     async getCountFrameLocator(locator: string) {
-
         const countframecocos2 = await this.page.frameLocator("iframe").locator(locator).count();
-        if (countframecocos2 == 0){
-            if (await this.page.frameLocator('#frmGame').frameLocator('#microsite').frameLocator('#webview').locator(`${locator}[1]`).isVisible()){
-                return await this.page.frameLocator('#frmGame').frameLocator('#microsite').frameLocator('#webview').locator(locator).count();
-            } 
-            else if (await this.page.frameLocator('#frmGame').frameLocator('iframe').locator(`${locator}[1]`).isVisible()){
-                return await this.page.frameLocator('#frmGame').frameLocator('iframe').locator(locator).count();
-            }          
-            else if (await this.page.frameLocator("iframe").frameLocator("#webview").locator(`${locator}[1]`).isVisible()){
-                return await this.page.frameLocator("iframe").frameLocator("#webview").locator(locator).count()
+        if (countframecocos2 == 0) {
+            if (
+                await this.page
+                    .frameLocator("#frmGame")
+                    .frameLocator("#microsite")
+                    .frameLocator("#webview")
+                    .locator(`${locator}[1]`)
+                    .isVisible()
+            ) {
+                return await this.page
+                    .frameLocator("#frmGame")
+                    .frameLocator("#microsite")
+                    .frameLocator("#webview")
+                    .locator(locator)
+                    .count();
+            } else if (await this.page.frameLocator("#frmGame").frameLocator("iframe").locator(`${locator}[1]`).isVisible()) {
+                return await this.page.frameLocator("#frmGame").frameLocator("iframe").locator(locator).count();
+            } else if (await this.page.frameLocator("iframe").frameLocator("#webview").locator(`${locator}[1]`).isVisible()) {
+                return await this.page.frameLocator("iframe").frameLocator("#webview").locator(locator).count();
             }
         }
         return countframecocos2;

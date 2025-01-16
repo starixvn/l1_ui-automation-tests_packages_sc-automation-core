@@ -5,8 +5,6 @@ import { expect } from "../expects";
 import { GameGuides } from "../game-components/guides/guides.spec";
 import verifyImage from "../expects/verify-image";
 
-const timeout = 4000;
-
 export class TapGameBase {
     game: BaseGame;
     player: BasePlayer;
@@ -102,9 +100,9 @@ export class TapGameBase {
             await test.step(`Wait for 10 spins finished`, async () => {
                 await selectAutoSpin(this.game, totalAutoSpin, true);
                 for (let index = 1; index <= totalAutoSpin; index++) {
-                    const settledResults = await this.game.waitForSettlement();
+                    const endBet = await this.game.waitForEndBet();
 
-                    settledResultsAutoSpin.push(settledResults.winAmount);
+                    settledResultsAutoSpin.push(endBet.endBet);
                 }
             });
 
@@ -114,7 +112,9 @@ export class TapGameBase {
             });
 
             //Post-Act
-            await test.step(`Click out side to close big win`, async () => {
+            await test.step(`Turn off turbo mode`, async () => {
+                await this.game.clickLocator("btnAutoSpin", 1000);
+                await this.game.clickLocator("btnAutoSpinTurbo");
                 await this.game.clickOutSide(2000); //click outside to close big win 
             });
         });
@@ -128,8 +128,8 @@ export class TapGameBase {
 
             await test.step(`Wait for 5 spins and stop`, async () => {
                 for (let index = 1; index <= totalAutoSpin - 5; index++) {
-                    const settledResults = await this.game.waitForSettlement();
-                    settledResultsAutoSpin.push(settledResults.winAmount);
+                    const endBet = await this.game.waitForEndBet();
+                    settledResultsAutoSpin.push(endBet.endBet);
                 }
 
                 await this.game.clickLocator("btnAutoSpin"); //stop autospin
@@ -140,11 +140,6 @@ export class TapGameBase {
                 expect(settledResultsAutoSpin.length < 10).toBe(true);
             });
 
-            //Post-Act
-            await test.step(`Click outside`, async () => {
-                await this.game.waitForTimeout(timeout); //handle cases free spin or bonus
-                await this.game.clickOutSide(2000); //click outside to close big win popup
-            });
         });
 
         test("Verify user can stop auto spin process by press Spacebar", async () => {
@@ -156,8 +151,8 @@ export class TapGameBase {
 
             await test.step(`Wait for 5 spins and stop`, async () => {
                 for (let index = 1; index <= totalAutoSpin - 5; index++) {
-                    const settledResults = await this.game.waitForSettlement();
-                    settledResultsAutoSpin.push(settledResults.winAmount);
+                    const endBet = await this.game.waitForEndBet();
+                    settledResultsAutoSpin.push(endBet.endBet);
                 }
 
                 await this.game.keyboardPress("Space"); //stop autospin
@@ -168,11 +163,6 @@ export class TapGameBase {
                 expect(settledResultsAutoSpin.length < 10).toBe(true);
             });
 
-            //Post-Act
-            await test.step(`Click outside`, async () => {
-                await this.game.waitForTimeout(timeout); //handle cases free spin or bonus
-                await this.game.clickOutSide(2000); //click outside to close big win popup
-            });
         });
     }
 

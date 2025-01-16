@@ -12,6 +12,7 @@ import { MobiGameBase } from "./mobi-game-base.spec";
 import { ISGameBase } from "./is-game-base.spec";
 import { MarbleGameBase } from "./marble-game-base";
 import { TapGameBase } from "./tap-game-base.spec";
+import { BacGameBase } from "./bac-game-base.spec";
 
 export {
     IBaseOptions,
@@ -29,4 +30,5 @@ export {
     ISGameBase,
     MarbleGameBase,
     TapGameBase,
+    BacGameBase,
 };
