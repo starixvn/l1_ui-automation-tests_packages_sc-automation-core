@@ -27,7 +27,7 @@ export class BacGameBase extends MiniGameBase {
           const settledResults = await this.game.waitForSettlement();
     
           // Assert
-          expect(placeBetResponse.endBet).toBe(bet.amount*(1 + extraRate));
+          expect(placeBetResponse.endBet).toBe(parseFloat((bet.amount * (1 + extraRate)).toFixed(1)));
           if (settledResults.settlementResult.tie) {
             expect(settledResults.winAmount).toEqual(bet.amount);
           } else if (settledResults.winStatus){
