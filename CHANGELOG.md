@@ -1,3 +1,10 @@
+## [1.63.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.63.0...v1.63.1) (2025-01-16)
+
+
+### Bug Fixes
+
+* minor issue bac game base ([75ecb7c](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/75ecb7cbf4b57ff0a64bcfc59f4b7a654f3c73ed))
+
 # [1.63.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.62.0...v1.63.0) (2025-01-16)
 
 
