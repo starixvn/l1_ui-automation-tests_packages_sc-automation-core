@@ -21,13 +21,14 @@ export async function waitForMessage(socket: PlaywrightWs, key: string, gameName
     });
 
     timeoutId = setTimeout(() => {
-        resolve("");
+        console.log(`Timeout reached, can not find event ${key} in ${gameName}`);
+        resolve(undefined);
     }, 80 * 1000);
 
     socket.on("socketerror", (error) => {
         console.error("Socket error:", error);
         clearTimeout(timeoutId);
-        resolve("");
+        resolve(undefined);
     });
     return promise;
 }

@@ -282,9 +282,7 @@ export class BaseGame {
     }
 
     async waitUntilNextRound(subGameName?: string): Promise<any> {
-        this.capturedEvents[GameEvent.WinStatus] = "";
-
-        return await this.waitForEvent(GameEvent.StartRound, subGameName);
+       await this.waitForEvent(GameEvent.StartRound, subGameName);
     }
 
     async waitUntilPlaceBet(subGameName?: string): Promise<void> {
