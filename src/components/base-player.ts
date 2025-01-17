@@ -80,6 +80,7 @@ export class BasePlayer {
             return this.betOnCard(choice, amount);
         } else {
             let placeBetResponse = await this.betOn(choice, amount, subGameName);
+            console.log('placeBetResponse', placeBetResponse);
             if (!placeBetResponse || placeBetResponse.endBet == -1) {
                 console.log('Wait until next round then place bet !');
                 await this.game.waitUntilPlaceBet(subGameName);
