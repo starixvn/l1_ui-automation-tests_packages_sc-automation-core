@@ -1,3 +1,10 @@
+## [1.63.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.63.2...v1.63.3) (2025-01-17)
+
+
+### Bug Fixes
+
+* enhance websocket helper wait for msg ([9afd89b](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/9afd89b94aeb95495b15b2d5b969dc6112b85b76))
+
 ## [1.63.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.63.1...v1.63.2) (2025-01-17)
 
 
