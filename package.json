@@ -1,6 +1,6 @@
 {
     "name": "sc-automation-core",
-    "version": "1.63.1",
+    "version": "1.63.2",
     "description": "The core of SC automation tests. Built with Playwright.",
     "license": "ISC",
     "main": "lib/index.js",

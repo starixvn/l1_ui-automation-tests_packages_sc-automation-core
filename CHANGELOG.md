@@ -1,3 +1,10 @@
+## [1.63.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.63.1...v1.63.2) (2025-01-17)
+
+
+### Bug Fixes
+
+* log place bet response ([aebba77](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/aebba777f1a99a35cc38fdff198b89fddc226f7f))
+
 ## [1.63.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.63.0...v1.63.1) (2025-01-16)
 
 
