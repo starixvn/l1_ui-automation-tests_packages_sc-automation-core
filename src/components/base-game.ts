@@ -95,6 +95,7 @@ export class BaseGame {
                     wsUrl.includes(this.gameConfiguration.socketName ?? this.gameConfiguration.name.toLowerCase())
                 ) {
                     this.gameSocket = ws;
+                    console.log("wsUrl", ws.url(), this.gameConfiguration.socketName,this.gameConfiguration.name.toLowerCase());
 
                     ws.on("framereceived", async (msg: any) => {
                         const { payload } = msg ?? "";
@@ -270,7 +271,7 @@ export class BaseGame {
     }
 
     private getGameName(subGameName?: string): string {
-        return subGameName ?? this.gameConfiguration.name;
+        return subGameName ?? this.gameConfiguration.name.toLowerCase();
     }
 
     async waitForEvent(event: string, subGameName?: string): Promise<any> {
@@ -314,6 +315,7 @@ export class BaseGame {
     }
 
     async waitForSettlement(subGameName?: string): Promise<any> {
+        this.capturedEvents[GameEvent.WinStatus] = "";
         const message = await this.waitForEvent(GameEvent.Settlement, subGameName);
         await this.page.waitForTimeout(500); // add sleep due to feature Publish round result prior to settlement
         const winningByChoice = this.latestCaptureEvent(GameEvent.WinStatus);

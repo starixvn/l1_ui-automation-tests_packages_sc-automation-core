@@ -1,5 +1,5 @@
 export enum GameEvent {
-    StartRound = "snr",
+    StartRound = "remainingTime",
     Settlement = "finish",
     SignedIn = "signed",
     EndBet = "endBet",
