@@ -1,3 +1,10 @@
+## [1.63.4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.63.3...v1.63.4) (2025-01-21)
+
+
+### Bug Fixes
+
+* debug CI bac games ([83d42c2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/83d42c25779e1d2a23e1ef48f942942360972701))
+
 ## [1.63.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.63.2...v1.63.3) (2025-01-17)
 
 
