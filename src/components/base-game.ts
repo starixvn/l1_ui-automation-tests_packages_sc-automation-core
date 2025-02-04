@@ -13,7 +13,7 @@ import fs from "fs";
 import { DownloadReport } from "./download-report";
 const promClient = require("prom-client");
 const PNG = require("pngjs").PNG;
-const gatewayUrl = "http://10.70.70.120:9091";
+const gatewayUrl = "http://10.10.50.160:9091";
 const gauge = new promClient.Gauge({
     name: "performanceTest",
     help: "Game load time in seconds",
@@ -355,7 +355,9 @@ export class BaseGame {
     }
 
     async waitForTimeout(time = 5000): Promise<void> {
-        await this.page.waitForTimeout(time);
+        if (time > 0) { 
+            await this.page.waitForTimeout(time);
+        }
     }
 
     async capture(locatorName: string): Promise<ImageSnapshot> {
