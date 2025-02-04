@@ -1,3 +1,10 @@
+# [1.64.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.63.4...v1.64.0) (2025-02-04)
+
+
+### Features
+
+* change allure report domain ([d7cfcc0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/d7cfcc0c279b09fb89688ce7568c6a2713c400d6))
+
 ## [1.63.4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.63.3...v1.63.4) (2025-01-21)
 
 
