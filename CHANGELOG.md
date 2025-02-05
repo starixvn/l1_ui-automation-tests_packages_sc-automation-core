@@ -1,3 +1,10 @@
+## [1.64.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.64.0...v1.64.1) (2025-02-05)
+
+
+### Bug Fixes
+
+* uninstall "node-fetch" cause error Error: require() of ES Module ([d6bce27](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/d6bce27fd5ecb3e0eaac87c5ca4fb1c13b7e5c4c))
+
 # [1.64.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.63.4...v1.64.0) (2025-02-04)
 
 
