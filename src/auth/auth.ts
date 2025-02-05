@@ -2,7 +2,7 @@ import { LobbyLocator, UATLocator, PRODLocator, GroupCurrencyLocator, AdminLogin
 import { configs } from "./configs/config";
 import { Page } from "@playwright/test";
 import { createWorker } from "tesseract.js";
-import fetch from "node-fetch";
+import { fetch } from "undici";
 
 export enum Environment {
     LOCAL = "local",
