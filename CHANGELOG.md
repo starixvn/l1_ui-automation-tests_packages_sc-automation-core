@@ -1,3 +1,10 @@
+## [1.64.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.64.1...v1.64.2) (2025-02-06)
+
+
+### Bug Fixes
+
+* remove group currency ([a51ab68](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/a51ab688d501bade5911a7ba946d42b70074f89f))
+
 ## [1.64.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.64.0...v1.64.1) (2025-02-05)
 
 
