@@ -52,8 +52,8 @@ export const ssoToGame = async (
         await page.click(LobbyLocator.tokenBtn);
         await page.waitForTimeout(500);
         ssoLink = (await page.locator(LobbyLocator.ssoLink).textContent()) ?? "";
-        await page.goto(`${ssoLink.replace("gameId=0", `gameId=${gameId}`)}`);
         global.ssoLink = `${ssoLink.replace("gameId=0", `gameId=${gameId}`)}`;
+        await page.goto(global.ssoLink);
         const isCurrencyForm = await page.$$("id=currency");
         if (isCurrencyForm.length > 0) {
             await page.click("text=Submit");
@@ -117,10 +117,12 @@ const loginMemberSite = async (
     if (!projectCode.includes("is")) {
         if (projectCode === "ultra888") {
             await goToUltra888GameLobby(page, gameId);
-        } else {
+        }  else {
             await goToGameLobby(page, lobbyDomain, gameId, productId);
+            if (projectCode === "gn"  || projectCode === "l2") {
+                await selectCurrencyGroup(page, currencyGroup); // this change from 6 Feb 2025 and only apply select currency group for XD projects
+            }
         }
-        await selectCurrencyGroup(page, currencyGroup);
     }
 };
 

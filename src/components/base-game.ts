@@ -116,6 +116,7 @@ export class BaseGame {
             } else {
                 if (!wsUrl.includes("notification")) {
                     this.gameSocket = ws;
+                    console.log("wsUrl", ws.url(), this.gameConfiguration.socketName,this.gameConfiguration.name.toLowerCase());
                     ws.on("framereceived", async (msg: any) => {
                         const { payload } = msg ?? "";
 
@@ -190,8 +191,7 @@ export class BaseGame {
             const isRelevantMessage =
                 msgText.includes(searchString) &&
                 !msgText.includes(searchString + " db") &&
-                !msgText.includes(searchString + " microsite-game") &&
-                !msgText.includes(searchString + " gateway-102");
+                !msgText.includes(searchString + " microsite-game");
 
             if (isRelevantMessage) {
                 filterA.push(msgText);
@@ -201,11 +201,10 @@ export class BaseGame {
         while (filterA.length < waitRange) {
             if (filterA.length == 1) {
                 //handle case promotion popup
-                await this.page.mouse.click(5, 5, { delay: 100 });
+                await this.page.mouse.click(5, 36, { delay: 100 });
             }
-            await this.page.waitForTimeout(100);
+            await this.page.waitForTimeout(50);
         }
-        await this.page.waitForTimeout(800);
         console.log("Game UI ready for testing");
         await this.page.screenshot({ path: `./test-results/afterInGame.png` });
     }
