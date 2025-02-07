@@ -1,3 +1,10 @@
+## [1.64.4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.64.3...v1.64.4) (2025-02-07)
+
+
+### Bug Fixes
+
+* instant base game-> remove submit group currency ([18e1524](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/18e1524b756e38b0942715c9906b53b848bed07c))
+
 ## [1.64.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.64.2...v1.64.3) (2025-02-07)
 
 
