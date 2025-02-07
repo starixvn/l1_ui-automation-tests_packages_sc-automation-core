@@ -152,9 +152,9 @@ export class SlotGameBase {
         if (process.env.npm_config_jackpot) {
             this.jackpotTests();
         }
+        this.gameGuideTests();
         this.betStakeLevelTests(process.env.npm_config_project);
         this.placeBetAndSettleTests();
         this.ticketHistoryTests();
-        this.gameGuideTests();
     }
 }

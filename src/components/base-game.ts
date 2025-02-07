@@ -148,7 +148,8 @@ export class BaseGame {
                     if (projectCode.includes("mobi") || projectCode.includes("keno")) {
                         await this.waitUntilMobiGameUiLoad(projectCode);
                     } else if (!projectCode.includes("is")) {
-                        await this.waitUntilGameUiLoad();
+                        const waitRange = this.gameConfiguration.id == 102 ? 1 : 2;
+                        await this.waitUntilGameUiLoad(waitRange);
                     }
                     break;
             }
@@ -165,6 +166,7 @@ export class BaseGame {
         const totalSSOTimeSeconds =
             projectCode === "l1" ? ((endTime - startTime - 5000) / 1000).toFixed(2) : ((endTime - startTime - 10000) / 1000).toFixed(2);
         if (env === "prod" && (projectCode === "l1" || projectCode === "l2")) {
+            await this.page.mouse.click(5, 5, { delay: 100 }); //handle promotion popup
             console.log(`Total login time: ${totalSSOTimeSeconds} s`, this.gameConfiguration.name);
             const gateway = new promClient.Pushgateway(gatewayUrl, { timeout: 5000 });
             const gaugeLabel = `${projectCode}-${this.gameConfiguration.name}`;
@@ -179,9 +181,6 @@ export class BaseGame {
     }
 
     async waitUntilGameUiLoad(waitRange: number = 2) {
-        if (this.gameConfiguration.id == 102) {
-            waitRange = 1;
-        } //handle baccarat lobby
         await this.page.screenshot({ path: `./test-results/beforeInGame.png` });
         await this.page.waitForTimeout(100);
         let filterA: string[] = [];
@@ -199,10 +198,6 @@ export class BaseGame {
         });
 
         while (filterA.length < waitRange) {
-            if (filterA.length == 1) {
-                //handle case promotion popup
-                await this.page.mouse.click(5, 36, { delay: 100 });
-            }
             await this.page.waitForTimeout(50);
         }
         console.log("Game UI ready for testing");
