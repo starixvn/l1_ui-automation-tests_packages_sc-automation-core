@@ -1,3 +1,10 @@
+## [1.64.5](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.64.4...v1.64.5) (2025-02-11)
+
+
+### Bug Fixes
+
+* remove select currency in xd project and optimized openGuide ([24eddaa](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/24eddaaadbf4e7788770914ba4ffae295558f3b7))
+
 ## [1.64.4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.64.3...v1.64.4) (2025-02-07)
 
 
