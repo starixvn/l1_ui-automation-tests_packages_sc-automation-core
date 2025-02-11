@@ -12,12 +12,12 @@ export class GameGuides {
         this.game = game;
     }
 
-    tests(timeout: number, isJackpot : boolean = false) {
+    tests(timeout: number, isJackpot: boolean = false) {
         test(`Verify that player could open guide and clarify appropriate content @Guide`, async () => {
             // Arrange
             test.setTimeout(timeout);
             await test.step("Open game guide", async () => {
-                await this.game.clickGuide(10000, isJackpot);
+                await this.game.openGuide(10000, isJackpot);
             });
 
             // Act
@@ -32,38 +32,42 @@ export class GameGuides {
         });
     }
 
-    async captureGuideContent(isJackpot : boolean = false) {
+    async captureGuideContent(isJackpot: boolean = false) {
         let guidepages = await this.game.getCountFrameLocator(GuideLocator.xpathItem);
-        if (guidepages == 0){ //reopen guide if guide hasn't been load
+        if (guidepages == 0) {
+            //reopen guide if guide hasn't been load
             await this.game.clickOutSide(2000);
-            await this.game.clickGuide(10000, isJackpot);
+            await this.game.openGuide(10000, isJackpot);
             guidepages = await this.game.getCountFrameLocator(GuideLocator.xpathItem);
         }
         expect(guidepages).toBeGreaterThan(0);
         for (let index = 1; index <= guidepages; index++) {
-            const filename = isJackpot == true ? `guide-JP-${index}` : `guide-${index}`
+            const filename = isJackpot == true ? `guide-JP-${index}` : `guide-${index}`;
             const element = `${GuideLocator.xpathItem}[${index}]`;
             await this.snapshot(this.game.page, filename, element);
-            await verifyImage(this.game, filename, 0.04)
+            await verifyImage(this.game, filename, 0.04);
         }
-
     }
 
-    async snapshot(page: Page, name : string, element: string) {
+    async snapshot(page: Page, name: string, element: string) {
         //const imageName = formatName(name);
-        let root:any = page;
-        if (await page.frameLocator('#frmGame').frameLocator('#microsite').frameLocator('#webview').locator(`${GuideLocator.xpathItem}[1]`).isVisible()){
-            root =  page.frameLocator('#frmGame').frameLocator('#microsite').frameLocator('#webview');
-        } 
-        else if (await page.frameLocator('#frmGame').frameLocator('iframe').locator(`${GuideLocator.xpathItem}[1]`).isVisible()){
-            root = page.frameLocator('#frmGame').frameLocator('iframe');
-        }          
-        else if (await page.frameLocator("iframe").frameLocator("#webview").locator(`${GuideLocator.xpathItem}[1]`).isVisible()){
-            root = page.frameLocator("iframe").frameLocator("#webview")
+        let root: any = page;
+        if (
+            await page
+                .frameLocator("#frmGame")
+                .frameLocator("#microsite")
+                .frameLocator("#webview")
+                .locator(`${GuideLocator.xpathItem}[1]`)
+                .isVisible()
+        ) {
+            root = page.frameLocator("#frmGame").frameLocator("#microsite").frameLocator("#webview");
+        } else if (await page.frameLocator("#frmGame").frameLocator("iframe").locator(`${GuideLocator.xpathItem}[1]`).isVisible()) {
+            root = page.frameLocator("#frmGame").frameLocator("iframe");
+        } else if (await page.frameLocator("iframe").frameLocator("#webview").locator(`${GuideLocator.xpathItem}[1]`).isVisible()) {
+            root = page.frameLocator("iframe").frameLocator("#webview");
+        } else {
+            root = page.frameLocator("iframe");
         }
-        else {
-            root = page.frameLocator("iframe")
-        }
-        await root.locator(element).screenshot({ path: formatScreenshotFile(name)});
+        await root.locator(element).screenshot({ path: formatScreenshotFile(name) });
     }
 }

@@ -95,7 +95,7 @@ export class BaseGame {
                     wsUrl.includes(this.gameConfiguration.socketName ?? this.gameConfiguration.name.toLowerCase())
                 ) {
                     this.gameSocket = ws;
-                    console.log("wsUrl", ws.url(), this.gameConfiguration.socketName,this.gameConfiguration.name.toLowerCase());
+                    console.log("wsUrl", ws.url(), this.gameConfiguration.socketName, this.gameConfiguration.name.toLowerCase());
 
                     ws.on("framereceived", async (msg: any) => {
                         const { payload } = msg ?? "";
@@ -116,7 +116,7 @@ export class BaseGame {
             } else {
                 if (!wsUrl.includes("notification")) {
                     this.gameSocket = ws;
-                    console.log("wsUrl", ws.url(), this.gameConfiguration.socketName,this.gameConfiguration.name.toLowerCase());
+                    console.log("wsUrl", ws.url(), this.gameConfiguration.socketName, this.gameConfiguration.name.toLowerCase());
                     ws.on("framereceived", async (msg: any) => {
                         const { payload } = msg ?? "";
 
@@ -277,7 +277,7 @@ export class BaseGame {
     }
 
     async waitUntilNextRound(subGameName?: string): Promise<any> {
-       await this.waitForEvent(GameEvent.StartRound, subGameName);
+        await this.waitForEvent(GameEvent.StartRound, subGameName);
     }
 
     async waitUntilPlaceBet(subGameName?: string): Promise<void> {
@@ -349,7 +349,7 @@ export class BaseGame {
     }
 
     async waitForTimeout(time = 5000): Promise<void> {
-        if (time > 0) { 
+        if (time > 0) {
             await this.page.waitForTimeout(time);
         }
     }
@@ -445,12 +445,10 @@ export class BaseGame {
         }
     }
 
-    async clickGuide(waitTime: number = 500, isJP: boolean = false): Promise<void> {
+    async openGuide(waitTime: number = 500, isJP: boolean = false): Promise<void> {
         const hamburgerMenu = this.locator("hamburgerMenu");
-        let guideMenu = this.locator("guideMenu");
-        if (isJP) {
-            guideMenu = this.locator("icoGuideJP");
-        }
+        const guideMenu = this.locator(isJP ? "icoGuideJP" : "guideMenu");
+
         if (hamburgerMenu) {
             await hamburgerMenu.click(this.page);
             await this.waitForTimeout(500);

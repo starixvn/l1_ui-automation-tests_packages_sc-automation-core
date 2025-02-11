@@ -113,7 +113,6 @@ export class BasePlayer {
 
     async gnSlowPlaceBet(choice: string, amount: number): Promise<any> {
         const odds = await this.game.gnWaitUntilPlaceBet();
-        await this.gnSetQuickBet(false);
         await  this.gnBetOn(choice, amount);
         await this.game.click(numberGameLocator.commonControls.btnConfirmBet);
         const endBets =await this.game.waitForEndBet();
@@ -149,20 +148,6 @@ export class BasePlayer {
         }
 
         return this.game.waitForEndBet(subGameName);
-    }
-
-    async gnSetQuickBet(quickbet: boolean = true): Promise<any> {
-        console.log(quickbet);
-        // removed funtions
-        // const isCheck = await this.game.page.locator(numberGameLocator.commonControls.chkQuickBet).isChecked();
-        // if (quickbet == true && quickbet != isCheck) {
-        //     await this.game.click(numberGameLocator.commonControls.iconQuickBet);
-        //     await this.game.click(numberGameLocator.commonControls.btnConfirmQB);
-        //     await this.game.waitForTimeout(1000);
-        // } else if (quickbet == false && quickbet != isCheck) {
-        //     await this.game.click(numberGameLocator.commonControls.iconQuickBet);
-        //     await this.game.waitForTimeout(1000);
-        // }
     }
 
     async gnSettingPF(clientseed: string ): Promise<any> {

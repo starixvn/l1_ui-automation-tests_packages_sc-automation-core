@@ -119,8 +119,8 @@ const loginMemberSite = async (
             await goToUltra888GameLobby(page, gameId);
         }  else {
             await goToGameLobby(page, lobbyDomain, gameId, productId);
-            if (projectCode === "gn"  || projectCode === "l2") {
-                await selectCurrencyGroup(page, currencyGroup); // this change from 6 Feb 2025 and only apply select currency group for XD projects
+            if ( projectCode === "l2") {
+                await selectCurrencyGroup(page, currencyGroup); // this change from 6 Feb 2025 and only apply select currency group for l2 projects
             }
         }
     }
