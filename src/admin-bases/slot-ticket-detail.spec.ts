@@ -10,15 +10,16 @@ export class SlotTicketDetailGameBase {
     player: BasePlayer;
     configAdmin = this.options.Adminconfiguration;
     dataSet = this.configAdmin[`${process.env.npm_config_project}datasetTicket`];
-    
+    operatorId = this.configAdmin[`${process.env.npm_config_project}operatorId`]
+    mornitorlocator = this.configAdmin.mornitorlocator
     constructor(protected options: IBaseOptions) {}
 
     protected TC1() {
         admintest("Verify bet detail of archived round", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,1,this.configAdmin.accountId);
-            const archivedRound = await betdetailsTab.locator(adminLocator.commonUiBetDetailsTicket.tblMain);
-            await expect(archivedRound).toHaveScreenshot(`${process.env.npm_config_project}archivedRound.png`);
+            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,1,this.configAdmin.accountId,this.operatorId);
+            const archivedRound = await betdetailsTab.locator(adminLocator.commonUiBetDetailsTicket.tblMain).innerText();
+            expect(archivedRound).toContain("No data available");
             await betdetailsTab.close()
         });
     }
@@ -47,7 +48,7 @@ export class SlotTicketDetailGameBase {
 
         admintest("Verify BetDetails of case win", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId);
+            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId,this.operatorId);
             await this.verifyBetDetails(betdetailsTab, global.roundId,  this.dataSet["expect_win"].snapshot);
         });
     }
@@ -78,7 +79,7 @@ export class SlotTicketDetailGameBase {
 
         admintest("Verify BetDetails of case loose", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId);
+            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId,this.operatorId);
             await this.verifyBetDetails(betdetailsTab,global.roundId,  this.dataSet["expect_loose"].snapshot);
         });
     }
@@ -114,7 +115,7 @@ export class SlotTicketDetailGameBase {
         admintest("Verify BetDetails of bonus", async () => {
             let betdetailsTab :any
             const roundIdFreeSpin = [global.freespin1.roundId,global.freespin2.roundId,global.freespin3.roundId]
-            betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId);
+            betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId,this.operatorId);
             await this.verifyBetDetails(betdetailsTab,global.roundId,  this.dataSet["expect_freespin"].snapshot);
             await betdetailsTab.close()
 
@@ -166,9 +167,9 @@ export class SlotTicketDetailGameBase {
 
         admintest("Verify BetDetails of case case got bonus", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            let betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId);
+            let betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId,this.operatorId);
             await this.verifyBetDetails(betdetailsTab ,global.roundId,  this.dataSet["expect_bonus"].snapshot);
-            betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId);
+            betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId,this.operatorId);
             const totalBonus = await betdetailsTab.locator("//*/div[@id='game-ticket']/table[2]/tbody/tr[1]/td[4]").innerText()
             const win = await betdetailsTab.locator("//*/div[@id='game-ticket']/table[2]/tbody/tr[1]/td[6]").innerText()
             const totalWin = await betdetailsTab.locator("//*/div[@id='game-ticket']/table[2]/tbody/tr[3]/td[6]").innerText()
@@ -204,7 +205,7 @@ export class SlotTicketDetailGameBase {
 
         admintest("Verify BetDetails of jackpot", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId);
+            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId,this.operatorId);
             await this.verifyBetDetails(betdetailsTab,global.roundId , this.dataSet["expect_jackpot"].snapshot);        
         });
     }

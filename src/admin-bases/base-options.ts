@@ -14,6 +14,7 @@ export interface IBaseOptions {
 export class Adminconfiguration {
     accountId: number
     operatorId?: string;
+    mornitorlocator?: string;
     settleDomain: string;
     settlePath?: string;
     l1datasetRER?: object;

@@ -10,6 +10,8 @@ export class TableRERGameBase {
     player: BasePlayer;
     configAdmin = this.options.Adminconfiguration;
     dataSet = this.configAdmin[`${process.env.npm_config_project}datasetRER`];
+    operatorId = this.configAdmin[`${process.env.npm_config_project}operatorId`]
+    mornitorlocator = this.configAdmin.mornitorlocator
 
     constructor(protected options: IBaseOptions) {}
 
@@ -23,7 +25,8 @@ export class TableRERGameBase {
             let getRER = await this.admin.getRetrieveEndRound(
                 this.options.gameConfiguration.id,
                 currentRoundID,
-                this.options.Adminconfiguration.accountId
+                this.options.Adminconfiguration.accountId,
+                this.operatorId
             );
             await this.verifyRER(getRER, this.dataSet["expect_running"]);
         });
@@ -36,7 +39,8 @@ export class TableRERGameBase {
             let getRER = await this.admin.getRetrieveEndRound(
                 this.options.gameConfiguration.id,
                 archivedRoundID,
-                this.options.Adminconfiguration.accountId
+                this.options.Adminconfiguration.accountId,
+                this.operatorId
             );
             await this.verifyRER(getRER, this.dataSet["expect_archive"]);
         });
@@ -65,7 +69,8 @@ export class TableRERGameBase {
             let getRER = await this.admin.getRetrieveEndRound(
                 this.options.gameConfiguration.id,
                 global.settleRoundID,
-                this.options.Adminconfiguration.accountId
+                this.options.Adminconfiguration.accountId,
+                this.operatorId
             );
             await this.verifyRER(getRER, this.dataSet["expect_win"]);
         });
@@ -94,7 +99,8 @@ export class TableRERGameBase {
             let getRER = await this.admin.getRetrieveEndRound(
                 this.options.gameConfiguration.id,
                 global.settleRoundID,
-                this.options.Adminconfiguration.accountId
+                this.options.Adminconfiguration.accountId,
+                this.operatorId
             );
             await this.verifyRER(getRER, this.dataSet["expect_lose"]);
         });
@@ -125,7 +131,8 @@ export class TableRERGameBase {
             let getRER = await this.admin.getRetrieveEndRound(
                 this.options.gameConfiguration.id,
                 global.settleRoundID,
-                this.options.Adminconfiguration.accountId
+                this.options.Adminconfiguration.accountId,
+                this.operatorId
             );
             await this.verifyRER(getRER, this.dataSet["expect_multiple_choices"]);
         });
@@ -154,7 +161,8 @@ export class TableRERGameBase {
             let getRER = await this.admin.getRetrieveEndRound(
                 this.options.gameConfiguration.id,
                 global.settleRoundID,
-                this.options.Adminconfiguration.accountId
+                this.options.Adminconfiguration.accountId,
+                this.operatorId
             );
             await this.verifyRER(getRER, this.dataSet["expect_draw"]);
         });

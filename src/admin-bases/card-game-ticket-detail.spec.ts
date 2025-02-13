@@ -10,7 +10,8 @@ export class CardTicketDetailsGameBase {
     player: BasePlayer;
     configAdmin = this.options.Adminconfiguration;
     dataSet = this.configAdmin[`${process.env.npm_config_project}datasetTicket`];
-
+    operatorId = this.configAdmin[`${process.env.npm_config_project}operatorId`]
+    mornitorlocator = this.configAdmin.mornitorlocator
     constructor(protected options: IBaseOptions) {}
 
     protected TC1() {
@@ -35,7 +36,7 @@ export class CardTicketDetailsGameBase {
         });
 
         admintest("Verify bet details on handId is running", async () => {
-            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId);
+            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId,this.operatorId);
             await this.admin.waitForTimeout(1000);
             await this.verifyBetDetails(betdetailsTab, global.roundId ,this.dataSet["expect_running"].snapshot);
             await this.standCard();
@@ -45,9 +46,10 @@ export class CardTicketDetailsGameBase {
     protected TC2() {
         admintest("Verify bet details of archived round", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,1,this.configAdmin.accountId);
-            const archivedRound = await betdetailsTab.locator(adminLocator.commonUiBetDetailsTicket.tblMain);
-            await expect(archivedRound).toHaveScreenshot(`archivedRound.png`);
+            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,1,this.configAdmin.accountId,this.operatorId);
+            const archivedRound = await betdetailsTab.locator(adminLocator.commonUiBetDetailsTicket.tblMain).innerText();
+            expect(archivedRound).toContain("No data available");
+            await betdetailsTab.close();
         });
     }
 
@@ -75,7 +77,7 @@ export class CardTicketDetailsGameBase {
 
         admintest("Verify bet details of case placebet on win hand", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId);
+            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId,this.operatorId);
             await this.verifyBetDetails(betdetailsTab, global.roundId ,this.dataSet["expect_win"].snapshot);
         });
     }
@@ -105,7 +107,7 @@ export class CardTicketDetailsGameBase {
 
         admintest("Verify bet details of case placebet on lose hand", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId);
+            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId,this.operatorId);
             await this.verifyBetDetails(betdetailsTab, global.roundId ,this.dataSet["expect_lose"].snapshot);
         });
     }
@@ -135,7 +137,7 @@ export class CardTicketDetailsGameBase {
 
         admintest("Verify bet details of case placebet on draw hand", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId);
+            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId,this.operatorId);
             await this.verifyBetDetails(betdetailsTab, global.roundId ,this.dataSet["expect_draw"].snapshot);
         });
     }

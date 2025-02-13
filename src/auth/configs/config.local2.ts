@@ -8,6 +8,8 @@ export default {
     enabledMsgPack: false,
     guideLinkL1: "https://l1-guide-2.lumigame.com",
     guideLinkL2: "https://l2-guide-2.lumigame.com",
+    l1admin: "http://l1-admin2.lumigame.com",
+    l2admin: "http://l2-admin2.lumigame.com",
     l1mobimemberSite: "https://l1-glbs2.lumigame.com/signin",
     l1kenomemberSite: "https://l1-glbs2.lumigame.com/signin",
 };

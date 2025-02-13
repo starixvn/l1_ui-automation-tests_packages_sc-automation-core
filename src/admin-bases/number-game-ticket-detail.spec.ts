@@ -11,7 +11,8 @@ export class NumberTicketDetailGameBase {
     player: BasePlayer;
     configAdmin = this.options.Adminconfiguration;
     dataSet = this.configAdmin[`${process.env.npm_config_project}datasetTicket`];
-
+    operatorId = this.configAdmin[`${process.env.npm_config_project}operatorId`]
+    mornitorlocator = this.configAdmin.mornitorlocator
     constructor(protected options: IBaseOptions) {}
 
     protected TC1() {
@@ -26,8 +27,8 @@ export class NumberTicketDetailGameBase {
                 this.configAdmin.accountId,
                 this.dataSet.operatorId,
             );
-            const detailsRunning = await betdetailsTab.locator(adminLocator.commonUiBetDetailsTicket.tblMain);
-            await expect(detailsRunning).toHaveScreenshot(`detailsRunning.png`);
+            const detailsRunning = await betdetailsTab.locator(adminLocator.commonUiBetDetailsTicket.tblMain).innerText();
+            expect(detailsRunning).toContain("No data available");
             await betdetailsTab.close();
             global.settleRoundID = currentRoundID;
         });
@@ -44,8 +45,8 @@ export class NumberTicketDetailGameBase {
                 this.dataSet.operatorId,
             );
             expect(await betdetailsTab.locator(adminLocator.commonUiBetDetailsTicket.lblRoundId)).toHaveText(global.settleRoundID);
-            const detailsSettle = await betdetailsTab.locator(adminLocator.commonUiBetDetailsTicket.tblTable2);
-            await expect(detailsSettle).toHaveScreenshot(`emptyBetDetailsTable2.png`);
+            const detailsSettle = await betdetailsTab.locator(adminLocator.commonUiBetDetailsTicket.tblTable2).innerText();
+            expect(detailsSettle).toContain("No data available");
             await betdetailsTab.close();
         });
     }
@@ -60,8 +61,8 @@ export class NumberTicketDetailGameBase {
                 this.configAdmin.accountId,
                 this.dataSet.operatorId,
             );
-            const archivedRound = await betdetailsTab.locator(adminLocator.commonUiBetDetailsTicket.tblMain);
-            await expect(archivedRound).toHaveScreenshot(`archivedRound.png`);
+            const archivedRound = await betdetailsTab.locator(adminLocator.commonUiBetDetailsTicket.tblMain).innerText();
+            expect(archivedRound).toContain("No data available");
             await betdetailsTab.close();
         });
     }

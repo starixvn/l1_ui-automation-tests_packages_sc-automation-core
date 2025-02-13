@@ -171,14 +171,15 @@ export class BaseAdmin {
         return response;
     }
 
-    async getRunningRoundId(context: any, gameId: number) {
+    async getRunningRoundId(context: any, gameId: number, mornitorlocator?: string) {
         const admindomain = new URL(this.page.url());
         const monitoring = admindomain.protocol + "//" + admindomain.hostname + "/GameSettings/GameMonitor";
         await this.page.goto(monitoring);
-        await this.page.focus(adminLocator.monitoring[gameId]);
+        const mornitorLocator = mornitorlocator ?? adminLocator.monitoring[gameId];
+        await this.page.focus(mornitorLocator);
         const [newtab] = await Promise.all([
             context.waitForEvent("page"),
-            await this.page.click(adminLocator.monitoring[gameId]),
+            await this.page.click(mornitorLocator),
         ]);
         await newtab.waitForLoadState();
         await newtab.waitForSelector(adminLocator.commonUiResult.lblroundId, { state: 'visible' });
@@ -188,14 +189,15 @@ export class BaseAdmin {
         return Number(roundId);
     }
 
-    async gnGetRunningRoundId(context: any, gameId: number) {
+    async gnGetRunningRoundId(context: any, gameId: number, mornitorlocator?: string) {
         const admindomain = new URL(this.page.url());
         const monitoring = admindomain.protocol + "//" + admindomain.hostname + "/GameSettings/GameMonitor";
         await this.page.goto(monitoring);
-        await this.page.focus(adminLocator.monitoring[gameId]);
+        const mornitorLocator = mornitorlocator ?? adminLocator.monitoring[gameId];
+        await this.page.focus(mornitorLocator);
         const [newtab] = await Promise.all([
             context.waitForEvent("page"),
-            await this.page.click(adminLocator.monitoring[gameId]),
+            await this.page.click(mornitorLocator),
         ]);
         await newtab.waitForLoadState();
         await newtab.waitForSelector(adminLocator.commonUiResult.gnlblroundId, { state: 'visible' });
@@ -210,14 +212,15 @@ export class BaseAdmin {
             await this.postData(domain, setledata);
         }
 
-    async setUiGameResult(context: any, gameId: number, data: object) {
+    async setUiGameResult(context: any, gameId: number, data: object, mornitorlocator?: string) {
         const admindomain = new URL(this.page.url());
         const monitoring = admindomain.protocol + "//" + admindomain.hostname + "/GameSettings/GameMonitor";
         await this.page.goto(monitoring);
-        await this.page.focus(adminLocator.monitoring[gameId]);
+        const mornitorLocator = mornitorlocator ?? adminLocator.monitoring[gameId];
+        await this.page.focus(mornitorLocator);
         const [newtab] = await Promise.all([
             context.waitForEvent("page"),
-            await this.page.click(adminLocator.monitoring[gameId]),
+            await this.page.click(mornitorLocator),
         ]);
         await newtab.waitForLoadState();
         await newtab.waitForSelector(adminLocator.commonUiResult.lblTimmer, { state: 'visible' });
@@ -238,14 +241,15 @@ export class BaseAdmin {
         return Number(roundId+1);
     }
 
-    async gnSetUiGameResult(context: any, gameId: number, data: object) {
+    async gnSetUiGameResult(context: any, gameId: number, data: object, mornitorlocator?: string) {
         const admindomain = new URL(this.page.url());
         const monitoring = admindomain.protocol + "//" + admindomain.hostname + "/GameSettings/GameMonitor";
         await this.page.goto(monitoring);
-        await this.page.focus(adminLocator.monitoring[gameId]);
+        const mornitorLocator = mornitorlocator ?? adminLocator.monitoring[gameId];
+        await this.page.focus(mornitorLocator);
         const [newtab] = await Promise.all([
             context.waitForEvent("page"),
-            await this.page.click(adminLocator.monitoring[gameId]),
+            await this.page.click(mornitorLocator),
         ]);
         await newtab.waitForLoadState();
         await newtab.waitForSelector(adminLocator.commonUiResult.gnlblroundId, { state: 'visible' });
