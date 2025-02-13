@@ -1,3 +1,10 @@
+# [1.65.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.64.5...v1.65.0) (2025-02-13)
+
+
+### Features
+
+* core admin rer & td ([17051c4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/17051c4a2f07286b6582ca20c5abe8366afff1f9))
+
 ## [1.64.5](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.64.4...v1.64.5) (2025-02-11)
 
 
