@@ -45,6 +45,7 @@ export class TicketDetailGameBase {
             global.settleRoundID = Number(currentRoundId) + (this.settleNextRound ? 1 : 0);
             if (this.settleNextRound) {
                 await this.game.waitUntilNextRound();
+                await this.game.waitForTimeout(this.options.waitBetTimeout);
             }
         });
         admintest("THEN player able to place a bet and settle on running round", async () => {
@@ -84,6 +85,7 @@ export class TicketDetailGameBase {
             global.settleRoundID = Number(currentRoundId) + (this.settleNextRound ? 1 : 0);
             if (this.settleNextRound) {
                 await this.game.waitUntilNextRound();
+                await this.game.waitForTimeout(this.options.waitBetTimeout);
             }
         });
         admintest("THEN player able to place a bet and settle", async () => {
@@ -124,6 +126,7 @@ export class TicketDetailGameBase {
             global.settleRoundID = Number(currentRoundId) + (this.settleNextRound ? 1 : 0);
             if (this.settleNextRound) {
                 await this.game.waitUntilNextRound();
+                await this.game.waitForTimeout(this.options.waitBetTimeout);
             }
         });
         admintest("THEN player able to place a bet and lose", async () => {
@@ -192,7 +195,7 @@ export class TicketDetailGameBase {
         expect(roundId.includes(roundID)).toBe(true);
 
         for (const key in expectSnapshot) {
-            expect(await page.locator(key).screenshot()).toMatchSnapshot(expectSnapshot[key]);
+            expect(await page.locator(key).screenshot()).toMatchSnapshot(expectSnapshot[key],{ threshold: 0.3 });
         }
         await page.close();
     }

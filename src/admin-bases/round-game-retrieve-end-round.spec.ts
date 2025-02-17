@@ -42,6 +42,7 @@ export class RERGameBase {
             global.settleRoundID = Number(currentRoundId) + (this.settleNextRound ? 1 : 0);
             if (this.settleNextRound) {
                 await this.game.waitUntilNextRound();
+                await this.game.waitForTimeout(this.options.waitBetTimeout);
             }
         });
         admintest("THEN player able to place a bet and settle on running round", async () => {
@@ -79,6 +80,7 @@ export class RERGameBase {
             global.settleRoundID = Number(currentRoundId) + (this.settleNextRound ? 1 : 0);
             if (this.settleNextRound) {
                 await this.game.waitUntilNextRound();
+                await this.game.waitForTimeout(this.options.waitBetTimeout);
             }
         });
         admintest("THEN player able to place a bet and settle", async () => {
@@ -117,6 +119,7 @@ export class RERGameBase {
             global.settleRoundID = Number(currentRoundId) + (this.settleNextRound ? 1 : 0);
             if (this.settleNextRound) {
                 await this.game.waitUntilNextRound();
+                await this.game.waitForTimeout(this.options.waitBetTimeout);
             }
         });
         admintest("THEN player able to place a bet and settle on lose round", async () => {
