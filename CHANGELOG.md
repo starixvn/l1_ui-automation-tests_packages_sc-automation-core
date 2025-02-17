@@ -1,3 +1,10 @@
+## [1.65.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.65.1...v1.65.2) (2025-02-17)
+
+
+### Bug Fixes
+
+* base admin ticket detail ([ca09084](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/ca0908431e3d1d061ae14345f5b73bd4037d35fa))
+
 ## [1.65.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.65.0...v1.65.1) (2025-02-17)
 
 
