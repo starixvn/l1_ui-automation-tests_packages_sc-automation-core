@@ -1,3 +1,10 @@
+## [1.65.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.65.0...v1.65.1) (2025-02-17)
+
+
+### Bug Fixes
+
+* base admin for round games ([8a23614](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/8a236147f50b2f3fdc27a3058230674a1d97ab86))
+
 # [1.65.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.64.5...v1.65.0) (2025-02-13)
 
 
