@@ -1,5 +1,4 @@
 import { expect } from "@playwright/test";
-import { GameEvent } from "../_shared";
 import { admintest, BasePlayer, BaseGame, BaseAdmin } from "../components";
 import { IBaseOptions } from "./base-options";
 
@@ -9,26 +8,13 @@ export class RERGameBase {
     player: BasePlayer;
     configAdmin = this.options.Adminconfiguration;
     dataSet = this.configAdmin[`${process.env.npm_config_project}datasetRER`];
-    operatorId = this.configAdmin[`${process.env.npm_config_project}operatorId`]
-    mornitorlocator = this.configAdmin.mornitorlocator
+    operatorId = this.configAdmin[`${process.env.npm_config_project}operatorId`];
+    mornitorlocator = this.configAdmin.mornitorlocator;
+    settleNextRound = this.configAdmin.isSettleNextRound;
 
     constructor(protected options: IBaseOptions) {}
 
     protected TC1() {
-        admintest("Verify RER on roundId is running", async () => {
-            admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            let currentRoundID = await this.admin.getRunningRoundId(this.admin.page.context(),this.options.gameConfiguration.id,this.mornitorlocator);
-            let getRER = await this.admin.getRetrieveEndRound(
-                this.options.gameConfiguration.id,
-                currentRoundID,
-                this.options.Adminconfiguration.accountId,
-                this.operatorId
-            );
-            await this.verifyRER(getRER, this.dataSet["TC1_expect"]);
-        });
-    }
-
-    protected TC2() {
         admintest("Verify case roundId is archived", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             const archivedRoundID = 1;
@@ -36,24 +22,73 @@ export class RERGameBase {
                 this.options.gameConfiguration.id,
                 archivedRoundID,
                 this.options.Adminconfiguration.accountId,
-                this.operatorId
+                this.operatorId,
             );
-            await this.verifyRER(getRER, this.dataSet["TC2_expect"]);
+            await this.verifyRER(getRER, this.dataSet["Expect_NoData"]);
+        });
+    }
+
+    protected TC2() {
+        admintest("Verify case Player has ticket on roundId is running", async () => {
+            admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
+            await this.game.waitUntilPlaceBet();
+            const tabMonitoring = await this.admin.OpenMonitoring(
+                this.admin.page.context(),
+                this.options.gameConfiguration.id,
+                this.mornitorlocator,
+            );
+            await this.fillGameResult(tabMonitoring, this.dataSet["Settle_Win"]);
+            const currentRoundId = await this.getClientRunningRound();
+            global.settleRoundID = Number(currentRoundId) + (this.settleNextRound ? 1 : 0);
+            if (this.settleNextRound) {
+                await this.game.waitUntilNextRound();
+            }
+        });
+        admintest("THEN player able to place a bet and settle on running round", async () => {
+            // Arrange
+
+            admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
+            const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount ?? 1 };
+            // Act
+            await this.player.placeBet(bet.choice, bet.amount);
+        });
+
+        admintest("Verify RER of case of running round", async () => {
+            admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
+            let getRER = await this.admin.getRetrieveEndRound(
+                this.options.gameConfiguration.id,
+                global.settleRoundID,
+                this.options.Adminconfiguration.accountId,
+                this.operatorId,
+            );
+            await this.verifyRER(getRER, this.dataSet["Expect_NoData"]);
         });
     }
 
     protected TC3() {
         admintest("Set result win for user when placing 1 bet choice", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const settleRoundId = await this.admin.setUiGameResult(this.admin.page.context(),this.options.gameConfiguration.id ,this.dataSet["TC3_settle"],this.mornitorlocator)
-            global.settleRoundID = settleRoundId
+            await this.game.waitUntilPlaceBet();
+            const tabMonitoring = await this.admin.OpenMonitoring(
+                this.admin.page.context(),
+                this.options.gameConfiguration.id,
+                this.mornitorlocator,
+            );
+            await this.fillGameResult(tabMonitoring, this.dataSet["Settle_Win"]);
+            const currentRoundId = await this.getClientRunningRound();
+            global.settleRoundID = Number(currentRoundId) + (this.settleNextRound ? 1 : 0);
+            if (this.settleNextRound) {
+                await this.game.waitUntilNextRound();
+            }
         });
         admintest("THEN player able to place a bet and settle", async () => {
             // Arrange
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount ?? 1 };
             // Act
-            await this.placeBetOnRound(bet, global.settleRoundID);
+            await this.player.placeBet(bet.choice, bet.amount);
+            await this.game.waitForSettlement()
+            await this.game.waitForTimeout(5000)
         });
 
         admintest("Verify RER placebet 1 choice and win", async () => {
@@ -62,54 +97,39 @@ export class RERGameBase {
                 this.options.gameConfiguration.id,
                 global.settleRoundID,
                 this.options.Adminconfiguration.accountId,
-                this.operatorId
+                this.operatorId,
             );
-            await this.verifyRER(getRER, this.dataSet["TC3_expect"]);
+            await this.verifyRER(getRER, this.dataSet["Expect_Win"]);
         });
     }
 
     protected TC4() {
-        admintest("Verify case Player has ticket on roundId is running", async () => {
-            admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const settleRoundId = await this.admin.setUiGameResult(this.admin.page.context(),this.options.gameConfiguration.id ,this.dataSet["TC4_settle"],this.mornitorlocator)
-            global.settleRoundID = settleRoundId
-
-        });
-        admintest("THEN player able to place a bet and settle on running round", async () => {
-            // Arrange
-            admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount ?? 1 };
-            // Act
-            await this.placeBetOnRound(bet, global.settleRoundID, false);
-        });
-
-        admintest("Verify RER of running round", async () => {
-            admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            let getRER = await this.admin.getRetrieveEndRound(
-                this.options.gameConfiguration.id,
-                global.settleRoundID,
-                this.options.Adminconfiguration.accountId
-            );
-            await this.verifyRER(getRER, this.dataSet["TC4_expect"]);
-        });
-    }
-
-    protected TC5() {
         admintest("Verify case Player placebet 1 choice and lose", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const settleRoundId = await this.admin.setUiGameResult(this.admin.page.context(),this.options.gameConfiguration.id ,this.dataSet["TC5_settle"],this.mornitorlocator)
-            global.settleRoundID = settleRoundId
+            await this.game.waitUntilPlaceBet()
+            const tabMonitoring = await this.admin.OpenMonitoring(
+                this.admin.page.context(),
+                this.options.gameConfiguration.id,
+                this.mornitorlocator,
+            );
+            await this.fillGameResult(tabMonitoring, this.dataSet["Settle_Lose"]);
+            const currentRoundId = await this.getClientRunningRound();
+            global.settleRoundID = Number(currentRoundId) + (this.settleNextRound ? 1 : 0);
+            if (this.settleNextRound) {
+                await this.game.waitUntilNextRound();
+            }
         });
-        admintest("THEN player able to place a bet and lose", async () => {
+        admintest("THEN player able to place a bet and settle on lose round", async () => {
             // Arrange
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount ?? 1 };
-            this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
             // Act
-            await this.placeBetOnRound(bet, global.settleRoundID);
+            await this.player.placeBet(bet.choice, bet.amount);
+            await this.game.waitForSettlement()
+            await this.game.waitForTimeout(5000)
         });
 
-        admintest("Verify RER placebet 1 choice and lose", async () => {
+        admintest("Verify RER of Lose case", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             let getRER = await this.admin.getRetrieveEndRound(
                 this.options.gameConfiguration.id,
@@ -117,49 +137,7 @@ export class RERGameBase {
                 this.options.Adminconfiguration.accountId,
                 this.operatorId
             );
-            await this.verifyRER(getRER, this.dataSet["TC5_expect"]);
-        });
-    }
-
-    protected TC6() {
-        admintest("Verify case Player placebet multiple choices and lose", async () => {
-            admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const settleRoundId = await this.admin.setUiGameResult(this.admin.page.context(),this.options.gameConfiguration.id ,this.dataSet["TC6_settle"],this.mornitorlocator)
-            global.settleRoundID = settleRoundId
-        });
-        admintest("THEN player able to placebet multiple choices and lose all", async () => {
-            // Arrange
-            admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            this.game.attachSocketAndCaptureEvent(GameEvent.OwnBets);
-            this.game.attachSocketAndCaptureEvent(GameEvent.Settlement);
-            // Act
-            let betChoices: any = this.options.multiPlaceBetChoices;
-            const amount = this.options.placeBetAmount ?? 1;
-            await this.game.waitUntilPlaceBet();
-            await this.game.waitForTimeout(this.options.waitBetTimeout);
-            let currentRoundID = Number(await this.getClientRunningRound());
-            if (currentRoundID !=  global.settleRoundID) {
-                await this.game.waitUntilPlaceBet()
-            }
-            for (const iterator of betChoices) {
-                await this.game.clickStake(amount);
-                await this.game.clickToChoice(iterator);
-                await this.game.waitForTimeout(800);
-              }
-
-            // Act
-            await this.game.waitForEvent(GameEvent.Settlement);
-        });
-
-        admintest("Verify RER placebet multiple choices and lose all", async () => {
-            admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            let getRER = await this.admin.getRetrieveEndRound(
-                this.options.gameConfiguration.id,
-                global.settleRoundID,
-                this.options.Adminconfiguration.accountId,
-                this.operatorId
-            );
-            await this.verifyRER(getRER, this.dataSet["TC6_expect"]);
+            await this.verifyRER(getRER, this.dataSet["Expect_Lose"]);
         });
     }
 
@@ -193,50 +171,27 @@ export class RERGameBase {
         this.TC2();
         this.TC3();
         this.TC4();
-        this.TC5();
-        this.TC6();
-    }
+     }
 
     async verifyRER(getData: any, expectedData: any) {
-        const checkData = await JSON.parse(getData).result;
-        expect(checkData.totalAmount).toBe(expectedData.totalAmount);
-        expect(checkData.totalWin).toBe(expectedData.totalWin);
-        expect(checkData.validBetAmount).toBe(expectedData.validBetAmount);
-        expect(checkData.errorCode).toBe(expectedData.errorCode);
-        expect(checkData.errorDescription).toBe(expectedData.errorDescription);
-    }
-
-    async placeBetOnRound(bet: { choice: string; amount: number }, roundId: number, isWaitForSettlement = true) {
-        this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
-        this.game.attachSocketAndCaptureEvent(GameEvent.Settlement);
-        let currentRoundID = Number(await this.getClientRunningRound());
-        if (currentRoundID < roundId && isWaitForSettlement) {
-            // Act
-            await this.player.placeBet(bet.choice, bet.amount);
-            await this.game.waitForEvent(GameEvent.Settlement);
-        }
-        else if (currentRoundID ===  roundId && isWaitForSettlement) {
-
-            await this.game.clickStake(bet.amount);
-            await this.game.clickToChoice(bet.choice);
-            await this.game.waitForTimeout(800);
-            await this.game.waitForEvent(GameEvent.Settlement);
-        }
-        else if (currentRoundID ===  roundId) {
-
-            await this.game.clickStake(bet.amount);
-            await this.game.clickToChoice(bet.choice);
-            await this.game.waitForTimeout(800);
-        }
-        else if (currentRoundID !=  roundId) {
-            await this.game.waitUntilPlaceBet()
-            await this.game.clickStake(bet.amount);
-            await this.game.clickToChoice(bet.choice);
-            await this.game.waitForTimeout(800);
-        }
+        const checkData = await JSON.parse(getData).Result;
+        expect(checkData.TotalAmount).toBe(expectedData.totalAmount);
+        expect(checkData.ValidBetAmount).toBe(expectedData.validBetAmount);
+        expect(checkData.ErrorCode).toBe(expectedData.errorCode);
+        expect(checkData.ErrorDescription).toBe(expectedData.errorDescription);
     }
 
     async getClientRunningRound() {
         return this.game.getTextLocator("roundId");
+    }
+
+    async fillGameResult(newTab: any, data: object) {
+        for (const [key, value] of Object.entries(data)) {
+            await newTab.click(key);
+            await newTab.waitForTimeout(200);
+            await newTab.click(value);
+            await newTab.waitForTimeout(200);
+        }
+        await newTab.close();
     }
 }

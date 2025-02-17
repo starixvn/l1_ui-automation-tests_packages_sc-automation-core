@@ -21,4 +21,5 @@ export class Adminconfiguration {
     l1datasetTicket?: object;
     l2datasetRER?: object;
     l2datasetTicket?: object;
+    isSettleNextRound: boolean = false;
 }

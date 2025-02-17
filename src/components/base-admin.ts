@@ -5,7 +5,6 @@ import { loginAdmin } from "../auth/auth";
 import { GameConfiguration } from "./game-configuration";
 import * as adminLocator from "./base-admin-locator";
 
-
 export class BaseAdmin {
     readonly page: Page;
     readonly gameConfiguration: GameConfiguration;
@@ -115,7 +114,8 @@ export class BaseAdmin {
         };
         const currentPageUrl = this.page.url();
         const admindomain = new URL(currentPageUrl);
-        const responseData = (await this.makeJsonRequest("POST", admindomain.protocol + "//" + admindomain.hostname + "/jwt", requestHeader)) || "";
+        const responseData =
+            (await this.makeJsonRequest("POST", admindomain.protocol + "//" + admindomain.hostname + "/jwt", requestHeader)) || "";
         return JSON.parse(responseData as string).token || "";
     }
 
@@ -136,7 +136,7 @@ export class BaseAdmin {
                     const responseData = await response.text();
                     return responseData;
                 },
-                { url, jsonData }
+                { url, jsonData },
             );
         }
         // GET request
@@ -154,20 +154,23 @@ export class BaseAdmin {
         return response;
     }
 
-    async postData( url: string, data: string) {
+    async postData(url: string, data: string) {
         let response;
         // POST request
-            response = await this.page.evaluate(async ({ url, data }) => {
+        response = await this.page.evaluate(
+            async ({ url, data }) => {
                 const response = await fetch(url, {
                     method: "POST",
                     headers: {
-                        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+                        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
                     },
                     body: data,
                 });
                 const responseData = await response.text();
                 return responseData;
-            }, { url, data });
+            },
+            { url, data },
+        );
         return response;
     }
 
@@ -177,12 +180,9 @@ export class BaseAdmin {
         await this.page.goto(monitoring);
         const mornitorLocator = mornitorlocator ?? adminLocator.monitoring[gameId];
         await this.page.focus(mornitorLocator);
-        const [newtab] = await Promise.all([
-            context.waitForEvent("page"),
-            await this.page.click(mornitorLocator),
-        ]);
+        const [newtab] = await Promise.all([context.waitForEvent("page"), await this.page.click(mornitorLocator)]);
         await newtab.waitForLoadState();
-        await newtab.waitForSelector(adminLocator.commonUiResult.lblroundId, { state: 'visible' });
+        await newtab.waitForSelector(adminLocator.commonUiResult.lblroundId, { state: "visible" });
         let roundId = await newtab.locator(adminLocator.commonUiResult.lblroundId).innerText();
         roundId = Number(roundId.replace("#", ""));
         await newtab.close();
@@ -195,50 +195,29 @@ export class BaseAdmin {
         await this.page.goto(monitoring);
         const mornitorLocator = mornitorlocator ?? adminLocator.monitoring[gameId];
         await this.page.focus(mornitorLocator);
-        const [newtab] = await Promise.all([
-            context.waitForEvent("page"),
-            await this.page.click(mornitorLocator),
-        ]);
+        const [newtab] = await Promise.all([context.waitForEvent("page"), await this.page.click(mornitorLocator)]);
         await newtab.waitForLoadState();
-        await newtab.waitForSelector(adminLocator.commonUiResult.gnlblroundId, { state: 'visible' });
+        await newtab.waitForSelector(adminLocator.commonUiResult.gnlblroundId, { state: "visible" });
         let roundId = await newtab.locator(adminLocator.commonUiResult.lblroundId).innerText();
         roundId = Number(roundId.split("#")[1]);
         await newtab.close();
         return Number(roundId);
     }
 
-    async postGameResult(settleDomain: any,settlePath: string,setledata: any) {
-            const domain = `https://${settleDomain}.lumigame.com/monitoring/ResultMonitor/${settlePath}`;
-            await this.postData(domain, setledata);
-        }
+    async postGameResult(settleDomain: any, settlePath: string, setledata: any) {
+        const domain = `https://${settleDomain}.lumigame.com/monitoring/ResultMonitor/${settlePath}`;
+        await this.postData(domain, setledata);
+    }
 
-    async setUiGameResult(context: any, gameId: number, data: object, mornitorlocator?: string) {
+    async OpenMonitoring(context: any, gameId: number, mornitorlocator?: string) {
         const admindomain = new URL(this.page.url());
         const monitoring = admindomain.protocol + "//" + admindomain.hostname + "/GameSettings/GameMonitor";
         await this.page.goto(monitoring);
         const mornitorLocator = mornitorlocator ?? adminLocator.monitoring[gameId];
         await this.page.focus(mornitorLocator);
-        const [newtab] = await Promise.all([
-            context.waitForEvent("page"),
-            await this.page.click(mornitorLocator),
-        ]);
+        const [newtab] = await Promise.all([context.waitForEvent("page"), await this.page.click(mornitorLocator)]);
         await newtab.waitForLoadState();
-        await newtab.waitForSelector(adminLocator.commonUiResult.lblTimmer, { state: 'visible' });
-        let roundTimer = Number(await newtab.locator(adminLocator.commonUiResult.lblTimmer).innerText());
-        while (Number(roundTimer) < 10) {
-            roundTimer = Number(await newtab.locator(adminLocator.commonUiResult.lblTimmer).innerText());
-            await this.page.waitForTimeout(1000); // Wait for 1 second before checking again
-        }
-        let roundId = await newtab.locator(adminLocator.commonUiResult.lblroundId).innerText();
-        roundId =  Number(roundId.replace("#", ""))
-        for (const [key, value] of Object.entries(data)) {
-            await newtab.click(key);
-            await newtab.waitForTimeout(200);
-            await newtab.click(value);
-            await newtab.waitForTimeout(200);
-        }
-        await newtab.close();
-        return Number(roundId+1);
+        return newtab;
     }
 
     async gnSetUiGameResult(context: any, gameId: number, data: object, mornitorlocator?: string) {
@@ -247,12 +226,9 @@ export class BaseAdmin {
         await this.page.goto(monitoring);
         const mornitorLocator = mornitorlocator ?? adminLocator.monitoring[gameId];
         await this.page.focus(mornitorLocator);
-        const [newtab] = await Promise.all([
-            context.waitForEvent("page"),
-            await this.page.click(mornitorLocator),
-        ]);
+        const [newtab] = await Promise.all([context.waitForEvent("page"), await this.page.click(mornitorLocator)]);
         await newtab.waitForLoadState();
-        await newtab.waitForSelector(adminLocator.commonUiResult.gnlblroundId, { state: 'visible' });
+        await newtab.waitForSelector(adminLocator.commonUiResult.gnlblroundId, { state: "visible" });
         for (const [key, value] of Object.entries(data)) {
             await newtab.fill(key, value);
             await newtab.waitForTimeout(200);
@@ -284,30 +260,23 @@ export class BaseAdmin {
         return JSON.parse(response);
     }
 
-    async filterBetDetails(
-        context: any,
-        gameType: any,
-        roundId: any,
-        playerId: any,
-        operatorId: string = "ONEworks1"
-      ) {
+    async filterBetDetails(context: any, gameType: any, roundId: any, playerId: any, operatorId: string = "ONEworks1") {
         const admindomain = new URL(this.page.url());
         const monitoring = admindomain.protocol + "//" + admindomain.hostname + "/BetDetails";
         await this.page.goto(monitoring);
-        await this.page.waitForSelector(adminLocator.commonUiBetDetails.btnGetBetDetails, { state: 'visible' });
-        await this.page.locator(adminLocator.commonUiBetDetails.optOperatorId).selectOption({value:operatorId});
-        await this.page.locator(adminLocator.commonUiBetDetails.optGameType).selectOption({value:gameType.toString()});
+        await this.page.waitForSelector(adminLocator.commonUiBetDetails.btnGetBetDetails, { state: "visible" });
+        await this.page.locator(adminLocator.commonUiBetDetails.optOperatorId).selectOption({ value: operatorId });
+        await this.page.locator(adminLocator.commonUiBetDetails.optGameType).selectOption({ value: gameType.toString() });
         await this.page.fill(adminLocator.commonUiBetDetails.inpRoundId, roundId.toString());
         await this.page.fill(adminLocator.commonUiBetDetails.inpPlayerId, playerId.toString());
         const [newtab] = await Promise.all([
-          context.waitForEvent("page"),
-          await this.page.click(adminLocator.commonUiBetDetails.btnGetBetDetails),
+            context.waitForEvent("page"),
+            await this.page.click(adminLocator.commonUiBetDetails.btnGetBetDetails),
         ]);
         await newtab.waitForLoadState();
         await newtab.waitForTimeout(2000);
         return newtab;
-      };
-
+    }
 }
 
 export function convertDateTimeToGMTMinus4(dateTime: string): string {
