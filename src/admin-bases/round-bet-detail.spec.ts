@@ -4,12 +4,13 @@ import { GameEvent } from "../_shared";
 import * as adminLocator from "../components/base-admin-locator";
 import { expect } from "@playwright/test";
 
-export class TicketDetailGameBase {
+export class RoundBetDetailGameBase {
     admin: BaseAdmin;
     game: BaseGame;
     player: BasePlayer;
     configAdmin = this.options.Adminconfiguration;
-    dataSet = this.configAdmin[`${process.env.npm_config_project}datasetTicket`];
+    tdataSet = this.configAdmin[`${process.env.npm_config_project}datasetTicket`];
+    rdataSet = this.configAdmin[`${process.env.npm_config_project}datasetRER`];
     operatorId = this.configAdmin[`${process.env.npm_config_project}operatorId`];
     mornitorlocator = this.configAdmin.mornitorlocator;
     settleNextRound = this.configAdmin.isSettleNextRound;
@@ -18,10 +19,11 @@ export class TicketDetailGameBase {
     protected TC1() {
         admintest("Verify bet detail of archived round", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
+            const archivedRoundID = 1;
             const betdetailsTab = await this.admin.filterBetDetails(
                 this.admin.page.context(),
                 this.options.gameConfiguration.id,
-                1,
+                archivedRoundID,
                 this.configAdmin.accountId,
                 this.operatorId,
             );
@@ -29,24 +31,26 @@ export class TicketDetailGameBase {
             expect(noData).toContain("No data available");
             await betdetailsTab.close();
         });
+
+        admintest("Verify RER of archived round", async () => {
+            admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
+            const archivedRoundID = 1;
+            let getRER = await this.admin.getRetrieveEndRound(
+                this.options.gameConfiguration.id,
+                archivedRoundID,
+                this.options.Adminconfiguration.accountId,
+                this.operatorId,
+            );
+            await this.verifyRER(getRER, this.rdataSet["Expect_NoData"]);
+        });
     }
 
     protected TC2() {
         admintest("Verify case Player has ticket on roundId is running", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             await this.game.waitUntilPlaceBet();
-            const tabMonitoring = await this.admin.OpenMonitoring(
-                this.admin.page.context(),
-                this.options.gameConfiguration.id,
-                this.mornitorlocator,
-            );
-            await this.fillGameResult(tabMonitoring, this.dataSet["Settle_Win"]);
             const currentRoundId = await this.getClientRunningRound();
-            global.settleRoundID = Number(currentRoundId) + (this.settleNextRound ? 1 : 0);
-            if (this.settleNextRound) {
-                await this.game.waitUntilNextRound();
-                await this.game.waitForTimeout(this.options.waitBetTimeout);
-            }
+            global.settleRoundID = Number(currentRoundId)
         });
         admintest("THEN player able to place a bet and settle on running round", async () => {
             // Arrange
@@ -68,6 +72,18 @@ export class TicketDetailGameBase {
             );
             const noData = await betdetailsTab.locator(adminLocator.commonUiBetDetailsTicket.tblMain).innerText();
             expect(noData).toContain("No data available");
+            await betdetailsTab.close();
+        });
+
+        admintest("Verify RER of case of running round", async () => {
+            admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
+            let getRER = await this.admin.getRetrieveEndRound(
+                this.options.gameConfiguration.id,
+                global.settleRoundID,
+                this.options.Adminconfiguration.accountId,
+                this.operatorId,
+            );
+            await this.verifyRER(getRER, this.rdataSet["Expect_NoData"]);
         });
     }
 
@@ -80,7 +96,7 @@ export class TicketDetailGameBase {
                 this.options.gameConfiguration.id,
                 this.mornitorlocator,
             );
-            await this.fillGameResult(tabMonitoring, this.dataSet["Settle_Win"]);
+            await this.fillGameResult(tabMonitoring, this.tdataSet["Settle_Win"]);
             const currentRoundId = await this.getClientRunningRound();
             global.settleRoundID = Number(currentRoundId) + (this.settleNextRound ? 1 : 0);
             if (this.settleNextRound) {
@@ -108,7 +124,18 @@ export class TicketDetailGameBase {
                 this.configAdmin.accountId,
                 this.operatorId,
             );
-            await this.verifyBetDetails(betdetailsTab, global.settleRoundID, this.dataSet["Expect_Win"]);
+            await this.verifyBetDetails(betdetailsTab, global.settleRoundID, this.tdataSet["Expect_Win"]);
+        });
+
+        admintest("Verify RER placebet 1 choice and win", async () => {
+            admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
+            let getRER = await this.admin.getRetrieveEndRound(
+                this.options.gameConfiguration.id,
+                global.settleRoundID,
+                this.options.Adminconfiguration.accountId,
+                this.operatorId,
+            );
+            await this.verifyRER(getRER, this.rdataSet["Expect_Win"]);
         });
     }
 
@@ -121,7 +148,7 @@ export class TicketDetailGameBase {
                 this.options.gameConfiguration.id,
                 this.mornitorlocator,
             );
-            await this.fillGameResult(tabMonitoring, this.dataSet["Settle_Lose"]);
+            await this.fillGameResult(tabMonitoring, this.tdataSet["Settle_Lose"]);
             const currentRoundId = await this.getClientRunningRound();
             global.settleRoundID = Number(currentRoundId) + (this.settleNextRound ? 1 : 0);
             if (this.settleNextRound) {
@@ -149,7 +176,18 @@ export class TicketDetailGameBase {
                 this.configAdmin.accountId,
                 this.operatorId,
             );
-            await this.verifyBetDetails(betdetailsTab, global.settleRoundID, this.dataSet["Expect_Lose"]);
+            await this.verifyBetDetails(betdetailsTab, global.settleRoundID, this.tdataSet["Expect_Lose"]);
+        });
+
+        admintest("Verify RER of Lose case", async () => {
+            admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
+            let getRER = await this.admin.getRetrieveEndRound(
+                this.options.gameConfiguration.id,
+                global.settleRoundID,
+                this.options.Adminconfiguration.accountId,
+                this.operatorId
+            );
+            await this.verifyRER(getRER, this.rdataSet["Expect_Lose"]);
         });
     }
 
@@ -167,7 +205,7 @@ export class TicketDetailGameBase {
             locators: [this.options.locators],
         });
 
-        admintest.describe.serial(`${this.options.gameConfiguration.name} Ticket Detail Tests`, () => {
+        admintest.describe.serial(`${this.options.gameConfiguration.name} Bet Detail Tests`, () => {
             admintest.beforeAll(async ({ baseGame, baseAdmin }) => {
                 this.game = baseGame;
                 this.admin = baseAdmin;
@@ -195,7 +233,7 @@ export class TicketDetailGameBase {
         expect(roundId.includes(roundID)).toBe(true);
 
         for (const key in expectSnapshot) {
-            expect(await page.locator(key).screenshot()).toMatchSnapshot(expectSnapshot[key],{ threshold: 0.3 });
+            expect(await page.locator(key).screenshot()).toMatchSnapshot(expectSnapshot[key],{  maxDiffPixelRatio : 0.2 });
         }
         await page.close();
     }
@@ -208,5 +246,12 @@ export class TicketDetailGameBase {
             await newTab.waitForTimeout(200);
         }
         await newTab.close();
+    }
+
+    async verifyRER(getData: any, expectedData: any) {
+        const checkData = await JSON.parse(getData).Result;
+        expect(checkData.TotalAmount).toBe(expectedData.totalAmount);
+        expect(checkData.ErrorCode).toBe(expectedData.errorCode);
+        expect(checkData.ErrorDescription).toBe(expectedData.errorDescription);
     }
 }
