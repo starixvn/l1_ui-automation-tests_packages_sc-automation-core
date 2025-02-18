@@ -1,3 +1,10 @@
+# [1.66.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.65.2...v1.66.0) (2025-02-18)
+
+
+### Features
+
+* combined admin td and rer ([e49727d](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/e49727de938c81616c6ba23c534e113eeb8d5f96))
+
 ## [1.65.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.65.1...v1.65.2) (2025-02-17)
 
 
