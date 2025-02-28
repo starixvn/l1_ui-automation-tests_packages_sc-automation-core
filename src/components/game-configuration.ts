@@ -12,7 +12,6 @@ export class GameConfiguration {
     maxTimeout: number;
     odds: any;
     socketName?: string;
-    wsGameName?: Array<string>;
     betBoard?: boolean;
     slotsgame?: boolean;
     cardgame?: boolean;

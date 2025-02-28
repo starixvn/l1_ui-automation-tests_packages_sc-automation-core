@@ -129,7 +129,7 @@ export class RoundBetDetailGameBase {
 
         admintest("Verify RER placebet 1 choice and win", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            let getRER = await this.admin.getRetrieveEndRound(
+            const getRER = await this.admin.getRetrieveEndRound(
                 this.options.gameConfiguration.id,
                 global.settleRoundID,
                 this.options.Adminconfiguration.accountId,

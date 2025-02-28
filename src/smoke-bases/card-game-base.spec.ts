@@ -93,6 +93,7 @@ export class CardGameBase {
             });
             //Post-act
             await this.game.clickOutSide();
+            await this.game.waitForTimeout(5000);
         });
     }
 
