@@ -1,3 +1,10 @@
+# [1.67.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.66.0...v1.67.0) (2025-02-28)
+
+
+### Features
+
+* admin card game base ([aec6e8f](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/aec6e8f4b22e6f3a4a3ce53d73693eaf5c1310de))
+
 # [1.66.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.65.2...v1.66.0) (2025-02-18)
 
 
