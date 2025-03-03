@@ -1,3 +1,10 @@
+# [1.68.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.67.0...v1.68.0) (2025-03-03)
+
+
+### Features
+
+* feat: admin slot game base ([d5404ae](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/d5404ae328f7d67b30d3aab4f32386fc8800f356))
+
 # [1.67.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.66.0...v1.67.0) (2025-02-28)
 
 
