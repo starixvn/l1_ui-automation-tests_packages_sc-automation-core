@@ -23,7 +23,7 @@ const btnLocatorNames = ["btnRebet","btnHome","btnClosePopup","btnRightArrow","b
     "btnEnableAutoCashOut", "btnConfirmAutoCashout","btnConfirmAutoCashoutDisabled", "btnIncreaseAutoCashout", "btnDecreaseAutoCashout", "btnAutoPlay9Remaining", "btnAutoPlay10Remaining", "btnTooltipMd5", "btnConfirmStand",
     "btnClear", "btnDeal", "btnStand", "btnClientSeedClear", "btnClientSeed1", "btnClientSeed2", "btnClientSeed3", "btnClientSeed4", "btnClientSeed5", "btnClientSeedBackspace", "btnClientSeedSave",
     "btnPFPopupVerify", "btnHistoryVerify", "btnIncreaseClientSeed", "btnDecreaseClientSeed", "btnClientSeed0", "btnChangeClienSeed", "btnPFPopupTooltip", "btnClientSeedTooltip", "btnCombinedHashTooltip", "btnEarlyBetAccepted", "btnConfirmEnable", "btnConfirmDisable",
-    "btnChipBoardClose", "btnPresetStake", "btnPresetStakeFirstValue", "btnPresetStakeClear", "btnPresetStakeComfirm", "btnChipBoardClear", "btnPlaceBetChoice"]
+    "btnChipBoardClose", "btnPresetStake", "btnPresetStakeFirstValue", "btnPresetStakeClear", "btnPresetStakeComfirm", "btnChipBoardClear", "btnPlaceBetChoice", "btnPlaceBetBetAccepted"]
 
 const popLocatorNames = ["popAutoSpin","popHistory", "popGuide","popGameGuide", "popAutoSpinTurbo",  "popBetControll1", "popBetControlMaxBetLevell1",
     "popBetControlMinBetLevell1", "popBetControlMaxCoinValuel1", "popBetControlMinCoinValuel1", "popBetControll2", "popBetControlMaxBetLevell2", 
