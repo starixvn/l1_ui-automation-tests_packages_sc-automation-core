@@ -1,3 +1,10 @@
+## [1.68.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.68.0...v1.68.1) (2025-03-12)
+
+
+### Bug Fixes
+
+* handle promotion popup base instant game ([2ac3f86](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/2ac3f868d99e2f8f9ef465884b77f9c5aa423c3a))
+
 # [1.68.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.67.0...v1.68.0) (2025-03-03)
 
 
