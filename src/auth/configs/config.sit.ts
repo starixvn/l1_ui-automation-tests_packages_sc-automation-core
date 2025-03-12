@@ -1,11 +1,11 @@
 export default {
-    l1memberSite: "@http://smsw.playthefun.com:16012/login",
+    l1memberSite: "@https://sdms.playonesit.com:16003/login",
     l1lobbyDomain: "VendorGame/OpenSabaClub?GameID=",
     l1memberSiteMobile: "http://m.playthefun.com:6053",
     l1lobbyDomainMobile: "#ThirdPartyGame/vid=42&gid=0",
     l2memberSite: "http://athena000web.playthefun.com:3010/NewIndex?lang=en&WebSkinType=3",
     l2lobbyDomain: "VendorGame/GamePageLoading?Game=VGaming&refer=&GameID=",
-    l2memberSiteMobile: "http://athena000smart.playthefun.com:3010",
+    l2memberSiteMobile: "http://x999ms003.playonesit.com",
     l2lobbyDomainMobile: "VendorGame/GamePageLoading?Game=VGaming&refer=&GameID=",
     gnmemberSite: "@https://sdms.playonesit.com:16002/login",
     gnlobbyDomain: "VendorGame/Open3rdPartyGame?deviceType=1&vendorId=86&sportTypeId=240&gmt=7",

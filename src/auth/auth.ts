@@ -325,7 +325,20 @@ const loginSIT = async (page: Page, accountId: string, pwd: string, projectCode:
     }
     if (projectCode === "l2") {
         if (process.env.npm_config_mobile === "true") {
-            // be implemented later
+            await page.setViewportSize({ width: 340, height: 667 });
+            await page.selectOption(UATLocator.langDropdown, { value: UATLocator.vnLangOption });
+            await page.fill(UATLocator.memberIdInput, accountId);
+            await page.fill(UATLocator.pwdInput, pwd);
+            await page.click(UATLocator.loginButton);
+            await page.waitForLoadState("networkidle", { timeout: timeout });
+            const isCloseExist = await page.$$(PRODLocator.l2iconClose);
+            if (isCloseExist.length > 0) {
+                await page.click(PRODLocator.l2iconClose);
+            }
+            await page.setViewportSize({
+                width: 1280,
+                height: 720,
+            });
         } else {
             await page.waitForLoadState("domcontentloaded", { timeout: timeout });
             await page.locator(PRODLocator.usernameInput).waitFor();
@@ -390,6 +403,7 @@ const goToUltra888GameLobby = async (page: Page, productId: any, timeout = 15000
 
 const goToGameLobby = async (page: Page, lobbyDomain: string, gameId: number, productId, timeout: number = 15000) => {
     await page.goto(await formatGameLobbyUrl(page.url(), page, lobbyDomain, gameId, productId));
+    global.ssoLink = page.url();
     await page.waitForLoadState("load", { timeout });
 };
 
