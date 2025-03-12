@@ -1,3 +1,10 @@
+## [1.68.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.68.1...v1.68.2) (2025-03-12)
+
+
+### Bug Fixes
+
+* some minor wait ([31d09e3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/31d09e3019d9e2a328c6b2f9a6ee9dbe90293d90))
+
 ## [1.68.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.68.0...v1.68.1) (2025-03-12)
 
 
