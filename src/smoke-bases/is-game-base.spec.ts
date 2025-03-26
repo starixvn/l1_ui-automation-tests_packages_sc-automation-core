@@ -20,15 +20,9 @@ export class ISGameBase {
             await this.game.page.goto('https://'+domain+'/#Sports/s=1_0&d=l')
             await this.game.page.reload()
             await this.game.page.waitForLoadState('domcontentloaded')
-            await this.game.waitForTimeout(5000);
-            const isPromotionPopup = await this.game.page.locator("//div[contains(@class,'promo-highlight__btn')]/label").count();
-            if (isPromotionPopup>0) {
-              await this.game.page.locator("//div[contains(@class,'promo-highlight__btn')]/label").click();
-              await this.game.page.locator("//div[contains(@class,'promo-highlight__btn')]/a").click();
-              await this.game.waitForTimeout(1000);
-              await this.game.page.locator("//div[@id='dialogMessage']//a").click();
-            }
+            await this.handlePromotionPopup()
         });
+        
     }
 
     protected openInstantGame(): void {
@@ -86,4 +80,17 @@ export class ISGameBase {
         this.openInstantGame();
         this.placeBetAndSettleTests();
     }
+
+    async handlePromotionPopup() {
+        await this.game.waitForTimeout(5000);
+        const isPromotionPopup = await this.game.page.locator("//div[contains(@class,'promo-highlight__btn')]/label").count();
+        if (isPromotionPopup>0) {
+          await this.game.page.locator("//div[contains(@class,'promo-highlight__btn')]/label").click();
+          await this.game.page.locator("//div[contains(@class,'promo-highlight__btn')]/a").click();
+          await this.game.waitForTimeout(8000);
+          await this.game.page.locator("//div[@id='dialogMessage']//a").click();
+        }
+        await this.game.waitForTimeout(2000);
+    }
+    
 }

@@ -628,3 +628,43 @@ export const l1isprod = {
     80: "supertestte120201001",
     103: "supertestte120201002",
 };
+
+export const l2creditisprod = {
+    9: "SUPERTESTIBCAge0245",
+    7: "SUPERTESTIBCAge0246",
+    3: "SUPERTESTIBCAge0247",
+    45: "SUPERTESTIBCAge0248",
+    10: "SUPERTESTIBCAge0249",
+    25: "SUPERTESTIBCAge0245",
+    71: "SUPERTESTIBCAge0246",
+    80: "SUPERTESTIBCAge0247",
+    93: "SUPERTESTIBCAge0248",
+    103: "SUPERTESTIBCAge0249",
+};
+
+export const l1modirectprod = {
+    1: "supertestte120201002",
+    2: "supertestte120201003",
+    10: "supertestte120201004",
+    22: "supertestte120201006",
+    25: "supertestte120201009",
+    26: "supertestte120201011",
+    67: "supertestte120201012",
+    107: "supertestte120201013",
+};
+
+export const l2creditmodirectprod = {
+    1: "SUPERTESTIBCAge0245",
+    2: "SUPERTESTIBCAge0246",
+    10: "SUPERTESTIBCAge0247",
+    22: "SUPERTESTIBCAge0248",
+    25: "SUPERTESTIBCAge0249",
+    26: "SUPERTESTIBCAge0245",
+    67: "SUPERTESTIBCAge0246",
+    107: "SUPERTESTIBCAge0247",
+    3: "SUPERTESTIBCAge0248",
+    4: "SUPERTESTIBCAge0249",
+    5: "SUPERTESTIBCAge0245",
+    6: "SUPERTESTIBCAge0246",
+};
+

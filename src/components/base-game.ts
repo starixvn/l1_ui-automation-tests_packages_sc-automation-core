@@ -2,7 +2,7 @@ import type { Page } from "@playwright/test";
 import { expect } from "../expects";
 import type { WebSocket as PlaywrightWs } from "playwright-core";
 import { GameEvent, waitForMessage, parseSocketPayload, waitForSpecificMessage } from "./../_shared";
-import { ssoToGame, getConfig } from "./../auth/auth";
+import { ssoToGame, getConfig, ssoToGame2 } from "./../auth/auth";
 import { ImageLocator, ImageSnapshot } from "./base-image-locator";
 import { GameConfiguration } from "./game-configuration";
 import { createWorker } from "tesseract.js";
@@ -178,6 +178,75 @@ export class BaseGame {
                 }
             });
         }
+    }
+
+    async login2() {
+        const env = (process.env.npm_config_env ?? "local").toLowerCase();
+        const projectCode = process.env.npm_config_project ?? "l1";
+        let account: string;
+        if (env.includes("local")) {
+            account = this.gameConfiguration.accounts[env];
+        } else {
+            account = projectCode != "ultra888" ? accounts[`${projectCode}${env}`][this.gameConfiguration.id] : this.gameConfiguration.id;
+        }
+
+        await ssoToGame2(
+            this.page,
+            this.gameConfiguration.id,
+            account,
+            this.gameConfiguration.productId[projectCode],
+            env,
+            projectCode,
+            this.gameConfiguration.currencyGroup,
+        );
+        this.msgpack = getConfig().enabledMsgPack;
+
+        this.page.on("websocket", async (ws) => {
+            const wsUrl = ws.url();
+                if (
+                    !wsUrl.includes("notification") &&
+                    wsUrl.includes(this.gameConfiguration.socketName ?? this.gameConfiguration.name.toLowerCase())
+                ) {
+                    this.gameSocket = ws;
+                    console.log("wsUrl", ws.url(), this.gameConfiguration.socketName, this.gameConfiguration.name.toLowerCase());
+
+                    ws.on("framereceived", async (msg: any) => {
+                        const { payload } = msg ?? "";
+
+                        if (this.odds === null && payload.includes(GameEvent.GameConfig)) {
+                            const ingameResponse = parseSocketPayload(payload, this.msgpack).message;
+                            this.odds = ingameResponse.gameConfigs?.odds || ingameResponse.odds;
+                            this.gameConfigs = ingameResponse.gameConfigs;
+                        }
+
+                        Object.keys(this.capturedEvents)?.forEach((event) => {
+                            if (payload.includes(event)) {
+                                this.capturedEvents[event] = parseSocketPayload(payload, this.msgpack).message;
+                            }
+                        });
+                    });
+                }
+        });
+
+        await this.logConsole();
+        if (this.gameConfiguration.id === 0) {
+            await this.waitUntilGameLobbyUiLoad();
+        } else {
+            switch (projectCode) {
+                case "gn":
+                    await this.waitUntilXdGameUiLoad();
+                    break;
+                default:
+                    if (projectCode.includes("mobi") || projectCode.includes("keno")) {
+                        await this.waitUntilMobiGameUiLoad(projectCode);
+                    } else if (!projectCode.includes("is")) {
+                        const waitRange = this.gameConfiguration.id == 102 ? 1 : 2;
+                        await this.waitUntilGameUiLoad(waitRange);
+                    }
+                    break;
+            }
+        }
+
     }
 
     async waitUntilGameUiLoad(waitRange: number = 2) {

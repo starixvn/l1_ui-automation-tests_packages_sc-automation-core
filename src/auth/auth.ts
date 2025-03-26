@@ -2,7 +2,9 @@ import { LobbyLocator, UATLocator, PRODLocator, GroupCurrencyLocator, AdminLogin
 import { configs } from "./configs/config";
 import { Page } from "@playwright/test";
 import { createWorker } from "tesseract.js";
+import { readFile } from "node:fs/promises";
 import { fetch } from "undici";
+
 
 export enum Environment {
     LOCAL = "local",
@@ -13,6 +15,14 @@ export enum Environment {
     UAT = "uat",
     PROD = "prod",
 }
+
+const getAppType = (projectCode: string): number => {
+    if (projectCode.includes("mobi")) return 2;
+    if (projectCode.includes("keno")) return 4;
+    if (projectCode.includes("dedirect")) return 6;
+    if (projectCode.includes("modirect")) return 7;
+    return 1;
+};
 
 export const ssoToGame = async (
     page: Page,
@@ -29,6 +39,46 @@ export const ssoToGame = async (
     if (playerId === "" || productId === "") {
         throw new Error(`Missing Test Account or ProductId for game id ${gameId}!!!`);
     }
+
+    if (env.includes("local")) {
+        const memberSiteLink = config[`${projectCode}memberSite`] + `?obCustId=${playerId}&balance=200000`;
+        const appType = getAppType(projectCode);
+        await page.goto(memberSiteLink);
+        console.log("Login Local", memberSiteLink);
+        await page.click(LobbyLocator.advancelbl);
+        await page.click(`//input[@id=${appType}]`);
+        await page.locator(LobbyLocator.langDropdown).selectOption(LobbyLocator[`${langCode}LangOption`]);
+        
+        if (currencyGroup) {
+            await page.fill(LobbyLocator.currencyInput, currencyGroup);
+        }
+        
+        await page.click(LobbyLocator.tokenBtn);
+        await page.waitForTimeout(500);
+        ssoLink = (await page.locator(LobbyLocator.ssoLink).textContent()) ?? "";
+        global.ssoLink = `${ssoLink.replace("gameId=0", `gameId=${gameId}`)}`;
+        await page.goto(global.ssoLink);
+        const isCurrencyForm = await page.$$("id=currency");
+        if (isCurrencyForm.length > 0) {
+            await page.click("text=Submit");
+        }
+    } else {
+        await loginMemberSite(page, config, env, playerId, productId, langCode, projectCode, gameId, currencyGroup);
+    }
+};
+
+export const ssoToGame2 = async (
+    page: Page,
+    gameId: number,
+    playerId: string,
+    productId: string,
+    env: string,
+    projectCode: string,
+    currencyGroup?: string,
+): Promise<void> => {
+    const config = getConfig();
+    const langCode = process.env.npm_config_langCode ?? "vn";
+    let ssoLink;
 
     if (env.includes("local")) {
         const memberSiteLink = config[`${projectCode}memberSite`] + `?obCustId=${playerId}&balance=200000`;
@@ -59,7 +109,11 @@ export const ssoToGame = async (
             await page.click("text=Submit");
         }
     } else {
-        await loginMemberSite(page, config, env, playerId, productId, langCode, projectCode, gameId, currencyGroup);
+        const memberSiteUrl = await readFile(".auth/membersiteurl.txt", "utf8");
+        await page.goto(memberSiteUrl);
+        await page.waitForLoadState();
+        const lobbyDomain = config[`${projectCode}lobbyDomain`];
+        await goToGameLobby(page, lobbyDomain, gameId, productId);
     }
 };
 
@@ -68,6 +122,17 @@ export const getConfig = (): any => {
 
     return configs[env];
 };
+
+export const handlePromotionPopup = async (page: Page) => {
+    await page.waitForTimeout(5000);
+    const isPromotionPopup = await page.locator("//div[contains(@class,'promo-highlight__btn')]/label").count();
+    if (isPromotionPopup>0) {
+      await page.locator("//div[contains(@class,'promo-highlight__btn')]/label").click();
+      await page.locator("//div[contains(@class,'promo-highlight__btn')]/a").click();
+      await page.waitForTimeout(8000);
+      await page.locator("//div[@id='dialogMessage']//a").click();
+    }
+}
 
 const loginMemberSite = async (
     page: Page,
@@ -117,9 +182,20 @@ const loginMemberSite = async (
     if (!projectCode.includes("is")) {
         if (projectCode === "ultra888") {
             await goToUltra888GameLobby(page, gameId);
-        }  else {
+        } else if (projectCode.includes("modirect")) {
+            const domain = page.url().split("/");
+            const protocol = page.url().includes("http") ? "http" : "https";
+            await page.setViewportSize({
+                width: 500,
+                height: 608,
+            });
+            await page.goto(`${protocol}://${domain[2]}/${lobbyDomain}`);
+            await page.waitForLoadState();
+            await handlePromotionPopup(page);
+            await page.frameLocator("//iframe[contains(@src,'https://direct')]").locator(`//img[@alt='game-${gameId}']`).click();
+        } else {
             await goToGameLobby(page, lobbyDomain, gameId, productId);
-            if ( projectCode === "l2") {
+            if (projectCode === "l2") {
                 await selectCurrencyGroup(page, currencyGroup); // this change from 6 Feb 2025 and only apply select currency group for l2 projects
             }
         }
@@ -218,88 +294,6 @@ const loginUAT = async (page: Page, accountId: string, pwd: string, langCode: st
     }
 };
 
-const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: string, projectCode: string, timeout: number = 15000) => {
-    console.log(langCode);
-    const alertDialogSelector = "//div[@class='modal modal--alert']//div[1]/a";
-    await page.waitForSelector(alertDialogSelector, { timeout: 5000 }).catch(() => {
-        console.log("Alert dialog not found within the timeout period.");
-    });
-    const alertDialogExists = await page.$(alertDialogSelector);
-    if (alertDialogExists) {
-        await page.click(alertDialogSelector);
-    }
-    if (projectCode === "l1") {
-        if (process.env.npm_config_mobile === "true") {
-            await page.click("//div[@class='header-option']/div[1]");
-            await page.click("//div[@class='header-option']/div[1]/div//span[text()='Mobile']");
-        }
-        await page.click(PRODLocator.openLoginFormbtn);
-        await page.fill(PRODLocator.usernameInput, accountId);
-        await page.fill(PRODLocator.passwordInput, pwd);
-        await page.click(PRODLocator.submitLoginbtn);
-        await page.waitForLoadState("domcontentloaded");
-        await page.waitForTimeout(5000);
-    }
-    if (projectCode === "l2") {
-        if (process.env.npm_config_mobile === "true") {
-            await page.setViewportSize({
-                width: 340,
-                height: 667,
-            });
-            await page.goto(configs.prod.l2memberSiteMobile);
-            await page.waitForTimeout(3000);
-            await page.locator(PRODLocator.l2memberIdInput).waitFor();
-            await page.fill(PRODLocator.l2memberIdInput, accountId);
-            await page.fill(PRODLocator.l2pwdInput, pwd);
-            await page.click(PRODLocator.l2loginButton);
-            await page.waitForLoadState("domcontentloaded", { timeout: timeout });
-            await page.waitForTimeout(8000);
-            const iconSurvey = await page.$$(PRODLocator.l2iconClose);
-            if (iconSurvey.length > 0) {
-                await page.click(PRODLocator.l2iconClose);
-            }
-            await page.setViewportSize({
-                width: 1280,
-                height: 720,
-            });
-        } else {
-            const isSuccess = await loginWithCaptcha(page, accountId, pwd);
-            if (!isSuccess) {
-                console.log("Retry Login");
-                await page.locator("//i[@class='icon-refresh']").click();
-                await page.waitForTimeout(5000);
-                await loginWithCaptcha(page, accountId, pwd);
-            }
-            await page.waitForLoadState("domcontentloaded");
-            await page.waitForTimeout(2000);
-            await page.locator("#sportsFrame").waitFor({ state: "visible" });
-            await page.waitForTimeout(5000);
-        }
-    }
-    if (projectCode === "ultra888") {
-        const isConfirm = await page.$$(PRODLocator.ultra888popupconfirm);
-        if (isConfirm.length > 0) {
-            await page.click(PRODLocator.ultra888popupconfirm);
-        }
-        await page.waitForTimeout(2000);
-        await page.selectOption(PRODLocator.ultra888langDropdown, { value: "vn" });
-        await page.fill(PRODLocator.ultra888memberIdInput, "01862081667");
-        await page.fill(PRODLocator.ultra888pwdInput, "Bb1111");
-        await page.click(PRODLocator.ultra888loginButton);
-        await page.waitForTimeout(2000);
-        await page.waitForLoadState("domcontentloaded", { timeout });
-        await page.waitForTimeout(10000);
-    }
-    if (projectCode === "gn") {
-        await page.click(PRODLocator.openLoginFormbtn);
-        await page.fill(PRODLocator.usernameInput, accountId);
-        await page.fill(PRODLocator.passwordInput, pwd);
-        await page.click(PRODLocator.submitLoginbtn);
-        await page.waitForLoadState();
-        await page.waitForTimeout(5000);
-    }
-};
-
 const loginSIT = async (page: Page, accountId: string, pwd: string, projectCode: string, timeout: number = 15000) => {
     if (projectCode === "l1") {
         if (process.env.npm_config_mobile === "true") {
@@ -375,6 +369,105 @@ const loginSIT = async (page: Page, accountId: string, pwd: string, projectCode:
     }
 };
 
+const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: string, projectCode: string, timeout: number = 15000) => {
+    console.log(langCode);
+    const alertDialogSelector = "//div[@class='modal modal--alert']//div[1]/a";
+    await page.waitForSelector(alertDialogSelector, { timeout: 5000 }).catch(() => {
+        console.log("Alert dialog not found within the timeout period.");
+    });
+    const alertDialogExists = await page.$(alertDialogSelector);
+    if (alertDialogExists) {
+        await page.click(alertDialogSelector);
+    }
+
+    if (projectCode === "l1") {
+        if (process.env.npm_config_mobile === "true" || process.env.npm_config_project?.includes("modirect")) {
+            await page.click("//div[@class='header-option']/div[1]");
+            await page.click("//div[@class='header-option']/div[1]/div//span[text()='Mobile']");
+        }
+        await page.click(PRODLocator.openLoginFormbtn);
+        await page.fill(PRODLocator.usernameInput, accountId);
+        await page.fill(PRODLocator.passwordInput, pwd);
+        await page.click(PRODLocator.submitLoginbtn);
+        await page.waitForLoadState("domcontentloaded");
+        await page.waitForTimeout(5000);
+    }
+    
+    if (projectCode === "l2") {
+        if (process.env.npm_config_mobile === "true" && !process.env.npm_config_project?.includes("credit")) {
+            await page.setViewportSize({
+                width: 340,
+                height: 667,
+            });
+            await page.goto(configs.prod.l2memberSiteMobile);
+            await page.waitForTimeout(3000);
+            await page.locator(PRODLocator.l2memberIdInput).waitFor();
+            await page.fill(PRODLocator.l2memberIdInput, accountId);
+            await page.fill(PRODLocator.l2pwdInput, pwd);
+            await page.click(PRODLocator.l2loginButton);
+            await page.waitForLoadState("domcontentloaded", { timeout: timeout });
+            await page.waitForTimeout(8000);
+            const iconSurvey = await page.$$(PRODLocator.l2iconClose);
+            if (iconSurvey.length > 0) {
+                await page.click(PRODLocator.l2iconClose);
+            }
+            await page.setViewportSize({
+                width: 1280,
+                height: 720,
+            });
+        }
+
+        // CREDIT SITE VG
+        if (process.env.npm_config_project?.includes("modirect")||process.env.npm_config_project?.includes("credit")) {
+            await page.click("//div[@class='header-option']/div[1]");
+            await page.click("//div[@class='header-option']/div[1]/div//span[text()='Mobile']");
+            await page.click("//div[@class='header-login']");
+            await page.fill(PRODLocator.usernameInput, accountId);
+            await page.fill(PRODLocator.passwordInput, pwd);
+            await page.click("//div[@class='login-form']//a[@class='btn btn--secondary']");
+            await page.waitForLoadState("domcontentloaded");
+            await page.waitForTimeout(5000);
+        }
+
+        else {
+            const isSuccess = await loginWithCaptcha(page, accountId, pwd);
+            if (!isSuccess) {
+                console.log("Retry Login");
+                await page.locator("//i[@class='icon-refresh']").click();
+                await page.waitForTimeout(5000);
+                await loginWithCaptcha(page, accountId, pwd);
+            }
+            await page.waitForLoadState("domcontentloaded");
+            await page.waitForTimeout(2000);
+            await page.locator("#sportsFrame").waitFor({ state: "visible" });
+            await page.waitForTimeout(5000);
+        }
+    }
+
+    if (projectCode === "ultra888") {
+        const isConfirm = await page.$$(PRODLocator.ultra888popupconfirm);
+        if (isConfirm.length > 0) {
+            await page.click(PRODLocator.ultra888popupconfirm);
+        }
+        await page.waitForTimeout(2000);
+        await page.selectOption(PRODLocator.ultra888langDropdown, { value: "vn" });
+        await page.fill(PRODLocator.ultra888memberIdInput, "01862081667");
+        await page.fill(PRODLocator.ultra888pwdInput, "Bb1111");
+        await page.click(PRODLocator.ultra888loginButton);
+        await page.waitForTimeout(2000);
+        await page.waitForLoadState("domcontentloaded", { timeout });
+        await page.waitForTimeout(10000);
+    }
+    if (projectCode === "gn") {
+        await page.click(PRODLocator.openLoginFormbtn);
+        await page.fill(PRODLocator.usernameInput, accountId);
+        await page.fill(PRODLocator.passwordInput, pwd);
+        await page.click(PRODLocator.submitLoginbtn);
+        await page.waitForLoadState();
+        await page.waitForTimeout(5000);
+    }
+};
+
 const goToUltra888GameLobby = async (page: Page, productId: any, timeout = 15000) => {
     const ultra888MapGameIds = {
         2: `//*/div[contains(@style,"Vgaming_SeDie.")]/parent::div`,
@@ -409,9 +502,9 @@ const goToGameLobby = async (page: Page, lobbyDomain: string, gameId: number, pr
 
 const formatGameLobbyUrl = async (url: string, page: Page, lobbyDomain: string, gameId: number, productId: number): Promise<string> => {
     const domain = url.split("/");
-    const isAthenaOrQA = url.includes("athena") || url.includes("qa") || url.includes("/m.");
+    const protocol = url.includes("http") ? "http" : "https";
 
-    if (process.env.npm_config_project == "l2") {
+    if (process.env.npm_config_project == "l2" && process.env.npm_config_env == "prod") {
         const userAgent = await page.evaluate(() => navigator.userAgent); // Get User-Agent
         const cookies = await page.context().cookies();
         const sessionId = cookies.find((cookie) => cookie.name === "ASP.NET_SessionId" && cookie.domain === domain[2])?.value;
@@ -430,12 +523,10 @@ const formatGameLobbyUrl = async (url: string, page: Page, lobbyDomain: string, 
         const token = tokenMatch ? tokenMatch[1] : null; // Get the token value or null if not found
         return `${lobbyDomain}/user/CurrencyGroup?&token=${token}&language=vi-VN&gameId=${gameId}&ref=&rurl=&partnerId=ONEworksVGCash&appType=&op=`;
     } else if (process.env.npm_config_project == "l1") {
-        const protocol = isAthenaOrQA ? "http" : "https";
         await page.goto(`${protocol}://${domain[2]}/${lobbyDomain}1612`);
         await page.waitForLoadState();
         return page.url().replace("gameId=1", `gameId=${gameId}`);
     } else {
-        const protocol = isAthenaOrQA ? "http" : "https";
         return `${protocol}://${domain[2]}/${lobbyDomain}${productId}`;
     }
 };

@@ -27,5 +27,10 @@ export default {
     l2kenomemberSite: "http://www.spondemo.com/NewIndex?lang=vn&webskintype=3",
     l2kenolobbyDomain: "VendorGame/GamePageLoading?Game=VGamingMobi&refer=&GameID=",
     l1ismemberSiteMobile: "https://www.viva88.net/login888.aspx",
-    
+    l1modirectmemberSite: "https://www.viva88.net/login888.aspx",
+    l1modirectlobbyDomain: "#Sports/s=200_0",
+    l2creditmodirectmemberSite: "https://www.nova88.com/",
+    l2creditmodirectlobbyDomain: "#Sports/s=171_0",
+    l2creditismemberSiteMobile: "https://www.nova88.com/",
+
 };

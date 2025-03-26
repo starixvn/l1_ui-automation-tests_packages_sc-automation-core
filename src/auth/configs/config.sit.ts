@@ -6,7 +6,7 @@ export default {
     l2memberSite: "http://athena000web.playthefun.com:3010/NewIndex?lang=en&WebSkinType=3",
     l2lobbyDomain: "VendorGame/GamePageLoading?Game=VGaming&refer=&GameID=",
     l2memberSiteMobile: "http://x999ms003.playonesit.com",
-    l2lobbyDomainMobile: "VendorGame/GamePageLoading?Game=VGaming&refer=&GameID=",
+    l2lobbyDomainMobile: "?v=/#ThirdPartyGame/vid=66&gid=0",
     gnmemberSite: "@https://sdms.playonesit.com:16002/login",
     gnlobbyDomain: "VendorGame/Open3rdPartyGame?deviceType=1&vendorId=86&sportTypeId=240&gmt=7",
     lobbyTimeout: 30000, // 15s
