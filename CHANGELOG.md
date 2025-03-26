@@ -1,3 +1,10 @@
+# [1.69.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.68.2...v1.69.0) (2025-03-26)
+
+
+### Features
+
+* mobi direct and instant game for l2 credit ([e69490b](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/e69490b59da5f72167cb45bccf364f50e310ac9f))
+
 ## [1.68.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.68.1...v1.68.2) (2025-03-12)
 
 
