@@ -1,3 +1,10 @@
+## [1.69.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.69.0...v1.69.1) (2025-03-28)
+
+
+### Bug Fixes
+
+* l2 keno, mobi domain, and sso local ([331e24c](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/331e24c9d83fc74a31ce29e58449d58159b21081))
+
 # [1.69.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.68.2...v1.69.0) (2025-03-26)
 
 
