@@ -5,7 +5,6 @@ import { createWorker } from "tesseract.js";
 import { readFile } from "node:fs/promises";
 import { fetch } from "undici";
 
-
 export enum Environment {
     LOCAL = "local",
     LOCAL1 = "local1",
@@ -48,15 +47,15 @@ export const ssoToGame = async (
         await page.click(LobbyLocator.advancelbl);
         await page.click(`//input[@id=${appType}]`);
         await page.locator(LobbyLocator.langDropdown).selectOption(LobbyLocator[`${langCode}LangOption`]);
-        
+
         if (currencyGroup) {
             await page.fill(LobbyLocator.currencyInput, currencyGroup);
         }
-        
+
         await page.click(LobbyLocator.tokenBtn);
         await page.waitForTimeout(500);
         ssoLink = (await page.locator(LobbyLocator.ssoLink).textContent()) ?? "";
-        global.ssoLink = `${ssoLink.replace("gameId=0", `gameId=${gameId}`)}`;
+        global.ssoLink = `${ssoLink}&gameId=${gameId}`;
         await page.goto(global.ssoLink);
         const isCurrencyForm = await page.$$("id=currency");
         if (isCurrencyForm.length > 0) {
@@ -124,15 +123,15 @@ export const getConfig = (): any => {
 };
 
 export const handlePromotionPopup = async (page: Page) => {
-    await page.waitForTimeout(5000);
+    await page.waitForTimeout(8000);
     const isPromotionPopup = await page.locator("//div[contains(@class,'promo-highlight__btn')]/label").count();
-    if (isPromotionPopup>0) {
-      await page.locator("//div[contains(@class,'promo-highlight__btn')]/label").click();
-      await page.locator("//div[contains(@class,'promo-highlight__btn')]/a").click();
-      await page.waitForTimeout(8000);
-      await page.locator("//div[@id='dialogMessage']//a").click();
+    if (isPromotionPopup > 0) {
+        await page.locator("//div[contains(@class,'promo-highlight__btn')]/label").click();
+        await page.locator("//div[contains(@class,'promo-highlight__btn')]/a").click();
+        await page.waitForTimeout(8000);
+        await page.locator("//div[@id='dialogMessage']//a").click();
     }
-}
+};
 
 const loginMemberSite = async (
     page: Page,
@@ -392,7 +391,7 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
         await page.waitForLoadState("domcontentloaded");
         await page.waitForTimeout(5000);
     }
-    
+
     if (projectCode === "l2") {
         if (process.env.npm_config_mobile === "true" && !process.env.npm_config_project?.includes("credit")) {
             await page.setViewportSize({
@@ -418,7 +417,7 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
         }
 
         // CREDIT SITE VG
-        if (process.env.npm_config_project?.includes("modirect")||process.env.npm_config_project?.includes("credit")) {
+        if (process.env.npm_config_project?.includes("modirect") || process.env.npm_config_project?.includes("credit")) {
             await page.click("//div[@class='header-option']/div[1]");
             await page.click("//div[@class='header-option']/div[1]/div//span[text()='Mobile']");
             await page.click("//div[@class='header-login']");
@@ -427,9 +426,7 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
             await page.click("//div[@class='login-form']//a[@class='btn btn--secondary']");
             await page.waitForLoadState("domcontentloaded");
             await page.waitForTimeout(5000);
-        }
-
-        else {
+        } else {
             const isSuccess = await loginWithCaptcha(page, accountId, pwd);
             if (!isSuccess) {
                 console.log("Retry Login");
@@ -502,9 +499,12 @@ const goToGameLobby = async (page: Page, lobbyDomain: string, gameId: number, pr
 
 const formatGameLobbyUrl = async (url: string, page: Page, lobbyDomain: string, gameId: number, productId: number): Promise<string> => {
     const domain = url.split("/");
-    const protocol = url.includes("http") ? "http" : "https";
+    const protocol = url.startsWith("http") ? "http" : "https";
 
-    if (process.env.npm_config_project == "l2" && process.env.npm_config_env == "prod") {
+    const project = process.env.npm_config_project || "l1";
+    const env = process.env.npm_config_env || "local";
+
+    if (project === "l2" && env === "prod") {
         const userAgent = await page.evaluate(() => navigator.userAgent); // Get User-Agent
         const cookies = await page.context().cookies();
         const sessionId = cookies.find((cookie) => cookie.name === "ASP.NET_SessionId" && cookie.domain === domain[2])?.value;
@@ -518,14 +518,16 @@ const formatGameLobbyUrl = async (url: string, page: Page, lobbyDomain: string, 
         });
         const data = await response.text();
         const srcMatch = data.match(/<iframe[^>]+id=["']frmGame["'][^>]+src=["']([^"']+)["']/);
-        const iframeSrc = srcMatch ? srcMatch[1] : ""; // Get the src value or null if not found
-        const tokenMatch = iframeSrc.match(/token=([^&]+)/); // Extract token value
+        const tokenMatch = srcMatch?.[1]?.match(/token=([^&]+)/); // Combined token extraction
         const token = tokenMatch ? tokenMatch[1] : null; // Get the token value or null if not found
         return `${lobbyDomain}/user/CurrencyGroup?&token=${token}&language=vi-VN&gameId=${gameId}&ref=&rurl=&partnerId=ONEworksVGCash&appType=&op=`;
-    } else if (process.env.npm_config_project == "l1") {
+    } else if (project === "l1") {
         await page.goto(`${protocol}://${domain[2]}/${lobbyDomain}1612`);
         await page.waitForLoadState();
         return page.url().replace("gameId=1", `gameId=${gameId}`);
+    } else if (["l2keno", "l2mobi"].includes(project)) {
+        // Simplified project check
+        return lobbyDomain;
     } else {
         return `${protocol}://${domain[2]}/${lobbyDomain}${productId}`;
     }

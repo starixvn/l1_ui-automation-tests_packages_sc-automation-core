@@ -126,7 +126,9 @@ export class MarbleGameBase {
         if (process.env.npm_config_trackdownload) {
             this.performanceTest.tests(this.options.gameConfiguration.ssoTime ?? 35000);
         }
-        this.inGameOddsTests();
+        if (!process.env.npm_config_odds) {
+            this.inGameOddsTests();
+        }
         this.placeBetAndSettleTests();
         this.hedgeBetTests();
         this.ticketHistoryTests();

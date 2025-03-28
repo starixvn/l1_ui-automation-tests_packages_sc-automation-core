@@ -130,7 +130,9 @@ export class MultiplayGameBase {
                 this.performanceTest.tests(this.options.gameConfiguration.ssoTime ?? 35000);
             }
             this.inGameBetChoiceTests();
-            this.inGameOddsTests();
+            if (!process.env.npm_config_odds) {
+                this.inGameOddsTests();
+            }
             this.placeBetAndSettleTests();
             this.hedgeBetTests();
             this.ticketHistoryTests();

@@ -103,7 +103,9 @@ export class MultiplayGameBase {
             });
 
             this.inGameBetChoiceTests();
-            this.inGameOddsTests();
+            if (!process.env.npm_config_odds) {
+                this.inGameOddsTests();
+            }
             this.placeBetAndSettleTests();
             this.hedgeBetTests();
             this.ticketHistoryTests();

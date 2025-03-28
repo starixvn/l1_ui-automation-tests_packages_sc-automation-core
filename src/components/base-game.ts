@@ -146,7 +146,7 @@ export class BaseGame {
                     break;
                 default:
                     if (projectCode.includes("mobi") || projectCode.includes("keno")) {
-                        await this.waitUntilMobiGameUiLoad(projectCode);
+                        await this.waitUntilMobiGameUiLoad();
                     } else if (!projectCode.includes("is")) {
                         const waitRange = this.gameConfiguration.id == 102 ? 1 : 2;
                         await this.waitUntilGameUiLoad(waitRange);
@@ -238,7 +238,7 @@ export class BaseGame {
                     break;
                 default:
                     if (projectCode.includes("mobi") || projectCode.includes("keno")) {
-                        await this.waitUntilMobiGameUiLoad(projectCode);
+                        await this.waitUntilMobiGameUiLoad();
                     } else if (!projectCode.includes("is")) {
                         const waitRange = this.gameConfiguration.id == 102 ? 1 : 2;
                         await this.waitUntilGameUiLoad(waitRange);
@@ -273,12 +273,8 @@ export class BaseGame {
         await this.page.screenshot({ path: `./test-results/afterInGame.png` });
     }
 
-    async waitUntilMobiGameUiLoad(projectCode: string) {
-        if (projectCode.includes("l2")) {
-            await this.page.locator("//iframe[@id='frmGame']").waitFor();
-        } else {
-            await this.page.locator("//div[contains(@class,'games_game-list')]").waitFor();
-        }
+    async waitUntilMobiGameUiLoad() {
+        await this.page.locator("//div[contains(@class,'games_game-list')]").waitFor();
         console.log("Game UI ready for testing");
         await this.waitForTimeout(3000);
         await this.page.mouse.click(5, 5, { delay: 100 });
