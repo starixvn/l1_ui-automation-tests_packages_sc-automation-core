@@ -1,3 +1,10 @@
+# [1.70.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.69.1...v1.70.0) (2025-04-03)
+
+
+### Features
+
+* dynamic get playerId and playername for base admin tests ([48ddb24](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/48ddb248c833855de23526292c29daead6dade66))
+
 ## [1.69.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.69.0...v1.69.1) (2025-03-28)
 
 
