@@ -123,14 +123,21 @@ export const getConfig = (): any => {
 };
 
 export const handlePromotionPopup = async (page: Page) => {
-    await page.waitForTimeout(8000);
-    const isPromotionPopup = await page.locator("//div[contains(@class,'promo-highlight__btn')]/label").count();
-    if (isPromotionPopup > 0) {
-        await page.locator("//div[contains(@class,'promo-highlight__btn')]/label").click();
+    await page.waitForTimeout(3000);
+    const alertDialogSelector = "//div[contains(@class,'promo-highlight__btn')]/label";
+    await page.waitForSelector(alertDialogSelector, { timeout: 8000 }).catch(() => {
+        console.log("Alert dialog not found within the timeout period.");
+    });
+    const alertDialogExists = await page.$(alertDialogSelector);
+    if (alertDialogExists) {
+        await page.click(alertDialogSelector);
         await page.locator("//div[contains(@class,'promo-highlight__btn')]/a").click();
-        await page.waitForTimeout(8000);
+        await page.waitForSelector("//div[@id='dialogMessage']//a", { timeout: 8000 }).catch(() => {
+            console.log("dialog 2 not found within the timeout period.");
+        });
         await page.locator("//div[@id='dialogMessage']//a").click();
     }
+
 };
 
 const loginMemberSite = async (

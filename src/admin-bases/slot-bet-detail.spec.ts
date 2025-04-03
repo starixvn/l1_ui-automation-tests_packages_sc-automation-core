@@ -3,6 +3,8 @@ import { IBaseOptions } from "./base-options";
 import { GameEvent } from "../_shared";
 import * as adminLocator from "../components/base-admin-locator";
 import { expect } from "@playwright/test";
+let playerId = "";
+let operatorId = "";
 
 export class SlotBetDetailGameBase {
     admin: BaseAdmin;
@@ -18,7 +20,10 @@ export class SlotBetDetailGameBase {
     protected TC1() {
         admintest("Verify bet detail of archived round", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(), this.options.gameConfiguration.id, 1, this.configAdmin.accountId, this.operatorId);
+            const userData = await this.game.setPlayerIdFromLocalStorage();
+            playerId = userData.playerId;
+            operatorId = userData.operatorId;   
+            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(), this.options.gameConfiguration.id, 1, playerId, operatorId);
             const noData = await betdetailsTab.locator(adminLocator.commonUiBetDetailsTicket.tblMain).innerText();
             expect(noData).toContain("No data available");
             await betdetailsTab.close()
@@ -30,8 +35,8 @@ export class SlotBetDetailGameBase {
             let getRER = await this.admin.getRetrieveEndRound(
                 this.options.gameConfiguration.id,
                 archivedRoundID,
-                this.options.Adminconfiguration.accountId,
-                this.operatorId,
+                playerId,
+                operatorId,
             );
             await this.verifyRER(getRER, this.rdataSet["Expect_NoData"]);
         });
@@ -62,7 +67,7 @@ export class SlotBetDetailGameBase {
 
         admintest("Verify BetDetails of case win", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(), this.options.gameConfiguration.id, global.roundId, this.configAdmin.accountId, this.operatorId);
+            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(), this.options.gameConfiguration.id, global.roundId, playerId, operatorId);
             await this.verifyBetDetails(betdetailsTab, global.roundId,  this.tdataSet["Expect_Win"].snapshot);
         });
 
@@ -71,8 +76,8 @@ export class SlotBetDetailGameBase {
             let getRER = await this.admin.getRetrieveEndRound(
                 this.options.gameConfiguration.id,
                 global.roundId,
-                this.options.Adminconfiguration.accountId,
-                this.operatorId,
+                playerId,
+                operatorId,
             );
             await this.verifyRER(getRER, this.rdataSet["Expect_Win"]);
         });
@@ -104,7 +109,7 @@ export class SlotBetDetailGameBase {
 
         admintest("Verify BetDetails of case lose", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(), this.options.gameConfiguration.id, global.roundId, this.configAdmin.accountId, this.operatorId);
+            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(), this.options.gameConfiguration.id, global.roundId, playerId, operatorId);
             await this.verifyBetDetails(betdetailsTab, global.roundId,  this.tdataSet["Expect_Lose"].snapshot);
         });
 
@@ -113,8 +118,8 @@ export class SlotBetDetailGameBase {
             let getRER = await this.admin.getRetrieveEndRound(
                 this.options.gameConfiguration.id,
                 global.roundId,
-                this.options.Adminconfiguration.accountId,
-                this.operatorId
+                playerId,
+                operatorId
             );
             await this.verifyRER(getRER, this.rdataSet["Expect_Lose"]);
         });
@@ -152,12 +157,12 @@ export class SlotBetDetailGameBase {
         admintest("Verify BetDetails of freespin", async () => {
             let betdetailsTab :any
             const roundIdFreeSpin = [global.freespin1.roundId, global.freespin2.roundId, global.freespin3.roundId]
-            betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(), this.options.gameConfiguration.id,global.roundId, this.configAdmin.accountId, this.operatorId);
+            betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(), this.options.gameConfiguration.id,global.roundId, playerId, operatorId);
             await this.verifyBetDetails(betdetailsTab, global.roundId,  this.tdataSet["Expect_Freespin"].snapshot);
             await betdetailsTab.close()
 
             for (const iterator of roundIdFreeSpin) {
-                betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(), this.options.gameConfiguration.id, iterator, this.configAdmin.accountId, this.operatorId);
+                betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(), this.options.gameConfiguration.id, iterator, playerId, operatorId);
                 const round = await betdetailsTab.locator(adminLocator.commonUiBetDetailsTicket.lblRoundId).innerText()
                 expect((round.includes(iterator))).toBe(true);
                 expect((round.includes("Free Spins"))).toBe(true);
@@ -170,12 +175,12 @@ export class SlotBetDetailGameBase {
             let getRER = await this.admin.getRetrieveEndRound(
                 this.options.gameConfiguration.id,
                 global.roundId,
-                this.options.Adminconfiguration.accountId,
-                this.operatorId
+                playerId,
+                operatorId
             );
-            let getRER1 = await this.admin.getRetrieveEndRound(this.options.gameConfiguration.id, global.freespin1.roundId, this.options.Adminconfiguration.accountId, this.operatorId);
-            let getRER2 = await this.admin.getRetrieveEndRound(this.options.gameConfiguration.id, global.freespin2.roundId, this.options.Adminconfiguration.accountId, this.operatorId);
-            let getRER3 = await this.admin.getRetrieveEndRound(this.options.gameConfiguration.id, global.freespin3.roundId, this.options.Adminconfiguration.accountId, this.operatorId);
+            let getRER1 = await this.admin.getRetrieveEndRound(this.options.gameConfiguration.id, global.freespin1.roundId, playerId, operatorId);
+            let getRER2 = await this.admin.getRetrieveEndRound(this.options.gameConfiguration.id, global.freespin2.roundId, playerId, operatorId);
+            let getRER3 = await this.admin.getRetrieveEndRound(this.options.gameConfiguration.id, global.freespin3.roundId, playerId, operatorId);
 
             await this.verifyRER(getRER, this.rdataSet["Expect_Freespin"]);
             await this.verifyRER(getRER1, this.rdataSet["Expect_FreespinRound"], global.freespin1.winAmount);
@@ -222,9 +227,9 @@ export class SlotBetDetailGameBase {
 
         admintest("Verify BetDetails of case case got bonus", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            let betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id, global.roundId, this.configAdmin.accountId,this.operatorId);
+            let betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id, global.roundId, playerId,operatorId);
             await this.verifyBetDetails(betdetailsTab ,global.roundId,  this.tdataSet["expect_bonus"].snapshot);
-            betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id, global.roundId, this.configAdmin.accountId,this.operatorId);
+            betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id, global.roundId, playerId,operatorId);
             const totalBonus = await betdetailsTab.locator("//*/div[@id='game-ticket']/table[2]/tbody/tr[1]/td[4]").innerText()
             const win = await betdetailsTab.locator("//*/div[@id='game-ticket']/table[2]/tbody/tr[1]/td[6]").innerText()
             expect(totalBonus).toBe("3 Bonus");
@@ -236,8 +241,8 @@ export class SlotBetDetailGameBase {
             let getRER = await this.admin.getRetrieveEndRound(
                 this.options.gameConfiguration.id,
                 global.roundId,
-                this.options.Adminconfiguration.accountId,
-                this.operatorId
+                playerId,
+                operatorId
             );
             await this.verifyRER(getRER, this.rdataSet["Expect_Bonus"], global.winamount);
             await this.admin.waitForTimeout(5000);
@@ -270,7 +275,7 @@ export class SlotBetDetailGameBase {
 
         admintest("Verify BetDetails of jackpot", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,this.configAdmin.accountId,this.operatorId);
+            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,global.roundId,playerId,operatorId);
             await this.verifyBetDetails(betdetailsTab, global.roundId , this.tdataSet["Expect_Jackpot"].snapshot);        
         });
 
@@ -279,8 +284,8 @@ export class SlotBetDetailGameBase {
             let getRER = await this.admin.getRetrieveEndRound(
                 this.options.gameConfiguration.id,
                 global.roundId,
-                this.options.Adminconfiguration.accountId,
-                this.operatorId
+                playerId,
+                operatorId
             );
             await this.verifyRER(getRER, this.rdataSet["Expect_Jackpot"],global.winamount);
         });

@@ -36,6 +36,7 @@ export class BaseGame {
     trackDownload: boolean;
     files: Array<any>;
     trackDownloadReport: DownloadReport;
+    username: string;
 
     constructor(page: Page, locators: any, gameConfiguration: GameConfiguration, device?: any, trackDownload: boolean = false) {
         this.page = page;
@@ -104,6 +105,7 @@ export class BaseGame {
                             const ingameResponse = parseSocketPayload(payload, this.msgpack).message;
                             this.odds = ingameResponse.gameConfigs?.odds || ingameResponse.odds;
                             this.gameConfigs = ingameResponse.gameConfigs;
+                            this.username = ingameResponse.user.name.replace("@", "");
                         }
 
                         Object.keys(this.capturedEvents)?.forEach((event) => {
@@ -203,29 +205,29 @@ export class BaseGame {
 
         this.page.on("websocket", async (ws) => {
             const wsUrl = ws.url();
-                if (
-                    !wsUrl.includes("notification") &&
-                    wsUrl.includes(this.gameConfiguration.socketName ?? this.gameConfiguration.name.toLowerCase())
-                ) {
-                    this.gameSocket = ws;
-                    console.log("wsUrl", ws.url(), this.gameConfiguration.socketName, this.gameConfiguration.name.toLowerCase());
+            if (
+                !wsUrl.includes("notification") &&
+                wsUrl.includes(this.gameConfiguration.socketName ?? this.gameConfiguration.name.toLowerCase())
+            ) {
+                this.gameSocket = ws;
+                console.log("wsUrl", ws.url(), this.gameConfiguration.socketName, this.gameConfiguration.name.toLowerCase());
 
-                    ws.on("framereceived", async (msg: any) => {
-                        const { payload } = msg ?? "";
+                ws.on("framereceived", async (msg: any) => {
+                    const { payload } = msg ?? "";
 
-                        if (this.odds === null && payload.includes(GameEvent.GameConfig)) {
-                            const ingameResponse = parseSocketPayload(payload, this.msgpack).message;
-                            this.odds = ingameResponse.gameConfigs?.odds || ingameResponse.odds;
-                            this.gameConfigs = ingameResponse.gameConfigs;
+                    if (this.odds === null && payload.includes(GameEvent.GameConfig)) {
+                        const ingameResponse = parseSocketPayload(payload, this.msgpack).message;
+                        this.odds = ingameResponse.gameConfigs?.odds || ingameResponse.odds;
+                        this.gameConfigs = ingameResponse.gameConfigs;
+                    }
+
+                    Object.keys(this.capturedEvents)?.forEach((event) => {
+                        if (payload.includes(event)) {
+                            this.capturedEvents[event] = parseSocketPayload(payload, this.msgpack).message;
                         }
-
-                        Object.keys(this.capturedEvents)?.forEach((event) => {
-                            if (payload.includes(event)) {
-                                this.capturedEvents[event] = parseSocketPayload(payload, this.msgpack).message;
-                            }
-                        });
                     });
-                }
+                });
+            }
         });
 
         await this.logConsole();
@@ -246,7 +248,6 @@ export class BaseGame {
                     break;
             }
         }
-
     }
 
     async waitUntilGameUiLoad(waitRange: number = 2) {
@@ -798,6 +799,24 @@ export class BaseGame {
             }
         }
         return duplicateFiles;
+    }
+
+    async setPlayerIdFromLocalStorage() {
+        const local_storage_data = await this.page.evaluate(() => {
+            const data: { [key: string]: string | null } = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key) {
+                    data[key] = localStorage.getItem(key);
+                }
+            }
+            return data;
+        });
+
+        const storageKey = Object.keys(local_storage_data).find((key) => key.includes("scss"));
+        const storageData = storageKey ? JSON.parse(local_storage_data[storageKey] || "{}") : null; // Default to empty object
+        const [operatorId = "", playerId = ""] = (storageData?.username || "").split("_"); // Destructure with defaults
+        return { operatorId, playerId };
     }
 }
 

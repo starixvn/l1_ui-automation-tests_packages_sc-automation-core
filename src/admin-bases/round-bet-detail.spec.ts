@@ -3,6 +3,8 @@ import { IBaseOptions } from "./base-options";
 import { GameEvent } from "../_shared";
 import * as adminLocator from "../components/base-admin-locator";
 import { expect } from "@playwright/test";
+let playerId = "";
+let operatorId = "";
 
 export class RoundBetDetailGameBase {
     admin: BaseAdmin;
@@ -11,7 +13,6 @@ export class RoundBetDetailGameBase {
     configAdmin = this.options.Adminconfiguration;
     tdataSet = this.configAdmin[`${process.env.npm_config_project}datasetTicket`];
     rdataSet = this.configAdmin[`${process.env.npm_config_project}datasetRER`];
-    operatorId = this.configAdmin[`${process.env.npm_config_project}operatorId`];
     mornitorlocator = this.configAdmin.mornitorlocator;
     settleNextRound = this.configAdmin.isSettleNextRound;
     constructor(protected options: IBaseOptions) {}
@@ -19,13 +20,16 @@ export class RoundBetDetailGameBase {
     protected TC1() {
         admintest("Verify bet detail of archived round", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
+            const userData = await this.game.setPlayerIdFromLocalStorage();
+            playerId = userData.playerId;
+            operatorId = userData.operatorId;   
             const archivedRoundID = 1;
             const betdetailsTab = await this.admin.filterBetDetails(
                 this.admin.page.context(),
                 this.options.gameConfiguration.id,
                 archivedRoundID,
-                this.configAdmin.accountId,
-                this.operatorId,
+                playerId,
+                operatorId,
             );
             const noData = await betdetailsTab.locator(adminLocator.commonUiBetDetailsTicket.tblMain).innerText();
             expect(noData).toContain("No data available");
@@ -38,8 +42,8 @@ export class RoundBetDetailGameBase {
             let getRER = await this.admin.getRetrieveEndRound(
                 this.options.gameConfiguration.id,
                 archivedRoundID,
-                this.options.Adminconfiguration.accountId,
-                this.operatorId,
+                playerId,
+                operatorId,
             );
             await this.verifyRER(getRER, this.rdataSet["Expect_NoData"]);
         });
@@ -67,8 +71,8 @@ export class RoundBetDetailGameBase {
                 this.admin.page.context(),
                 this.options.gameConfiguration.id,
                 global.settleRoundID,
-                this.configAdmin.accountId,
-                this.operatorId,
+                playerId,
+                operatorId,
             );
             const noData = await betdetailsTab.locator(adminLocator.commonUiBetDetailsTicket.tblMain).innerText();
             expect(noData).toContain("No data available");
@@ -80,8 +84,8 @@ export class RoundBetDetailGameBase {
             let getRER = await this.admin.getRetrieveEndRound(
                 this.options.gameConfiguration.id,
                 global.settleRoundID,
-                this.options.Adminconfiguration.accountId,
-                this.operatorId,
+                playerId,
+                operatorId,
             );
             await this.verifyRER(getRER, this.rdataSet["Expect_NoData"]);
         });
@@ -121,8 +125,8 @@ export class RoundBetDetailGameBase {
                 this.admin.page.context(),
                 this.options.gameConfiguration.id,
                 global.settleRoundID,
-                this.configAdmin.accountId,
-                this.operatorId,
+                playerId,
+                operatorId,
             );
             await this.verifyBetDetails(betdetailsTab, global.settleRoundID, this.tdataSet["Expect_Win"]);
         });
@@ -132,8 +136,8 @@ export class RoundBetDetailGameBase {
             const getRER = await this.admin.getRetrieveEndRound(
                 this.options.gameConfiguration.id,
                 global.settleRoundID,
-                this.options.Adminconfiguration.accountId,
-                this.operatorId,
+                playerId,
+                operatorId,
             );
             await this.verifyRER(getRER, this.rdataSet["Expect_Win"]);
         });
@@ -173,8 +177,8 @@ export class RoundBetDetailGameBase {
                 this.admin.page.context(),
                 this.options.gameConfiguration.id,
                 global.settleRoundID,
-                this.configAdmin.accountId,
-                this.operatorId,
+                playerId,
+                operatorId,
             );
             await this.verifyBetDetails(betdetailsTab, global.settleRoundID, this.tdataSet["Expect_Lose"]);
         });
@@ -184,8 +188,8 @@ export class RoundBetDetailGameBase {
             let getRER = await this.admin.getRetrieveEndRound(
                 this.options.gameConfiguration.id,
                 global.settleRoundID,
-                this.options.Adminconfiguration.accountId,
-                this.operatorId
+                playerId,
+                operatorId
             );
             await this.verifyRER(getRER, this.rdataSet["Expect_Lose"]);
         });
