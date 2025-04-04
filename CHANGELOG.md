@@ -1,3 +1,10 @@
+## [1.70.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.70.0...v1.70.1) (2025-04-04)
+
+
+### Bug Fixes
+
+* add account for keno games ([8c4afe8](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/8c4afe8cbe35517d620dab151357dee5940fc445))
+
 # [1.70.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.69.1...v1.70.0) (2025-04-03)
 
 
