@@ -588,6 +588,10 @@ export const l1kenoprod = {
     17: "SUPERTEST30102052",
     18: "supertestte120201012",
     19: "supertestte120201013",
+    36: "SUPERTEST30102090",
+    37: "SUPERTEST30102052",
+    40: "supertestte120201012",
+    41: "supertestte120201013",
 };
 
 export const l2mobiprod = {
@@ -614,6 +618,10 @@ export const l2kenoprod = {
     17: "QCTest22082305",
     18: "QCTest22082313",
     19: "QCTest22082305",
+    36: "QCTest22082313",
+    37: "QCTest22082305",
+    40: "QCTest22082313",
+    41: "QCTest22082305",
 };
 
 export const l1isprod = {
