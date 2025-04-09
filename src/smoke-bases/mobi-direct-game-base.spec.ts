@@ -72,7 +72,7 @@ export class MobiDirect {
             test.setTimeout(maxTimeout);
             const projectCode = process.env.npm_config_project?.includes("l1")? "l1" : "l2" 
 
-            const betChoices = [projectCode+this.options.placeBetChoices[0][0], projectCode+this.options.placeBetChoices[0][1]];
+            const betChoices = [`${projectCode}${hedgeBetGroups[0][0]}`, `${projectCode}${hedgeBetGroups[0][1]}`];
             // Act
             const endBetMsg = await this.player.placeHedgeBet(betChoices, this.options.placeBetAmount ?? 1);
             await test.step("Verify that an error message is displayed to prevent the bet from being placed.", async () => {
