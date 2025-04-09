@@ -1,3 +1,10 @@
+## [1.71.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.71.0...v1.71.1) (2025-04-09)
+
+
+### Bug Fixes
+
+* rebuild core ([4e4c25c](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/4e4c25cf72ac469dc22ec78a0d72705a996acaf9))
+
 # [1.71.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.70.1...v1.71.0) (2025-04-09)
 
 
