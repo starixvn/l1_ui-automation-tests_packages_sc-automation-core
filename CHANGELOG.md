@@ -1,3 +1,10 @@
+# [1.71.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.70.1...v1.71.0) (2025-04-09)
+
+
+### Features
+
+* add mobi direct game base and enhance test game guide with prefix project name ([a7728a1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/a7728a19cc699c22df2546c7f0c9c732a0cbcad1))
+
 ## [1.70.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.70.0...v1.70.1) (2025-04-04)
 
 
