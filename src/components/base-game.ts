@@ -599,24 +599,15 @@ export class BaseGame {
     async getCountFrameLocator(locator: string) {
         const countframecocos2 = await this.page.frameLocator("iframe").locator(locator).count();
         if (countframecocos2 == 0) {
-            if (
-                await this.page
-                    .frameLocator("#frmGame")
-                    .frameLocator("#microsite")
-                    .frameLocator("#webview")
-                    .locator(`${locator}[1]`)
-                    .isVisible()
-            ) {
-                return await this.page
-                    .frameLocator("#frmGame")
-                    .frameLocator("#microsite")
-                    .frameLocator("#webview")
-                    .locator(locator)
-                    .count();
+            if (await this.page.frameLocator("#frmGame").frameLocator("#microsite").frameLocator("#webview").locator(`${locator}[1]`).isVisible()) {
+                return await this.page.frameLocator("#frmGame").frameLocator("#microsite").frameLocator("#webview").locator(locator).count();
             } else if (await this.page.frameLocator("#frmGame").frameLocator("iframe").locator(`${locator}[1]`).isVisible()) {
                 return await this.page.frameLocator("#frmGame").frameLocator("iframe").locator(locator).count();
             } else if (await this.page.frameLocator("iframe").frameLocator("#webview").locator(`${locator}[1]`).isVisible()) {
                 return await this.page.frameLocator("iframe").frameLocator("#webview").locator(locator).count();
+            }
+            else if (await this.page.frameLocator('//iframe[contains(@title,"Gaming")]').frameLocator('//iframe[contains(@title,"Game")]').frameLocator('#webview').locator(`${locator}[1]`).isVisible()) {
+                return await this.page.frameLocator('//iframe[contains(@title,"Gaming")]').frameLocator('//iframe[contains(@title,"Game")]').frameLocator('#webview').locator(`${locator}`).count();
             }
         }
         return countframecocos2;

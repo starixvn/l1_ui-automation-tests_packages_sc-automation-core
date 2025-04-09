@@ -12,7 +12,7 @@ export class GameGuides {
         this.game = game;
     }
 
-    tests(timeout: number, isJackpot: boolean = false) {
+    tests(timeout: number, isJackpot: boolean = false, extName: string = "") {
         test(`Verify that player could open guide and clarify appropriate content @Guide`, async () => {
             // Arrange
             test.setTimeout(timeout);
@@ -22,7 +22,7 @@ export class GameGuides {
 
             // Act
             await test.step("Verify guide content", async () => {
-                await this.captureGuideContent(isJackpot);
+                await this.captureGuideContent(isJackpot,extName);
             });
 
             //Post-Act
@@ -32,7 +32,7 @@ export class GameGuides {
         });
     }
 
-    async captureGuideContent(isJackpot: boolean = false) {
+    async captureGuideContent(isJackpot: boolean = false, extName: string = "") {
         let guidepages = await this.game.getCountFrameLocator(GuideLocator.xpathItem);
         if (guidepages == 0) {
             //reopen guide if guide hasn't been load
@@ -42,7 +42,7 @@ export class GameGuides {
         }
         expect(guidepages).toBeGreaterThan(0);
         for (let index = 1; index <= guidepages; index++) {
-            const filename = isJackpot == true ? `guide-JP-${index}` : `guide-${index}`;
+            const filename = isJackpot == true ? `${extName}guide-JP-${index}` : `${extName}guide-${index}`;
             const element = `${GuideLocator.xpathItem}[${index}]`;
             await this.snapshot(this.game.page, filename, element);
             await verifyImage(this.game, filename, 0.04);
@@ -65,7 +65,11 @@ export class GameGuides {
             root = page.frameLocator("#frmGame").frameLocator("iframe");
         } else if (await page.frameLocator("iframe").frameLocator("#webview").locator(`${GuideLocator.xpathItem}[1]`).isVisible()) {
             root = page.frameLocator("iframe").frameLocator("#webview");
-        } else {
+        } 
+        else if (await page.frameLocator('//iframe[contains(@title,"Gaming")]').frameLocator('//iframe[contains(@title,"Game")]').frameLocator('#webview').locator(`${GuideLocator.xpathItem}[1]`).isVisible()) {
+            root = page.frameLocator('//iframe[contains(@title,"Gaming")]').frameLocator('//iframe[contains(@title,"Game")]').frameLocator('#webview');
+        }
+        else {
             root = page.frameLocator("iframe");
         }
         await root.locator(element).screenshot({ path: formatScreenshotFile(name) });
