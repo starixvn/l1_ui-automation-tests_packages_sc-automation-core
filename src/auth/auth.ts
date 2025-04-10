@@ -186,9 +186,7 @@ const loginMemberSite = async (
             await loginSIT(page, playerId, pwd, subPcode, timeout);
     }
     if (!projectCode.includes("is")) {
-        if (projectCode === "ultra888") {
-            await goToUltra888GameLobby(page, gameId);
-        } else if (projectCode.includes("modirect")) {
+        if (projectCode.includes("modirect")) {
             const domain = page.url().split("/");
             const protocol = page.url().includes("http") ? "http" : "https";
             await page.setViewportSize({
@@ -448,20 +446,6 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
         }
     }
 
-    if (projectCode === "ultra888") {
-        const isConfirm = await page.$$(PRODLocator.ultra888popupconfirm);
-        if (isConfirm.length > 0) {
-            await page.click(PRODLocator.ultra888popupconfirm);
-        }
-        await page.waitForTimeout(2000);
-        await page.selectOption(PRODLocator.ultra888langDropdown, { value: "vn" });
-        await page.fill(PRODLocator.ultra888memberIdInput, "01862081667");
-        await page.fill(PRODLocator.ultra888pwdInput, "Bb1111");
-        await page.click(PRODLocator.ultra888loginButton);
-        await page.waitForTimeout(2000);
-        await page.waitForLoadState("domcontentloaded", { timeout });
-        await page.waitForTimeout(10000);
-    }
     if (projectCode === "gn") {
         await page.click(PRODLocator.openLoginFormbtn);
         await page.fill(PRODLocator.usernameInput, accountId);
@@ -472,31 +456,6 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
     }
 };
 
-const goToUltra888GameLobby = async (page: Page, productId: any, timeout = 15000) => {
-    const ultra888MapGameIds = {
-        2: `//*/div[contains(@style,"Vgaming_SeDie.")]/parent::div`,
-        10: `//*/div[contains(@style,"Vgaming_Baccarat")]/parent::div`,
-        21: `//*/div[contains(@style,"Vgaming_Roulette")]/parent::div`,
-        23: `//*/div[contains(@style,"Vgaming_Blackjack")]/parent::div`,
-        25: `//*/div[contains(@style,"Vgaming_SicBo")]/parent::div`,
-        26: `//*/div[contains(@style,"Vgaming_VIPFishPrawnCrab")]/parent::div`,
-        28: `//*/div[contains(@style,"Vgaming_SeDieWar")]/parent::div`,
-        31: `//*/div[contains(@style,"Vgaming_RNGLottery")]/parent::div`,
-        35: `//*/div[contains(@style,"Vgaming_ThreeCards")]/parent::div`,
-        39: `//*/div[contains(@style,"Vgaming_CasinoHold'emPoker")]/parent::div`,
-        42: `//*/div[contains(@style,"Vgaming_TexasHold'emPoker")]/parent::div`,
-        52: `//*/div[contains(@style,"Vgaming_MegaKeno")]/parent::div`,
-        59: `//*/div[contains(@style,"Vgaming_FruitSlot")]/parent::div`,
-        60: `//*/div[contains(@style,"Vgaming_FanTan")]/parent::div`,
-        61: `//*/div[contains(@style,"Vgaming_WinThreeCards")]/parent::div`,
-    };
-    await page.click(`//*/div[contains(@class,"table")]`);
-    await page.waitForTimeout(3000);
-    await page.waitForLoadState("load", { timeout });
-    console.log("productId", productId, ultra888MapGameIds[productId]);
-    await page.click(ultra888MapGameIds[productId]);
-    await page.waitForLoadState("load", { timeout });
-};
 
 const goToGameLobby = async (page: Page, lobbyDomain: string, gameId: number, productId, timeout: number = 15000) => {
     await page.goto(await formatGameLobbyUrl(page.url(), page, lobbyDomain, gameId, productId));

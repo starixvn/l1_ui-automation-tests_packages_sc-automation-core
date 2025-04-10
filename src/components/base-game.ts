@@ -68,7 +68,8 @@ export class BaseGame {
         if (env.includes("local")) {
             account = this.gameConfiguration.accounts[env];
         } else {
-            account = projectCode != "ultra888" ? accounts[`${projectCode}${env}`][this.gameConfiguration.id] : this.gameConfiguration.id;
+            account =
+                accounts[`${projectCode}${env}`][this.gameConfiguration.id] ?? this.gameConfiguration.accounts[`${projectCode}${env}`];
         }
         const startTime = performance.now(); // Measure start time
 
@@ -189,7 +190,8 @@ export class BaseGame {
         if (env.includes("local")) {
             account = this.gameConfiguration.accounts[env];
         } else {
-            account = projectCode != "ultra888" ? accounts[`${projectCode}${env}`][this.gameConfiguration.id] : this.gameConfiguration.id;
+            account = accounts[`${projectCode}${env}`][this.gameConfiguration.id] ?? this.gameConfiguration.accounts[`${projectCode}${env}`];
+
         }
 
         await ssoToGame2(
@@ -599,15 +601,38 @@ export class BaseGame {
     async getCountFrameLocator(locator: string) {
         const countframecocos2 = await this.page.frameLocator("iframe").locator(locator).count();
         if (countframecocos2 == 0) {
-            if (await this.page.frameLocator("#frmGame").frameLocator("#microsite").frameLocator("#webview").locator(`${locator}[1]`).isVisible()) {
-                return await this.page.frameLocator("#frmGame").frameLocator("#microsite").frameLocator("#webview").locator(locator).count();
+            if (
+                await this.page
+                    .frameLocator("#frmGame")
+                    .frameLocator("#microsite")
+                    .frameLocator("#webview")
+                    .locator(`${locator}[1]`)
+                    .isVisible()
+            ) {
+                return await this.page
+                    .frameLocator("#frmGame")
+                    .frameLocator("#microsite")
+                    .frameLocator("#webview")
+                    .locator(locator)
+                    .count();
             } else if (await this.page.frameLocator("#frmGame").frameLocator("iframe").locator(`${locator}[1]`).isVisible()) {
                 return await this.page.frameLocator("#frmGame").frameLocator("iframe").locator(locator).count();
             } else if (await this.page.frameLocator("iframe").frameLocator("#webview").locator(`${locator}[1]`).isVisible()) {
                 return await this.page.frameLocator("iframe").frameLocator("#webview").locator(locator).count();
-            }
-            else if (await this.page.frameLocator('//iframe[contains(@title,"Gaming")]').frameLocator('//iframe[contains(@title,"Game")]').frameLocator('#webview').locator(`${locator}[1]`).isVisible()) {
-                return await this.page.frameLocator('//iframe[contains(@title,"Gaming")]').frameLocator('//iframe[contains(@title,"Game")]').frameLocator('#webview').locator(`${locator}`).count();
+            } else if (
+                await this.page
+                    .frameLocator('//iframe[contains(@title,"Gaming")]')
+                    .frameLocator('//iframe[contains(@title,"Game")]')
+                    .frameLocator("#webview")
+                    .locator(`${locator}[1]`)
+                    .isVisible()
+            ) {
+                return await this.page
+                    .frameLocator('//iframe[contains(@title,"Gaming")]')
+                    .frameLocator('//iframe[contains(@title,"Game")]')
+                    .frameLocator("#webview")
+                    .locator(`${locator}`)
+                    .count();
             }
         }
         return countframecocos2;

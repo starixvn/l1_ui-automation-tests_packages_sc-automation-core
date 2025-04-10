@@ -16,8 +16,6 @@ export default {
     gnpwd: "1234aa",
     guideLinkL1: "https://guides.sabagame.com",
     guideLinkL2: "https://guides.vgaming.win",
-    ultra888memberSite: "https://www.ultra888-lobby.com/",
-    ultra888lobbyDomain: "#ThirdPartyGame/vid=66&gid=",
     l1mobimemberSite: "https://www.viva88.net/login888.aspx",
     l1mobilobbyDomain: "VendorGame/OpenSabaClubLobby?deviceType=1&IsMobi=true&test=",
     l1kenomemberSite: "https://www.viva88.net/login888.aspx",

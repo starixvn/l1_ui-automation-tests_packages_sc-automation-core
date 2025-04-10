@@ -9,4 +9,5 @@ export default {
     l2admin: "http://l2-admin3.lumigame.com",
     l1mobimemberSite: "https://l1-glbs3.lumigame.com/signin",
     l1kenomemberSite: "https://l1-glbs3.lumigame.com/signin",
+    l1modirectmemberSite: "https://l1-glbs3.lumigame.com/signin",
 };

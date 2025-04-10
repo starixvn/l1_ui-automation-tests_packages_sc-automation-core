@@ -659,6 +659,8 @@ export const l1modirectprod = {
     26: "supertestte120201011",
     67: "supertestte120201012",
     107: "supertestte120201013",
+    113: "supertestte120201003",
+
 };
 
 export const l2creditmodirectprod = {
@@ -670,7 +672,7 @@ export const l2creditmodirectprod = {
     26: "SUPERTESTIBCAge0245",
     67: "SUPERTESTIBCAge0246",
     107: "SUPERTESTIBCAge0247",
-    3: "SUPERTESTIBCAge0248",
+    113: "SUPERTESTIBCAge0248",
     4: "SUPERTESTIBCAge0249",
     5: "SUPERTESTIBCAge0245",
     6: "SUPERTESTIBCAge0246",
