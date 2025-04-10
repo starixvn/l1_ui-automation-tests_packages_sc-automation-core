@@ -1,3 +1,10 @@
+## [1.71.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.71.1...v1.71.2) (2025-04-10)
+
+
+### Bug Fixes
+
+* remove ultra88 and enhance set account name ([4e5330f](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/4e5330f3159d631d523fc6db6f33ee89cf52b407))
+
 ## [1.71.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.71.0...v1.71.1) (2025-04-09)
 
 
