@@ -28,7 +28,7 @@ export class ISGameBase {
     protected openInstantGame(): void {
         test(`Smoke Tests ${this.options.gameConfiguration.name}`, async () => {
             await this.game.click(this.options.locators.gameIcon)
-            await this.game.waitUntilGameUiLoad(1)
+            await this.game.waitUntilGameUiLoad()
             await this.game.waitForTimeout(3000)
             await this.game.page.frameLocator('iframe').first().locator('#GameCanvas').scrollIntoViewIfNeeded()
         });

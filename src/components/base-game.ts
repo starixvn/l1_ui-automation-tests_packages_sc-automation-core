@@ -151,8 +151,7 @@ export class BaseGame {
                     if (projectCode.includes("mobi") || projectCode.includes("keno")) {
                         await this.waitUntilMobiGameUiLoad();
                     } else if (!projectCode.includes("is")) {
-                        const waitRange = this.gameConfiguration.id == 102 ? 1 : 2;
-                        await this.waitUntilGameUiLoad(waitRange);
+                        await this.waitUntilGameUiLoad();
                     }
                     break;
             }
@@ -244,15 +243,14 @@ export class BaseGame {
                     if (projectCode.includes("mobi") || projectCode.includes("keno")) {
                         await this.waitUntilMobiGameUiLoad();
                     } else if (!projectCode.includes("is")) {
-                        const waitRange = this.gameConfiguration.id == 102 ? 1 : 2;
-                        await this.waitUntilGameUiLoad(waitRange);
+                        await this.waitUntilGameUiLoad();
                     }
                     break;
             }
         }
     }
 
-    async waitUntilGameUiLoad(waitRange: number = 2) {
+    async waitUntilGameUiLoad(waitRange: number = 1) {
         await this.page.screenshot({ path: `./test-results/beforeInGame.png` });
         await this.page.waitForTimeout(100);
         let filterA: string[] = [];
@@ -262,6 +260,7 @@ export class BaseGame {
             const isRelevantMessage =
                 msgText.includes(searchString) &&
                 !msgText.includes(searchString + " db") &&
+                !msgText.includes(searchString + " Lobby") &&
                 !msgText.includes(searchString + " microsite-game");
 
             if (isRelevantMessage) {
@@ -272,13 +271,13 @@ export class BaseGame {
         while (filterA.length < waitRange) {
             await this.page.waitForTimeout(50);
         }
-        console.log("Game UI ready for testing");
+        console.log("Game UI is ready for testing");
         await this.page.screenshot({ path: `./test-results/afterInGame.png` });
     }
 
     async waitUntilMobiGameUiLoad() {
         await this.page.locator("//div[contains(@class,'games_game-list')]").waitFor();
-        console.log("Game UI ready for testing");
+        console.log("Game UI is ready for testing");
         await this.waitForTimeout(3000);
         await this.page.mouse.click(5, 5, { delay: 100 });
         await this.page.screenshot({ path: `./test-results/afterInGame.png` });
@@ -286,6 +285,7 @@ export class BaseGame {
 
     async waitUntilXdGameUiLoad() {
         await this.page.locator(numberGameLocator.commonControls.lblUserName).waitFor();
+        console.log("Game UI is ready for testing");
     }
 
     async waitUntilGameLobbyUiLoad() {
@@ -302,7 +302,7 @@ export class BaseGame {
         }
         await this.page.waitForTimeout(3000);
         await this.page.mouse.click(5, 5, { delay: 100 });
-        console.log("GameLobby UI load success");
+        console.log("GameLobby UI is ready for testing");
     }
 
     async getTextLocator(locatorName: string, whitelist: string = "0123456789/:.", lang: string = "eng") {

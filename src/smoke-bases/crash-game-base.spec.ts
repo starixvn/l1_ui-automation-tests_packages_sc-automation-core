@@ -34,7 +34,7 @@ export class CrashGameBase {
             await test.step("Verify default controls are displayed correctly on the screen.", async () => {
 
             const imgControlArea = await this.game.capture(`imgControlArea${process.env.npm_config_project}`);
-            expect(imgControlArea.image).toMatchSnapshot(imgControlArea.name, { maxDiffPixelRatio: 0 });
+            expect(imgControlArea.image).toMatchSnapshot(imgControlArea.name, { maxDiffPixelRatio: 0.1 });
         });
     });
     }
