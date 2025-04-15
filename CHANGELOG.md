@@ -1,3 +1,10 @@
+## [1.71.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.71.2...v1.71.3) (2025-04-15)
+
+
+### Bug Fixes
+
+* enhance waitUntilGameUiLoad ([3d23a31](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/3d23a31df30e4f3013f9859fb0a4d3867d1ac369))
+
 ## [1.71.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.71.1...v1.71.2) (2025-04-10)
 
 
