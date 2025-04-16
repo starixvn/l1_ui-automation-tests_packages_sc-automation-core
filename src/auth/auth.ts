@@ -123,21 +123,19 @@ export const getConfig = (): any => {
 };
 
 export const handlePromotionPopup = async (page: Page) => {
-    await page.waitForTimeout(3000);
-    const alertDialogSelector = "//div[contains(@class,'promo-highlight__btn')]/label";
-    await page.waitForSelector(alertDialogSelector, { timeout: 8000 }).catch(() => {
+    await page.waitForTimeout(5000);
+    const alertDialogSelector = "//div[contains(@class,'promo-highlight-group')]";
+    await page.waitForSelector(alertDialogSelector, { timeout: 10000 }).catch(() => {
         console.log("Alert dialog not found within the timeout period.");
     });
     const alertDialogExists = await page.$(alertDialogSelector);
     if (alertDialogExists) {
-        await page.click(alertDialogSelector);
-        await page.locator("//div[contains(@class,'promo-highlight__btn')]/a").click();
-        await page.waitForSelector("//div[@id='dialogMessage']//a", { timeout: 8000 }).catch(() => {
-            console.log("dialog 2 not found within the timeout period.");
+        await page.addStyleTag({
+            content: `#dialogMessage {display: none !important;}
+            div[class*="promo-highlight-group"] {display: none !important;}
+            a[class*="c-btn c-btn--bot"] {display: none !important;}`,
         });
-        await page.locator("//div[@id='dialogMessage']//a").click();
     }
-
 };
 
 const loginMemberSite = async (
@@ -455,7 +453,6 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
         await page.waitForTimeout(5000);
     }
 };
-
 
 const goToGameLobby = async (page: Page, lobbyDomain: string, gameId: number, productId, timeout: number = 15000) => {
     await page.goto(await formatGameLobbyUrl(page.url(), page, lobbyDomain, gameId, productId));
