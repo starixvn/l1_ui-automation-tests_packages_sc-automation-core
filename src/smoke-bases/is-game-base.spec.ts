@@ -33,6 +33,14 @@ export class ISGameBase {
             await this.game.click(this.options.locators.gameIcon);
             await this.game.waitUntilGameUiLoad();
             await this.game.waitForTimeout(3000);
+            // Hide the content li element
+            await this.game.page.addStyleTag({
+                content: `
+              div.content li {
+                display: none !important;
+              }
+                `,
+            });
             await this.game.page.frameLocator("iframe").first().locator("#GameCanvas").scrollIntoViewIfNeeded();
         });
     }
@@ -99,8 +107,8 @@ export class ISGameBase {
             await this.game.page.addStyleTag({
                 content: `#dialogMessage {display: none !important;}
                 div[class*="promo-highlight-group"] {display: none !important;}
-                a[class*="c-btn c-btn--bot"] {display: none !important;}`
-              });
-        }    
+                a[class*="c-btn c-btn--bot"] {display: none !important;}`,
+            });
+        }
     }
 }
