@@ -271,6 +271,7 @@ export class BaseGame {
         while (filterA.length < waitRange) {
             await this.page.waitForTimeout(50);
         }
+        await this.page.waitForTimeout(1000);
         console.log("Game UI is ready for testing");
         await this.page.screenshot({ path: `./test-results/afterInGame.png` });
     }

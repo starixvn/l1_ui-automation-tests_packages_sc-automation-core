@@ -134,6 +134,7 @@ const placeBet = async (game: BaseGame) => {
     await game.waitUntilPlaceBet();
     await game.clickLocator(baseLocatorNames.btnPlaceBet);
 };
+
 const waitForSettlement = async (game: BaseGame) => {
     const message = await game.waitForEvent(GameEvent.Settlement);
     await game.waitForTimeout(2500); // add sleep due to feature Publish round result prior to settlement

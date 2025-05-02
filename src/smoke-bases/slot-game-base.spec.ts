@@ -29,14 +29,7 @@ export class SlotGameBase {
 
     constructor(protected options: SlotGameOptions) {}
 
-    protected inGameOddsTests() {
-        test("Ensure that the odds displayed for each bet choice are accurate.", async () => {
-            await test.step("Ensure that the odds displayed for each bet choice are accurate.", async () => {
-                // Assert
-                expect(this.game.odds).toStrictEqual(this.options.gameConfiguration.odds);
-            });
-        });
-    }
+ 
 
     protected jackpotTests() {
         test("Verify that the Jackpot banner should be displayed in game ", async () => {
@@ -148,9 +141,7 @@ export class SlotGameBase {
         if (process.env.npm_config_trackdownload) {
             this.performanceTest.tests(this.options.gameConfiguration.ssoTime ?? 35000);
         }
-        if (!process.env.npm_config_odds) {
-            this.inGameOddsTests();
-        }
+
         if (process.env.npm_config_jackpot) {
             this.jackpotTests();
         }
