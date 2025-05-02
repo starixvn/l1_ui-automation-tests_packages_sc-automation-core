@@ -20,7 +20,7 @@ export class CrashBetDetailGameBase {
     tdataSet = this.configAdmin[`${process.env.npm_config_project}datasetTicket`];
     rdataSet = this.configAdmin[`${process.env.npm_config_project}datasetRER`];
     mornitorlocator = this.configAdmin.mornitorlocator;
-    settleNextCrash = this.configAdmin.isSettleNextRound;
+    settleNextRound = this.configAdmin.isSettleNextRound;
     constructor(protected options: IBaseOptions) {}
 
     protected TC1() {
