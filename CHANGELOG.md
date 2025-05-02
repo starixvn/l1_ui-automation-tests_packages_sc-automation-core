@@ -1,3 +1,15 @@
+# [1.72.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.71.5...v1.72.0) (2025-05-02)
+
+
+### Bug Fixes
+
+* admin crash game base contructor ([10e0c96](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/10e0c9692b795e15c14b3fdffae8c5e095e89d8c))
+
+
+### Features
+
+* admin crash game base ([ec76f99](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/ec76f999554034c494d5ed6158b18b91cd5c3bd6))
+
 ## [1.71.5](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.71.4...v1.71.5) (2025-04-17)
 
 
