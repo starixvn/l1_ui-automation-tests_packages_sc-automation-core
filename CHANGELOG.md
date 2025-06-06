@@ -1,3 +1,11 @@
+## [1.73.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.73.0...v1.73.1) (2025-06-06)
+
+
+### Bug Fixes
+
+* remove select currency ([f99e065](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/f99e0655cbe1572c2026ebeeea55fc86270d252c))
+* sso with incorrect language ([b601d52](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/b601d52b8511b1257511b7664fdeb9548116b77a))
+
 # [1.73.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.72.0...v1.73.0) (2025-06-06)
 
 
