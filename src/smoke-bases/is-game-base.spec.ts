@@ -98,7 +98,7 @@ export class ISGameBase {
 
     async handlePromotionPopup() {
         await this.game.page.waitForTimeout(5000);
-        const alertDialogSelector = "//div[contains(@class,'promo-highlight-group')]";
+        const alertDialogSelector = "//div[contains(@class,'promo')]";
         await this.game.page.waitForSelector(alertDialogSelector, { timeout: 10000 }).catch(() => {
             console.log("Alert dialog not found within the timeout period.");
         });
