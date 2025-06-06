@@ -20,7 +20,7 @@ export class SlotBetDetailGameBase {
     protected TC1() {
         admintest("Verify bet detail of archived round", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const userData = await this.game.setPlayerIdFromLocalStorage();
+            const userData = await this.game.getPlayerIdFromLocalStorage();
             playerId = userData.playerId;
             operatorId = userData.operatorId;   
             const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(), this.options.gameConfiguration.id, 1, playerId, operatorId);
