@@ -124,7 +124,7 @@ export const getConfig = (): any => {
 
 export const handlePromotionPopup = async (page: Page) => {
     await page.waitForTimeout(5000);
-    const alertDialogSelector = "//div[contains(@class,'promo-highlight-group')]";
+    const alertDialogSelector = "//div[contains(@class,'promo')]";
     await page.waitForSelector(alertDialogSelector, { timeout: 10000 }).catch(() => {
         console.log("Alert dialog not found within the timeout period.");
     });
@@ -132,7 +132,7 @@ export const handlePromotionPopup = async (page: Page) => {
     if (alertDialogExists) {
         await page.addStyleTag({
             content: `#dialogMessage {display: none !important;}
-            div[class*="promo-highlight-group"] {display: none !important;}
+            div[class*="promo"] {display: none !important;}
             a[class*="c-btn c-btn--bot"] {display: none !important;}`,
         });
     }
@@ -423,7 +423,7 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
         if (process.env.npm_config_project?.includes("modirect") || process.env.npm_config_project?.includes("credit")) {
             await page.click("//div[@class='header-option']/div[1]");
             await page.click("//div[@class='header-option']/div[1]/div//span[text()='Mobile']");
-            await page.click("//div[@class='header-login']");
+            await page.click("//div[@class='header-login']/*[text()='Đăng nhập']");
             await page.fill(PRODLocator.usernameInput, accountId);
             await page.fill(PRODLocator.passwordInput, pwd);
             await page.click("//div[@class='login-form']//a[@class='btn btn--secondary']");

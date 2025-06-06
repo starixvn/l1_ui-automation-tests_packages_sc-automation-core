@@ -20,9 +20,9 @@ export class RoundBetDetailGameBase {
     protected TC1() {
         admintest("Verify bet detail of archived round", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const userData = await this.game.setPlayerIdFromLocalStorage();
+            const userData = await this.game.getPlayerIdFromLocalStorage();
             playerId = userData.playerId;
-            operatorId = userData.operatorId;   
+            operatorId = userData.operatorId;
             const archivedRoundID = 1;
             const betdetailsTab = await this.admin.filterBetDetails(
                 this.admin.page.context(),
@@ -39,12 +39,7 @@ export class RoundBetDetailGameBase {
         admintest("Verify RER of archived round", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             const archivedRoundID = 1;
-            let getRER = await this.admin.getRetrieveEndRound(
-                this.options.gameConfiguration.id,
-                archivedRoundID,
-                playerId,
-                operatorId,
-            );
+            let getRER = await this.admin.getRetrieveEndRound(this.options.gameConfiguration.id, archivedRoundID, playerId, operatorId);
             await this.verifyRER(getRER, this.rdataSet["Expect_NoData"]);
         });
     }
@@ -54,7 +49,7 @@ export class RoundBetDetailGameBase {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             await this.game.waitUntilPlaceBet();
             const currentRoundId = await this.getClientRunningRound();
-            global.settleRoundID = Number(currentRoundId)
+            global.settleRoundID = Number(currentRoundId);
         });
         admintest("THEN player able to place a bet and settle on running round", async () => {
             // Arrange
@@ -114,9 +109,8 @@ export class RoundBetDetailGameBase {
             const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount ?? 1 };
             // Act
             await this.player.placeBet(bet.choice, bet.amount);
-            await this.game.waitForSettlement()
-            await this.game.waitForTimeout(5000)
-
+            await this.game.waitForSettlement();
+            await this.game.waitForTimeout(5000);
         });
 
         admintest("Verify BetDetails of case placebet 1 choice and win", async () => {
@@ -146,7 +140,7 @@ export class RoundBetDetailGameBase {
     protected TC4() {
         admintest("Verify case Player placebet 1 choice and lose", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            await this.game.waitUntilPlaceBet()
+            await this.game.waitUntilPlaceBet();
             const tabMonitoring = await this.admin.OpenMonitoring(
                 this.admin.page.context(),
                 this.options.gameConfiguration.id,
@@ -167,9 +161,8 @@ export class RoundBetDetailGameBase {
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
             // Act
             await this.player.placeBet(bet.choice, bet.amount);
-            await this.game.waitForSettlement()
-            await this.game.waitForTimeout(5000)
-
+            await this.game.waitForSettlement();
+            await this.game.waitForTimeout(5000);
         });
 
         admintest("Verify BetDetails of case placebet 1 choice and lose", async () => {
@@ -189,7 +182,7 @@ export class RoundBetDetailGameBase {
                 this.options.gameConfiguration.id,
                 global.settleRoundID,
                 playerId,
-                operatorId
+                operatorId,
             );
             await this.verifyRER(getRER, this.rdataSet["Expect_Lose"]);
         });
@@ -237,7 +230,7 @@ export class RoundBetDetailGameBase {
         expect(roundId.includes(roundID)).toBe(true);
 
         for (const key in expectSnapshot) {
-            expect(await page.locator(key).screenshot()).toMatchSnapshot(expectSnapshot[key],{  maxDiffPixelRatio : 0.2 });
+            expect(await page.locator(key).screenshot()).toMatchSnapshot(expectSnapshot[key], { maxDiffPixelRatio: 0.2 });
         }
         await page.close();
     }

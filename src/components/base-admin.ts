@@ -4,6 +4,7 @@ import { GameEvent, waitForMessage, parseSocketPayload } from "../_shared";
 import { loginAdmin } from "../auth/auth";
 import { GameConfiguration } from "./game-configuration";
 import * as adminLocator from "./base-admin-locator";
+import { expect } from "../expects";
 
 export class BaseAdmin {
     readonly page: Page;
@@ -71,7 +72,7 @@ export class BaseAdmin {
         await this.page.waitForTimeout(time);
     }
 
-    async clickLocator(element: string, wait = 500): Promise<void> {
+    async clickLocator(element: string, wait = 1000): Promise<void> {
         await this.page.click(element);
         await this.waitForTimeout(wait);
     }
@@ -210,14 +211,16 @@ export class BaseAdmin {
     }
 
     async OpenMonitoring(context: any, gameId: number, mornitorlocator?: string) {
-        const admindomain = new URL(this.page.url());
-        const monitoring = admindomain.protocol + "//" + admindomain.hostname + "/GameSettings/GameMonitor";
-        await this.page.goto(monitoring);
+        await this.selectLeftMenu("Game Monitoring");
         const mornitorLocator = mornitorlocator ?? adminLocator.monitoring[gameId];
         await this.page.focus(mornitorLocator);
         const [newtab] = await Promise.all([context.waitForEvent("page"), await this.page.click(mornitorLocator)]);
         await newtab.waitForLoadState();
         return newtab;
+    }
+
+    async selectLeftMenu(menu: string) {
+        await this.page.click(`//span[text()="${menu}"]`);
     }
 
     async gnSetUiGameResult(context: any, gameId: number, data: object, mornitorlocator?: string) {
@@ -260,15 +263,14 @@ export class BaseAdmin {
         return JSON.parse(response);
     }
 
-    async filterBetDetails(context: any, gameType: any, roundId: any, playerId: any, operatorId: string = "ONEworks1") {
-        const admindomain = new URL(this.page.url());
-        const monitoring = admindomain.protocol + "//" + admindomain.hostname + "/BetDetails";
-        await this.page.goto(monitoring);
+    async filterBetDetails(context: any, gameType: any, roundId: any, playerId: any, operatorId: string = "ONEworks1", language: string = "en-US") {
+        await this.selectLeftMenu("Bet Details");
         await this.page.waitForSelector(adminLocator.commonUiBetDetails.btnGetBetDetails, { state: "visible" });
         await this.page.locator(adminLocator.commonUiBetDetails.optOperatorId).selectOption({ value: operatorId });
         await this.page.locator(adminLocator.commonUiBetDetails.optGameType).selectOption({ value: gameType.toString() });
         await this.page.fill(adminLocator.commonUiBetDetails.inpRoundId, roundId.toString());
         await this.page.fill(adminLocator.commonUiBetDetails.inpPlayerId, playerId.toString());
+        await this.page.locator(adminLocator.commonUiBetDetails.optLanguage).selectOption({ value: language });
         const [newtab] = await Promise.all([
             context.waitForEvent("page"),
             await this.page.click(adminLocator.commonUiBetDetails.btnGetBetDetails),
@@ -276,6 +278,81 @@ export class BaseAdmin {
         await newtab.waitForLoadState();
         await newtab.waitForTimeout(2000);
         return newtab;
+    }
+
+    async verifyLocatorsVisible(locators: string[]) {
+        await this.page.waitForLoadState("domcontentloaded");
+        for (const locator of locators) {
+            expect(await this.page.locator(locator).isVisible(), { message: `${locator} is not visible` }).toBe(true);
+        }
+    }
+
+    async textLocatorShouldBe(locator: string, expectedValue: string) {
+        await expect(this.page.locator(locator), { message: `${locator} does not have text ${expectedValue}` }).toHaveText(
+            expectedValue.toString(),
+        );
+    }
+
+    async updateOddsCascading(index: string, fromValue: string, toValue: string, oddsValue: string, isSave: boolean = true) {
+        if (adminLocator.gameManagementOddsCascading[`icon_${index}_0_From`] !== undefined) {
+            await this.page.locator(adminLocator.gameManagementOddsCascading[`icon_${index}_0_From`]).fill(fromValue);
+            await this.page.locator(adminLocator.gameManagementOddsCascading[`icon_${index}_0_To`]).fill(toValue);
+            await this.page.locator(adminLocator.gameManagementOddsCascading[`icon_${index}_0_Odds`]).fill(oddsValue);
+            if (isSave) {
+                await this.page.locator(adminLocator.gameManagementOddsCascading.save_btn).click();
+            }
+        } else {
+            console.error("Invalid index provided for odds cascading update.");
+        }
+    }
+
+    async verifyOddsCascading(index: string, fromValue: string, toValue: string, oddsValue: string) {
+        await expect(this.page.locator(adminLocator.gameManagementOddsCascading[`icon_${index}_0_From`]), {
+            message: `${adminLocator.gameManagementOddsCascading[`icon_${index}_0_From`]} does not have text ${fromValue}`,
+        }).toHaveText(fromValue.toString());
+        await expect(this.page.locator(adminLocator.gameManagementOddsCascading[`icon_${index}_0_To`]), {
+            message: `${adminLocator.gameManagementOddsCascading[`icon_${index}_0_To`]} does not have text ${toValue}`,
+        }).toHaveText(toValue.toString());
+        await expect(this.page.locator(adminLocator.gameManagementOddsCascading[`icon_${index}_0_Odds`]), {
+            message: `${adminLocator.gameManagementOddsCascading[`icon_${index}_0_Odds`]} does not have text ${oddsValue}`,
+        }).toHaveText(oddsValue.toString());
+    }
+
+    async updateBotRatioGameManagement(value: string = "1") {
+        for (let index = 1; index <= 12; index++) {
+            await this.page.locator(`//div[@class="row options"]/div[1]/table//tr[${index}]//input[1]`).fill(value);
+            await this.page.locator(`//div[@class="row options"]/div[2]/table//tr[${index}]//input[1]`).fill(value);
+        }
+        await this.clickLocator("#updateBotRatioBtn")
+    }
+
+    async verifyBotRatioGameManagement(value: string = "1") {
+        for (let index = 1; index <= 12; index++) {
+            await this.textLocatorShouldBe(`//div[@class="row options"]/div[1]/table//tr[${index}]//span[@id='bot_number']`, value);
+            await this.textLocatorShouldBe(`//div[@class="row options"]/div[2]/table//tr[${index}]//span[@id='bot_number']`, value);
+        }
+    }
+
+    async verifyNoBrokenImages(){
+        const images = await this.page.locator("img").all();
+        for (const image of images) {
+            const src = await image.getAttribute("src");
+            if (src) {
+                const response = await this.page.request.get(src);
+                expect.soft(response.status()).toBe(200);
+            }
+        }
+    }
+
+    async getPlayerInfo(playerId: string) {
+        await this.selectLeftMenu("View Player Info");
+        await this.page.locator(adminLocator.commonUiBetDetails.inpPlayerId).fill(playerId.toString());
+        await this.clickLocator(adminLocator.commonUiResult.btnSearch);
+        const nickname = await this.page.locator(adminLocator.commonUiResult.lblNickname).innerText();
+        const playerName = await this.page.locator(adminLocator.commonUiResult.lblPlayerName).innerText();
+        const operatorId = await this.page.locator(adminLocator.commonUiResult.lblOperatorId).innerText();
+        const currency = await this.page.locator(adminLocator.commonUiResult.lblCurrency).innerText();
+        return { nickname, playerName, operatorId, currency, playerId };
     }
 }
 

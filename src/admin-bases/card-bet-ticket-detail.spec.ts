@@ -13,7 +13,7 @@ export class CardBetDetailsGameBase {
     configAdmin = this.options.Adminconfiguration;
     tdataSet = this.configAdmin[`${process.env.npm_config_project}datasetTicket`];
     rdataSet = this.configAdmin[`${process.env.npm_config_project}datasetRER`];
-    mornitorlocator = this.configAdmin.mornitorlocator
+    mornitorlocator = this.configAdmin.mornitorlocator;
     settleNextRound = this.configAdmin.isSettleNextRound;
 
     constructor(protected options: IBaseOptions) {}
@@ -21,10 +21,16 @@ export class CardBetDetailsGameBase {
     protected TC1() {
         admintest("Verify bet details of archived round", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const userData = await this.game.setPlayerIdFromLocalStorage();
+            const userData = await this.game.getPlayerIdFromLocalStorage();
             playerId = userData.playerId;
-            operatorId = userData.operatorId;   
-            const betdetailsTab = await this.admin.filterBetDetails(this.admin.page.context(),this.options.gameConfiguration.id,1,playerId,operatorId);
+            operatorId = userData.operatorId;
+            const betdetailsTab = await this.admin.filterBetDetails(
+                this.admin.page.context(),
+                this.options.gameConfiguration.id,
+                1,
+                playerId,
+                operatorId,
+            );
             const noData = await betdetailsTab.locator(adminLocator.commonUiBetDetailsTicket.tblMain).innerText();
             expect(noData).toContain("No data available");
             await betdetailsTab.close();
@@ -49,7 +55,7 @@ export class CardBetDetailsGameBase {
             this.game.attachSocketAndCaptureEvent(GameEvent.Deal);
             await this.game.clickToChoice(bet.choice);
             await this.game.waitForTimeout(2000);
-            await this.game.clickLocator("hitcard",2000);
+            await this.game.clickLocator("hitcard", 2000);
             let currentRoundID = Number(await this.getClientRunningRound());
             global.roundId = currentRoundID;
         });
@@ -69,12 +75,7 @@ export class CardBetDetailsGameBase {
 
         admintest("Verify RER on handId is running", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            let getRER = await this.admin.getRetrieveEndRound(
-                this.options.gameConfiguration.id,
-                global.roundId,
-                playerId,
-                operatorId,
-            );
+            let getRER = await this.admin.getRetrieveEndRound(this.options.gameConfiguration.id, global.roundId, playerId, operatorId);
             await this.verifyRER(getRER, this.rdataSet["Expect_Running"]);
             await this.game.waitForTimeout(5000);
             await this.standCard();
@@ -91,7 +92,6 @@ export class CardBetDetailsGameBase {
                 this.mornitorlocator,
             );
             await this.fillGameResult(tabMonitoring, this.tdataSet["Settle_Win"]);
-
         });
         admintest("Placebet on win hand", async () => {
             // Arrange
@@ -120,12 +120,7 @@ export class CardBetDetailsGameBase {
 
         admintest("Verify RER of case hand is win", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const getRER = await this.admin.getRetrieveEndRound(
-                this.options.gameConfiguration.id,
-                global.roundId,
-                playerId,
-                operatorId,
-            );
+            const getRER = await this.admin.getRetrieveEndRound(this.options.gameConfiguration.id, global.roundId, playerId, operatorId);
             await this.verifyRER(getRER, this.rdataSet["Expect_Win"]);
         });
     }
@@ -139,7 +134,6 @@ export class CardBetDetailsGameBase {
                 this.mornitorlocator,
             );
             await this.fillGameResult(tabMonitoring, this.tdataSet["Settle_Lose"]);
-
         });
         admintest("Placebet on lose hand", async () => {
             // Arrange
@@ -168,12 +162,7 @@ export class CardBetDetailsGameBase {
 
         admintest("Verify RER of case hand is lose", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const getRER = await this.admin.getRetrieveEndRound(
-                this.options.gameConfiguration.id,
-                global.roundId,
-                playerId,
-                operatorId,
-            );
+            const getRER = await this.admin.getRetrieveEndRound(this.options.gameConfiguration.id, global.roundId, playerId, operatorId);
             await this.verifyRER(getRER, this.rdataSet["Expect_Lose"]);
         });
     }
@@ -210,7 +199,6 @@ export class CardBetDetailsGameBase {
         this.TC4();
     }
 
-
     async hitCardThenSettle() {
         await this.game.clickLocator("hitcard", 10000);
         await this.game.clickLocator("standcard", 2000);
@@ -228,19 +216,18 @@ export class CardBetDetailsGameBase {
 
     async standCard() {
         await this.game.clickLocator("standcard", 1000);
-        if(this.game.locator("btnConfirmStand")){
+        if (this.game.locator("btnConfirmStand")) {
             await this.game.clickLocator("btnConfirmStand");
         }
         await this.game.waitForTimeout(8000);
     }
 
-
     async verifyBetDetails(page: any, roundID: number, expectSnapshot: object) {
-        let roundId = await page.locator(adminLocator.commonUiBetDetailsTicket.lblRoundId).innerText()
-       expect(roundId.includes(roundID)).toBe(true);
+        let roundId = await page.locator(adminLocator.commonUiBetDetailsTicket.lblRoundId).innerText();
+        expect(roundId.includes(roundID)).toBe(true);
 
         for (const key in expectSnapshot) {
-            expect(await page.locator(key).screenshot()).toMatchSnapshot(expectSnapshot[key],{  maxDiffPixelRatio : 0.2 });
+            expect(await page.locator(key).screenshot()).toMatchSnapshot(expectSnapshot[key], { maxDiffPixelRatio: 0.2 });
         }
     }
 
@@ -258,5 +245,4 @@ export class CardBetDetailsGameBase {
         expect(checkData.ErrorCode).toBe(expectedData.errorCode);
         expect(checkData.ErrorDescription).toBe(expectedData.errorDescription);
     }
-
 }

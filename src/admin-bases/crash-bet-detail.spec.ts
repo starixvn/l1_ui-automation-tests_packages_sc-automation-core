@@ -26,9 +26,9 @@ export class CrashBetDetailGameBase {
     protected TC1() {
         admintest("Verify bet detail of archived round", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const userData = await this.game.setPlayerIdFromLocalStorage();
+            const userData = await this.game.getPlayerIdFromLocalStorage();
             playerId = userData.playerId;
-            operatorId = userData.operatorId;   
+            operatorId = userData.operatorId;
             const archivedRoundID = 1;
             const betdetailsTab = await this.admin.filterBetDetails(
                 this.admin.page.context(),
@@ -45,12 +45,7 @@ export class CrashBetDetailGameBase {
         admintest("Verify RER of archived round", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             const archivedRoundID = 1;
-            let getRER = await this.admin.getRetrieveEndRound(
-                this.options.gameConfiguration.id,
-                archivedRoundID,
-                playerId,
-                operatorId,
-            );
+            let getRER = await this.admin.getRetrieveEndRound(this.options.gameConfiguration.id, archivedRoundID, playerId, operatorId);
             await this.verifyRER(getRER, this.rdataSet["Expect_NoData"]);
         });
     }
@@ -60,7 +55,7 @@ export class CrashBetDetailGameBase {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             await this.game.waitUntilPlaceBet();
             const currentRoundId = await this.getClientRunningRound();
-            global.settleRoundID = Number(currentRoundId)
+            global.settleRoundID = Number(currentRoundId);
         });
         admintest("THEN player able to place a bet and settle on running round", async () => {
             // Arrange
@@ -121,9 +116,8 @@ export class CrashBetDetailGameBase {
             // Act
             await this.placeBet();
             await this.game.waitForSpecificEvent(CrashGameEvent.StartCashOut); //wait for start cash out
-            await this.cashOut()
-            await this.game.waitForTimeout(5000)
-
+            await this.cashOut();
+            await this.game.waitForTimeout(5000);
         });
 
         admintest("Verify BetDetails of case placebet 1 choice and win", async () => {
@@ -153,7 +147,7 @@ export class CrashBetDetailGameBase {
     protected TC4() {
         admintest("Verify case Player placebet 1 choice and lose", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            await this.game.waitUntilPlaceBet()
+            await this.game.waitUntilPlaceBet();
             const tabMonitoring = await this.admin.OpenMonitoring(
                 this.admin.page.context(),
                 this.options.gameConfiguration.id,
@@ -174,9 +168,8 @@ export class CrashBetDetailGameBase {
             // Act
             await this.placeBet();
             await this.game.waitForSpecificEvent(CrashGameEvent.StartCashOut); //wait for start cash out
-            await this.cashOut()
-            await this.game.waitForTimeout(5000)
-
+            await this.cashOut();
+            await this.game.waitForTimeout(5000);
         });
 
         admintest("Verify BetDetails of case placebet 1 choice and lose", async () => {
@@ -196,7 +189,7 @@ export class CrashBetDetailGameBase {
                 this.options.gameConfiguration.id,
                 global.settleRoundID,
                 playerId,
-                operatorId
+                operatorId,
             );
             await this.verifyRER(getRER, this.rdataSet["Expect_Lose"]);
         });
@@ -244,7 +237,7 @@ export class CrashBetDetailGameBase {
         expect(roundId.includes(roundID)).toBe(true);
 
         for (const key in expectSnapshot) {
-            expect(await page.locator(key).screenshot()).toMatchSnapshot(expectSnapshot[key],{  maxDiffPixelRatio : 0.2 });
+            expect(await page.locator(key).screenshot()).toMatchSnapshot(expectSnapshot[key], { maxDiffPixelRatio: 0.2 });
         }
         await page.close();
     }
@@ -266,21 +259,21 @@ export class CrashBetDetailGameBase {
         expect(checkData.ErrorDescription).toBe(expectedData.errorDescription);
     }
 
-    async cashOut () {
+    async cashOut() {
         await this.game.waitForTimeout(200);
         await this.game.clickLocator("btnCashOut");
-    };
-    
-    async placeBet () {
+    }
+
+    async placeBet() {
         await this.game.waitUntilPlaceBet();
         await this.game.clickLocator("btnPlaceBet");
-    };
-    
-    async waitForSettlement () {
+    }
+
+    async waitForSettlement() {
         const message = await this.game.waitForEvent(GameEvent.Settlement);
         await this.game.waitForTimeout(2500); // add sleep due to feature Publish round result prior to settlement
         const winningByChoice = this.game.latestCaptureEvent(GameEvent.WinStatus);
-    
+
         let settledResults = {
             settlementResult: message?.finish?.settlementResult,
             winStatus: typeof winningByChoice == "object" ? winningByChoice.status.win : "",
@@ -288,6 +281,5 @@ export class CrashBetDetailGameBase {
         };
         settledResults["winAmount"] = winningByChoice.status.win ? winningByChoice.status.bet : 0;
         return settledResults;
-    };
-
+    }
 }

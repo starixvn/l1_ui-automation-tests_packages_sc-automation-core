@@ -189,8 +189,8 @@ export class BaseGame {
         if (env.includes("local")) {
             account = this.gameConfiguration.accounts[env];
         } else {
-            account = accounts[`${projectCode}${env}`][this.gameConfiguration.id] ?? this.gameConfiguration.accounts[`${projectCode}${env}`];
-
+            account =
+                accounts[`${projectCode}${env}`][this.gameConfiguration.id] ?? this.gameConfiguration.accounts[`${projectCode}${env}`];
         }
 
         await ssoToGame2(
@@ -377,7 +377,7 @@ export class BaseGame {
         return await this.waitForEvent(GameEvent.Stand, subGameName);
     }
 
-    async waitForSettlement(subGameName?: string): Promise<any> {
+    async waitForSettlement(subGameName?: string, extraInfo?: string): Promise<any> {
         this.capturedEvents[GameEvent.WinStatus] = "";
         const message = await this.waitForEvent(GameEvent.Settlement, subGameName);
         await this.page.waitForTimeout(500); // add sleep due to feature Publish round result prior to settlement
@@ -389,6 +389,11 @@ export class BaseGame {
             winStatus: typeof winningByChoice == "object" ? winningByChoice.status.win : "",
             roundId: message.finish.roundId || 0,
         };
+
+        if (extraInfo) {
+            settledResults[extraInfo] = message.finish[extraInfo] ;
+        }
+
         if (this.gameConfiguration.slotsgame) {
             settledResults["winAmount"] = message?.finish?.betWin ?? 0;
         } else {
@@ -818,7 +823,7 @@ export class BaseGame {
         return duplicateFiles;
     }
 
-    async setPlayerIdFromLocalStorage() {
+    async getPlayerIdFromLocalStorage() {
         const local_storage_data = await this.page.evaluate(() => {
             const data: { [key: string]: string | null } = {};
             for (let i = 0; i < localStorage.length; i++) {

@@ -27,8 +27,8 @@ export default {
     l1ismemberSiteMobile: "https://www.viva88.net/login888.aspx",
     l1modirectmemberSite: "https://www.viva88.net/login888.aspx",
     l1modirectlobbyDomain: "#Sports/s=200_0",
-    l2creditmodirectmemberSite: "https://www.nova88.com/",
+    l2creditmodirectmemberSite: "https://www.nova88.com/b/vn",
     l2creditmodirectlobbyDomain: "#Sports/s=171_0",
-    l2creditismemberSiteMobile: "https://www.nova88.com/",
+    l2creditismemberSiteMobile: "https://www.nova88.com/b/vn",
 
 };

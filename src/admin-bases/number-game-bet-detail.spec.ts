@@ -14,16 +14,16 @@ export class NumberBetDetailGameBase {
     configAdmin = this.options.Adminconfiguration;
     tdataSet = this.configAdmin[`${process.env.npm_config_project}datasetTicket`];
     dataSet = this.configAdmin[`${process.env.npm_config_project}datasetRER`];
-    operatorId = this.configAdmin[`${process.env.npm_config_project}operatorId`]
+    operatorId = this.configAdmin[`${process.env.npm_config_project}operatorId`];
     mornitorlocator = this.configAdmin.mornitorlocator;
     settleNextRound = this.configAdmin.isSettleNextRound;
-    
+
     constructor(protected options: IBaseOptions) {}
 
     protected TC1() {
         admintest("Verify bet detail of running round", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
-            const userData = await this.game.setPlayerIdFromLocalStorage();
+            const userData = await this.game.getPlayerIdFromLocalStorage();
             playerId = userData.playerId;
             operatorId = userData.operatorId;
             await this.game.gnWaitUntilPlaceBet();
@@ -46,15 +46,9 @@ export class NumberBetDetailGameBase {
             await this.game.gnWaitUntilPlaceBet();
             const currentRoundID = await this.getClientRunningRound();
 
-            const getRER = await this.admin.getRetrieveEndRound(
-                this.options.gameConfiguration.id,
-                currentRoundID,
-                playerId,
-                operatorId,
-            );
+            const getRER = await this.admin.getRetrieveEndRound(this.options.gameConfiguration.id, currentRoundID, playerId, operatorId);
             await this.verifyRER(getRER, this.dataSet["runningRound"]);
         });
-  
     }
 
     protected TC2() {
@@ -75,12 +69,7 @@ export class NumberBetDetailGameBase {
         admintest("Verify case roundId is archived", async () => {
             admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
             const archivedRoundID = 1;
-            const getRER = await this.admin.getRetrieveEndRound(
-                this.options.gameConfiguration.id,
-                archivedRoundID,
-                playerId,
-                operatorId,
-            );
+            const getRER = await this.admin.getRetrieveEndRound(this.options.gameConfiguration.id, archivedRoundID, playerId, operatorId);
             await this.verifyRER(getRER, this.dataSet["Expect_NoData"]);
         });
     }
@@ -244,7 +233,7 @@ export class NumberBetDetailGameBase {
 
     async verifyBetDetails(page: any, roundID: any, expectSnapshot: object, expectData: any) {
         await page.waitForTimeout(3000);
-        await page.waitForLoadState('domcontentloaded')
+        await page.waitForLoadState("domcontentloaded");
 
         let gsettleClient = await expectData.betTimes.settleTime.split(" ")[0].split(":");
         let gplaceBetClient = await expectData.betTimes.placeBetTime.split(" ")[0].split(":");
@@ -258,8 +247,12 @@ export class NumberBetDetailGameBase {
         expect(await page.locator(adminLocator.commonUiBetDetailsTicket.lblBetChoices)).toContainText(betchoice);
         expect(await page.locator(adminLocator.commonUiBetDetailsTicket.lblStake)).toContainText(expectData.bet.amount.toString());
         expect(await page.locator(adminLocator.commonUiBetDetailsTicket.lblRoundId)).toContainText(roundID);
-        expect(await page.locator(adminLocator.commonUiBetDetailsTicket.lblOdds)).toContainText(expectData.settledResults.odds[expectData.bet.choice].toString())
-        expect(await page.locator(adminLocator.commonUiBetDetailsTicket.lblTotalWin)).toContainText(expectData.settledResults.winAmount.toString())
+        expect(await page.locator(adminLocator.commonUiBetDetailsTicket.lblOdds)).toContainText(
+            expectData.settledResults.odds[expectData.bet.choice].toString(),
+        );
+        expect(await page.locator(adminLocator.commonUiBetDetailsTicket.lblTotalWin)).toContainText(
+            expectData.settledResults.winAmount.toString(),
+        );
         expect(await page.locator(adminLocator.commonUiBetDetailsTicket.lblWinLoss)).toContainText(cleanwinamount.toString());
 
         for (const key in expectSnapshot) {
@@ -270,7 +263,7 @@ export class NumberBetDetailGameBase {
 
     async verifyBetDetailsMultipleChoices(page: any, roundID: any, expectSnapshot: object, expectData: any) {
         await page.waitForTimeout(3000);
-        await page.waitForLoadState('domcontentloaded')
+        await page.waitForLoadState("domcontentloaded");
 
         let gsettleClient = await expectData.betTimes.settleTime.split(" ")[0].split(":");
         const settleTimeClient = `${gsettleClient[1]}:${gsettleClient[2]}`;
@@ -280,11 +273,17 @@ export class NumberBetDetailGameBase {
         expect(await page.locator(adminLocator.commonUiBetDetailsTicket.lblBetDate)).toContainText(settleTimeClient);
         expect(await page.locator(adminLocator.commonUiBetDetailsTicket.lblStake)).toContainText(expectData.bet.amount.toString());
         expect(await page.locator(adminLocator.commonUiBetDetailsTicket.lblRoundId)).toContainText(roundID);
-        expect(await page.locator(adminLocator.commonUiBetDetailsTicket.lblOdds)).toContainText(expectData.settledResults.odds[expectData.bet.choices[1]].toString())
-        expect(await page.locator(adminLocator.commonUiBetDetailsTicket.lblOdds2)).toContainText(expectData.settledResults.odds[expectData.bet.choices[0]].toString())
-        expect(await page.locator(adminLocator.commonUiBetDetailsTicket.lblTotalWin)).toContainText(expectData.settledResults.winAmount.toString())
+        expect(await page.locator(adminLocator.commonUiBetDetailsTicket.lblOdds)).toContainText(
+            expectData.settledResults.odds[expectData.bet.choices[1]].toString(),
+        );
+        expect(await page.locator(adminLocator.commonUiBetDetailsTicket.lblOdds2)).toContainText(
+            expectData.settledResults.odds[expectData.bet.choices[0]].toString(),
+        );
+        expect(await page.locator(adminLocator.commonUiBetDetailsTicket.lblTotalWin)).toContainText(
+            expectData.settledResults.winAmount.toString(),
+        );
         expect(await page.locator(adminLocator.commonUiBetDetailsTicket.lblWinLoss)).toContainText(cleanwinamount.toString());
-      
+
         for (const key in expectSnapshot) {
             expect(await page.locator(key).screenshot()).toMatchSnapshot(expectSnapshot[key]);
         }
@@ -298,5 +297,4 @@ export class NumberBetDetailGameBase {
         expect(checkData.errorCode).toBe(expectedData.errorCode);
         expect(checkData.errorDescription).toBe(expectedData.errorDescription);
     }
-
 }

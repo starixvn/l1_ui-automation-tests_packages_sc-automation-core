@@ -106,7 +106,7 @@ export class ISGameBase {
         if (alertDialogExists) {
             await this.game.page.addStyleTag({
                 content: `#dialogMessage {display: none !important;}
-                div[class*="promo-highlight-group"] {display: none !important;}
+                div[class*="promo"] {display: none !important;}
                 a[class*="c-btn c-btn--bot"] {display: none !important;}`,
             });
         }

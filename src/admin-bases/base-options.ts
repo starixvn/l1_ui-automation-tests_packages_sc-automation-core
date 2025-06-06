@@ -12,7 +12,9 @@ export interface IBaseOptions {
 }
 
 export class Adminconfiguration {
+    accountId?: string;
     mornitorlocator?: string;
+    gameName?: string;
     settleDomain: string;
     settlePath?: string;
     l1datasetRER?: object;
