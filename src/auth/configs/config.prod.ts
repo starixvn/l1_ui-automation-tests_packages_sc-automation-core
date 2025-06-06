@@ -4,7 +4,7 @@ export default {
     l1memberSiteMobile: "https://www.viva88.net/login888.aspx",
     l1lobbyDomainMobile: "#ThirdPartyGame/vid=66&gid=",
     l2memberSite: "http://www.spondemo.com/NewIndex?lang=vn&webskintype=3",
-    l2lobbyDomain: "https://proxy.vgames88.com",
+    l2lobbyDomain: "https://www.vgames88.com",
     l2memberSiteMobile: "https://smart.spondemo.com",
     l2lobbyDomainMobile: "#ThirdPartyGame/vid=66&gid=",
     gnmemberSite: "https://www.viva88.net/login888.aspx",

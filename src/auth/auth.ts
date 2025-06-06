@@ -197,9 +197,6 @@ const loginMemberSite = async (
             await page.frameLocator("//iframe[contains(@src,'https://direct')]").locator(`//img[@alt='game-${gameId}']`).click();
         } else {
             await goToGameLobby(page, lobbyDomain, gameId, productId);
-            if (projectCode === "l2") {
-                await selectCurrencyGroup(page, currencyGroup); // this change from 6 Feb 2025 and only apply select currency group for l2 projects
-            }
         }
     }
 };
@@ -483,7 +480,7 @@ const formatGameLobbyUrl = async (url: string, page: Page, lobbyDomain: string, 
         const srcMatch = data.match(/<iframe[^>]+id=["']frmGame["'][^>]+src=["']([^"']+)["']/);
         const tokenMatch = srcMatch?.[1]?.match(/token=([^&]+)/); // Combined token extraction
         const token = tokenMatch ? tokenMatch[1] : null; // Get the token value or null if not found
-        return `${lobbyDomain}/user/CurrencyGroup?&token=${token}&language=vi-VN&gameId=${gameId}&ref=&rurl=&partnerId=ONEworksVGCash&appType=&op=`;
+        return `${lobbyDomain}/?token=${token}&lang=vi-VN&appType=1&gameId=${gameId}&partnerId=ONEworksVGCash&op=`
     } else if (project === "l1") {
         await page.goto(`${protocol}://${domain[2]}/${lobbyDomain}1612`);
         await page.waitForLoadState();
@@ -542,6 +539,7 @@ const loginWithCaptcha = async (page: any, accountId: string, pwd: string) => {
     await page.locator(PRODLocator.usernameInput).waitFor({ state: "visible" });
     await page.fill(PRODLocator.usernameInput, accountId);
     await page.fill(PRODLocator.passwordInput, pwd);
+    await page.waitForTimeout(500);
     let capcha = await getCaptcha(page);
     console.log("capcha", capcha);
     await page.fill("#validation", capcha);
