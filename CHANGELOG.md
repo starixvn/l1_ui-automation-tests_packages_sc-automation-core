@@ -1,3 +1,15 @@
+# [1.73.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.72.0...v1.73.0) (2025-06-06)
+
+
+### Bug Fixes
+
+* getPlayerIdFromLocalStorage ([5be80c3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/5be80c30e2788847dcea2d4092c719c473606c76))
+
+
+### Features
+
+* admin base for cascading slot games and fix some sso issue on mobile mode ([b33cdce](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/b33cdce7199bf7406faa3f71ee644b39a097d663))
+
 # [1.72.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.71.5...v1.72.0) (2025-05-02)
 
 
