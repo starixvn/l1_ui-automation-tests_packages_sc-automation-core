@@ -1,4 +1,4 @@
-import { LobbyLocator, UATLocator, PRODLocator, GroupCurrencyLocator, AdminLogin } from "./locators/index";
+import { LobbyLocator, UATLocator, PRODLocator, AdminLogin } from "./locators/index";
 import { configs } from "./configs/config";
 import { Page } from "@playwright/test";
 import { createWorker } from "tesseract.js";
@@ -30,7 +30,7 @@ export const ssoToGame = async (
     productId: string,
     env: string,
     projectCode: string,
-    currencyGroup?: string,
+
 ): Promise<void> => {
     const config = getConfig();
     const langCode = process.env.npm_config_langCode ?? "vn";
@@ -48,10 +48,6 @@ export const ssoToGame = async (
         await page.click(`//input[@id=${appType}]`);
         await page.locator(LobbyLocator.langDropdown).selectOption(LobbyLocator[`${langCode}LangOption`]);
 
-        if (currencyGroup) {
-            await page.fill(LobbyLocator.currencyInput, currencyGroup);
-        }
-
         await page.click(LobbyLocator.tokenBtn);
         await page.waitForTimeout(500);
         ssoLink = (await page.locator(LobbyLocator.ssoLink).textContent()) ?? "";
@@ -62,7 +58,7 @@ export const ssoToGame = async (
             await page.click("text=Submit");
         }
     } else {
-        await loginMemberSite(page, config, env, playerId, productId, langCode, projectCode, gameId, currencyGroup);
+        await loginMemberSite(page, config, env, playerId, productId, langCode, projectCode, gameId);
     }
 };
 
@@ -73,7 +69,7 @@ export const ssoToGame2 = async (
     productId: string,
     env: string,
     projectCode: string,
-    currencyGroup?: string,
+
 ): Promise<void> => {
     const config = getConfig();
     const langCode = process.env.npm_config_langCode ?? "vn";
@@ -95,9 +91,6 @@ export const ssoToGame2 = async (
         await page.click(LobbyLocator.advancelbl);
         await page.click(`//input[@id=${appType}]`);
         await page.locator(LobbyLocator.langDropdown).selectOption(LobbyLocator[`${langCode}LangOption`]);
-        if (currencyGroup) {
-            await page.fill(LobbyLocator.currencyInput, currencyGroup);
-        }
         await page.click(LobbyLocator.tokenBtn);
         await page.waitForTimeout(500);
         ssoLink = (await page.locator(LobbyLocator.ssoLink).textContent()) ?? "";
@@ -147,7 +140,6 @@ const loginMemberSite = async (
     langCode: string,
     projectCode: string,
     gameId: number,
-    currencyGroup?: string,
 ) => {
     const timeout = config.lobbyTimeout;
     const memberSiteLink =
@@ -201,24 +193,24 @@ const loginMemberSite = async (
     }
 };
 
-const selectCurrencyGroup = async (page: Page, currencyGroup?: string) => {
-    await page.waitForTimeout(2000);
-    global.ssoLink = page.url();
-    const frameLocator = page.frameLocator("#frmGame");
+// const selectCurrencyGroup = async (page: Page, currencyGroup?: string) => {
+//     await page.waitForTimeout(2000);
+//     global.ssoLink = page.url();
+//     const frameLocator = page.frameLocator("#frmGame");
 
-    if (await page.$("#frmGame")) {
-        // If currencyGroup is provided, select it
-        if (currencyGroup) {
-            await frameLocator.locator(GroupCurrencyLocator.specificCheckbox).click();
-            await frameLocator.locator(GroupCurrencyLocator.currencyGroupDropdown).selectOption(currencyGroup);
-        }
-        await frameLocator.locator(GroupCurrencyLocator.submitButton).click();
-    } else {
-        await page.locator(GroupCurrencyLocator.submitButton).waitFor();
-        await page.click(GroupCurrencyLocator.submitButton);
-    }
-    await page.waitForLoadState();
-};
+//     if (await page.$("#frmGame")) {
+//         // If currencyGroup is provided, select it
+//         if (currencyGroup) {
+//             await frameLocator.locator(GroupCurrencyLocator.specificCheckbox).click();
+//             await frameLocator.locator(GroupCurrencyLocator.currencyGroupDropdown).selectOption(currencyGroup);
+//         }
+//         await frameLocator.locator(GroupCurrencyLocator.submitButton).click();
+//     } else {
+//         await page.locator(GroupCurrencyLocator.submitButton).waitFor();
+//         await page.click(GroupCurrencyLocator.submitButton);
+//     }
+//     await page.waitForLoadState();
+// };
 
 const loginUAT = async (page: Page, accountId: string, pwd: string, langCode: string, projectCode: string, timeout: number = 15000) => {
     if (projectCode === "l1") {

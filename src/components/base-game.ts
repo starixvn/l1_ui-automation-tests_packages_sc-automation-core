@@ -79,8 +79,7 @@ export class BaseGame {
             account,
             this.gameConfiguration.productId[projectCode],
             env,
-            projectCode,
-            this.gameConfiguration.currencyGroup,
+            projectCode
         );
         this.msgpack = getConfig().enabledMsgPack;
         if (this.trackDownload) {
@@ -200,7 +199,6 @@ export class BaseGame {
             this.gameConfiguration.productId[projectCode],
             env,
             projectCode,
-            this.gameConfiguration.currencyGroup,
         );
         this.msgpack = getConfig().enabledMsgPack;
 
