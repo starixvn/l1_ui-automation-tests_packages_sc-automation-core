@@ -1,3 +1,10 @@
+## [1.73.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.73.2...v1.73.3) (2025-06-09)
+
+
+### Bug Fixes
+
+* creadit login button ([d591614](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/d591614dac0d9b74df04fbef6eef8865c97dd697))
+
 ## [1.73.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.73.1...v1.73.2) (2025-06-06)
 
 
