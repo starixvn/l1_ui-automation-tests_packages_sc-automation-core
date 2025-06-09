@@ -1,3 +1,10 @@
+## [1.73.4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.73.3...v1.73.4) (2025-06-09)
+
+
+### Bug Fixes
+
+* cascading slot game base ([4619648](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/461964846b982b8c24fcc19ea06763db6cf07ba6))
+
 ## [1.73.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.73.2...v1.73.3) (2025-06-09)
 
 
