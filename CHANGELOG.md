@@ -1,3 +1,10 @@
+## [1.73.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.73.1...v1.73.2) (2025-06-06)
+
+
+### Bug Fixes
+
+* promotion popup ([b339c48](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/b339c48bf626f9296847904b757b5749584a7123))
+
 ## [1.73.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.73.0...v1.73.1) (2025-06-06)
 
 
