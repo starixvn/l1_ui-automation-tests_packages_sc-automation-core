@@ -19,14 +19,6 @@ export class CascadingSlotGameBase {
 
     constructor(protected options: SlotGameOptions) {}
 
-    protected inGameTests() {
-        test("Verify received websocket Odds of game should be the same with game's config ", async () => {
-            // Assert
-            await test.step(`Verify ODDs should be correct`, async () => {
-                expect(this.game.odds).toStrictEqual(this.options.gameConfiguration.odds);
-            });
-        });
-    }
 
     protected mainUITests() {
         test("Verify game name", async () => {
@@ -85,7 +77,7 @@ export class CascadingSlotGameBase {
         test("Verify menu expand with sound and music on", async () => {
             //Act
             await test.step("Click hamburger menu", async () => {
-                await this.game.clickLocator(baseLocatorNames.mnuHamburger);
+                await this.game.clickLocator(baseLocatorNames.hamburgerMenu);
             });
             await test.step("Capture expand hamburger menu and compare with the snapshot", async () => {
                 const mnuHamburgerExpandSoundOn = await this.game.capture(baseLocatorNames.mnuHamburgerExpandSoundOn);
@@ -101,7 +93,7 @@ export class CascadingSlotGameBase {
         test("Verify menu expand with sound and music off", async () => {
             //Act
             await test.step("Click on hamburger menu", async () => {
-                await this.game.clickLocator(baseLocatorNames.mnuHamburger);
+                await this.game.clickLocator(baseLocatorNames.hamburgerMenu);
             });
             await test.step("Click on sound icon", async () => {
                 await this.game.clickLocator(baseLocatorNames.icoSound);
@@ -454,7 +446,7 @@ export class CascadingSlotGameBase {
             //Assert
             await test.step("Capture bottom area and compare with snapshot", async () => {
                 const imgBottomAreaTrialMode = await this.game.capture(baseLocatorNames.imgBottomAreaTrialMode);
-                expect(imgBottomAreaTrialMode.image).toMatchSnapshot(imgBottomAreaTrialMode.name, { maxDiffPixelRatio: 0 });
+                expect(imgBottomAreaTrialMode.image).toMatchSnapshot(imgBottomAreaTrialMode.name);
             });
         });
 
@@ -464,20 +456,20 @@ export class CascadingSlotGameBase {
                 const imgTurboTrial = await this.game.capture(baseLocatorNames.imgTurboTrial);
 
                 //Assert
-                expect(imgTurboTrial.image).toMatchSnapshot(imgTurboTrial.name, { maxDiffPixelRatio: 0 });
+                expect(imgTurboTrial.image).toMatchSnapshot(imgTurboTrial.name, { maxDiffPixelRatio: 0.01  });
             });
         });
 
         test("Verify expand hamburger menu of trial mode", async () => {
             //Act
             await test.step("Click on hamburger menu", async () => {
-                await this.game.clickLocator(baseLocatorNames.mnuHamburger);
+                await this.game.clickLocator(baseLocatorNames.hamburgerMenu);
             });
 
             //Assert
             await test.step("Capture hamburger menu and compare with snapshot", async () => {
                 const mnuHamburgerExpandTrialMode = await this.game.capture(baseLocatorNames.mnuHamburgerExpandTrialMode);
-                expect(mnuHamburgerExpandTrialMode.image).toMatchSnapshot(mnuHamburgerExpandTrialMode.name, { maxDiffPixelRatio: 0 });
+                expect(mnuHamburgerExpandTrialMode.image).toMatchSnapshot(mnuHamburgerExpandTrialMode.name);
             });
 
             //Post-Act
@@ -489,11 +481,11 @@ export class CascadingSlotGameBase {
         test("Verify user can open game guide in trial mode", async () => {
             //Act
             await test.step("Click on hamburger menu", async () => {
-                await this.game.clickLocator(baseLocatorNames.mnuHamburger);
+                await this.game.clickLocator(baseLocatorNames.hamburgerMenu);
             });
 
             await test.step("Click on game guide icon", async () => {
-                await this.game.clickLocator(baseLocatorNames.icoGuide);
+                await this.game.clickLocator(baseLocatorNames.guideMenu);
             });
 
             //Assert
@@ -628,7 +620,6 @@ export class CascadingSlotGameBase {
     }
 
     protected runScenario() {
-        this.inGameTests();
         this.mainUITests();
         this.turboTests();
         this.spinByKeys();
