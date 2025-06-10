@@ -305,6 +305,61 @@ export class CascadingBetDetailGameBase {
         });
     }
 
+    protected TC6() {
+        admintest("Set result reach max win for user", async () => {
+            admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
+            const tabMonitoring = await this.admin.OpenMonitoring(
+                this.admin.page.context(),
+                this.options.gameConfiguration.id,
+                this.mornitorlocator,
+            );
+            await this.fillGameResult(tabMonitoring, nickname, this.rdataSet["Settle_MaxWin"]);
+        });
+
+        admintest("Placebet on case got max win", async () => {
+            // Arrange
+            admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
+            const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount ?? 1 };
+            // Act
+            this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
+            const endbets = await this.player.placeBet(bet.choice, bet.amount);
+            global.maxWinPerRound =  endbets.endBet*this.configAdmin[`${process.env.npm_config_project}maxWinPerRound`];
+
+            const settledResults = await this.game.waitForSettlement(this.options.gameConfiguration.name, "reachMaxWin"); //wait for main placebet
+            global.roundId = settledResults.roundId;
+            global.winamount = settledResults.winAmount;
+            expect(settledResults.reachMaxWin).toBe(true);
+            await this.game.waitForTimeout(8000);
+            await this.game.clickOutSide()
+
+        });
+
+        admintest("Verify RER of max win", async () => {
+            admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
+            let getRER = await this.admin.getRetrieveEndRound(this.options.gameConfiguration.id, global.roundId, playerId, operatorId);
+            await this.verifyRER(getRER, this.rdataSet["Expect_MaxWin"]);
+            await this.admin.waitForTimeout(5000);
+        });
+
+        admintest("Verify BetDetails of case case got max win", async () => {
+            admintest.setTimeout(this.options.gameConfiguration.maxTimeout);
+            let betdetailsTab = await this.admin.filterBetDetails(
+                this.admin.page.context(),
+                this.options.gameConfiguration.id,
+                global.roundId,
+                playerId,
+                operatorId,
+            );
+            await betdetailsTab.waitForTimeout(1000);
+            expect(await betdetailsTab.locator("//div[@id='game-ticket']/table[2]/tbody/tr[5]/td[@class='text-right']").innerText()).toContain(
+                "(You reached the Max Win) Win");
+            expect(await betdetailsTab.locator("//div[@id='game-ticket']/table[1]/tbody/tr[2]/td[3]").innerText()).toContain(global.maxWinPerRound.toString());
+            await betdetailsTab.close();
+        });
+
+    }
+
+
     start(): void {
         admintest.beforeEach(async ({}, testInfo) => {
             testInfo.snapshotPath = (name: string) => {
@@ -341,6 +396,7 @@ export class CascadingBetDetailGameBase {
         this.TC3();
         this.TC4();
         this.TC5();
+        this.TC6();
     }
 
     async verifyBetDetails(page: any, roundID: number, expectData: object) {
@@ -386,7 +442,12 @@ export class CascadingBetDetailGameBase {
     async fillGameResult(newTab: any, nickname: string, data: Record<string, string | number>) {
         await newTab.type("#Nickname", nickname);
         for (const [key, value] of Object.entries(data)) {
-            await newTab.selectOption(key, String(value));
+            if (key.includes("#Item-")) {
+                await newTab.selectOption(key, String(value));
+            }
+            else {
+                await newTab.fill(key, String(value));
+            }
         }
         await newTab.click("//button[@id='submit']");
         await newTab.waitForTimeout(3000);
