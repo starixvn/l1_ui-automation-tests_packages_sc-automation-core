@@ -1,3 +1,10 @@
+# [1.74.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.73.4...v1.74.0) (2025-06-10)
+
+
+### Features
+
+* add tc reach max win per round ([c62551e](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/c62551eeb593df12f03f95700a590ec50d4aaa28))
+
 ## [1.73.4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.73.3...v1.73.4) (2025-06-09)
 
 
