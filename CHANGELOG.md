@@ -1,3 +1,10 @@
+## [1.74.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.74.0...v1.74.1) (2025-06-12)
+
+
+### Bug Fixes
+
+* increase total click on cascading slot e2e ([592c5eb](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/592c5eb374959867533b66fee33f9ddadf2cf31c))
+
 # [1.74.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.73.4...v1.74.0) (2025-06-10)
 
 
