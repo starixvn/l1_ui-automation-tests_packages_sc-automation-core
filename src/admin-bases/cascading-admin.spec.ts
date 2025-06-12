@@ -41,7 +41,7 @@ export class CascadingAdminBase {
             ]);
             await newtab.waitForLoadState();
             const gameNameText = await newtab.locator("//div[@class='page-title']").innerText();
-            expect(gameNameText.toLowerCase()).toBe(this.gameName.replace(" ", "").toLowerCase() + " result controller");
+            expect(gameNameText.toLowerCase()).toBe(this.gameName.replace(/ /g, "" ).toLowerCase() + " result controller");
             await newtab.close();
         });
 
@@ -216,7 +216,7 @@ export class CascadingAdminBase {
             await this.player.placeBet(bet.choice, bet.amount);
             const settlement1 = await this.game.waitForSettlement();
             await this.game.clickOutSide();
-            await this.game.waitForTimeout(15000);//wait for bot placebet
+            await this.game.waitForTimeout(15000); //wait for bot placebet
             await this.player.placeBet(bet.choice, bet.amount);
             const settlement2 = await this.game.waitForSettlement();
             await this.game.clickOutSide();
@@ -268,7 +268,7 @@ export class CascadingAdminBase {
             admintest.afterAll(async ({ baseGame, baseAdmin }) => {
                 await baseGame.page.close();
                 await baseAdmin.page.close();
-            }); 
+            });
 
             this.runScenario();
         });

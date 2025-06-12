@@ -253,6 +253,8 @@ export class CascadingSlotGameBase {
     }
 
     protected betControlTests(projectCode = "l1") {
+        const totalClick = 10;
+        
         test("Verify default value of total stake", async () => {
             //Act
             await test.step("Click on total stake", async () => {
@@ -268,7 +270,7 @@ export class CascadingSlotGameBase {
         test("Verify increase bet level to the max value", async () => {
             //Act
             await test.step("Click on bet level increase button multiple times", async () => {
-                for (let i = 0; i < 5; i++) {
+                for (let i = 0; i < totalClick; i++) {
                     await this.game.clickLocator(baseLocatorNames.btnBetLevelIncrease);
                 }
             });
@@ -282,7 +284,7 @@ export class CascadingSlotGameBase {
         test("Verify increase coin value to the max value", async () => {
             //Act
             await test.step("Click on coin value increase button multiple times", async () => {
-                for (let i = 0; i < 4; i++) {
+                for (let i = 0; i < totalClick; i++) {
                     await this.game.clickLocator(baseLocatorNames.btnCoinValueIncrease);
                 }
             });
@@ -296,7 +298,7 @@ export class CascadingSlotGameBase {
         test("Verify decrease bet level to the min value", async () => {
             //Act
             await test.step("Click on bet level decrease button multiple times", async () => {
-                for (let i = 0; i < 9; i++) {
+                for (let i = 0; i < totalClick; i++) {
                     await this.game.clickLocator(baseLocatorNames.btnBetLevelDecrease);
                 }
             });
@@ -310,7 +312,7 @@ export class CascadingSlotGameBase {
         test("Verify decrease coin value to the min value", async () => {
             //Act
             await test.step("Click on coin value decrease button multiple times", async () => {
-                for (let i = 0; i < 4; i++) {
+                for (let i = 0; i < totalClick; i++) {
                     await this.game.clickLocator(baseLocatorNames.btnCoinValueDecrease);
                 }
             });
