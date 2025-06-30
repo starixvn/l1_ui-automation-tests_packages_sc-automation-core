@@ -411,7 +411,9 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
         // CREDIT SITE VG
         if (process.env.npm_config_project?.includes("modirect") || process.env.npm_config_project?.includes("credit")) {
             await page.click("//div[@class='header-option']/div[1]");
-            await page.click("//div[@class='header-option']/div[1]/div//span[text()='Mobile']");
+            if (!process.env.npm_config_project?.includes("pingoal")) {
+                await page.click("//div[@class='header-option']/div[1]/div//span[text()='Mobile']");
+            }
             await page.click("//div[@class='header-login']/a[2]");
             await page.fill(PRODLocator.usernameInput, accountId);
             await page.fill(PRODLocator.passwordInput, pwd);

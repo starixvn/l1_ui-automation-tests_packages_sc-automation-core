@@ -5,6 +5,7 @@ const toMatchWinningSymbols = (bet: any, settledResult: any) => {
         for (const iterator of settledResult.settlementResult.winningLines) {
             expectedAmount = bet.amount * settledResult.odds[iterator.symbol][iterator.count] + expectedAmount;
         }
+        expectedAmount = Math.round(expectedAmount * 10000)/10000;
     }
 
     if (expectedAmount === settledResult.winAmount) {

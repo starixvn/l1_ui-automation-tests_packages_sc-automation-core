@@ -149,7 +149,7 @@ export class BaseGame {
                 default:
                     if (projectCode.includes("mobi") || projectCode.includes("keno")) {
                         await this.waitUntilMobiGameUiLoad();
-                    } else if (!projectCode.includes("is")) {
+                    } else if (!projectCode.includes("is") && !projectCode.includes("pingoal")) {
                         await this.waitUntilGameUiLoad();
                     }
                     break;
@@ -240,7 +240,7 @@ export class BaseGame {
                 default:
                     if (projectCode.includes("mobi") || projectCode.includes("keno")) {
                         await this.waitUntilMobiGameUiLoad();
-                    } else if (!projectCode.includes("is")) {
+                    } else if (!projectCode.includes("is") && !projectCode.includes("pingoal")) {
                         await this.waitUntilGameUiLoad();
                     }
                     break;

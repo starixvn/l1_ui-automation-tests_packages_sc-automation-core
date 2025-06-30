@@ -708,3 +708,26 @@ export const l2creditmodirectprod = {
     6: "SUPERTESTIBCAge0246",
 };
 
+export const l1pingoalprod = {
+    2001: "membertestptg04",
+    2002: "membertestptg05",
+    2003: "membertestptg04",
+    2004: "membertestptg05",
+    2005: "membertestptg04",
+    2006: "membertestptg05",
+    2007: "membertestptg04",
+    2008: "membertestptg05",
+};
+
+export const l2creditpingoalprod = {
+    2001: "SUPERTESTIBCAge0245",
+    2002: "SUPERTESTIBCAge0246",
+    2003: "SUPERTESTIBCAge0247",
+    2004: "SUPERTESTIBCAge0248",
+    2005: "SUPERTESTIBCAge0249",
+    2006: "SUPERTESTIBCAge0245",
+    2007: "SUPERTESTIBCAge0246",
+    2008: "SUPERTESTIBCAge0247",
+    2009: "SUPERTESTIBCAge0248",
+    2010: "SUPERTESTIBCAge0249",
+};
