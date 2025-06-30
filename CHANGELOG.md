@@ -1,3 +1,10 @@
+# [1.75.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.74.1...v1.75.0) (2025-06-30)
+
+
+### Features
+
+* add membersite url for marble soccer, fix floating-point precision on slot games ([ef3204a](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/ef3204a4cb4713669080e3b75c9a9f13267f8629))
+
 ## [1.74.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.74.0...v1.74.1) (2025-06-12)
 
 
