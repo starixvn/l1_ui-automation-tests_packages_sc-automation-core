@@ -1,3 +1,10 @@
+## [1.75.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.75.0...v1.75.1) (2025-07-03)
+
+
+### Bug Fixes
+
+* instant games base ([47150f4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/47150f45526cc26451132f1b25f8dbaffbbc5f75))
+
 # [1.75.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.74.1...v1.75.0) (2025-06-30)
 
 
