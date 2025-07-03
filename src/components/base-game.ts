@@ -256,10 +256,13 @@ export class BaseGame {
         this.page.on("console", (msg) => {
             const msgText = msg.text();
             const isRelevantMessage =
+                msgText.includes("Open Game") ||
                 msgText.includes(searchString) &&
                 !msgText.includes(searchString + " db") &&
                 !msgText.includes(searchString + " Lobby") &&
-                !msgText.includes(searchString + " microsite-game");
+                !msgText.includes(searchString + " microsite-game") &&
+                !msgText.includes("LoadScene Main") &&
+                !msgText.includes("LoadScene game-instant");
 
             if (isRelevantMessage) {
                 filterA.push(msgText);

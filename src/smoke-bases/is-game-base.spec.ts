@@ -34,14 +34,8 @@ export class ISGameBase {
             await this.game.waitUntilGameUiLoad();
             await this.game.waitForTimeout(3000);
             // Hide the content li element
-            await this.game.page.addStyleTag({
-                content: `
-              div.content li {
-                display: none !important;
-              }
-                `,
-            });
-            await this.game.page.frameLocator("iframe").first().locator("#GameCanvas").scrollIntoViewIfNeeded();
+            await this.game.page.addStyleTag({ content: 'div.content li { display: none !important; }' });
+            await this.game.page.frameLocator("iframe").frameLocator("iframe").locator("#GameCanvas").scrollIntoViewIfNeeded();
         });
     }
 
@@ -55,7 +49,7 @@ export class ISGameBase {
             // Act
             await this.game.waitUntilPlaceBet();
             await this.game.page
-                .frameLocator("iframe")
+                .frameLocator("iframe").frameLocator("iframe")
                 .locator("#GameCanvas")
                 .click({ position: { x: this.options.locators[choice]["x"], y: this.options.locators[choice]["y"] } });
             // Act
