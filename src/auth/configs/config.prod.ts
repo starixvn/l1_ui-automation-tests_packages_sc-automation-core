@@ -30,8 +30,11 @@ export default {
     l2creditmodirectmemberSite: "https://www.nova88.com/b/vn",
     l2creditmodirectlobbyDomain: "#Sports/s=171_0",
     l2creditismemberSiteMobile: "https://www.nova88.com/b/vn",
-    l1pingoallobbyDomain: "Sports/97/97-5?mode=AllPinGoal&market=T&leagueGroupId=",
-    l2creditpingoallobbyDomain: "Sports/97/97-5?mode=AllPinGoal&market=T&leagueGroupId=",
+    l1pingoallobbyDomain: "",
+    l2creditpingoallobbyDomain: "",
+    l2pingoallobbyDomain: "",
+    l2mobipingoalmemberSite: "http://www.spondemo.com/NewIndex?lang=vn&webskintype=3",
+    l2pingoalmemberSite: "http://www.spondemo.com/NewIndex?lang=vn&webskintype=3",
     l1pingoalmemberSite: "https://www.viva88.net/login888.aspx",
     l2creditpingoalmemberSite: "https://www.nova88.com/b/vn",
 };

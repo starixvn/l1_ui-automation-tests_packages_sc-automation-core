@@ -731,3 +731,12 @@ export const l2creditpingoalprod = {
     2009: "SUPERTESTIBCAge0248",
     2010: "SUPERTESTIBCAge0249",
 };
+
+export const l2pingoalprod = {
+    2001: "QCTest22082313",
+    2002: "QCTest22082304",
+    2003: "QCTest22082305",
+    2004: "QCTest22082317",
+    2005: "QCTest22082318",
+    2006: "QCTest22082302",
+}
