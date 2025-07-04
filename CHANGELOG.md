@@ -1,3 +1,10 @@
+## [1.75.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.75.1...v1.75.2) (2025-07-04)
+
+
+### Bug Fixes
+
+* update membersite domain for marble soccer ([426c3e2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/426c3e26c28e0eca5284cff0e51086b8b5f9d0ed))
+
 ## [1.75.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.75.0...v1.75.1) (2025-07-03)
 
 
