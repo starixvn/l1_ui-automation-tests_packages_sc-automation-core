@@ -1,3 +1,10 @@
+# [1.76.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.75.2...v1.76.0) (2025-07-10)
+
+
+### Features
+
+* xd games change behavior, go to game lobby instead of 1st game index ([1694e9a](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/1694e9a67c335e6700a845daa962db3a91ea8855))
+
 ## [1.75.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.75.1...v1.75.2) (2025-07-04)
 
 
