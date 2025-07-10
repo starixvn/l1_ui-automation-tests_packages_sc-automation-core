@@ -13,11 +13,9 @@ export class NumberGameBase {
     constructor(protected options: IBaseOptions) {}
 
     protected inGameUITests() {
-        test("Verify SSO direct to 1st game success", async () => {
+        test("Verify SSO to Game Lobby then navigate to game", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
-            await this.game.waitForTimeout(3000)
-            await this.game.click(commonControls.iconHome,5000);
             await this.game.click(this.options.locators.lobbyGameIcon,5000);
             await this.game.page.locator(commonControls.iconHome).waitFor({state:"visible"})  
 
