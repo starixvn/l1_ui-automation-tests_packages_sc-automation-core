@@ -1,3 +1,10 @@
+## [1.76.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.76.0...v1.76.1) (2025-07-15)
+
+
+### Bug Fixes
+
+* enhance is game base ([dccca83](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/dccca83e540f3919c5be7ba5f3fe54e7decdd7bf))
+
 # [1.76.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.75.2...v1.76.0) (2025-07-10)
 
 
