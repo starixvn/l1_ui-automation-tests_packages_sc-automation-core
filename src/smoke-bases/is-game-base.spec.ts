@@ -32,7 +32,7 @@ export class ISGameBase {
         test(`Smoke Tests ${this.options.gameConfiguration.name}`, async () => {
             await this.game.click(this.options.locators.gameIcon);
             await this.game.waitUntilGameUiLoad();
-            await this.game.waitForTimeout(3000);
+            await this.game.waitForTimeout(5000);
             // Hide the content li element
             await this.game.page.addStyleTag({ content: 'div.content li { display: none !important; }' });
             await this.game.page.frameLocator("iframe").frameLocator("iframe").locator("#GameCanvas").scrollIntoViewIfNeeded();
@@ -93,7 +93,7 @@ export class ISGameBase {
     async handlePromotionPopup() {
         await this.game.page.waitForTimeout(5000);
         const alertDialogSelector = "//div[contains(@class,'promo')]";
-        await this.game.page.waitForSelector(alertDialogSelector, { timeout: 10000 }).catch(() => {
+        await this.game.page.waitForSelector(alertDialogSelector, { timeout: 15000 }).catch(() => {
             console.log("Alert dialog not found within the timeout period.");
         });
         const alertDialogExists = await this.game.page.$(alertDialogSelector);
