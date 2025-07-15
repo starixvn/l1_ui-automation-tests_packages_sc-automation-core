@@ -1,3 +1,10 @@
+## [1.76.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.76.1...v1.76.2) (2025-07-15)
+
+
+### Bug Fixes
+
+* l1 select desktop version ([5e0e8a3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/5e0e8a3a15ee2a10136fb629a14425ba887e6f9e))
+
 ## [1.76.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.76.0...v1.76.1) (2025-07-15)
 
 
