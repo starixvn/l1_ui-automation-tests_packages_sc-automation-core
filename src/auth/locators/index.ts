@@ -36,7 +36,7 @@ export enum UATLocator {
 }
 
 export enum PRODLocator {
-    openLoginFormbtn = "//div[@class='header-option']//a[2]",
+    openLoginFormbtn = "//div[@class='header-option']/a[@class='btn btn--secondary']",
     usernameInput = "id=username",
     passwordInput = "id=password",
     submitLoginbtn = "//div[@class='login-form__item']//span[text()='Đăng nhập']",

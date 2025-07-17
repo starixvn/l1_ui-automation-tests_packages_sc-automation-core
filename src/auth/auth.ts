@@ -158,6 +158,7 @@ const loginMemberSite = async (
         await page.goto(memberSiteLink.replace("@", ""));
     } else {
         await page.goto(memberSiteLink);
+        await page.waitForLoadState("domcontentloaded");
     }
 
     console.log(`Login ${playerId} - ${gameId} Member Site: ${memberSiteLink}`);
@@ -379,6 +380,7 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
         else {
             await page.click("//div[@class='header-option']/div[1]");
             await page.click("//div[@class='platform-list']/div[1]/a[@class='btn']/i[@class='icon icon--desktop']");
+            await page.waitForTimeout(1000);
         }
         await page.click(PRODLocator.openLoginFormbtn);
         await page.fill(PRODLocator.usernameInput, accountId);
