@@ -1,3 +1,10 @@
+## [1.76.4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.76.3...v1.76.4) (2025-07-22)
+
+
+### Bug Fixes
+
+* enhance log in membersite l1 ([05dc367](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/05dc367ed747efd31f924f1b4c7b291c0a262c11))
+
 ## [1.76.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.76.2...v1.76.3) (2025-07-17)
 
 
