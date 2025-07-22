@@ -378,8 +378,8 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
             await page.click("//div[@class='header-option']/div[1]/div//span[text()='Mobile']");
         }
         else {
-            await page.click("//div[@class='header-option']/div[1]");
-            await page.click("//div[@class='platform-list']/div[1]/a[@class='btn']/i[@class='icon icon--desktop']");
+            //await page.click("//div[@class='header-option']/div[1]");
+            //await page.click("//div[@class='platform-list']/div[1]/a[@class='btn']/i[@class='icon icon--desktop']");
             await page.waitForTimeout(1000);
         }
         await page.click(PRODLocator.openLoginFormbtn);
