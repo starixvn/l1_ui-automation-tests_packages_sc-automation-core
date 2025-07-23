@@ -2,7 +2,7 @@ import { LobbyLocator, UATLocator, PRODLocator, AdminLogin } from "./locators/in
 import { configs } from "./configs/config";
 import { Page } from "@playwright/test";
 import { createWorker } from "tesseract.js";
-import { readFile } from "node:fs/promises";
+import { readFile, unlink } from "node:fs/promises";
 import { fetch } from "undici";
 
 export enum Environment {
@@ -30,7 +30,6 @@ export const ssoToGame = async (
     productId: string,
     env: string,
     projectCode: string,
-
 ): Promise<void> => {
     const config = getConfig();
     const langCode = process.env.npm_config_langCode ?? "vn";
@@ -69,7 +68,6 @@ export const ssoToGame2 = async (
     productId: string,
     env: string,
     projectCode: string,
-
 ): Promise<void> => {
     const config = getConfig();
     const langCode = process.env.npm_config_langCode ?? "vn";
@@ -376,11 +374,9 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
         if (process.env.npm_config_mobile === "true" || process.env.npm_config_project?.includes("modirect")) {
             await page.click("//div[@class='header-option']/div[1]");
             await page.click("//div[@class='header-option']/div[1]/div//span[text()='Mobile']");
-        }
-        else {
-            //await page.click("//div[@class='header-option']/div[1]");
-            //await page.click("//div[@class='platform-list']/div[1]/a[@class='btn']/i[@class='icon icon--desktop']");
-            await page.waitForTimeout(1000);
+            await page.waitForLoadState("load", { timeout: 10000 });
+        } else {
+            await page.waitForLoadState("load", { timeout: 10000 });
         }
         await page.click(PRODLocator.openLoginFormbtn);
         await page.fill(PRODLocator.usernameInput, accountId);
@@ -434,7 +430,7 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
                 await page.waitForTimeout(5000);
                 await loginWithCaptcha(page, accountId, pwd);
             }
-            await page.waitForLoadState("domcontentloaded");
+            await page.waitForLoadState("load", { timeout: 10000 });
             await page.waitForTimeout(2000);
             await page.locator("#sportsFrame").waitFor({ state: "visible" });
             await page.waitForTimeout(5000);
@@ -467,20 +463,20 @@ const formatGameLobbyUrl = async (url: string, page: Page, lobbyDomain: string, 
     if (project === "l2" && env === "prod") {
         const userAgent = await page.evaluate(() => navigator.userAgent); // Get User-Agent
         const cookies = await page.context().cookies();
-        const sessionId = cookies.find((cookie) => cookie.name === "ASP.NET_SessionId" && cookie.domain === domain[2])?.value;
+        const sessionId = cookies.find((cookie) => cookie.name === "customSession" && cookie.domain === domain[2])?.value;
 
         const response = await fetch(`http://${domain[2]}/GamePage.aspx?Game=VGaming&refer=&betFrom=x&timeZone=7`, {
             method: "GET",
             headers: {
                 "User-Agent": userAgent,
-                Cookie: `ASP.NET_SessionId=${sessionId}`,
+                Cookie: `customSession=${sessionId}`,
             },
         });
         const data = await response.text();
         const srcMatch = data.match(/<iframe[^>]+id=["']frmGame["'][^>]+src=["']([^"']+)["']/);
         const tokenMatch = srcMatch?.[1]?.match(/token=([^&]+)/); // Combined token extraction
         const token = tokenMatch ? tokenMatch[1] : null; // Get the token value or null if not found
-        return `${lobbyDomain}/?token=${token}&lang=vi-VN&appType=1&gameId=${gameId}&partnerId=ONEworksVGCash&op=`
+        return `${lobbyDomain}/?token=${token}&lang=vi-VN&appType=1&gameId=${gameId}&partnerId=ONEworksVGCash&op=`;
     } else if (project === "l1") {
         await page.goto(`${protocol}://${domain[2]}/${lobbyDomain}1612`);
         await page.waitForLoadState();
@@ -522,27 +518,32 @@ const getTextLocator = async (img: any, whitelist: string = "0123456789", lang: 
 };
 
 const getCaptcha = async (page: any) => {
-    await page.screenshot({ path: "imgcapcha.png", clip: { x: 1114, y: 18, width: 35, height: 12 } });
+    await page.locator("//input[@id='validation']/following::img").screenshot({ path: "imgcapcha.png" });
     let capcha = await getTextLocator("imgcapcha.png");
     let retryCount = 0;
     while (capcha.length !== 4 && retryCount < 2) {
         await page.reload({ waitUntil: "domcontentloaded" });
         await page.waitForTimeout(5000);
-        await page.screenshot({ path: "imgcapcha.png", clip: { x: 1114, y: 18, width: 35, height: 12 } });
+        await page.locator("//input[@id='validation']/following::img").screenshot({ path: "imgcapcha.png" });
         capcha = await getTextLocator("imgcapcha.png");
         retryCount++;
+    }
+    try {
+        await unlink("imgcapcha.png");
+    } catch (error) {
+        console.log("Failed to delete imgcapcha.png:", (error as Error).message);
     }
     return capcha;
 };
 
 const loginWithCaptcha = async (page: any, accountId: string, pwd: string) => {
     await page.locator(PRODLocator.usernameInput).waitFor({ state: "visible" });
-    await page.fill(PRODLocator.usernameInput, accountId);
-    await page.fill(PRODLocator.passwordInput, pwd);
     await page.waitForTimeout(500);
     let capcha = await getCaptcha(page);
     console.log("capcha", capcha);
     await page.fill("#validation", capcha);
+    await page.fill(PRODLocator.usernameInput, accountId);
+    await page.fill(PRODLocator.passwordInput, pwd);
     await page.click(`//*[@data-tag="tabBtn"]`);
     await page.waitForTimeout(2000);
     const isFailedCaptcha = await page.isVisible('//*[@class="hint-absolute"]');
