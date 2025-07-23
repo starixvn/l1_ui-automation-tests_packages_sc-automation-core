@@ -1,3 +1,10 @@
+## [1.76.5](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.76.4...v1.76.5) (2025-07-23)
+
+
+### Bug Fixes
+
+* login vg spondemo ([121f909](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/121f909b6fe6684d1cdecc47e0156fbc1c7c1f88))
+
 ## [1.76.4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.76.3...v1.76.4) (2025-07-22)
 
 
