@@ -1,3 +1,10 @@
+## [1.76.6](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.76.5...v1.76.6) (2025-08-04)
+
+
+### Bug Fixes
+
+* update sit for l2 ([a1bdf96](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/a1bdf96e6956548e20dca77a70b6edd64c61b02f))
+
 ## [1.76.5](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.76.4...v1.76.5) (2025-07-23)
 
 
