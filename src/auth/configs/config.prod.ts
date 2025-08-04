@@ -3,7 +3,7 @@ export default {
     l1lobbyDomain: "VendorGame/OpenSabaClub?GameID=",
     l1memberSiteMobile: "https://www.viva88.net/b/vn",
     l1lobbyDomainMobile: "#ThirdPartyGame/vid=66&gid=",
-    l2memberSite: "http://www.spondemo.com/NewIndex?lang=vn&webskintype=3",
+    l2memberSite: "https://member.spondemo.com/NewIndex?lang=vn&webskintype=3",
     l2lobbyDomain: "https://www.vgames88.com",
     l2memberSiteMobile: "https://smart.spondemo.com",
     l2lobbyDomainMobile: "#ThirdPartyGame/vid=66&gid=",

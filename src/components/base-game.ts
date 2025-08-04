@@ -77,7 +77,6 @@ export class BaseGame {
             this.page,
             this.gameConfiguration.id,
             account,
-            this.gameConfiguration.productId[projectCode],
             env,
             projectCode
         );
@@ -196,7 +195,6 @@ export class BaseGame {
             this.page,
             this.gameConfiguration.id,
             account,
-            this.gameConfiguration.productId[projectCode],
             env,
             projectCode,
         );

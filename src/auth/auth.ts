@@ -27,14 +27,13 @@ export const ssoToGame = async (
     page: Page,
     gameId: number,
     playerId: string,
-    productId: string,
     env: string,
     projectCode: string,
 ): Promise<void> => {
     const config = getConfig();
     const langCode = process.env.npm_config_langCode ?? "vn";
     let ssoLink;
-    if (playerId === "" || productId === "") {
+    if (playerId === "") {
         throw new Error(`Missing Test Account or ProductId for game id ${gameId}!!!`);
     }
 
@@ -57,7 +56,7 @@ export const ssoToGame = async (
             await page.click("text=Submit");
         }
     } else {
-        await loginMemberSite(page, config, env, playerId, productId, langCode, projectCode, gameId);
+        await loginMemberSite(page, config, env, playerId, langCode, projectCode, gameId);
     }
 };
 
@@ -65,7 +64,6 @@ export const ssoToGame2 = async (
     page: Page,
     gameId: number,
     playerId: string,
-    productId: string,
     env: string,
     projectCode: string,
 ): Promise<void> => {
@@ -103,7 +101,7 @@ export const ssoToGame2 = async (
         await page.goto(memberSiteUrl);
         await page.waitForLoadState();
         const lobbyDomain = config[`${projectCode}lobbyDomain`];
-        await goToGameLobby(page, lobbyDomain, gameId, productId);
+        await goToGameLobby(page, lobbyDomain, gameId);
     }
 };
 
@@ -134,7 +132,6 @@ const loginMemberSite = async (
     config: any,
     env: string,
     playerId: string,
-    productId: string,
     langCode: string,
     projectCode: string,
     gameId: number,
@@ -187,7 +184,7 @@ const loginMemberSite = async (
             await handlePromotionPopup(page);
             await page.frameLocator("//iframe[contains(@src,'https://direct')]").locator(`//img[@alt='game-${gameId}']`).click();
         } else {
-            await goToGameLobby(page, lobbyDomain, gameId, productId);
+            await goToGameLobby(page, lobbyDomain, gameId);
         }
     }
 };
@@ -325,26 +322,14 @@ const loginSIT = async (page: Page, accountId: string, pwd: string, projectCode:
             });
         } else {
             await page.waitForLoadState("domcontentloaded", { timeout: timeout });
-            await page.locator(PRODLocator.usernameInput).waitFor();
+            await page.locator("#txtID").waitFor();
             await page.waitForTimeout(3000);
-            await page.fill(PRODLocator.usernameInput, accountId);
-            await page.fill(PRODLocator.passwordInput, pwd);
-            let capcha = await getCaptcha(page);
-            console.log("capcha", capcha);
-            await page.fill("id=validation", capcha);
-            await page.click(`//*[@data-tag="tabBtn"]`);
-            await page.waitForTimeout(2000);
-            const isElementVisible = await page.isVisible('//*[@class="hint-absolute"]');
-            if (isElementVisible) {
-                await page.locator("//i[@class='icon-refresh']").click();
-                await page.waitForTimeout(5000);
-                await page.fill(PRODLocator.usernameInput, accountId);
-                await page.fill(PRODLocator.passwordInput, pwd);
-                capcha = await getCaptcha(page);
-                await page.fill("id=validation", capcha);
-                await page.click(`//*[@data-tag="tabBtn"]`);
-            }
-            await page.waitForTimeout(20000);
+            await page.fill("#txtID", accountId);
+            await page.fill("#txtPW", pwd);
+            await page.click("//button");
+            await page.waitForTimeout(15000);
+            await page.locator("//div[contains(@class,'dropdown--lang')]").click();
+            await page.locator("//div[@class='c-dropdown__item']/span[text()='Tiếng Việt']").click();
         }
     }
     if (projectCode === "gn") {
@@ -430,6 +415,7 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
                 await page.waitForTimeout(5000);
                 await loginWithCaptcha(page, accountId, pwd);
             }
+            await page.goto(configs.prod.l2memberSite); // navigate to language = vn
             await page.waitForLoadState("load", { timeout: 10000 });
             await page.waitForTimeout(2000);
             await page.locator("#sportsFrame").waitFor({ state: "visible" });
@@ -447,15 +433,15 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
     }
 };
 
-const goToGameLobby = async (page: Page, lobbyDomain: string, gameId: number, productId, timeout: number = 15000) => {
-    await page.goto(await formatGameLobbyUrl(page.url(), page, lobbyDomain, gameId, productId));
+const goToGameLobby = async (page: Page, lobbyDomain: string, gameId: number, timeout: number = 15000) => {
+    await page.goto(await formatGameLobbyUrl(page.url(), page, lobbyDomain, gameId));
     global.ssoLink = page.url();
     await page.waitForLoadState("load", { timeout });
 };
 
-const formatGameLobbyUrl = async (url: string, page: Page, lobbyDomain: string, gameId: number, productId: number): Promise<string> => {
+const formatGameLobbyUrl = async (url: string, page: Page, lobbyDomain: string, gameId: number): Promise<string> => {
     const domain = url.split("/");
-    const protocol = url.startsWith("http") ? "http" : "https";
+    const protocol = domain.includes("http") ? "http" : "https";
 
     const project = process.env.npm_config_project || "l1";
     const env = process.env.npm_config_env || "local";
@@ -485,7 +471,9 @@ const formatGameLobbyUrl = async (url: string, page: Page, lobbyDomain: string, 
         // Simplified project check
         return lobbyDomain;
     } else {
-        return `${protocol}://${domain[2]}/${lobbyDomain}${productId}`;
+        await page.goto(`${protocol}://${domain[2]}/${lobbyDomain}`);
+        await page.waitForLoadState();
+        return page.url().replace("gameId=0", `gameId=${gameId}`);
     }
 };
 
