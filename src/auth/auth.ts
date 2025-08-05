@@ -23,13 +23,7 @@ const getAppType = (projectCode: string): number => {
     return 1;
 };
 
-export const ssoToGame = async (
-    page: Page,
-    gameId: number,
-    playerId: string,
-    env: string,
-    projectCode: string,
-): Promise<void> => {
+export const ssoToGame = async (page: Page, gameId: number, playerId: string, env: string, projectCode: string): Promise<void> => {
     const config = getConfig();
     const langCode = process.env.npm_config_langCode ?? "vn";
     let ssoLink;
@@ -60,13 +54,7 @@ export const ssoToGame = async (
     }
 };
 
-export const ssoToGame2 = async (
-    page: Page,
-    gameId: number,
-    playerId: string,
-    env: string,
-    projectCode: string,
-): Promise<void> => {
+export const ssoToGame2 = async (page: Page, gameId: number, playerId: string, env: string, projectCode: string): Promise<void> => {
     const config = getConfig();
     const langCode = process.env.npm_config_langCode ?? "vn";
     let ssoLink;
@@ -99,7 +87,7 @@ export const ssoToGame2 = async (
     } else {
         const memberSiteUrl = await readFile(".auth/membersiteurl.txt", "utf8");
         await page.goto(memberSiteUrl);
-        await page.waitForLoadState();
+        await page.waitForLoadState("load", { timeout: 10000 });
         const lobbyDomain = config[`${projectCode}lobbyDomain`];
         await goToGameLobby(page, lobbyDomain, gameId);
     }
@@ -153,12 +141,13 @@ const loginMemberSite = async (
         await page.goto(memberSiteLink.replace("@", ""));
     } else {
         await page.goto(memberSiteLink);
-        await page.waitForLoadState("domcontentloaded");
     }
 
     console.log(`Login ${playerId} - ${gameId} Member Site: ${memberSiteLink}`);
-    await page.waitForLoadState("domcontentloaded", { timeout });
-    const subPcode = projectCode.match(/^l[12]/)?.[0] ?? "l1";
+
+    await page.waitForLoadState("load", { timeout: 10000 });
+
+    const subPcode = projectCode === "gn" ? "gn" : projectCode.match(/^l[12]/)?.[0] ?? "l1";
     switch (env) {
         case Environment.UAT:
             await loginUAT(page, playerId, pwd, langCode, subPcode, timeout);
@@ -180,7 +169,7 @@ const loginMemberSite = async (
                 height: 608,
             });
             await page.goto(`${protocol}://${domain[2]}/${lobbyDomain}`);
-            await page.waitForLoadState();
+            await page.waitForLoadState("load", { timeout: 10000 });
             await handlePromotionPopup(page);
             await page.frameLocator("//iframe[contains(@src,'https://direct')]").locator(`//img[@alt='game-${gameId}']`).click();
         } else {
@@ -235,7 +224,7 @@ const loginUAT = async (page: Page, accountId: string, pwd: string, langCode: st
             await page.fill("#txtID", accountId);
             await page.fill("#txtPW", pwd);
             await page.click("//button");
-            await page.waitForLoadState("load", { timeout });
+            await page.waitForLoadState("load", { timeout: 10000 });
         }
     }
     if (projectCode === "l2") {
@@ -248,7 +237,7 @@ const loginUAT = async (page: Page, accountId: string, pwd: string, langCode: st
             await page.fill(PRODLocator.l2memberIdInput, accountId);
             await page.fill(PRODLocator.l2pwdInput, pwd);
             await page.click(PRODLocator.l2loginButton);
-            await page.waitForLoadState("networkidle", { timeout: timeout });
+            await page.waitForLoadState("load", { timeout: 10000 });
             const isCloseExist = await page.$$(PRODLocator.l2iconClose);
             if (isCloseExist.length > 0) {
                 await page.click(PRODLocator.l2iconClose);
@@ -266,17 +255,17 @@ const loginUAT = async (page: Page, accountId: string, pwd: string, langCode: st
             await page.fill(UATLocator.memberIdInput, accountId);
             await page.fill(UATLocator.pwdInput, pwd);
             await page.click(UATLocator.loginButton);
-            await page.waitForLoadState("load", { timeout });
+            await page.waitForLoadState("load", { timeout: 10000 });
         }
     }
     if (projectCode === "gn") {
         await page.fill("#txtID", accountId);
         await page.fill("#txtPW", pwd);
         await page.click("//button");
-        await page.waitForLoadState("load", { timeout });
+        await page.waitForLoadState("load", { timeout: 10000 });
         await page.locator("//div[contains(@class,'c-dropdown--lang')]").click();
         await page.locator("//span[contains(text(),'Tiếng Việt')]").click();
-        await page.waitForLoadState("load", { timeout });
+        await page.waitForLoadState("load", { timeout: 10000 });
         await page.waitForTimeout(5000);
     }
 };
@@ -321,7 +310,7 @@ const loginSIT = async (page: Page, accountId: string, pwd: string, projectCode:
                 height: 720,
             });
         } else {
-            await page.waitForLoadState("domcontentloaded", { timeout: timeout });
+            await page.waitForLoadState("load", { timeout: 10000 });
             await page.locator("#txtID").waitFor();
             await page.waitForTimeout(3000);
             await page.fill("#txtID", accountId);
@@ -336,10 +325,10 @@ const loginSIT = async (page: Page, accountId: string, pwd: string, projectCode:
         await page.fill("#txtID", accountId);
         await page.fill("#txtPW", pwd);
         await page.click("//button");
-        await page.waitForLoadState("load", { timeout });
+        await page.waitForLoadState("load", { timeout: 10000 });
         await page.locator("//div[contains(@class,'c-dropdown--lang')]").click();
         await page.locator("//span[contains(text(),'Tiếng Việt')]").click();
-        await page.waitForLoadState("load", { timeout });
+        await page.waitForLoadState("load", { timeout: 10000 });
         await page.waitForTimeout(5000);
     }
 };
@@ -359,15 +348,15 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
         if (process.env.npm_config_mobile === "true" || process.env.npm_config_project?.includes("modirect")) {
             await page.click("//div[@class='header-option']/div[1]");
             await page.click("//div[@class='header-option']/div[1]/div//span[text()='Mobile']");
-            await page.waitForLoadState("load", { timeout: 10000 });
+            await page.waitForLoadState("load", { timeout: timeout });
         } else {
-            await page.waitForLoadState("load", { timeout: 10000 });
+            await page.waitForLoadState("load", { timeout: timeout });
         }
         await page.click(PRODLocator.openLoginFormbtn);
         await page.fill(PRODLocator.usernameInput, accountId);
         await page.fill(PRODLocator.passwordInput, pwd);
         await page.click(PRODLocator.submitLoginbtn);
-        await page.waitForLoadState("domcontentloaded");
+        await page.waitForLoadState("load", { timeout: timeout });
         await page.waitForTimeout(5000);
     }
 
@@ -383,7 +372,7 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
             await page.fill(PRODLocator.l2memberIdInput, accountId);
             await page.fill(PRODLocator.l2pwdInput, pwd);
             await page.click(PRODLocator.l2loginButton);
-            await page.waitForLoadState("domcontentloaded", { timeout: timeout });
+            await page.waitForLoadState("load", { timeout: timeout });
             await page.waitForTimeout(8000);
             const iconSurvey = await page.$$(PRODLocator.l2iconClose);
             if (iconSurvey.length > 0) {
@@ -405,7 +394,7 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
             await page.fill(PRODLocator.usernameInput, accountId);
             await page.fill(PRODLocator.passwordInput, pwd);
             await page.click("//div[@class='login-form']//a[@class='btn btn--secondary']");
-            await page.waitForLoadState("domcontentloaded");
+            await page.waitForLoadState("load", { timeout: timeout });
             await page.waitForTimeout(5000);
         } else {
             const isSuccess = await loginWithCaptcha(page, accountId, pwd);
@@ -416,7 +405,7 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
                 await loginWithCaptcha(page, accountId, pwd);
             }
             await page.goto(configs.prod.l2memberSite); // navigate to language = vn
-            await page.waitForLoadState("load", { timeout: 10000 });
+            await page.waitForLoadState("load", { timeout: timeout });
             await page.waitForTimeout(2000);
             await page.locator("#sportsFrame").waitFor({ state: "visible" });
             await page.waitForTimeout(5000);
@@ -428,7 +417,7 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
         await page.fill(PRODLocator.usernameInput, accountId);
         await page.fill(PRODLocator.passwordInput, pwd);
         await page.click(PRODLocator.submitLoginbtn);
-        await page.waitForLoadState();
+        await page.waitForLoadState("load", { timeout: timeout });
         await page.waitForTimeout(5000);
     }
 };
@@ -436,7 +425,7 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
 const goToGameLobby = async (page: Page, lobbyDomain: string, gameId: number, timeout: number = 15000) => {
     await page.goto(await formatGameLobbyUrl(page.url(), page, lobbyDomain, gameId));
     global.ssoLink = page.url();
-    await page.waitForLoadState("load", { timeout });
+    await page.waitForLoadState("load", { timeout: timeout });
 };
 
 const formatGameLobbyUrl = async (url: string, page: Page, lobbyDomain: string, gameId: number): Promise<string> => {
@@ -465,12 +454,15 @@ const formatGameLobbyUrl = async (url: string, page: Page, lobbyDomain: string, 
         return `${lobbyDomain}/?token=${token}&lang=vi-VN&appType=1&gameId=${gameId}&partnerId=ONEworksVGCash&op=`;
     } else if (project === "l1") {
         await page.goto(`${protocol}://${domain[2]}/${lobbyDomain}1612`);
-        await page.waitForLoadState();
+        await page.waitForLoadState("load", { timeout: 10000 });
         return page.url().replace("gameId=1", `gameId=${gameId}`);
     } else if (["l2keno", "l2mobi"].includes(project)) {
         // Simplified project check
         return lobbyDomain;
-    } else {
+    } else if (project === "gn") {
+        return `${protocol}://${domain[2]}/${lobbyDomain}`
+    }
+     else {
         await page.goto(`${protocol}://${domain[2]}/${lobbyDomain}`);
         await page.waitForLoadState();
         return page.url().replace("gameId=0", `gameId=${gameId}`);
@@ -483,11 +475,11 @@ export const loginAdmin = async (page: Page, projectCode: string) => {
     const adminLink = config[`${projectCode}admin`];
     const admin = { username: "admauto", pwd: "admauto" };
     await page.goto(adminLink);
-    await page.waitForLoadState("domcontentloaded", { timeout });
+    await page.waitForLoadState("load", { timeout: timeout });
     await page.fill(AdminLogin.usernameInput, admin.username);
     await page.fill(AdminLogin.pwdInput, admin.pwd);
     await page.click(AdminLogin.loginButton);
-    await page.waitForLoadState("domcontentloaded", { timeout });
+    await page.waitForLoadState("load", { timeout: timeout });
 };
 
 const getTextLocator = async (img: any, whitelist: string = "0123456789", lang: string = "eng") => {
