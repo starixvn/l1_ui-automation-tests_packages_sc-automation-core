@@ -1,3 +1,10 @@
+## [1.76.7](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.76.6...v1.76.7) (2025-08-05)
+
+
+### Bug Fixes
+
+* xd login ([147565b](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/147565b238c82cdbb5797ee4db5f6af88432ada8))
+
 ## [1.76.6](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.76.5...v1.76.6) (2025-08-04)
 
 
