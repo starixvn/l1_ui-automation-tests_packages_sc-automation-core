@@ -1,3 +1,10 @@
+## [1.76.8](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.76.7...v1.76.8) (2025-08-08)
+
+
+### Bug Fixes
+
+* auth ([5c128f5](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/5c128f5640ac085b358b76e1975c4fdae1c52021))
+
 ## [1.76.7](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.76.6...v1.76.7) (2025-08-05)
 
 
