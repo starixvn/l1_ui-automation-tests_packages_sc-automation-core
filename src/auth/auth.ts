@@ -86,8 +86,8 @@ export const ssoToGame2 = async (page: Page, gameId: number, playerId: string, e
         }
     } else {
         const memberSiteUrl = await readFile(".auth/membersiteurl.txt", "utf8");
-        await page.goto(memberSiteUrl);
-        await page.waitForLoadState("load", { timeout: 10000 });
+        await page.goto(memberSiteUrl, { waitUntil: "domcontentloaded", timeout: 30000 });
+        await page.waitForLoadState("networkidle", { timeout: 25000 });
         const lobbyDomain = config[`${projectCode}lobbyDomain`];
         await goToGameLobby(page, lobbyDomain, gameId);
     }
@@ -140,12 +140,11 @@ const loginMemberSite = async (
         await page.setExtraHTTPHeaders({ Authorization: authHeader });
         await page.goto(memberSiteLink.replace("@", ""));
     } else {
-        await page.goto(memberSiteLink);
+        await page.goto(memberSiteLink, { waitUntil: "domcontentloaded", timeout: 30000 });
+        await page.waitForLoadState("networkidle", { timeout: 25000 });
     }
 
     console.log(`Login ${playerId} - ${gameId} Member Site: ${memberSiteLink}`);
-
-    await page.waitForLoadState("load", { timeout: 10000 });
 
     const subPcode = projectCode === "gn" ? "gn" : projectCode.match(/^l[12]/)?.[0] ?? "l1";
     switch (env) {
@@ -423,9 +422,8 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
 };
 
 const goToGameLobby = async (page: Page, lobbyDomain: string, gameId: number, timeout: number = 15000) => {
-    await page.goto(await formatGameLobbyUrl(page.url(), page, lobbyDomain, gameId));
+    await page.goto(await formatGameLobbyUrl(page.url(), page, lobbyDomain, gameId),{ waitUntil: "domcontentloaded", timeout: timeout });
     global.ssoLink = page.url();
-    await page.waitForLoadState("load", { timeout: timeout });
 };
 
 const formatGameLobbyUrl = async (url: string, page: Page, lobbyDomain: string, gameId: number): Promise<string> => {
@@ -453,18 +451,15 @@ const formatGameLobbyUrl = async (url: string, page: Page, lobbyDomain: string, 
         const token = tokenMatch ? tokenMatch[1] : null; // Get the token value or null if not found
         return `${lobbyDomain}/?token=${token}&lang=vi-VN&appType=1&gameId=${gameId}&partnerId=ONEworksVGCash&op=`;
     } else if (project === "l1") {
-        await page.goto(`${protocol}://${domain[2]}/${lobbyDomain}1612`);
-        await page.waitForLoadState("load", { timeout: 10000 });
+        await page.goto(`${protocol}://${domain[2]}/${lobbyDomain}1612`, { waitUntil: "domcontentloaded", timeout: 30000 });
         return page.url().replace("gameId=1", `gameId=${gameId}`);
     } else if (["l2keno", "l2mobi"].includes(project)) {
         // Simplified project check
         return lobbyDomain;
     } else if (project === "gn") {
-        return `${protocol}://${domain[2]}/${lobbyDomain}`
-    }
-     else {
-        await page.goto(`${protocol}://${domain[2]}/${lobbyDomain}`);
-        await page.waitForLoadState();
+        return `${protocol}://${domain[2]}/${lobbyDomain}`;
+    } else {
+        await page.goto(`${protocol}://${domain[2]}/${lobbyDomain}`, { waitUntil: "domcontentloaded", timeout: 30000 });
         return page.url().replace("gameId=0", `gameId=${gameId}`);
     }
 };
