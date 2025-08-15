@@ -1,3 +1,10 @@
+## [1.77.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.77.0...v1.77.1) (2025-08-15)
+
+
+### Bug Fixes
+
+* xd games ([c297a8c](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/c297a8c2a70ecc2697b5955a80ef132d5b01080c))
+
 # [1.77.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.76.8...v1.77.0) (2025-08-08)
 
 
