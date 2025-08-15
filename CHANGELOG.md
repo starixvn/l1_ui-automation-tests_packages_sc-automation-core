@@ -1,3 +1,10 @@
+## [1.77.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.77.1...v1.77.2) (2025-08-15)
+
+
+### Bug Fixes
+
+* update game base titles ([81dadda](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/81dadda13a0952de2ba258981bd9419d0f31d9cd))
+
 ## [1.77.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.77.0...v1.77.1) (2025-08-15)
 
 
