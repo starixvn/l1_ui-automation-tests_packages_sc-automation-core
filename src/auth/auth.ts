@@ -261,6 +261,7 @@ const loginUAT = async (page: Page, accountId: string, pwd: string, langCode: st
         await page.fill("#txtID", accountId);
         await page.fill("#txtPW", pwd);
         await page.click("//button");
+        await page.waitForTimeout(1000);
         await page.waitForLoadState("load", { timeout: 10000 });
         await page.locator("//div[contains(@class,'c-dropdown--lang')]").click();
         await page.locator("//span[contains(text(),'Tiếng Việt')]").click();
@@ -355,6 +356,7 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
         await page.fill(PRODLocator.usernameInput, accountId);
         await page.fill(PRODLocator.passwordInput, pwd);
         await page.click(PRODLocator.submitLoginbtn);
+        await page.waitForTimeout(1000);
         await page.waitForLoadState("load", { timeout: timeout });
         await page.waitForTimeout(5000);
     }
@@ -371,6 +373,7 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
             await page.fill(PRODLocator.l2memberIdInput, accountId);
             await page.fill(PRODLocator.l2pwdInput, pwd);
             await page.click(PRODLocator.l2loginButton);
+            await page.waitForTimeout(1000);
             await page.waitForLoadState("load", { timeout: timeout });
             await page.waitForTimeout(8000);
             const iconSurvey = await page.$$(PRODLocator.l2iconClose);
@@ -416,13 +419,14 @@ const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: s
         await page.fill(PRODLocator.usernameInput, accountId);
         await page.fill(PRODLocator.passwordInput, pwd);
         await page.click(PRODLocator.submitLoginbtn);
+        await page.waitForTimeout(1000);
         await page.waitForLoadState("load", { timeout: timeout });
         await page.waitForTimeout(5000);
     }
 };
 
 const goToGameLobby = async (page: Page, lobbyDomain: string, gameId: number, timeout: number = 15000) => {
-    await page.goto(await formatGameLobbyUrl(page.url(), page, lobbyDomain, gameId),{ waitUntil: "domcontentloaded", timeout: timeout });
+    await page.goto(await formatGameLobbyUrl(page.url(), page, lobbyDomain, gameId), { waitUntil: "domcontentloaded", timeout: timeout });
     global.ssoLink = page.url();
 };
 

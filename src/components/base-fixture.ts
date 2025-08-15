@@ -31,10 +31,10 @@ export const test = base.extend<BaseFixtures>({
         } else {
             try {
                 const trackDownload = process.env.npm_config_trackdownload == "true";
-                const game = new BaseGame(page, locators, gameConfigurations,null, trackDownload);
-                if(process.env.npm_config_storedsso == "true"){
+                const game = new BaseGame(page, locators, gameConfigurations, null, trackDownload);
+                if (process.env.npm_config_storedsso == "true") {
                     await game.login2();
-                }else{
+                } else {
                     await game.login();
                 }
                 await use(game);
