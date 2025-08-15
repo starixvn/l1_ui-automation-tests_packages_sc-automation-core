@@ -114,7 +114,7 @@ export class MobiDirect {
             locators: [this.options.locators],
         });
 
-        test.describe.serial(`${projectName} - ${this.options.gameConfiguration.name} Smoke Tests`, () => {
+        test.describe.serial(`${projectName} - ${this.options.gameConfiguration.name} Direct Game`, () => {
             test.beforeAll(async ({ baseGame }) => {
                 this.game = baseGame;
                 this.player = new BasePlayer(this.game);

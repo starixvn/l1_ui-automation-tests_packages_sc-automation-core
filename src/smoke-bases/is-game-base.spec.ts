@@ -75,7 +75,7 @@ export class ISGameBase {
             locators: [this.options.locators],
         });
 
-        test.describe.serial(`${projectName} - ${this.options.gameConfiguration.name} Smoke Tests`, () => {
+        test.describe.serial(`${projectName} - ${this.options.gameConfiguration.name} Instant Game`, () => {
             test.beforeAll(async ({ baseGame }) => {
                 this.game = baseGame;
                 this.player = new BasePlayer(this.game);
