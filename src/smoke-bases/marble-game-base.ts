@@ -37,7 +37,12 @@ export class MarbleGameBase {
             this.game.attachSocketAndCaptureEvent(GameEvent.StartPlaceBet);
 
             await test.step("Verify that the bet choices are displayed correctly on the screen.", async () => {
-              await this.game.waitUntilPlaceBet()
+                const message = await this.game.waitForEvent(GameEvent.StartPlaceBet);
+                if (message === undefined) {
+                    console.log("No message received for spb event, retrying...");
+                    await this.game.waitForEvent(GameEvent.StartPlaceBet);
+                }
+                await this.game.waitForTimeout(2000);
                 for (const placeBetChoice of this.options.placeBetChoices) {
                     // Act
                     const betChoice = await this.game.captureChoice(placeBetChoice);
