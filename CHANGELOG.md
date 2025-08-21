@@ -1,3 +1,10 @@
+## [1.77.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.77.2...v1.77.3) (2025-08-21)
+
+
+### Bug Fixes
+
+* update marble game base ([6e27989](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/6e27989c71cb80d28f524cc3121289beeddc6ec9))
+
 ## [1.77.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.77.1...v1.77.2) (2025-08-15)
 
 
