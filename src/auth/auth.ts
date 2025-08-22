@@ -141,7 +141,7 @@ const loginMemberSite = async (
         await page.goto(memberSiteLink.replace("@", ""));
     } else {
         await page.goto(memberSiteLink, { waitUntil: "domcontentloaded", timeout: 30000 });
-        await page.waitForLoadState("networkidle", { timeout: 25000 });
+        await page.waitForLoadState("networkidle", { timeout: 60000 });
     }
 
     console.log(`Login ${playerId} - ${gameId} Member Site: ${memberSiteLink}`);

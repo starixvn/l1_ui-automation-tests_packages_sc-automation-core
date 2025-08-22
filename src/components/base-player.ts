@@ -186,7 +186,7 @@ export class BasePlayer {
     }
 
     async betOnSlot(choice: string, amount = 1): Promise<any> {
-        await this.game.clickToSlotsChoice(choice);
+        console.log('betOnSlot', choice);
         await this.game.clickSlotsStake(amount);
         await this.game.clickSubmitBet();
 
