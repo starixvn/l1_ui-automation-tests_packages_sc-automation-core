@@ -1,3 +1,10 @@
+## [1.77.4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.77.3...v1.77.4) (2025-08-22)
+
+
+### Bug Fixes
+
+* error  "load" event fired ([2cdcd2b](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/2cdcd2bbbccd051f11435b34c28d89f861784f0c))
+
 ## [1.77.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.77.2...v1.77.3) (2025-08-21)
 
 
