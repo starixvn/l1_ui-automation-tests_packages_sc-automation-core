@@ -73,13 +73,7 @@ export class BaseGame {
         }
         const startTime = performance.now(); // Measure start time
 
-        await ssoToGame(
-            this.page,
-            this.gameConfiguration.id,
-            account,
-            env,
-            projectCode
-        );
+        await ssoToGame(this.page, this.gameConfiguration.id, account, env, projectCode);
         this.msgpack = getConfig().enabledMsgPack;
         if (this.trackDownload) {
             await this.trackDownloadResources(this.page);
@@ -191,13 +185,7 @@ export class BaseGame {
                 accounts[`${projectCode}${env}`][this.gameConfiguration.id] ?? this.gameConfiguration.accounts[`${projectCode}${env}`];
         }
 
-        await ssoToGame2(
-            this.page,
-            this.gameConfiguration.id,
-            account,
-            env,
-            projectCode,
-        );
+        await ssoToGame2(this.page, this.gameConfiguration.id, account, env, projectCode);
         this.msgpack = getConfig().enabledMsgPack;
 
         this.page.on("websocket", async (ws) => {
@@ -255,12 +243,12 @@ export class BaseGame {
             const msgText = msg.text();
             const isRelevantMessage =
                 msgText.includes("Open Game") ||
-                msgText.includes(searchString) &&
-                !msgText.includes(searchString + " db") &&
-                !msgText.includes(searchString + " Lobby") &&
-                !msgText.includes(searchString + " microsite-game") &&
-                !msgText.includes("LoadScene Main") &&
-                !msgText.includes("LoadScene game-instant");
+                (msgText.includes(searchString) &&
+                    !msgText.includes(searchString + " db") &&
+                    !msgText.includes(searchString + " Lobby") &&
+                    !msgText.includes(searchString + " microsite-game") &&
+                    !msgText.includes("LoadScene Main") &&
+                    !msgText.includes("LoadScene game-instant"));
 
             if (isRelevantMessage) {
                 filterA.push(msgText);
@@ -390,7 +378,7 @@ export class BaseGame {
         };
 
         if (extraInfo) {
-            settledResults[extraInfo] = message.finish[extraInfo] ;
+            settledResults[extraInfo] = message.finish[extraInfo];
         }
 
         if (this.gameConfiguration.slotsgame) {
@@ -723,8 +711,7 @@ export class BaseGame {
     }
 
     async click(locator: string, waittime = 500) {
-        await this.page.locator(locator).waitFor({ state: "visible" });
-        await this.page.locator(locator).first().click();
+        await this.page.locator(locator).click();
         await this.waitForTimeout(waittime);
     }
 

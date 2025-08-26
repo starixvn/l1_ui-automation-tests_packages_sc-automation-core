@@ -105,5 +105,6 @@ export class ISGameBase {
                 a[class*="c-btn c-btn--bot"] {display: none !important;}`,
             });
         }
+        await this.game.page.waitForTimeout(2000);
     }
 }
