@@ -1,3 +1,10 @@
+## [1.77.5](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.77.4...v1.77.5) (2025-08-26)
+
+
+### Bug Fixes
+
+* minor bug of click locator and remove redundant wait ([9ed42d6](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/9ed42d64710cc45054115327e78323a5dc873460))
+
 ## [1.77.4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.77.3...v1.77.4) (2025-08-22)
 
 
