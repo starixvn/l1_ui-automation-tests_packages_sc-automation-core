@@ -29,18 +29,17 @@ export class CrashGameBase {
     constructor(protected options: CrashGameOptions) {}
 
     protected inGameUITests() {
-        test("Verify default control area", async () => {
+        test("Validate default control area display", async () => {
             // Arrange
-            await test.step("Verify default controls are displayed correctly on the screen.", async () => {
-
-            const imgControlArea = await this.game.capture(`imgControlArea${process.env.npm_config_project}`);
-            expect(imgControlArea.image).toMatchSnapshot(imgControlArea.name, { maxDiffPixelRatio: 0.1 });
+            await test.step("Verify default controls are displayed correctly on the screen", async () => {
+                const imgControlArea = await this.game.capture(`imgControlArea${process.env.npm_config_project}`);
+                expect(imgControlArea.image).toMatchSnapshot(imgControlArea.name, { maxDiffPixelRatio: 0.1 });
+            });
         });
-    });
     }
 
     protected placeBetAndSettleTests() {
-        test("Verify player be able to place bet and cash out", async () => {
+        test("Test bet placement and cash out functionality", async () => {
             test.setTimeout(this.options.gameConfiguration.maxTimeout * 2);
             await placeBet(this.game);
             const btnPlaceBet = await this.game.captureLocator(baseLocatorNames.btnPlaceBetBetAccepted);
@@ -70,14 +69,14 @@ export class CrashGameBase {
     }
 
     protected ticketHistoryTests() {
-        test("Access the history popup.", async () => {
+        test("Test betting history display and popup management", async () => {
             // Arrange
             await this.game.clickHistory();
             await this.game.waitForTimeout(2000);
 
             // Act
             const historySnapshot = await this.game.captureHistory();
-            await test.step("Verify that the history popup is displayed correctly and contains accurate betting history information.", async () => {
+            await test.step("Verify that the history popup is displayed correctly and contains accurate betting history information", async () => {
                 // Assert
                 expect(historySnapshot.image).toMatchSnapshot(historySnapshot.name);
             });
@@ -86,6 +85,7 @@ export class CrashGameBase {
         });
     }
     protected gameGuideTests() {
+        // Run comprehensive game guide validation
         this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
     }
 

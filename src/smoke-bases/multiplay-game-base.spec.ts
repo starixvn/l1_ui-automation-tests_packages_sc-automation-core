@@ -24,10 +24,10 @@ export class MultiplayGameBase {
     constructor(protected options: MultiplayGameOptions) {}
 
     protected inGameBetChoiceTests() {
-        test("Verify that the bet choices are displayed correctly on the screen", async () => {
+        test("Validate bet choice visibility and snapshot capture", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
-            await test.step("Verify that the bet choices are displayed correctly on the screen.", async () => {
+            await test.step("Validate bet choice visibility and snapshot capture", async () => {
                 await this.game.waitUntilNextRound();
                 await this.game.clickLocator("closeguide");
                 await this.game.waitForTimeout(this.options.waitBetTimeout);
@@ -42,8 +42,8 @@ export class MultiplayGameBase {
     }
 
     protected inGameOddsTests() {
-        test("Ensure that the odds displayed for each bet choice are accurate.", async () => {
-            await test.step("Ensure that the odds displayed for each bet choice are accurate.", async () => {
+        test("Verify game odds match configuration", async () => {
+            await test.step("Verify game odds match configuration", async () => {
                 // Assert
                 expect(this.game.odds).toStrictEqual(this.options.gameConfiguration.odds);
             });
@@ -51,12 +51,12 @@ export class MultiplayGameBase {
     }
 
     protected placeBetAndSettleTests() {
-        test("Place a bet on a valid bet choice.", async () => {
+        test("Test complete bet lifecycle: placement → settlement → validation", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount ?? 1 };
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
-            const { placeBetResponse, settledResults } = await test.step("Verify that the bet is successfully placed.", async () => {
+            const { placeBetResponse, settledResults } = await test.step("Verify that the bet is successfully placed", async () => {
                 // Act
                 const placeBetResponse = await this.player.placeBet(bet.choice, bet.amount);
                 const settledResults = await this.game.waitForSettlement();
@@ -72,7 +72,7 @@ export class MultiplayGameBase {
     }
 
     protected hedgeBetTests() {
-        test("Attempt to place a bet that would result in a hedged position.", async () => {
+        test("Verify hedge betting is blocked with proper error handling", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
 
@@ -81,7 +81,7 @@ export class MultiplayGameBase {
                 this.options.gameConfiguration.hedgeBetGroups[0],
                 this.options.placeBetAmount ?? 1,
             );
-            await test.step("Verify that an error message is displayed to prevent the bet from being placed.", async () => {
+            await test.step("Verify that an error message is displayed to prevent the bet from being placed", async () => {
                 // Assert
                 expect(endBetMsg).toMatchObject({ endBet: -1, betChoice: this.options.gameConfiguration.hedgeBetGroups[0][1] });
             });
@@ -89,13 +89,13 @@ export class MultiplayGameBase {
     }
 
     protected ticketHistoryTests() {
-        test("Access the history popup.", async () => {
+        test("Test betting history display and popup management", async () => {
             // Arrange
             const historyPayload = await this.player.openHistory();
 
             // Act
             const historySnapshot = await this.game.captureHistory();
-            await test.step("Verify that the history popup is displayed correctly and contains accurate betting history information.", async () => {
+            await test.step("Verify that the history popup is displayed correctly and contains accurate betting history information", async () => {
                 // Assert
                 expect(historyPayload.history.betLogs.length).toBeGreaterThan(0);
                 expect(historySnapshot.image).toMatchSnapshot(historySnapshot.name);
@@ -105,6 +105,7 @@ export class MultiplayGameBase {
         });
     }
     protected gameGuideTests() {
+        // Run comprehensive game guide validation
         this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
     }
 
@@ -127,6 +128,7 @@ export class MultiplayGameBase {
                 this.gameGuides.init(this.game);
             });
             if (process.env.npm_config_trackdownload) {
+                // Monitor game performance metrics when enabled
                 this.performanceTest.tests(this.options.gameConfiguration.ssoTime ?? 35000);
             }
             this.inGameBetChoiceTests();
@@ -150,7 +152,7 @@ export class MultiplayGameBase {
 
     protected subGameplaceBetAndSettleTests() {
         this.options.subGameConfigurations.forEach((gameOptions) => {
-            test(`THEN player able to place a bet and settle ${gameOptions.name}`, async () => {
+            test(`Test sub-game bet lifecycle: ${gameOptions.name}`, async () => {
                 // Arrange
                 test.setTimeout(gameOptions.maxTimeout);
                 let bet = { choice: gameOptions.choices[0], amount: this.options.placeBetAmount ?? 1 };

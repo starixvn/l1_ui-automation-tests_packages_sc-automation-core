@@ -41,7 +41,14 @@ export const ssoToGame = async (page: Page, gameId: number, playerId: string, en
         await page.locator(LobbyLocator.langDropdown).selectOption(LobbyLocator[`${langCode}LangOption`]);
 
         await page.click(LobbyLocator.tokenBtn);
-        await page.waitForTimeout(500);
+        // Wait for token generation instead of hard sleep
+        await page.waitForFunction(
+            () => {
+                const linkElement = document.querySelector(LobbyLocator.ssoLink);
+                return linkElement && linkElement.textContent && linkElement.textContent.trim() !== "";
+            },
+            { timeout: 10000 },
+        );
         ssoLink = (await page.locator(LobbyLocator.ssoLink).textContent()) ?? "";
         global.ssoLink = `${ssoLink}&gameId=${gameId}`;
         await page.goto(global.ssoLink);
@@ -76,7 +83,14 @@ export const ssoToGame2 = async (page: Page, gameId: number, playerId: string, e
         await page.click(`//input[@id=${appType}]`);
         await page.locator(LobbyLocator.langDropdown).selectOption(LobbyLocator[`${langCode}LangOption`]);
         await page.click(LobbyLocator.tokenBtn);
-        await page.waitForTimeout(500);
+        // Wait for token generation instead of hard sleep
+        await page.waitForFunction(
+            () => {
+                const linkElement = document.querySelector(LobbyLocator.ssoLink);
+                return linkElement && linkElement.textContent && linkElement.textContent.trim() !== "";
+            },
+            { timeout: 10000 },
+        );
         ssoLink = (await page.locator(LobbyLocator.ssoLink).textContent()) ?? "";
         global.ssoLink = `${ssoLink.replace("gameId=0", `gameId=${gameId}`)}`;
         await page.goto(global.ssoLink);
@@ -177,25 +191,6 @@ const loginMemberSite = async (
     }
 };
 
-// const selectCurrencyGroup = async (page: Page, currencyGroup?: string) => {
-//     await page.waitForTimeout(2000);
-//     global.ssoLink = page.url();
-//     const frameLocator = page.frameLocator("#frmGame");
-
-//     if (await page.$("#frmGame")) {
-//         // If currencyGroup is provided, select it
-//         if (currencyGroup) {
-//             await frameLocator.locator(GroupCurrencyLocator.specificCheckbox).click();
-//             await frameLocator.locator(GroupCurrencyLocator.currencyGroupDropdown).selectOption(currencyGroup);
-//         }
-//         await frameLocator.locator(GroupCurrencyLocator.submitButton).click();
-//     } else {
-//         await page.locator(GroupCurrencyLocator.submitButton).waitFor();
-//         await page.click(GroupCurrencyLocator.submitButton);
-//     }
-//     await page.waitForLoadState();
-// };
-
 const loginUAT = async (page: Page, accountId: string, pwd: string, langCode: string, projectCode: string, timeout: number = 15000) => {
     if (projectCode === "l1") {
         if (process.env.npm_config_mobile === "true") {
@@ -223,7 +218,7 @@ const loginUAT = async (page: Page, accountId: string, pwd: string, langCode: st
             await page.fill("#txtID", accountId);
             await page.fill("#txtPW", pwd);
             await page.click("//button");
-            await page.waitForLoadState("load", { timeout: 10000 });
+            await page.waitForLoadState("load", { timeout: 60000 });
         }
     }
     if (projectCode === "l2") {
@@ -236,7 +231,7 @@ const loginUAT = async (page: Page, accountId: string, pwd: string, langCode: st
             await page.fill(PRODLocator.l2memberIdInput, accountId);
             await page.fill(PRODLocator.l2pwdInput, pwd);
             await page.click(PRODLocator.l2loginButton);
-            await page.waitForLoadState("load", { timeout: 10000 });
+            await page.waitForLoadState("load", { timeout: 60000 });
             const isCloseExist = await page.$$(PRODLocator.l2iconClose);
             if (isCloseExist.length > 0) {
                 await page.click(PRODLocator.l2iconClose);
@@ -254,7 +249,7 @@ const loginUAT = async (page: Page, accountId: string, pwd: string, langCode: st
             await page.fill(UATLocator.memberIdInput, accountId);
             await page.fill(UATLocator.pwdInput, pwd);
             await page.click(UATLocator.loginButton);
-            await page.waitForLoadState("load", { timeout: 10000 });
+            await page.waitForLoadState("load", { timeout: 30000 });
         }
     }
     if (projectCode === "gn") {
@@ -262,10 +257,10 @@ const loginUAT = async (page: Page, accountId: string, pwd: string, langCode: st
         await page.fill("#txtPW", pwd);
         await page.click("//button");
         await page.waitForTimeout(1000);
-        await page.waitForLoadState("load", { timeout: 10000 });
+        await page.waitForLoadState("load", { timeout: 30000 });
         await page.locator("//div[contains(@class,'c-dropdown--lang')]").click();
         await page.locator("//span[contains(text(),'Tiếng Việt')]").click();
-        await page.waitForLoadState("load", { timeout: 10000 });
+        await page.waitForLoadState("load", { timeout: 30000 });
         await page.waitForTimeout(5000);
     }
 };
@@ -335,13 +330,15 @@ const loginSIT = async (page: Page, accountId: string, pwd: string, projectCode:
 
 const loginPROD = async (page: Page, accountId: string, pwd: string, langCode: string, projectCode: string, timeout: number = 15000) => {
     console.log(langCode);
-    const alertDialogSelector = "//div[@class='modal modal--alert']//div[1]/a";
-    await page.waitForSelector(alertDialogSelector, { timeout: 5000 }).catch(() => {
+    const alertDialogSelector = "//div[@class='modal modal--alert']//a[@class='btn btn--icon']";
+
+    try {
+        const alertDialog = await page.waitForSelector(alertDialogSelector, { timeout: 5000 });
+        if (alertDialog) {
+            await alertDialog.click();
+        }
+    } catch (error) {
         console.log("Alert dialog not found within the timeout period.");
-    });
-    const alertDialogExists = await page.$(alertDialogSelector);
-    if (alertDialogExists) {
-        await page.click(alertDialogSelector);
     }
 
     if (projectCode === "l1") {

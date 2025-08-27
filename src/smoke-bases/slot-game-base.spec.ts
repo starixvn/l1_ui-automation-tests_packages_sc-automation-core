@@ -29,11 +29,9 @@ export class SlotGameBase {
 
     constructor(protected options: SlotGameOptions) {}
 
- 
-
     protected jackpotTests() {
-        test("Verify that the Jackpot banner should be displayed in game ", async () => {
-            await test.step("Verify that the Jackpot banner is displayed correctly on the screen.", async () => {
+        test("Validate jackpot banner display and hall of fame popup", async () => {
+            await test.step("Verify that the Jackpot banner is displayed correctly on the screen", async () => {
                 // Act
                 const jackpotbanner = await this.game.capture(`imgJackpot`);
 
@@ -56,10 +54,10 @@ export class SlotGameBase {
     }
 
     protected betStakeLevelTests(projectCode = "l1") {
-        test("Verify stake level should be correct", async () => {
+        test("Validate stake level display and selection", async () => {
             // Arrange
             await this.game.clickLocator(stakeLevel.stakemenu);
-            await test.step("Verify that the stake level is displayed correctly on the screen.", async () => {
+            await test.step("Verify that the stake level is displayed correctly on the screen", async () => {
                 // Act
                 const stakelevelSnapshot = await this.game.capture(stakeLevel[`imgStakeLevel${projectCode}`]);
 
@@ -72,12 +70,12 @@ export class SlotGameBase {
     }
 
     protected placeBetAndSettleTests() {
-        test("Place a bet on a valid bet choice.", async () => {
+        test("Test complete bet lifecycle: placement → settlement → validation", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount ?? 1 };
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
-            const { placeBetResponse, settledResults } = await test.step("Verify that the bet is successfully placed.", async () => {
+            const { placeBetResponse, settledResults } = await test.step("Verify that the bet is successfully placed", async () => {
                 // Act
                 const placeBetResponse = await this.player.placeBet(bet.choice, bet.amount);
                 const settledResults = await this.game.waitForSettlement();
@@ -94,13 +92,13 @@ export class SlotGameBase {
     }
 
     protected ticketHistoryTests() {
-        test("Access the history popup.", async () => {
+        test("Test betting history display and popup management", async () => {
             // Arrange
             const historyPayload = await this.player.openHistory();
 
             // Act
             const historySnapshot = await this.game.captureHistory();
-            await test.step("Verify that the history popup is displayed correctly and contains accurate betting history information.", async () => {
+            await test.step("Verify that the history popup is displayed correctly and contains accurate betting history information", async () => {
                 // Assert
                 expect(historyPayload.history.betLogs.length).toBeGreaterThan(0);
                 expect(historySnapshot.image).toMatchSnapshot(historySnapshot.name);
@@ -110,6 +108,7 @@ export class SlotGameBase {
         });
     }
     protected gameGuideTests() {
+        // Run comprehensive game guide validation
         this.gameGuides.tests(this.options.gameConfiguration.maxTimeout, this.options.isJackpot);
     }
 
@@ -139,6 +138,7 @@ export class SlotGameBase {
 
     protected runScenario() {
         if (process.env.npm_config_trackdownload) {
+            // Monitor game performance metrics when enabled
             this.performanceTest.tests(this.options.gameConfiguration.ssoTime ?? 35000);
         }
 

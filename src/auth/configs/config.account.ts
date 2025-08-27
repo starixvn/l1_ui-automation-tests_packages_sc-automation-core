@@ -108,6 +108,22 @@ export const l1prod = {
     133: "supertestte120201011",
     134: "supertestte120201012",
     135: "supertestte120201013",
+    139: "supertestte120201002",
+    140: "supertestte120201003",
+    141: "supertestte120201004",
+    142: "supertestte120201006",
+    143: "supertestte120201008",
+    144: "supertestte120201009",
+    145: "supertestte120201011",
+    146: "supertestte120201012",
+    147: "supertestte120201013",
+    148: "supertestte120201002",
+    149: "supertestte120201003",
+    150: "supertestte120201004",
+    151: "supertestte120201006",
+    152: "supertestte120201008",
+    153: "supertestte120201009",
+    154: "supertestte120201011",
 };
 
 export const l2prod = {
@@ -218,6 +234,16 @@ export const l2prod = {
     131: "QCTest22082302",
     132: "QCTest22082304",
     133: "QCTest22082305",
+    139: "QCTest22082317",
+    140: "QCTest22082318",
+    141: "QCTest22082302",
+    142: "QCTest22082304",
+    143: "QCTest22082305",
+    144: "QCTest22082317",
+    145: "QCTest22082318",
+    146: "QCTest22082302",
+    147: "QCTest22082304",
+    148: "QCTest22082305",
 };
 
 export const l1uat = {

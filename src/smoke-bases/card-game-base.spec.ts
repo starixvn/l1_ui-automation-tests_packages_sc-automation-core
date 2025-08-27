@@ -24,10 +24,10 @@ export class CardGameBase {
     constructor(protected options: CardGameOptions) {}
 
     protected inGameBetChoiceTests() {
-        test("Verify that the bet choices are displayed correctly on the screen", async () => {
+        test("Validate bet choice visibility and snapshot capture", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
-            await test.step("Verify that the bet choices are displayed correctly on the screen.", async () => {
+            await test.step("Validate bet choice visibility and snapshot capture", async () => {
                 await this.game.waitForTimeout(this.options.waitBetTimeout);
 
                 for (const placeBetChoice of this.options.placeBetChoices) {
@@ -42,22 +42,22 @@ export class CardGameBase {
     }
 
     protected inGameOddsTests() {
-        test("Ensure that the odds displayed for each bet choice are accurate.", async () => {
+        test("Verify game odds match configuration", async () => {
             // Assert
-            await test.step("Ensure that the odds displayed for each bet choice are accurate.", async () => {
+            await test.step("Verify game odds match configuration", async () => {
                 expect(this.game.odds).toStrictEqual(this.options.gameConfiguration.odds);
             });
         });
     }
 
     protected placeBetAndSettleTests() {
-        test("Place a bet on a valid bet choice.", async () => {
+        test("Test complete bet lifecycle: placement → settlement → validation", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount ?? 1 };
             this.game.attachSocketAndCaptureEvent(GameEvent.Deal);
             const { isdealerPontoon, placebetdeal, playertotal } =
-                await test.step("Verify that the bet is successfully placed.", async () => {
+                await test.step("Verify that the bet is successfully placed", async () => {
                     // Act
                     const placebetdeal = await this.player.placeBet(bet.choice, bet.amount);
                     let endDeal = await this.game.latestCaptureEvent(GameEvent.Deal).deal;
@@ -79,8 +79,8 @@ export class CardGameBase {
     }
 
     protected ticketHistoryTests() {
-        test("Access the history popup.", async () => {
-            await test.step("Verify that the history popup is displayed correctly and contains accurate betting history information.", async () => {
+        test("Test betting history display and popup management", async () => {
+            await test.step("Verify that the history popup is displayed correctly and contains accurate betting history information", async () => {
                 // Arrange
                 const historyPayload = await this.player.openHistory();
 
@@ -98,6 +98,7 @@ export class CardGameBase {
     }
 
     protected gameGuideTests() {
+        // Run comprehensive game guide validation
         this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
     }
 
@@ -129,6 +130,7 @@ export class CardGameBase {
 
     protected runScenario() {
         if (process.env.npm_config_trackdownload) {
+            // Monitor game performance metrics when enabled
             this.performanceTest.tests(this.options.gameConfiguration.ssoTime ?? 35000);
         }
         this.inGameBetChoiceTests();

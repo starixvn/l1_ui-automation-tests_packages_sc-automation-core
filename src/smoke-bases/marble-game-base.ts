@@ -20,8 +20,8 @@ export class MarbleGameBase {
     constructor(protected options: IBaseOptions) {}
 
     protected inGameOddsTests() {
-        test("Ensure that the odds displayed for each bet choice are accurate.", async () => {
-            await test.step("Ensure that the odds displayed for each bet choice are accurate.", async () => {
+        test("Verify game odds match configuration", async () => {
+            await test.step("Verify game odds match configuration", async () => {
                 // Assert
                 expect(this.game.odds).toStrictEqual(this.options.gameConfiguration.odds);
             });
@@ -29,14 +29,14 @@ export class MarbleGameBase {
     }
 
     protected placeBetAndSettleTests() {
-        test("Place a bet on a valid bet choice.", async () => {
+        test("Test complete bet lifecycle: placement → settlement → validation", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             const bet = { choice: this.options.placeBetChoices[0], amount: this.options.placeBetAmount ?? 1 };
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
             this.game.attachSocketAndCaptureEvent(GameEvent.StartPlaceBet);
 
-            await test.step("Verify that the bet choices are displayed correctly on the screen.", async () => {
+            await test.step("Validate bet choice visibility and snapshot capture", async () => {
                 const message = await this.game.waitForEvent(GameEvent.StartPlaceBet);
                 if (message === undefined) {
                     console.log("No message received for spb event, retrying...");
@@ -51,10 +51,10 @@ export class MarbleGameBase {
                     expect(betChoice.image).toMatchSnapshot(betChoice.name);
                 }
             });
-            const { placeBetResponse, settledResults } = await test.step("Verify that the bet is successfully placed.", async () => {
+            const { placeBetResponse, settledResults } = await test.step("Verify that the bet is successfully placed", async () => {
                 // Act
                 const placeBetResponse = await this.player.placeBet(bet.choice, bet.amount);
-                await this.game.waitForTimeout(this.options.waitBetTimeout)
+                await this.game.waitForTimeout(this.options.waitBetTimeout);
                 const settledResults = await this.game.waitForSettlement();
                 return { placeBetResponse, settledResults };
             });
@@ -68,13 +68,13 @@ export class MarbleGameBase {
     }
 
     protected hedgeBetTests() {
-        test("Attempt to place a bet that would result in a hedged position.", async () => {
+        test("Verify hedge betting is blocked with proper error handling", async () => {
             // Arrange
             const { maxTimeout, hedgeBetGroups } = this.options.gameConfiguration;
             test.setTimeout(maxTimeout);
             // Act
             const endBetMsg = await this.player.placeHedgeBet(hedgeBetGroups[0], this.options.placeBetAmount ?? 1);
-            await test.step("Verify that an error message is displayed to prevent the bet from being placed.", async () => {
+            await test.step("Verify that an error message is displayed to prevent the bet from being placed", async () => {
                 // Assert
                 expect(endBetMsg).toMatchObject({ endBet: -1, betChoice: hedgeBetGroups[0][1] });
             });
@@ -82,14 +82,14 @@ export class MarbleGameBase {
     }
 
     protected ticketHistoryTests() {
-        test("Access the history popup.", async () => {
+        test("Test betting history display and popup management", async () => {
             // Arrange
             const historyPayload = await this.player.openHistory();
 
             // Act
             const historySnapshot = await this.game.captureHistory();
 
-            await test.step("Verify that the history popup is displayed correctly and contains accurate betting history information.", async () => {
+            await test.step("Verify that the history popup is displayed correctly and contains accurate betting history information", async () => {
                 // Assert
                 expect(historyPayload.history.betLogs.length).toBeGreaterThan(0);
                 expect(historySnapshot.image).toMatchSnapshot(historySnapshot.name);
@@ -98,6 +98,7 @@ export class MarbleGameBase {
         });
     }
     protected gameGuideTests() {
+        // Run comprehensive game guide validation
         this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
     }
 
@@ -129,6 +130,7 @@ export class MarbleGameBase {
 
     protected runScenario() {
         if (process.env.npm_config_trackdownload) {
+            // Monitor game performance metrics when enabled
             this.performanceTest.tests(this.options.gameConfiguration.ssoTime ?? 35000);
         }
         if (!process.env.npm_config_odds) {

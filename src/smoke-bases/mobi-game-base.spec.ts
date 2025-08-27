@@ -19,17 +19,16 @@ export class MobiGameBase {
     constructor(protected options: IBaseOptions) {}
 
     protected inGameUITests() {
-        test("Verify Game Name and Bet Locators", async () => {
+        test("Validate game name and bet locators display", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
-            await test.step("Verify that the Game Name and Bet Locators are displayed correctly on the screen.", async () => {
+            await test.step("Verify that the Game Name and Bet Locators are displayed correctly on the screen", async () => {
                 await this.game.waitForTimeout(10000);
                 const isFrame = await this.game.page.$("#frmGame");
                 await this.game.page.mouse.click(5, 5);
                 if (isFrame) {
                     await this.game.verifyFrameLocatorsVisible("#frmGame", this.options.locators.inGameUI);
-                } 
-                 else {
+                } else {
                     await this.game.verifyLocatorsVisible(this.options.locators.inGameUI);
                     await this.game.page.reload(); // L1 PRO issue only: need to be reload page for capturing web socket data, by default on framerecived do not have any channel
                 }
@@ -38,7 +37,7 @@ export class MobiGameBase {
     }
 
     protected placeBetAndSettleTests() {
-        test("Place a bet on a valid bet choice.", async () => {
+        test("Test complete bet lifecycle: placement → settlement → validation", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             await this.game.waitForTimeout(this.options.waitBetTimeout);
@@ -49,7 +48,7 @@ export class MobiGameBase {
             };
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
             // Act
-            const { placeBetResponse, settledResults } = await test.step("Verify that the bet is successfully placed.", async () => {
+            const { placeBetResponse, settledResults } = await test.step("Verify that the bet is successfully placed", async () => {
                 const placeBetResponse = await this.player.mbQuickPlaceBet(bet.locator, bet.amount, this.options.gameConfiguration.name);
                 let settledResults = await this.game.waitForSettlement(this.options.gameConfiguration.name);
                 return { placeBetResponse, settledResults };
@@ -63,7 +62,7 @@ export class MobiGameBase {
     }
 
     protected hedgeBetTests() {
-        test("Attempt to place a bet that would result in a hedged position.", async () => {
+        test("Verify hedge betting is blocked with proper error handling", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             await this.game.waitUntilPlaceBet(this.options.gameConfiguration.name);
@@ -74,7 +73,7 @@ export class MobiGameBase {
             // Act
             await this.player.mbPlaceHedgeBet(hedgeBetLocators, this.options.placeBetAmount ?? 1);
             const hedgeBetError = this.options.locators.hedgeBetError;
-            await test.step("Verify that an error message is displayed to prevent the bet from being placed.", async () => {
+            await test.step("Verify that an error message is displayed to prevent the bet from being placed", async () => {
                 const isFrame = await this.game.page.$("#frmGame");
                 if (isFrame) {
                     const framelocator = this.game.page.frameLocator("#frmGame");

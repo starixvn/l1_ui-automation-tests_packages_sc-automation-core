@@ -13,11 +13,11 @@ export class NumberGameBase {
     constructor(protected options: IBaseOptions) {}
 
     protected inGameUITests() {
-        test("Verify SSO to Game Lobby then navigate to game", async () => {
+        test("Validate SSO to game lobby and navigation", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
-            await this.game.click(this.options.locators.lobbyGameIcon,5000);
-            await this.game.page.locator(commonControls.iconHome).waitFor({state:"visible"})  
+            await this.game.click(this.options.locators.lobbyGameIcon, 5000);
+            await this.game.page.locator(commonControls.iconHome).waitFor({ state: "visible" });
 
             const inGameUi =
                 process.env.npm_config_android == "true" ? this.options.locators.inGameUIAndroid : this.options.locators.inGameUI;
@@ -25,17 +25,16 @@ export class NumberGameBase {
             await this.game.verifyLocatorsVisible(inGameUi);
         });
 
-        test("Verify menu list items", async () => {
+        test("Validate menu list items display", async () => {
             // Assert
             await this.game.click(commonControls.iconMenu);
             await this.game.verifyLocatorsVisible(this.options.locators.menuItems);
             await this.game.click(commonControls.iconMenu);
         });
-
     }
 
     protected placeBetAndSettleTests() {
-        test("THEN player able to place a bet and settle", async () => {
+        test("Test complete bet lifecycle: placement → settlement → validation", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             const bet = {
@@ -58,7 +57,7 @@ export class NumberGameBase {
     }
 
     protected hedgeBetTests() {
-        test("THEN player should get error when they hedge their bets", async () => {
+        test("Verify hedge betting is blocked with proper error handling", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
@@ -78,7 +77,7 @@ export class NumberGameBase {
     }
 
     protected ticketHistoryTests() {
-        test("AND player could open history popup", async () => {
+        test("Test betting history display and popup management", async () => {
             // Arrange
             await this.player.gnOpenHistory();
             // Act
@@ -97,7 +96,7 @@ export class NumberGameBase {
     }
 
     protected statisticBoardTests() {
-        test("Verify Statistic bar icon", async () => {
+        test("Validate statistic bar icon display", async () => {
             const statisticbar =
                 process.env.npm_config_android == "true" ? this.options.locators.statisticbarAndroid : this.options.locators.statisticbar;
 
@@ -105,15 +104,15 @@ export class NumberGameBase {
             await this.game.verifyLocatorsVisible(statisticbar);
         });
 
-        test("Verify user can slide left/right to switch road", async () => {
+        test("Validate road switching with left/right slide navigation", async () => {
             // Arrange
-            await this.game.click(commonControls.btnStatisticNext)
+            await this.game.click(commonControls.btnStatisticNext);
             expect(await this.game.page.locator(commonControls.tblbigRoad).isVisible()).toBe(true);
-            await this.game.click(commonControls.btnStatisticPrev)
+            await this.game.click(commonControls.btnStatisticPrev);
             expect(await this.game.page.locator(commonControls.tblbeadRoad).isVisible()).toBe(true);
         });
 
-        test("Verify total rows and columns of Bead Road & Big Road", async () => {
+        test("Validate Bead Road & Big Road grid dimensions", async () => {
             // Arrange
             const totalcellBIR = await this.game.page.$$eval(commonControls.cellsbigRoad, (elements) => elements.length);
             const totalcellBER = await this.game.page.$$eval(commonControls.cellsbeadRoad, (elements) => elements.length);
@@ -123,7 +122,7 @@ export class NumberGameBase {
     }
 
     protected gameGuideTests() {
-        test("AND player could open guide and clarify guide content", async () => {
+        test("Validate game guide display and content accuracy", async () => {
             // Arrange
             await this.player.gnOpenGuide();
             const getGuideContent = await this.game.getGuideContent();
@@ -155,7 +154,6 @@ export class NumberGameBase {
                 this.game = baseGame;
                 this.player = new BasePlayer(this.game);
                 this.performanceTest.init(this.game);
-
             });
 
             this.runScenario();
@@ -164,7 +162,7 @@ export class NumberGameBase {
 
     protected runScenario() {
         if (process.env.npm_config_trackdownload) {
-            this.performanceTest.tests(this.options.gameConfiguration.ssoTime??35000);
+            this.performanceTest.tests(this.options.gameConfiguration.ssoTime ?? 35000);
         }
         this.inGameUITests();
         this.placeBetAndSettleTests();
