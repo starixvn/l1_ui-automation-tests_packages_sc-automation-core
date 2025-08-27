@@ -1,3 +1,10 @@
+# [1.78.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.77.5...v1.78.0) (2025-08-27)
+
+
+### Features
+
+* enhance smoke test described ([58f999f](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/58f999fc7a428f9c9f80484fd8e4376d0686965d))
+
 ## [1.77.5](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.77.4...v1.77.5) (2025-08-26)
 
 
