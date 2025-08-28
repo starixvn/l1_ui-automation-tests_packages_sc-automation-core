@@ -338,7 +338,7 @@ export class BaseGame {
 
     async waitUntilPlaceBet(subGameName?: string): Promise<void> {
         await this.waitForEvent(GameEvent.StartPlaceBet, subGameName);
-        await this.waitForTimeout(4000);
+        await this.waitForTimeout(5000);
     }
 
     async gnWaitUntilPlaceBet(timeout = 3000): Promise<void> {
@@ -517,7 +517,7 @@ export class BaseGame {
 
         if (guideMenu) {
             await guideMenu.click(this.page);
-            await this.page.waitForLoadState("load");
+            await this.page.waitForLoadState("load", { timeout: 60000 });
             await this.waitForTimeout(waitTime);
         }
     }
