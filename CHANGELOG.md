@@ -1,3 +1,10 @@
+## [1.78.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.78.0...v1.78.1) (2025-08-29)
+
+
+### Bug Fixes
+
+* remove hard sleep when open guide ([ded2263](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/ded2263d50ce40463924682186bf27b2f1839bb1))
+
 # [1.78.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.77.5...v1.78.0) (2025-08-27)
 
 
