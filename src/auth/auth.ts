@@ -39,16 +39,8 @@ export const ssoToGame = async (page: Page, gameId: number, playerId: string, en
         await page.click(LobbyLocator.advancelbl);
         await page.click(`//input[@id=${appType}]`);
         await page.locator(LobbyLocator.langDropdown).selectOption(LobbyLocator[`${langCode}LangOption`]);
-
         await page.click(LobbyLocator.tokenBtn);
-        // Wait for token generation instead of hard sleep
-        await page.waitForFunction(
-            () => {
-                const linkElement = document.querySelector(LobbyLocator.ssoLink);
-                return linkElement && linkElement.textContent && linkElement.textContent.trim() !== "";
-            },
-            { timeout: 10000 },
-        );
+        await page.waitForTimeout(2000);
         ssoLink = (await page.locator(LobbyLocator.ssoLink).textContent()) ?? "";
         global.ssoLink = `${ssoLink}&gameId=${gameId}`;
         await page.goto(global.ssoLink);
@@ -83,14 +75,6 @@ export const ssoToGame2 = async (page: Page, gameId: number, playerId: string, e
         await page.click(`//input[@id=${appType}]`);
         await page.locator(LobbyLocator.langDropdown).selectOption(LobbyLocator[`${langCode}LangOption`]);
         await page.click(LobbyLocator.tokenBtn);
-        // Wait for token generation instead of hard sleep
-        await page.waitForFunction(
-            () => {
-                const linkElement = document.querySelector(LobbyLocator.ssoLink);
-                return linkElement && linkElement.textContent && linkElement.textContent.trim() !== "";
-            },
-            { timeout: 10000 },
-        );
         ssoLink = (await page.locator(LobbyLocator.ssoLink).textContent()) ?? "";
         global.ssoLink = `${ssoLink.replace("gameId=0", `gameId=${gameId}`)}`;
         await page.goto(global.ssoLink);

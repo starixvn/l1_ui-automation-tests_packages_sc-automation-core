@@ -14,6 +14,8 @@ import { MarbleGameBase } from "./marble-game-base";
 import { TapGameBase } from "./tap-game-base.spec";
 import { BacGameBase } from "./bac-game-base.spec";
 import { MobiDirect } from "./mobi-direct-game-base.spec";
+import { PortrailCascadingGameBase } from "./portrail-cascading-slot-game-base.spec";
+
 
 export {
     IBaseOptions,
@@ -33,4 +35,5 @@ export {
     TapGameBase,
     BacGameBase,
     MobiDirect,
+    PortrailCascadingGameBase
 };

@@ -15,4 +15,6 @@ export default {
     l1kenomemberSite: "https://gamelobby-simulator.lumigame.com/signin",
     l2mobimemberSite: "https://l2-glbs.lumigame.com/signin",
     l2kenomemberSite: "https://l2-glbs.lumigame.com/signin",
+    l1ptmemberSite: "https://gamelobby-simulator.lumigame.com/signin",
+    l1ptlobbyDomain: "https://gamelobby-simulator.lumigame.com/",
 };

@@ -10,4 +10,8 @@ declare global {
             toMatchWinningSymbols(b: any): R;
         }
     }
+
+    interface Window {
+        cc: any;
+    }
 }

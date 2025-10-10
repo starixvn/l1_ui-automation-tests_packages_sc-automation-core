@@ -135,17 +135,16 @@ export class BaseGame {
         if (this.gameConfiguration.id === 0) {
             await this.waitUntilGameLobbyUiLoad();
         } else {
-            switch (projectCode) {
-                case "gn":
-                    await this.waitUntilXdGameUiLoad();
-                    break;
-                default:
-                    if (projectCode.includes("mobi") || projectCode.includes("keno")) {
-                        await this.waitUntilMobiGameUiLoad();
-                    } else if (!projectCode.includes("is") && !projectCode.includes("pingoal")) {
-                        await this.waitUntilGameUiLoad();
-                    }
-                    break;
+            if (projectCode === "gn") {
+                await this.waitUntilXdGameUiLoad();
+            } else if (projectCode.includes("pt")) {
+                await this.page.locator('#GameCanvas').waitFor();
+                await this.waitForTimeout(3000);
+                await this.navigateToMicrositeIframe();
+            } else if (projectCode.includes("mobi") || projectCode.includes("keno")) {
+                await this.waitUntilMobiGameUiLoad();
+            } else if (!projectCode.includes("is") && !projectCode.includes("pingoal")) {
+                await this.waitUntilGameUiLoad();
             }
         }
         if (this.trackDownload) {
@@ -219,28 +218,37 @@ export class BaseGame {
         if (this.gameConfiguration.id === 0) {
             await this.waitUntilGameLobbyUiLoad();
         } else {
-            switch (projectCode) {
-                case "gn":
-                    await this.waitUntilXdGameUiLoad();
-                    break;
-                default:
-                    if (projectCode.includes("mobi") || projectCode.includes("keno")) {
-                        await this.waitUntilMobiGameUiLoad();
-                    } else if (!projectCode.includes("is") && !projectCode.includes("pingoal")) {
-                        await this.waitUntilGameUiLoad();
-                    }
-                    break;
+            if (projectCode === "gn") {
+                await this.waitUntilXdGameUiLoad();
+            } else if (projectCode.includes("pt")) {
+                await this.navigateToMicrositeIframe();
+                await this.waitUntilPortraitGameUiLoad();
+            } else if (projectCode.includes("mobi") || projectCode.includes("keno")) {
+                await this.waitUntilMobiGameUiLoad();
+            } else if (!projectCode.includes("is") && !projectCode.includes("pingoal")) {
+                await this.waitUntilGameUiLoad();
             }
         }
     }
 
     async waitUntilGameUiLoad(waitRange: number = 1) {
         await this.page.screenshot({ path: `./test-results/beforeInGame.png` });
+
         await this.page.waitForTimeout(100);
         let filterA: string[] = [];
         const searchString = "LoadScene";
+        const searchStringPortrait = "LoadScene Portrait";
+
         this.page.on("console", (msg) => {
             const msgText = msg.text();
+            
+            // Check for portrait mode first
+            if (msgText.includes(searchStringPortrait)) {
+                console.log("Portrait mode detected, switching to portrait handling");
+                filterA.push("PORTRAIT_MODE_DETECTED");
+                return;
+            }
+            
             const isRelevantMessage =
                 msgText.includes("Open Game") ||
                 (msgText.includes(searchString) &&
@@ -258,8 +266,19 @@ export class BaseGame {
         while (filterA.length < waitRange) {
             await this.page.waitForTimeout(50);
         }
+        
+        // Check if portrait mode was detected
+        if (filterA.includes("PORTRAIT_MODE_DETECTED")) {
+            console.log("Switching to portrait mode handling");
+            await this.waitForTimeout(3000);
+            await this.navigateToMicrositeIframe();
+            console.log("Portrait Game UI is ready for testing");
+            await this.page.screenshot({ path: `./test-results/afterInGame.png` });
+            return;
+        }
+        
         await this.page.waitForTimeout(1000);
-        console.log("Game UI is ready for testing");
+        console.log("Landscape Game UI is ready for testing");
         await this.page.screenshot({ path: `./test-results/afterInGame.png` });
     }
 
@@ -826,6 +845,582 @@ export class BaseGame {
         const [operatorId = "", playerId = ""] = (storageData?.username || "").split("_"); // Destructure with defaults
         return { operatorId, playerId };
     }
+
+    async clickCocosPosition(path: string) {
+        try {
+          const coordinates = await this.page.evaluate((pathString) => {
+            const cc = window.cc;
+            if (!cc) return { success: false, message: 'Cocos Creator not found' };
+            
+            const node = cc.find(pathString);
+            if (!node) return { success: false, message: 'Node not found: ' + pathString };
+            
+            if (!node._active) return { success: false, message: 'Node is not active: ' + pathString };
+            
+            const canvas = cc.find('Canvas');
+            const canvasElement = document.querySelector('canvas') || document.querySelector('#GameCanvas');
+            
+            if (!canvas || !canvasElement) {
+              return { success: false, message: 'Canvas not found' };
+            }
+            
+            try {
+              // Get the node's world position directly
+              const worldPosition = node.worldPosition;
+              
+              // Get canvas and its rect
+              const canvasRect = canvasElement.getBoundingClientRect();
+              const canvasSize = canvas.getContentSize();
+              
+              console.log(`Debug: node.worldPosition = (${worldPosition.x}, ${worldPosition.y})`);
+              console.log(`Debug: canvasSize = ${canvasSize.width}x${canvasSize.height}`);
+              console.log(`Debug: canvasRect = ${canvasRect.width}x${canvasRect.height} at (${canvasRect.left}, ${canvasRect.top})`);
+              
+              // Convert Cocos world coordinates to screen coordinates
+              // Cocos uses center-origin coordinate system
+              const cocosX = worldPosition.x;
+              const cocosY = worldPosition.y;
+              
+              // Convert to screen coordinates
+              // Try different coordinate conversion approaches
+              
+              // Approach 1: Direct conversion
+              const screenX1 = canvasRect.left + (cocosX + canvasSize.width / 2) * (canvasRect.width / canvasSize.width);
+              const screenY1 = canvasRect.top + (canvasSize.height / 2 - cocosY) * (canvasRect.height / canvasSize.height);
+              
+              // Approach 2: Alternative conversion (inverted Y)
+              const screenX2 = canvasRect.left + (cocosX + canvasSize.width / 2) * (canvasRect.width / canvasSize.width);
+              const screenY2 = canvasRect.top + (cocosY + canvasSize.height / 2) * (canvasRect.height / canvasSize.height);
+              
+              // Approach 3: Simple offset-based conversion
+              const screenX3 = canvasRect.left + cocosX * (canvasRect.width / canvasSize.width) + canvasRect.width / 2;
+              const screenY3 = canvasRect.top + canvasRect.height / 2 - cocosY * (canvasRect.height / canvasSize.height);
+              
+              console.log(`Debug: Approach 1 = (${screenX1}, ${screenY1})`);
+              console.log(`Debug: Approach 2 = (${screenX2}, ${screenY2})`);
+              console.log(`Debug: Approach 3 = (${screenX3}, ${screenY3})`);
+              
+              // Use approach 3 for now (seems most likely to be correct)
+              const screenX = screenX3;
+              const screenY = screenY3;
+              
+              console.log(`Debug: Calculated screen coordinates = (${screenX}, ${screenY})`);
+              
+              return {
+                success: true,
+                playwrightCoordinates: { x: screenX, y: screenY }
+              };
+            } catch (err) {
+              console.error('Error in coordinate calculation:', err);
+              return { success: false, message: 'Error calculating coordinates: ' + (err as Error).message };
+            }
+          }, path);
+    
+          if (coordinates.success && coordinates.playwrightCoordinates) {
+            await this.page.mouse.click(
+              coordinates.playwrightCoordinates.x, 
+              coordinates.playwrightCoordinates.y
+            );
+            return { success: true, coordinates };
+          } else {
+            return { success: false, error: coordinates.message };
+          }
+        } catch (err) {
+          return { success: false, error: (err as Error).message };
+        }
+    }
+    
+    
+    async isCocosLocatorExists(nodeNameOrPath: string): Promise<boolean> {
+        try {
+            const result = await this.page.evaluate((nameOrPath) => {
+                const cc = window.cc;
+                if (!cc) return { success: false, message: 'Cocos Creator not found' };
+                
+                let targetNode = null;
+                
+                if (nameOrPath.includes('/')) {
+                    targetNode = cc.find(nameOrPath);
+                } else {
+                    const findNodeByName = (parent: any, targetName: string) => {
+                        if (parent.name === targetName) {
+                            return parent;
+                        }
+                        for (let i = 0; i < parent.children.length; i++) {
+                            const found = findNodeByName(parent.children[i], targetName);
+                            if (found) return found;
+                        }
+                        return null;
+                    };
+                    
+                    const canvas = cc.find('Canvas');
+                    if (!canvas) return { success: false, message: 'Canvas not found' };
+                    targetNode = findNodeByName(canvas, nameOrPath);
+                }
+                
+                if (!targetNode) {
+                    return { success: false, message: 'Node not found' };
+                }
+                
+                const isActive = (targetNode as any)._active;
+                
+                return {
+                    success: true,
+                    exists: true,
+                    isActive: isActive,
+                    nodeName: (targetNode as any).name
+                };
+            }, nodeNameOrPath);
+            
+            return result.success && result.exists && result.isActive;
+            
+        } catch (err) {
+            console.error(`Error checking Cocos locator existence: ${(err as Error).message}`);
+            return false;
+        }
+    }
+
+    async clickCocos(nodeNameOrPath: string) {
+        try {
+          const nodeInfo = await this.page.evaluate((nameOrPath) => {
+            const cc = window.cc;
+            if (!cc) return { success: false, message: 'Cocos Creator not found' };
+            
+            let targetNode = null;
+            
+            if (nameOrPath.includes('/')) {
+              targetNode = cc.find(nameOrPath);
+            } else {
+              const findNodeByName = (parent: any, targetName: string) => {
+                if (parent.name === targetName) {
+                  return parent;
+                }
+                for (let i = 0; i < parent.children.length; i++) {
+                  const found = findNodeByName(parent.children[i], targetName);
+                  if (found) return found;
+                }
+                return null;
+              };
+              
+              const canvas = cc.find('Canvas');
+              if (!canvas) return { success: false, message: 'Canvas not found' };
+              targetNode = findNodeByName(canvas, nameOrPath);
+            }
+            
+            if (!targetNode) {
+              return { success: false, message: 'Node not found' };
+            }
+    
+            const node = targetNode as any;
+            const button = node.getComponent(cc.Button);
+            const childButton = node.getComponentInChildren(cc.Button);
+            const sprite = node.getComponent(cc.Sprite);
+            const image = node.getComponent(cc.UITransform);
+            
+            return {
+              success: true,
+              buttonClickEvents: button ? (button.clickEvents ? button.clickEvents.length : 0) : 0,
+              childButtonClickEvents: childButton ? (childButton.clickEvents ? childButton.clickEvents.length : 0) : 0,
+              hasSprite: !!sprite,
+              hasImage: !!image
+            };
+          }, nodeNameOrPath);
+    
+          if (!nodeInfo.success) {
+            return { success: false, error: nodeInfo.message };
+          }
+    
+          if (nodeInfo.buttonClickEvents === 0 && nodeInfo.childButtonClickEvents === 0) {
+            // For images/sprites without button events, use position click
+            return await this.clickCocosPosition(nodeNameOrPath);
+          }
+    
+          const eventResult = await this.page.evaluate((nameOrPath) => {
+            const cc = window.cc;
+            if (!cc) return { success: false, message: 'Cocos Creator not found' };
+            
+            let targetNode = null;
+            
+            if (nameOrPath.includes('/')) {
+              targetNode = cc.find(nameOrPath);
+            } else {
+              const findNodeByName = (parent: any, targetName: string) => {
+                if (parent.name === targetName) {
+                  return parent;
+                }
+                for (let i = 0; i < parent.children.length; i++) {
+                  const found = findNodeByName(parent.children[i], targetName);
+                  if (found) return found;
+                }
+                return null;
+              };
+              
+              const canvas = cc.find('Canvas');
+              if (!canvas) return { success: false, message: 'Canvas not found' };
+              targetNode = findNodeByName(canvas, nameOrPath);
+            }
+            
+            if (!targetNode || !(targetNode as any)._active) {
+              return { success: false, message: 'Node not found or not active' };
+            }
+    
+            const button = (targetNode as any).getComponent(cc.Button);
+            if (button && button.clickEvents && button.clickEvents.length > 0) {
+              button.clickEvents.forEach((eventHandler: any) => {
+                eventHandler.emit([eventHandler.customEventData]);
+              });
+              return { success: true };
+            } else {
+              const childButton = (targetNode as any).getComponentInChildren(cc.Button);
+              if (childButton && childButton.clickEvents && childButton.clickEvents.length > 0) {
+                childButton.clickEvents.forEach((eventHandler: any) => {
+                  eventHandler.emit([eventHandler.customEventData]);
+                });
+                return { success: true };
+              } else {
+                (targetNode as any).emit('click');
+                (targetNode as any).emit('touchstart');
+                (targetNode as any).emit('touchend');
+                return { success: true };
+              }
+            }
+          }, nodeNameOrPath);
+    
+          if (eventResult.success) {
+            return { success: true, result: eventResult };
+          }
+          await this.page.waitForTimeout(500);
+          return await this.clickCocosPosition(nodeNameOrPath);
+
+        } catch (err) {
+          return { success: false, error: (err as Error).message };
+        }
+    }
+
+    /**
+     * Find Cocos node by label text
+     * @param labelText - The text content to search for
+     * @param exactMatch - Whether to match exact text or contains text (default: false)
+     * @returns Promise<{success: boolean, nodePath?: string, error?: string}>
+     */
+    async findCocosByLabel(labelText: string, exactMatch: boolean = false) {
+        try {
+            console.log(`findCocosByLabel: Searching for "${labelText}", exactMatch: ${exactMatch}`);
+            
+            const result = await this.page.evaluate((args) => {
+                const [text, exact] = args as [string, boolean];
+                console.log(`Browser: Searching for "${text}", exactMatch: ${exact}`);
+                
+                const cc = window.cc;
+                if (!cc) {
+                    console.log('Browser: Cocos Creator not found');
+                    return { success: false, message: 'Cocos Creator not found' };
+                }
+                
+                const findNodeByLabel = (parent: any, targetText: string, exactMatch: boolean): any => {
+                    // Check if current node has Label component
+                    const label = parent.getComponent(cc.Label);
+                    if (label && label.string) {
+                        const nodeText = label.string.trim();
+                        const matches = exactMatch ? 
+                            nodeText === targetText : 
+                            nodeText.includes(targetText);
+                        
+                        console.log(`Browser: Checking node "${parent.name}" with text "${nodeText}", matches: ${matches}`);
+                        
+                        if (matches) {
+                            console.log(`Browser: Found matching node: "${parent.name}"`);
+                            return parent;
+                        }
+                    }
+                    
+                    // Check children recursively
+                    for (let i = 0; i < parent.children.length; i++) {
+                        const found = findNodeByLabel(parent.children[i], targetText, exactMatch);
+                        if (found) return found;
+                    }
+                    
+                    return null;
+                };
+                
+                const canvas = cc.find('Canvas');
+                if (!canvas) {
+                    console.log('Browser: Canvas not found');
+                    return { success: false, message: 'Canvas not found' };
+                }
+                
+                console.log(`Browser: Starting search in Canvas with ${canvas.children.length} children`);
+                const targetNode = findNodeByLabel(canvas, text, exact);
+                
+                if (!targetNode) {
+                    console.log(`Browser: No node found with label text "${text}"`);
+                    return { success: false, message: 'Node with label text not found' };
+                }
+                
+                console.log(`Browser: Found target node: "${targetNode.name}"`);
+                
+                // Get the full path of the node
+                const getNodePath = (node: any): string => {
+                    const path: string[] = [];
+                    let current = node;
+                    
+                    while (current && current !== canvas) {
+                        path.unshift(current.name);
+                        current = current.parent;
+                    }
+                    
+                    // Include Canvas in the path for compatibility with cc.find()
+                    return 'Canvas/' + path.join('/');
+                };
+                
+                return {
+                    success: true,
+                    nodePath: getNodePath(targetNode),
+                    nodeName: targetNode.name,
+                    labelText: targetNode.getComponent(cc.Label)?.string?.trim() || ''
+                };
+            }, [labelText, exactMatch]);
+            
+            return result;
+        } catch (err) {
+            return { success: false, error: (err as Error).message };
+        }
+    }
+
+    /**
+     * Click Cocos node by label text
+     * @param labelText - The text content to search for
+     * @param exactMatch - Whether to match exact text or contains text (default: false)
+     * @returns Promise<{success: boolean, error?: string}>
+     */
+    async clickCocosByLabel(labelText: string, exactMatch: boolean = false) {
+        try {
+            console.log(`Searching for label: "${labelText}", exactMatch: ${exactMatch}`);
+            
+            const findResult = await this.findCocosByLabel(labelText, exactMatch) as {success: boolean, nodePath?: string, message?: string, nodeName?: string, labelText?: string};
+            
+            console.log('Find result:', findResult);
+            
+            if (!findResult.success) {
+                console.log(`Failed to find node with label: ${findResult.message}`);
+                return { success: false, error: findResult.message || 'Node not found' };
+            }
+            
+            console.log(`Found node: ${findResult.nodeName}, path: ${findResult.nodePath}, label: ${findResult.labelText}`);
+            
+            // Use the found node path to click
+            const clickResult = await this.clickCocos(findResult.nodePath!);
+            console.log('Click result:', clickResult);
+            
+            return clickResult;
+        } catch (err) {
+            console.error('Error in clickCocosByLabel:', err);
+            return { success: false, error: (err as Error).message };
+        }
+    }
+    
+    // Helper function to find node and return label text
+    async findLabelText(nodeNameOrPath: string): Promise<string> {
+        try {
+          const result = await this.page.evaluate((nameOrPath) => {
+            const cc = window.cc;
+            if (!cc) return '';
+            
+            let targetNode = null;
+            
+            if (nameOrPath.includes('/')) {
+              targetNode = cc.find(nameOrPath);
+            } else {
+              const findNodeByName = (parent: any, targetName: string) => {
+                if (parent.name === targetName) {
+                  return parent;
+                }
+                for (let i = 0; i < parent.children.length; i++) {
+                  const found = findNodeByName(parent.children[i], targetName);
+                  if (found) return found;
+                }
+                return null;
+              };
+              
+              const canvas = cc.find('Canvas');
+              if (!canvas) return '';
+              targetNode = findNodeByName(canvas, nameOrPath);
+            }
+            
+            if (!targetNode || !(targetNode as any)._active) {
+              return '';
+            }
+    
+            const label = (targetNode as any).getComponent(cc.Label);
+            if (label) {
+              return label.string;
+            } else {
+              const childLabel = (targetNode as any).getComponentInChildren(cc.Label);
+              if (childLabel) {
+                return childLabel.string;
+              } else {
+                return '';
+              }
+            }
+          }, nodeNameOrPath);
+    
+          return result || '';
+        } catch (err) {
+          console.error(`Error finding label text: ${(err as Error).message}`);
+          return '';
+        }
+    }
+
+
+    async navigateToMicrositeIframe(timeout: number = 5000): Promise<void> {
+        try {
+            const iframeLocator = this.page.locator('iframe[id="microsite"]');
+            
+            if (await iframeLocator.count() === 0) return;
+            
+            await iframeLocator.waitFor({ timeout });
+            
+            const iframeSrc = await iframeLocator.getAttribute('src');
+            
+            if (iframeSrc) {
+                await this.page.goto(iframeSrc);
+                await this.page.waitForLoadState("load", { timeout });
+                await this.page.waitForTimeout(timeout);
+            }
+        } catch (err) {
+            // Silent fail
+        }
+    }
+
+    /**
+     * Get bounding box (x, y, width, height) of a Cocos locator
+     * @param nodeNameOrPath - The Cocos node name or path
+     * @returns Promise<{success: boolean, bounds?: {x: number, y: number, width: number, height: number}, error?: string}>
+     */
+    async getCocosBounds(nodeNameOrPath: string) {
+        try {
+            const result = await this.page.evaluate((nameOrPath) => {
+                const cc = window.cc;
+                if (!cc) return { success: false, message: 'Cocos Creator not found' };
+                
+                let targetNode = null;
+                
+                if (nameOrPath.includes('/')) {
+                    targetNode = cc.find(nameOrPath);
+                } else {
+                    const findNodeByName = (parent: any, targetName: string) => {
+                        if (parent.name === targetName) {
+                            return parent;
+                        }
+                        for (let i = 0; i < parent.children.length; i++) {
+                            const found = findNodeByName(parent.children[i], targetName);
+                            if (found) return found;
+                        }
+                        return null;
+                    };
+                    
+                    const canvas = cc.find('Canvas');
+                    if (!canvas) return { success: false, message: 'Canvas not found' };
+                    targetNode = findNodeByName(canvas, nameOrPath);
+                }
+                
+                if (!targetNode || !(targetNode as any)._active) {
+                    return { success: false, message: 'Node not found or not active' };
+                }
+                
+                const canvas = cc.find('Canvas');
+                const canvasElement = document.querySelector('canvas') || document.querySelector('#GameCanvas');
+                
+                if (!canvas || !canvasElement) {
+                    return { success: false, message: 'Canvas not found' };
+                }
+                
+                const canvasSize = canvas.getContentSize();
+                const canvasRect = canvasElement.getBoundingClientRect();
+                
+                // Get node position and size
+                const node = targetNode as any;
+                const uiTransform = node.getComponent(cc.UITransform);
+                
+                if (!uiTransform) {
+                    return { success: false, message: 'Node does not have UITransform component' };
+                }
+                
+                const cocosX = node.position.x;
+                const cocosY = node.position.y;
+                const cocosWidth = uiTransform.width;
+                const cocosHeight = uiTransform.height;
+                
+                // Convert Cocos coordinates to screen coordinates
+                const screenX = canvasRect.left + (cocosX + canvasSize.width / 2) * (canvasRect.width / canvasSize.width);
+                const screenY = canvasRect.top + (canvasSize.height / 2 - cocosY) * (canvasRect.height / canvasSize.height);
+                const screenWidth = cocosWidth * (canvasRect.width / canvasSize.width);
+                const screenHeight = cocosHeight * (canvasRect.height / canvasSize.height);
+                
+                return {
+                    success: true,
+                    bounds: {
+                        x: screenX,
+                        y: screenY,
+                        width: screenWidth,
+                        height: screenHeight
+                    },
+                    cocosBounds: {
+                        x: cocosX,
+                        y: cocosY,
+                        width: cocosWidth,
+                        height: cocosHeight
+                    }
+                };
+            }, nodeNameOrPath);
+            
+            return result;
+        } catch (err) {
+            return { success: false, error: (err as Error).message };
+        }
+    }
+
+    /**
+     * Take screenshot of a Cocos locator
+     * @param nodeNameOrPath - The Cocos node name or path
+     * @param name - Name for the screenshot
+     * @returns Promise<ImageSnapshot>
+     */
+    async screenshotCocosLocator(nodeNameOrPath: string, name: string): Promise<ImageSnapshot> {
+        try {
+            const boundsResult = await this.getCocosBounds(nodeNameOrPath);
+            
+            if (!boundsResult.success || !('bounds' in boundsResult) || !boundsResult.bounds) {
+                const errorMsg = 'message' in boundsResult ? boundsResult.message : ('error' in boundsResult ? boundsResult.error : 'Unknown error');
+                throw new Error(`Failed to get bounds: ${errorMsg}`);
+            }
+            
+            const { x, y, width, height } = boundsResult.bounds;
+            
+            // Take screenshot of the specific area and save to current directory
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            const filename = `${name}_${timestamp}.png`;
+            const filepath = `./${filename}`;
+            
+            const screenshot = await this.page.screenshot({
+                clip: { x, y, width, height },
+                path: filepath
+            });
+            
+            console.log(`Screenshot saved to: ${filepath}`);
+            
+            return {
+                name: name,
+                image: screenshot,
+                filepath: filepath
+            } as ImageSnapshot & { filepath: string };
+        } catch (err) {
+            console.error(`Error taking screenshot of Cocos locator: ${(err as Error).message}`);
+            return { name: name, image: Buffer.from("") };
+        }
+    }
+    
+
 }
 
 function loadImage(path: string) {
