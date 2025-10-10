@@ -1,3 +1,10 @@
+## [1.79.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.79.0...v1.79.1) (2025-10-10)
+
+
+### Bug Fixes
+
+* operator name do not show in autotest ([781d31a](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/781d31afb6952c6a170b6e3eb0cd0f36933f595b))
+
 # [1.79.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.78.1...v1.79.0) (2025-10-10)
 
 
