@@ -221,8 +221,9 @@ export class BaseGame {
             if (projectCode === "gn") {
                 await this.waitUntilXdGameUiLoad();
             } else if (projectCode.includes("pt")) {
+                await this.page.locator('#GameCanvas').waitFor();
+                await this.waitForTimeout(3000);
                 await this.navigateToMicrositeIframe();
-                await this.waitUntilPortraitGameUiLoad();
             } else if (projectCode.includes("mobi") || projectCode.includes("keno")) {
                 await this.waitUntilMobiGameUiLoad();
             } else if (!projectCode.includes("is") && !projectCode.includes("pingoal")) {
