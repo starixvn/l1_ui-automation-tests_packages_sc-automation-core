@@ -1,3 +1,15 @@
+# [1.79.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.78.1...v1.79.0) (2025-10-10)
+
+
+### Bug Fixes
+
+* base game- wait portrait screen ([b70f0c1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/b70f0c133729922e19f68186e84dd2ab67bb4f8f))
+
+
+### Features
+
+* portrait cascading slot ([4516fe0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/4516fe0637a9af229e5eb6f49c0770029afdbf76))
+
 ## [1.78.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.78.0...v1.78.1) (2025-08-29)
 
 
