@@ -219,7 +219,7 @@ export class PortrailCascadingGameBase {
             locators: [this.options.locators],
         });
 
-        test.describe.serial(`${this.options.gameConfiguration.name} E2E Testing`, () => {
+        test.describe.serial(`${this.options.gameConfiguration.name} Smoke Testing`, () => {
             test.beforeAll(async ({ baseGame }) => {
                 this.game = baseGame;
                 this.player = new BasePlayer(this.game);
@@ -236,10 +236,10 @@ export class PortrailCascadingGameBase {
 
     async clickSpinButton() {
         await this.game.page.mouse.click(640, 570);
-    }
+        }
 
     async clickPlayNowButton() {
-        await this.game.page.mouse.click(640, 615);
+        await this.game.clickCocos(Portrail_Cascading_Locators.btnPlayNow);
         await this.game.waitForTimeout(2000);
     }
     

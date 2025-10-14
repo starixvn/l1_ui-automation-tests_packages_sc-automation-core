@@ -847,91 +847,6 @@ export class BaseGame {
         return { operatorId, playerId };
     }
 
-    async clickCocosPosition(path: string) {
-        try {
-          const coordinates = await this.page.evaluate((pathString) => {
-            const cc = window.cc;
-            if (!cc) return { success: false, message: 'Cocos Creator not found' };
-            
-            const node = cc.find(pathString);
-            if (!node) return { success: false, message: 'Node not found: ' + pathString };
-            
-            if (!node._active) return { success: false, message: 'Node is not active: ' + pathString };
-            
-            const canvas = cc.find('Canvas');
-            const canvasElement = document.querySelector('canvas') || document.querySelector('#GameCanvas');
-            
-            if (!canvas || !canvasElement) {
-              return { success: false, message: 'Canvas not found' };
-            }
-            
-            try {
-              // Get the node's world position directly
-              const worldPosition = node.worldPosition;
-              
-              // Get canvas and its rect
-              const canvasRect = canvasElement.getBoundingClientRect();
-              const canvasSize = canvas.getContentSize();
-              
-              console.log(`Debug: node.worldPosition = (${worldPosition.x}, ${worldPosition.y})`);
-              console.log(`Debug: canvasSize = ${canvasSize.width}x${canvasSize.height}`);
-              console.log(`Debug: canvasRect = ${canvasRect.width}x${canvasRect.height} at (${canvasRect.left}, ${canvasRect.top})`);
-              
-              // Convert Cocos world coordinates to screen coordinates
-              // Cocos uses center-origin coordinate system
-              const cocosX = worldPosition.x;
-              const cocosY = worldPosition.y;
-              
-              // Convert to screen coordinates
-              // Try different coordinate conversion approaches
-              
-              // Approach 1: Direct conversion
-              const screenX1 = canvasRect.left + (cocosX + canvasSize.width / 2) * (canvasRect.width / canvasSize.width);
-              const screenY1 = canvasRect.top + (canvasSize.height / 2 - cocosY) * (canvasRect.height / canvasSize.height);
-              
-              // Approach 2: Alternative conversion (inverted Y)
-              const screenX2 = canvasRect.left + (cocosX + canvasSize.width / 2) * (canvasRect.width / canvasSize.width);
-              const screenY2 = canvasRect.top + (cocosY + canvasSize.height / 2) * (canvasRect.height / canvasSize.height);
-              
-              // Approach 3: Simple offset-based conversion
-              const screenX3 = canvasRect.left + cocosX * (canvasRect.width / canvasSize.width) + canvasRect.width / 2;
-              const screenY3 = canvasRect.top + canvasRect.height / 2 - cocosY * (canvasRect.height / canvasSize.height);
-              
-              console.log(`Debug: Approach 1 = (${screenX1}, ${screenY1})`);
-              console.log(`Debug: Approach 2 = (${screenX2}, ${screenY2})`);
-              console.log(`Debug: Approach 3 = (${screenX3}, ${screenY3})`);
-              
-              // Use approach 3 for now (seems most likely to be correct)
-              const screenX = screenX3;
-              const screenY = screenY3;
-              
-              console.log(`Debug: Calculated screen coordinates = (${screenX}, ${screenY})`);
-              
-              return {
-                success: true,
-                playwrightCoordinates: { x: screenX, y: screenY }
-              };
-            } catch (err) {
-              console.error('Error in coordinate calculation:', err);
-              return { success: false, message: 'Error calculating coordinates: ' + (err as Error).message };
-            }
-          }, path);
-    
-          if (coordinates.success && coordinates.playwrightCoordinates) {
-            await this.page.mouse.click(
-              coordinates.playwrightCoordinates.x, 
-              coordinates.playwrightCoordinates.y
-            );
-            return { success: true, coordinates };
-          } else {
-            return { success: false, error: coordinates.message };
-          }
-        } catch (err) {
-          return { success: false, error: (err as Error).message };
-        }
-    }
-    
-    
     async isCocosLocatorExists(nodeNameOrPath: string): Promise<boolean> {
         try {
             const result = await this.page.evaluate((nameOrPath) => {
@@ -983,15 +898,17 @@ export class BaseGame {
 
     async clickCocos(nodeNameOrPath: string) {
         try {
-          const nodeInfo = await this.page.evaluate((nameOrPath) => {
-            const cc = window.cc;
+          const result = await this.page.evaluate((nameOrPath) => {
+            const cc = (window as any).cc;
             if (!cc) return { success: false, message: 'Cocos Creator not found' };
             
             let targetNode = null;
             
             if (nameOrPath.includes('/')) {
+              // Use full path directly
               targetNode = cc.find(nameOrPath);
             } else {
+              // Search by name in Canvas
               const findNodeByName = (parent: any, targetName: string) => {
                 if (parent.name === targetName) {
                   return parent;
@@ -1011,92 +928,29 @@ export class BaseGame {
             if (!targetNode) {
               return { success: false, message: 'Node not found' };
             }
-    
-            const node = targetNode as any;
-            const button = node.getComponent(cc.Button);
-            const childButton = node.getComponentInChildren(cc.Button);
-            const sprite = node.getComponent(cc.Sprite);
-            const image = node.getComponent(cc.UITransform);
             
-            return {
-              success: true,
-              buttonClickEvents: button ? (button.clickEvents ? button.clickEvents.length : 0) : 0,
-              childButtonClickEvents: childButton ? (childButton.clickEvents ? childButton.clickEvents.length : 0) : 0,
-              hasSprite: !!sprite,
-              hasImage: !!image
-            };
-          }, nodeNameOrPath);
-    
-          if (!nodeInfo.success) {
-            return { success: false, error: nodeInfo.message };
-          }
-    
-          if (nodeInfo.buttonClickEvents === 0 && nodeInfo.childButtonClickEvents === 0) {
-            // For images/sprites without button events, use position click
-            return await this.clickCocosPosition(nodeNameOrPath);
-          }
-    
-          const eventResult = await this.page.evaluate((nameOrPath) => {
-            const cc = window.cc;
-            if (!cc) return { success: false, message: 'Cocos Creator not found' };
-            
-            let targetNode = null;
-            
-            if (nameOrPath.includes('/')) {
-              targetNode = cc.find(nameOrPath);
-            } else {
-              const findNodeByName = (parent: any, targetName: string) => {
-                if (parent.name === targetName) {
-                  return parent;
-                }
-                for (let i = 0; i < parent.children.length; i++) {
-                  const found = findNodeByName(parent.children[i], targetName);
-                  if (found) return found;
-                }
-                return null;
-              };
-              
-              const canvas = cc.find('Canvas');
-              if (!canvas) return { success: false, message: 'Canvas not found' };
-              targetNode = findNodeByName(canvas, nameOrPath);
-            }
-            
-            if (!targetNode || !(targetNode as any)._active) {
-              return { success: false, message: 'Node not found or not active' };
-            }
-    
+            // Try button component first
             const button = (targetNode as any).getComponent(cc.Button);
-            if (button && button.clickEvents && button.clickEvents.length > 0) {
+            if (button && button.clickEvents) {
               button.clickEvents.forEach((eventHandler: any) => {
                 eventHandler.emit([eventHandler.customEventData]);
               });
-              return { success: true };
-            } else {
-              const childButton = (targetNode as any).getComponentInChildren(cc.Button);
-              if (childButton && childButton.clickEvents && childButton.clickEvents.length > 0) {
-                childButton.clickEvents.forEach((eventHandler: any) => {
-                  eventHandler.emit([eventHandler.customEventData]);
-                });
-                return { success: true };
-              } else {
-                (targetNode as any).emit('click');
-                (targetNode as any).emit('touchstart');
-                (targetNode as any).emit('touchend');
-                return { success: true };
-              }
             }
+            
+            // Always emit events as fallback
+            (targetNode as any).emit('click');
+            (targetNode as any).emit('touchstart');
+            (targetNode as any).emit('touchend');
+            
+            return { success: true };
           }, nodeNameOrPath);
-    
-          if (eventResult.success) {
-            return { success: true, result: eventResult };
-          }
-          await this.page.waitForTimeout(500);
-          return await this.clickCocosPosition(nodeNameOrPath);
 
+          return result;
         } catch (err) {
           return { success: false, error: (err as Error).message };
         }
     }
+
 
     /**
      * Find Cocos node by label text

@@ -262,7 +262,7 @@ export class PortrailCascadingGameBase {
                 await this.game.clickCocos(Portrail_Cascading_Locators.btnBetDecrease);
                 await this.game.waitForTimeout(500);
                 totalBetafter = await this.game.findLabelText(Portrail_Cascading_Locators.txtbottomTotalBet);
-                expect(Number(totalBetafter)<Number(totalBetbefore)).toBe(true);
+                expect(Number(totalBetafter.replace(/,/g, ''))<Number(totalBetbefore.replace(/,/g, ''))).toBe(true);
             }
 
             for (let i = 0; i < 10; i++) {
@@ -270,7 +270,7 @@ export class PortrailCascadingGameBase {
                 await this.game.clickCocos(Portrail_Cascading_Locators.btnBetIncrease);
                 await this.game.waitForTimeout(500);
                 totalBetafter = await this.game.findLabelText(Portrail_Cascading_Locators.txtbottomTotalBet);
-                expect(Number(totalBetafter)>Number(totalBetbefore)).toBe(true);
+                expect(Number(totalBetafter.replace(/,/g, ''))>Number(totalBetbefore.replace(/,/g, ''))).toBe(true);
             }
 
         });
@@ -395,10 +395,10 @@ export class PortrailCascadingGameBase {
                     settledResultsAutoSpin.push(settledResults.winAmount);
                     
                     // Check if user won additional auto spins
-                    if (settledResults.totalAutoSpins && settledResults.totalAutoSpins > currentTotalAutoSpin) {
-                        const additionalSpins = settledResults.totalAutoSpins - currentTotalAutoSpin;
-                        currentTotalAutoSpin = settledResults.totalAutoSpins;
-                        await this.game.clickOutSide();
+                    // settledResults.totalAutoSpins now represents remaining spins
+                    if (settledResults.totalAutoSpins && settledResults.totalAutoSpins > 0) {
+                        const additionalSpins = settledResults.totalAutoSpins - (currentTotalAutoSpin - completedSpins);
+                        currentTotalAutoSpin = completedSpins + settledResults.totalAutoSpins;
                         console.log(`🎉 User won ${additionalSpins} additional auto spins! Total auto spins now: ${currentTotalAutoSpin}`);
                     }
                     
@@ -414,6 +414,7 @@ export class PortrailCascadingGameBase {
                         await this.game.waitForTimeout((settledResults.tumble + 1) * 5000); //wait for tumbling of the last spin
                         await this.game.clickOutSide();       
                     }
+                    await this.game.clickOutSide();
                 }
                 
                 console.log(`✅ Completed all ${currentTotalAutoSpin} auto spins!`);
@@ -459,34 +460,40 @@ export class PortrailCascadingGameBase {
             await this.game.clickCocos(Portrail_Cascading_Locators.btnBackHistory);
             await this.game.waitForTimeout(2000);
             await this.game.clickCocos(Portrail_Cascading_Locators.btnClosePopup);
-            await this.game.waitForTimeout(12000); //wait for free spin popup close
+            await this.game.waitForTimeout(8000); //wait for free spin popup close
             await this.game.clickOutSide();
         });
 
          test("Wait until 15 freespin finished", async () => {
              let totalAutoSpin = 15; // Start with initial free spins
              let completedSpins = 0;
+             let totalWinAmount = 0; // Track total win amount
+             let previousSpincount = 15; // Track previous spin count
              
              while (completedSpins < totalAutoSpin) {
                 const settledResults = await waitForSettlementCascadingSlot(this.game);
-                 let spincount = await this.game.findLabelText(Portrail_Cascading_Locators.txtFreeSpinCount);
-                 console.log("isbigWin", settledResults.isbigWin);               
+                 let currentSpincount = await this.game.findLabelText(Portrail_Cascading_Locators.txtFreeSpinCount);
+                 
                  if (settledResults.isbigWin) {
                     await this.game.waitForTimeout(10000);
                     await this.game.clickOutSide();
                 }
                  
                  // Check if user won additional free spins
-                 if (settledResults.totalFreeSpins && settledResults.totalFreeSpins > totalAutoSpin) {
-                     const additionalSpins = settledResults.totalFreeSpins - totalAutoSpin;
-                     totalAutoSpin = settledResults.totalFreeSpins;
-                     await this.game.clickOutSide();
-                     console.log(`🎉 User won ${additionalSpins} additional free spins! Total free spins now: ${totalAutoSpin}`);
+                 if (settledResults.totalFreeSpins && settledResults.totalFreeSpins > 0) {
+                     const currentRemainingSpins = parseInt(currentSpincount);
+                     const previousRemainingSpins = previousSpincount;
+                     
+                     if (currentRemainingSpins > previousRemainingSpins) {
+                         const additionalSpins = currentRemainingSpins - previousRemainingSpins;
+                         totalAutoSpin += additionalSpins;
+                         await this.game.clickOutSide();
+                         console.log(`🎉 User won ${additionalSpins} additional free spins! Total: ${totalAutoSpin}`);
+                     }
                  }
                  
-                 // Calculate expected count based on remaining spins shown in UI
-                 const expectedCount = parseInt(spincount);
-                 console.log(`Spin ${completedSpins + 1}/${totalAutoSpin}, remaining count: ${spincount}, expected count: ${expectedCount}`);               
+                 previousSpincount = parseInt(currentSpincount);
+                 totalWinAmount += parseFloat(settledResults.win);
                  completedSpins++;
                  
                  if (completedSpins == totalAutoSpin) {
@@ -494,10 +501,15 @@ export class PortrailCascadingGameBase {
                  }
              }
              
-             console.log(`✅ Completed all ${totalAutoSpin} free spins!`);
-             await this.game.waitForTimeout(10000); //handle animation
+             console.log(`✅ Completed ${totalAutoSpin} free spins! Total win: ${totalWinAmount}`);             
+             await this.game.waitForTimeout(8000);
+             const displayedTotalWin = await this.game.findLabelText(Portrail_Cascading_Locators.lblFSTotalWin);
+             
+             // Compare calculated total with displayed total
+             expect(parseFloat(displayedTotalWin)).toBeCloseTo(totalWinAmount+this.settledResults.win, 2);
              await this.game.clickOutSide();
          });
+
 
 
     }
@@ -536,7 +548,7 @@ export class PortrailCascadingGameBase {
     }
 
     async clickPlayNowButton() {
-        await this.game.page.mouse.click(640, 615);
+        await this.game.clickCocos(Portrail_Cascading_Locators.btnPlayNow);
         await this.game.waitForTimeout(2000);
     }
     
@@ -607,7 +619,7 @@ const waitForSettlementCascadingSlot = async (game: BaseGame): Promise<any> => {
     await game.waitForTimeout(500); // add sleep due to feature Publish round result prior to settlement
 
     let settledResults = {
-        isbigWin: message?.finish?.bigWin ?? "",
+        isbigWin: message?.finish?.bigWin ??  message?.finish?.megaWin ?? message?.finish?.superWin ?? "",
         reachMaxWin: message?.finish?.reachMaxWin ?? "",
         totalFreeSpins: message?.finish?.totalFreeSpins ?? "",
         totalMultiplier: message?.finish?.totalMultiplier ?? "",
