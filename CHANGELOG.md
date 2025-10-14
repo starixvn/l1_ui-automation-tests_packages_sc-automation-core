@@ -1,3 +1,10 @@
+## [1.79.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.79.1...v1.79.2) (2025-10-14)
+
+
+### Bug Fixes
+
+* extra free spin ([d2a4c36](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/d2a4c3693dc6ce1f7ee1349b101e8f49fc6e2e70))
+
 ## [1.79.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.79.0...v1.79.1) (2025-10-10)
 
 
