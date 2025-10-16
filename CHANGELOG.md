@@ -1,3 +1,10 @@
+# [1.80.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.79.2...v1.80.0) (2025-10-16)
+
+
+### Features
+
+* add portrail classic slot game base ([3a9a9a7](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/3a9a9a76c52ec8a69c60e976d2e5850b64661a8b))
+
 ## [1.79.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.79.1...v1.79.2) (2025-10-14)
 
 
