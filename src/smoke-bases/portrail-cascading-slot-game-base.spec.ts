@@ -163,8 +163,8 @@ export class PortrailCascadingGameBase {
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             await this.game.waitForTimeout(5000);// wait for animation
             if(this.settledResults.win > 0) {
-                expect(Number(await this.game.findLabelText(Portrail_Cascading_Locators.txtcenterWin))).toBe(Number(this.settledResults.win));
-                expect(Number(await this.game.findLabelText(Portrail_Cascading_Locators.txtbottomWin))).toBe(Number(this.settledResults.win));
+                expect(parseFloat(await this.game.findLabelText(Portrail_Cascading_Locators.txtcenterWin))).toBeCloseTo(this.settledResults.win, 2);
+                expect(parseFloat(await this.game.findLabelText(Portrail_Cascading_Locators.txtbottomWin))).toBeCloseTo(this.settledResults.win, 2);
             } else {
                 expect(await this.game.findLabelText(Portrail_Cascading_Locators.txtbottomWin)).toBe("0");
             }

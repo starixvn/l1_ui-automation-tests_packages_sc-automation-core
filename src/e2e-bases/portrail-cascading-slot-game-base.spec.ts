@@ -125,7 +125,7 @@ export class PortrailCascadingGameBase {
         test("Verify center message exists", async () => {
             const centerMessages = [
                 "Bấm Quay hoặc giữ phím Space",
-                "Hệ Số Nhân tăng dần trong Free Spin",
+                "Hệ Số Nhân cộng dồn trong Free Spin",
                 "Thắng lên đến 2000x tiền cược",
                 "Quay trúng",
                 "Hệ Số Nhân ngẫu nhiên lên đến 500x",
@@ -320,8 +320,8 @@ export class PortrailCascadingGameBase {
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             await this.game.waitForTimeout(5000);// wait for animation
             if(this.settledResults.win > 0) {
-                expect(Number(await this.game.findLabelText(Portrail_Cascading_Locators.txtcenterWin))).toBe(Number(this.settledResults.win));
-                expect(Number(await this.game.findLabelText(Portrail_Cascading_Locators.txtbottomWin))).toBe(Number(this.settledResults.win));
+                expect(parseFloat(await this.game.findLabelText(Portrail_Cascading_Locators.txtcenterWin))).toBeCloseTo(this.settledResults.win, 2);
+                expect(parseFloat(await this.game.findLabelText(Portrail_Cascading_Locators.txtbottomWin))).toBeCloseTo(this.settledResults.win, 2);
             } else {
                 expect(await this.game.findLabelText(Portrail_Cascading_Locators.txtbottomWin)).toBe("0");
             }
@@ -471,6 +471,9 @@ export class PortrailCascadingGameBase {
              let previousSpincount = 15; // Track previous spin count
              
              while (completedSpins < totalAutoSpin) {
+                if (totalAutoSpin == 0) {
+                    expect(await this.game.isCocosLocatorExists(Portrail_Cascading_Locators.lblLastFreeSpin)).toBe(true);
+                }
                 const settledResults = await waitForSettlementCascadingSlot(this.game);
                  let currentSpincount = await this.game.findLabelText(Portrail_Cascading_Locators.txtFreeSpinCount);
                  

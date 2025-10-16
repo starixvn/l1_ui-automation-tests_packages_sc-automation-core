@@ -66,7 +66,7 @@ export const Portrail_Cascading_Locators = {
     btnYesBuyFS: `${CANVAS}/center/buy-freespin-container/buy-fs-container/buy-fs-confirmation/container/popup-bg/content/buttons/yes`,
     btnNoBuyFS: `${CANVAS}/center/buy-freespin-container/buy-fs-container/buy-fs-confirmation/container/popup-bg/content/buttons/no`,
     txtFreeSpinCount: `${CENTER}/full-widget/container/freespins-section/freespins-section/remaining-freespins/freespin-count`,
-
+    lblLastFreeSpin: `${CENTER}/full-widget/container/freespins-section/freespins-section/last-freespin`,
     // Text displays
     txtOperator: `${CENTER}/operator-section/text`,
     txtbottomBalance: `${CENTER}/info-player/balance-container/balance`,
