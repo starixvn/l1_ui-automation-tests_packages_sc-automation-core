@@ -36,6 +36,7 @@ export class PortrailCascadingGameBase {
     protected mainUITests() {
 
         test("Verify welcome screen and Play Now button exists", async () => {
+            await this.game.waitForTimeout(5000);
             expect(await this.game.isCocosLocatorExists(Portrail_Cascading_Locators.btnPlayNow), "Play Now button not found").toBe(true);
         });
 
@@ -50,7 +51,7 @@ export class PortrailCascadingGameBase {
         test("Verify center message exists", async () => {
             const centerMessages = [
                 "Bấm Quay hoặc giữ phím Space",
-                "Hệ Số Nhân tăng dần trong Free Spin",
+                "Hệ Số Nhân cộng dồn trong Free Spin",
                 "Thắng lên đến 2000x tiền cược",
                 "Quay trúng",
                 "Hệ Số Nhân ngẫu nhiên lên đến 500x",
