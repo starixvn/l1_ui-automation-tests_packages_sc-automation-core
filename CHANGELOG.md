@@ -1,3 +1,10 @@
+## [1.80.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.80.0...v1.80.1) (2025-10-16)
+
+
+### Bug Fixes
+
+* enhance smoke portrait cascading ([7d06d5f](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/7d06d5f225192118f17ffe99ba2f9866111d0f44))
+
 # [1.80.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.79.2...v1.80.0) (2025-10-16)
 
 
