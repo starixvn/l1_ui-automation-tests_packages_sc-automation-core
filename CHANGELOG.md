@@ -1,3 +1,10 @@
+## [1.80.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.80.1...v1.80.2) (2025-10-17)
+
+
+### Bug Fixes
+
+* add portrait classic slot locators ([a23a8ee](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/a23a8ee7dcf6432033945f31cba2ed9e78fa03f8))
+
 ## [1.80.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.80.0...v1.80.1) (2025-10-16)
 
 
