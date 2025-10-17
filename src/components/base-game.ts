@@ -893,7 +893,7 @@ export class BaseGame {
         }
     }
 
-    async clickCocos(nodeNameOrPath: string) {
+    async clickCocos(nodeNameOrPath: string,timeout: number = 500) {
         try {
           const result = await this.page.evaluate((nameOrPath) => {
             const cc = (window as any).cc;
@@ -941,6 +941,8 @@ export class BaseGame {
             
             return { success: true };
           }, nodeNameOrPath);
+
+          await this.waitForTimeout(timeout);
 
           return result;
         } catch (err) {
@@ -1232,6 +1234,8 @@ export class BaseGame {
         }
     }
 
+
+    
     /**
      * Take screenshot of a Cocos locator
      * @param nodeNameOrPath - The Cocos node name or path
@@ -1271,7 +1275,60 @@ export class BaseGame {
             return { name: name, image: Buffer.from("") };
         }
     }
-    
+
+    /**
+     * Wait until a Cocos locator becomes active
+     * @param nodeNameOrPath - The Cocos node name or path
+     * @param maxAttempts - Maximum number of attempts (default: 300, which is 30 seconds with 100ms intervals)
+     * @returns Promise<boolean> - Returns true if successful, false if timeout
+     */
+    async waitUntilCocosLocatorActive(
+        nodeNameOrPath: string, 
+        maxAttempts: number = 300
+    ): Promise<boolean> {
+        console.log(`Waiting for Cocos locator "${nodeNameOrPath}" to become active...`);
+        
+        for (let i = 0; i < maxAttempts; i++) {
+            const isActive = await this.isCocosLocatorExists(nodeNameOrPath);
+            
+            if (isActive) {
+                console.log(`Cocos locator "${nodeNameOrPath}" is now active`);
+                return true;
+            }
+            
+            await this.page.waitForTimeout(100);
+        }
+        
+        console.log(`Timeout: Cocos locator "${nodeNameOrPath}" did not become active after ${maxAttempts} attempts`);
+        return false;
+    }
+
+    /**
+     * Wait until a Cocos locator becomes inactive
+     * @param nodeNameOrPath - The Cocos node name or path
+     * @param maxAttempts - Maximum number of attempts (default: 300, which is 30 seconds with 100ms intervals)
+     * @returns Promise<boolean> - Returns true if successful, false if timeout
+     */
+    async waitUntilCocosLocatorInactive(
+        nodeNameOrPath: string, 
+        maxAttempts: number = 300
+    ): Promise<boolean> {
+        console.log(`Waiting for Cocos locator "${nodeNameOrPath}" to become inactive...`);
+        
+        for (let i = 0; i < maxAttempts; i++) {
+            const isActive = await this.isCocosLocatorExists(nodeNameOrPath);
+            
+            if (!isActive) {
+                console.log(`Cocos locator "${nodeNameOrPath}" is now inactive`);
+                return true;
+            }
+            
+            await this.page.waitForTimeout(100);
+        }
+        
+        console.log(`Timeout: Cocos locator "${nodeNameOrPath}" did not become inactive after ${maxAttempts} attempts`);
+        return false;
+    }
 
 }
 

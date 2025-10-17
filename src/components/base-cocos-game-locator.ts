@@ -3,7 +3,6 @@ const CANVAS = "Canvas";
 const CENTER = "Canvas/center";
 const BET_CONTAINER = "Canvas/center/full-widget/container/low/bottom-center/portrait-bottom-area/bet-container/totalBetContainer/total-bet/portrait-bet-control/container";
 const AUTO_PLAY = "Canvas/center/auto-play-lazyload-container/auto-play-container/auto-play-popup/container/container";
-const MENU = "Canvas/center/full-widget/container/low/in-game-menu/outer-menu/btn-menu/expandable-layout";
 
 export const Portrail_Cascading_Locators = {
     // Main buttons
@@ -57,9 +56,11 @@ export const Portrail_Cascading_Locators = {
     iconTurboON: `${CENTER}/full-widget/container/low/bottom-center/portrait-bottom-area/turbo-container/portrait-turbo-mode-button/check/icon-active`,
 
     // Menu items
-    btnLobby: `${MENU}/lobby`,
-    btnMusic: `${MENU}/music`,
-    btnSound: `${MENU}/sfx`,
+    btnLobby: `lobby`,
+    btnMusic: `music`,
+    btnSound: `sfx`,
+    btnMenuClose: "close",
+
 
     // Free spin
     lblFSTotalWin: `${CANVAS}/center/buy-freespin-container/buy-fs-container/buy-fs-congratulation/body/win`,
@@ -95,4 +96,31 @@ export const Portrail_Cascading_Locators = {
     // Popup controls
     iconCloseMainPopup: "main-popup-close-btn",
     btnClosePopup: "btnClosed"
+};
+
+export const Portrail_Classic_Locators = {
+    ...exports.Portrail_Cascading_Locators,
+    //top JP Classic Menu items
+    lblMajorJackpot: "Canvas/center/auto-scale-widget/jackpot-visi/auto-load-node/jackpot-pools/content/major/value",
+    lblGrandJackpot: "Canvas/center/auto-scale-widget/jackpot-visi/auto-load-node/jackpot-pools/content/grand/value",
+    lblMinorJackpot: "Canvas/center/auto-scale-widget/jackpot-visi/auto-load-node/jackpot-pools/content/minor/value",
+    // Line Setting Popup
+    btnLineSetting: "line-setting",
+    btnLineSettingClose: "line-setting-close",
+    popupLineSetting: "Canvas/center/line-setting-popup",
+    lineSettingContainer: "Canvas/center/line-setting-popup/container",
+    btnTop: "top",
+    txtOperator: `${CENTER}/top-section/system-decorator-label`,
+    txtMessageCenter: `${CENTER}/auto-scale-widget/bottom-message/slot-ingame-message`,
+    btnAutoSpin: "auto",
+    btnTurbo: "Canvas/center/bottom-controls/container/low/bottom-center/bet-control/right/turbo",
+    betAmountSetting: "btn-bet-selection",
+    btnguide: "btn-guide",
+    iconTurboOFF: `active`,
+    iconTurboON: `deactive`,
+    btnLine: "Canvas/center/bottom-controls/container/low/bottom-center/in-game-menu/expandable-layout/line",
+    btnAutoSpinStart: `Canvas/center/auto-spin-dialog-container/auto-spin-dialog/container/start-button`,
+    btnAutoPlayTurbo: `Canvas/center/auto-spin-dialog-container/auto-spin-dialog/container/turbo-mode/turbo_toggle`,
+    iconCloseAutoPlay: `main-popup-close-btn`,
+    txtautoSpinCount: `Canvas/center/bottom-controls/container/high/center/btn-spin-container/btn-spin/btn-spin-square/bg/number-font`,
 };
