@@ -17,6 +17,10 @@ export class PortrailCascadingGameBase {
 
     constructor(protected options: SlotGameOptions) {}
 
+    private get locators() {
+        return this.options.locators || Portrail_Cascading_Locators;
+    }
+
     private overrideClickOutSide() {
         // Override the method globally for this project
         this.game.clickOutSide = async () => {
@@ -28,7 +32,7 @@ export class PortrailCascadingGameBase {
         // Override the method globally for this project
         this.game.openGuide = async () => {
             await this.game.page.waitForTimeout(1000);
-            await this.game.clickCocos(Portrail_Cascading_Locators.btnguide);
+            await this.game.clickCocos(this.locators.btnguide);
             await this.game.page.waitForTimeout(10000);
         };
     }
@@ -111,15 +115,15 @@ export class PortrailCascadingGameBase {
         });
 
         test("Verify welcome screen and Play Now button exists", async () => {
-            expect(await this.game.isCocosLocatorExists(Portrail_Cascading_Locators.btnPlayNow), "Play Now button not found").toBe(true);
+            expect(await this.game.isCocosLocatorExists(this.locators.btnPlayNow), "Play Now button not found").toBe(true);
         });
 
         test("Verify User can click Play Now button and navigate to game", async () => {
-            const operatorName = (process.env.npm_config_project?.includes("l1")) ? "SABA.games" : "Vgaming.games";
+            const operatorName = (process.env.npm_config_project?.includes("l1")) ? "SABA.games" : "Vgaming";
             await this.clickPlayNowButton();
             await this.game.waitForTimeout(5000);
-            expect(await this.game.isCocosLocatorExists(Portrail_Cascading_Locators.btnSpin), "Spin button not found").toBe(true);
-            expect(await this.game.findLabelText(Portrail_Cascading_Locators.txtOperator)).toBe(operatorName);
+            expect(await this.game.isCocosLocatorExists(this.locators.btnSpin), "Spin button not found").toBe(true);
+            expect(await this.game.findLabelText(this.locators.txtOperator)).toBe(operatorName);
         });
 
         test("Verify center message exists", async () => {
@@ -132,43 +136,43 @@ export class PortrailCascadingGameBase {
                 "Biểu tượng được tính thắng nằm ở vị trí bất kỳ"
             ];
          
-            const actualMessage = await this.game.findLabelText(Portrail_Cascading_Locators.txtMessageCenter);
+            const actualMessage = await this.game.findLabelText(this.locators.txtMessageCenter);
             expect(centerMessages).toContain(actualMessage.trim());
         });
 
         test("Verify button increase/decrease bet amount exists", async () => {
-            expect(await this.game.isCocosLocatorExists(Portrail_Cascading_Locators.btnBetIncrease), "Bet increase button not found").toBe(true);
-            expect(await this.game.isCocosLocatorExists(Portrail_Cascading_Locators.btnBetDecrease), "Bet decrease button not found").toBe(true);
+            expect(await this.game.isCocosLocatorExists(this.locators.btnBetIncrease), "Bet increase button not found").toBe(true);
+            expect(await this.game.isCocosLocatorExists(this.locators.btnBetDecrease), "Bet decrease button not found").toBe(true);
         });
 
         test("Verify button auto spin exists", async () => {
-            expect(await this.game.isCocosLocatorExists(Portrail_Cascading_Locators.btnAutoSpin), "Auto spin button not found").toBe(true);
+            expect(await this.game.isCocosLocatorExists(this.locators.btnAutoSpin), "Auto spin button not found").toBe(true);
         });
 
         test("Verify button turbo mode exists", async () => {
-            expect(await this.game.isCocosLocatorExists(Portrail_Cascading_Locators.btnTurbo), "Turbo button not found").toBe(true);
+            expect(await this.game.isCocosLocatorExists(this.locators.btnTurbo), "Turbo button not found").toBe(true);
         });
 
         test("Verify button bet amount setting exists", async () => {
-            expect(await this.game.isCocosLocatorExists(Portrail_Cascading_Locators.betAmountSetting), "Bet amount setting button not found").toBe(true);
+            expect(await this.game.isCocosLocatorExists(this.locators.betAmountSetting), "Bet amount setting button not found").toBe(true);
         });
 
         test("Verify button menu exists", async () => {
-            expect(await this.game.isCocosLocatorExists(Portrail_Cascading_Locators.btnMenu), "Menu button not found").toBe(true);
+            expect(await this.game.isCocosLocatorExists(this.locators.btnMenu), "Menu button not found").toBe(true);
         });
 
         test("Verify button game guide exists", async () => {
-            expect(await this.game.isCocosLocatorExists(Portrail_Cascading_Locators.btnguide), "Game guide button not found").toBe(true);
+            expect(await this.game.isCocosLocatorExists(this.locators.btnguide), "Game guide button not found").toBe(true);
         });
 
         test("Verify all menu items exists", async () => {
-            await this.game.clickCocos(Portrail_Cascading_Locators.btnMenu);
+            await this.game.clickCocos(this.locators.btnMenu);
             await this.game.waitForTimeout(2000);
-                expect(await this.game.isCocosLocatorExists(Portrail_Cascading_Locators.btnLobby), "Lobby button not found").toBe(true);
-                expect(await this.game.isCocosLocatorExists(Portrail_Cascading_Locators.btnMusic), "Music button not found").toBe(true);
-                expect(await this.game.isCocosLocatorExists(Portrail_Cascading_Locators.btnSound), "Sound button not found").toBe(true);
-                expect(await this.game.isCocosLocatorExists(Portrail_Cascading_Locators.btnHistory), "History button not found").toBe(true);
-            await this.game.clickCocos(Portrail_Cascading_Locators.btnMenu);
+                expect(await this.game.isCocosLocatorExists(this.locators.btnLobby), "Lobby button not found").toBe(true);
+                expect(await this.game.isCocosLocatorExists(this.locators.btnMusic), "Music button not found").toBe(true);
+                expect(await this.game.isCocosLocatorExists(this.locators.btnSound), "Sound button not found").toBe(true);
+                expect(await this.game.isCocosLocatorExists(this.locators.btnHistory), "History button not found").toBe(true);
+            await this.game.clickCocos(this.locators.btnMenu);
             await this.game.waitForTimeout(2000);
         });
 
@@ -178,74 +182,74 @@ export class PortrailCascadingGameBase {
     protected turboTests() {
         test("Verify default state of turbo button is OFF", async () => {
             // Verify default turbo off state
-            expect(await this.game.isCocosLocatorExists(Portrail_Cascading_Locators.iconTurboOFF), "Turbo OFF icon not found").toBe(true);
+            expect(await this.game.isCocosLocatorExists(this.locators.iconTurboOFF), "Turbo OFF icon not found").toBe(true);
 
         });
 
         test("Verify user can turn On turbo mode", async () => {
             // Turbo ON
-                await this.game.clickCocos(Portrail_Cascading_Locators.btnTurbo);
-                expect(await this.game.isCocosLocatorExists(Portrail_Cascading_Locators.iconTurboON), "Turbo ON icon not found").toBe(true);
+                await this.game.clickCocos(this.locators.btnTurbo);
+                expect(await this.game.isCocosLocatorExists(this.locators.iconTurboON), "Turbo ON icon not found").toBe(true);
 
         });
 
         test("Verify user can turn OFF turbo mode", async () => {
             // Turbo OFF
-            await this.game.clickCocos(Portrail_Cascading_Locators.btnTurbo);
-            expect(await this.game.isCocosLocatorExists(Portrail_Cascading_Locators.iconTurboOFF), "Turbo OFF icon not found").toBe(true);
+            await this.game.clickCocos(this.locators.btnTurbo);
+            expect(await this.game.isCocosLocatorExists(this.locators.iconTurboOFF), "Turbo OFF icon not found").toBe(true);
         });
     }
 
     protected BetLevelSettingTests() {
 
         test("Verify User can open bet amount setting popup", async () => {
-            await this.game.clickCocos(Portrail_Cascading_Locators.betAmountSetting);
+            await this.game.clickCocos(this.locators.betAmountSetting);
             await this.game.waitForTimeout(2000);
-            expect(await this.game.isCocosLocatorExists(Portrail_Cascading_Locators.btnBetLevelIncrease), "Bet level increase button not found").toBe(true);
-            expect(await this.game.isCocosLocatorExists(Portrail_Cascading_Locators.btnBetLevelDecrease), "Bet level decrease button not found").toBe(true);
-            expect(await this.game.isCocosLocatorExists(Portrail_Cascading_Locators.btnCoinValueIncrease), "Coin value increase button not found").toBe(true);
-            expect(await this.game.isCocosLocatorExists(Portrail_Cascading_Locators.btnCoinValueDecrease), "Coin value decrease button not found").toBe(true);
-            expect(await this.game.isCocosLocatorExists(Portrail_Cascading_Locators.btnTotalBetIncrease), "Total bet increase button not found").toBe(true);
-            expect(await this.game.isCocosLocatorExists(Portrail_Cascading_Locators.btnTotalBetDecrease), "Total bet decrease button not found").toBe(true);
+            expect(await this.game.isCocosLocatorExists(this.locators.btnBetLevelIncrease), "Bet level increase button not found").toBe(true);
+            expect(await this.game.isCocosLocatorExists(this.locators.btnBetLevelDecrease), "Bet level decrease button not found").toBe(true);
+            expect(await this.game.isCocosLocatorExists(this.locators.btnCoinValueIncrease), "Coin value increase button not found").toBe(true);
+            expect(await this.game.isCocosLocatorExists(this.locators.btnCoinValueDecrease), "Coin value decrease button not found").toBe(true);
+            expect(await this.game.isCocosLocatorExists(this.locators.btnTotalBetIncrease), "Total bet increase button not found").toBe(true);
+            expect(await this.game.isCocosLocatorExists(this.locators.btnTotalBetDecrease), "Total bet decrease button not found").toBe(true);
             await this.game.waitForTimeout(2000);
         });
 
         test("Verify button state of bet level", async () => {
-            await this.game.clickCocos(Portrail_Cascading_Locators.btnBetLevelDecrease);
-            expect(await this.game.isCocosLocatorExists(Portrail_Cascading_Locators.btnBetLevelDecreaseUnactive), "Bet level decrease inactive button not found").toBe(true);
+            await this.game.clickCocos(this.locators.btnBetLevelDecrease);
+            expect(await this.game.isCocosLocatorExists(this.locators.btnBetLevelDecreaseUnactive), "Bet level decrease inactive button not found").toBe(true);
         });
 
         test("Verify button state of coin value", async () => {
-            expect(await this.game.isCocosLocatorExists(Portrail_Cascading_Locators.btnCoinValueDecreaseUnactive), "Coin value decrease inactive button not found").toBe(true);
+            expect(await this.game.isCocosLocatorExists(this.locators.btnCoinValueDecreaseUnactive), "Coin value decrease inactive button not found").toBe(true);
             });
 
         test("Verify button state of total bet", async () => {
-            expect(await this.game.isCocosLocatorExists(Portrail_Cascading_Locators.btnTotalBetDecreaseUnactive), "Total bet decrease inactive button not found").toBe(true);
+            expect(await this.game.isCocosLocatorExists(this.locators.btnTotalBetDecreaseUnactive), "Total bet decrease inactive button not found").toBe(true);
         });
 
         test("Verify range value of bet level", async () => {
             const betlevel =  this.game.gameConfigs.betLevels
             for (const element of betlevel) {
-                expect(await this.game.findLabelText(Portrail_Cascading_Locators.txtBetLevelValue)).toBe(element.toString());
-                await this.game.clickCocos(Portrail_Cascading_Locators.btnBetLevelIncrease);
+                expect(await this.game.findLabelText(this.locators.txtBetLevelValue)).toBe(element.toString());
+                await this.game.clickCocos(this.locators.btnBetLevelIncrease);
             }    
         });
 
         test("Verify range value of coin value", async () => {
             const coinvalue =  this.game.gameConfigs.coinValues
             for (const element of coinvalue) {
-                expect(await this.game.findLabelText(Portrail_Cascading_Locators.txtCoinValue)).toBe(element.toString());
-                await this.game.clickCocos(Portrail_Cascading_Locators.btnCoinValueIncrease);
+                expect(await this.game.findLabelText(this.locators.txtCoinValue)).toBe(element.toString());
+                await this.game.clickCocos(this.locators.btnCoinValueIncrease);
             }    
         });
 
         test("Verify total bet value", async () => {
-            const betlevel = await this.game.findLabelText(Portrail_Cascading_Locators.txtBetLevelValue);
-            const coinvalue = await this.game.findLabelText(Portrail_Cascading_Locators.txtCoinValue);
+            const betlevel = await this.game.findLabelText(this.locators.txtBetLevelValue);
+            const coinvalue = await this.game.findLabelText(this.locators.txtCoinValue);
             const expectedTotal = (Number(betlevel) * Number(coinvalue) * 20).toFixed(0);
-            expect((await this.game.findLabelText(Portrail_Cascading_Locators.txtTotalBetValue)).replace(/,/g, "")).toBe(expectedTotal.toString());
-            expect((await this.game.findLabelText(Portrail_Cascading_Locators.txtbottomTotalBet)).replace(/,/g, "")).toBe(expectedTotal.toString());
-            await this.game.clickCocos(Portrail_Cascading_Locators.iconCloseMainPopup);
+            expect((await this.game.findLabelText(this.locators.txtTotalBetValue)).replace(/,/g, "")).toBe(expectedTotal.toString());
+            expect((await this.game.findLabelText(this.locators.txtbottomTotalBet)).replace(/,/g, "")).toBe(expectedTotal.toString());
+            await this.game.clickCocos(this.locators.iconCloseMainPopup);
             await this.game.waitForTimeout(2000);
 
         });
@@ -254,22 +258,22 @@ export class PortrailCascadingGameBase {
             let totalBetbefore,totalBetafter = "";
 
             for (let i = 0; i < 20; i++) {
-                await this.game.clickCocos(Portrail_Cascading_Locators.btnBetIncrease);
+                await this.game.clickCocos(this.locators.btnBetIncrease);
             }
 
             for (let i = 0; i < 10; i++) {
-                totalBetbefore = await this.game.findLabelText(Portrail_Cascading_Locators.txtbottomTotalBet);
-                await this.game.clickCocos(Portrail_Cascading_Locators.btnBetDecrease);
+                totalBetbefore = await this.game.findLabelText(this.locators.txtbottomTotalBet);
+                await this.game.clickCocos(this.locators.btnBetDecrease);
                 await this.game.waitForTimeout(500);
-                totalBetafter = await this.game.findLabelText(Portrail_Cascading_Locators.txtbottomTotalBet);
+                totalBetafter = await this.game.findLabelText(this.locators.txtbottomTotalBet);
                 expect(Number(totalBetafter.replace(/,/g, ''))<Number(totalBetbefore.replace(/,/g, ''))).toBe(true);
             }
 
             for (let i = 0; i < 10; i++) {
-                totalBetbefore = await this.game.findLabelText(Portrail_Cascading_Locators.txtbottomTotalBet);
-                await this.game.clickCocos(Portrail_Cascading_Locators.btnBetIncrease);
+                totalBetbefore = await this.game.findLabelText(this.locators.txtbottomTotalBet);
+                await this.game.clickCocos(this.locators.btnBetIncrease);
                 await this.game.waitForTimeout(500);
-                totalBetafter = await this.game.findLabelText(Portrail_Cascading_Locators.txtbottomTotalBet);
+                totalBetafter = await this.game.findLabelText(this.locators.txtbottomTotalBet);
                 expect(Number(totalBetafter.replace(/,/g, ''))>Number(totalBetbefore.replace(/,/g, ''))).toBe(true);
             }
 
@@ -290,9 +294,9 @@ export class PortrailCascadingGameBase {
             console.log("Selected coinvalue at index 1:", coinvalue);
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
             // Act
-            await this.game.clickCocos(Portrail_Cascading_Locators.btnTurbo);
+            await this.game.clickCocos(this.locators.btnTurbo);
             await this.setBetConfiguration(this.game, betlevel, coinvalue);
-            const totalBet = await this.game.findLabelText(Portrail_Cascading_Locators.txtbottomTotalBet);
+            const totalBet = await this.game.findLabelText(this.locators.txtbottomTotalBet);
             await this.clickSpinButton();
 
             await test.step("Get bet result", async () => {
@@ -320,19 +324,19 @@ export class PortrailCascadingGameBase {
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             await this.game.waitForTimeout(5000);// wait for animation
             if(this.settledResults.win > 0) {
-                expect(parseFloat(await this.game.findLabelText(Portrail_Cascading_Locators.txtcenterWin))).toBeCloseTo(this.settledResults.win, 2);
-                expect(parseFloat(await this.game.findLabelText(Portrail_Cascading_Locators.txtbottomWin))).toBeCloseTo(this.settledResults.win, 2);
+                expect(parseFloat(await this.game.findLabelText(this.locators.txtcenterWin))).toBeCloseTo(this.settledResults.win, 2);
+                expect(parseFloat(await this.game.findLabelText(this.locators.txtbottomWin))).toBeCloseTo(this.settledResults.win, 2);
             } else {
-                expect(await this.game.findLabelText(Portrail_Cascading_Locators.txtbottomWin)).toBe("0");
+                expect(await this.game.findLabelText(this.locators.txtbottomWin)).toBe("0");
             }
         });
 
         test("Verify bet ticket in history popup", async () => {
             await this.openHistoryPopup();
 
-            expect(await this.game.findLabelText(Portrail_Cascading_Locators.txtHistoryRoundId)).toBe(this.settledResults.roundId.toString());
-            expect(await this.game.findLabelText(Portrail_Cascading_Locators.txtHistoryTotalBet)).toBe(this.settledResults.totalBet.toString());
-            expect(Number(await this.game.findLabelText(Portrail_Cascading_Locators.txtHistoryWin))).toBe(Number(this.settledResults.win));
+            expect(await this.game.findLabelText(this.locators.txtHistoryRoundId)).toBe(this.settledResults.roundId.toString());
+            expect(await this.game.findLabelText(this.locators.txtHistoryTotalBet)).toBe(this.settledResults.totalBet.toString());
+            expect(Number(await this.game.findLabelText(this.locators.txtHistoryWin))).toBe(Number(this.settledResults.win));
         });
 
         test("Verify bet ticket detail data in history popup", async () => {
@@ -340,22 +344,22 @@ export class PortrailCascadingGameBase {
             // await this.game.clickCocosByLabel(this.settledResults.roundId.toString());
             await this.game.waitForTimeout(2000);
 
-            expect(await this.game.findLabelText(Portrail_Cascading_Locators.txtHistoryDetailRoundId)).toBe(this.settledResults.roundId.toString());
-            expect(await this.game.findLabelText(Portrail_Cascading_Locators.txtHistoryDetailBetLevel)).toBe(this.settledResults.betlevel.toString());
-            expect(await this.game.findLabelText(Portrail_Cascading_Locators.txtHistoryDetailBetCoinValue)).toBe(this.settledResults.coinvalue.toString());
-            expect(await this.game.findLabelText(Portrail_Cascading_Locators.txtHistoryDetailTotalBet)).toBe(this.settledResults.totalBet.toString());
-            expect(Number(await this.game.findLabelText(Portrail_Cascading_Locators.txtHistoryDetailWin))).toBe(Number(this.settledResults.win));
+            expect(await this.game.findLabelText(this.locators.txtHistoryDetailRoundId)).toBe(this.settledResults.roundId.toString());
+            expect(await this.game.findLabelText(this.locators.txtHistoryDetailBetLevel)).toBe(this.settledResults.betlevel.toString());
+            expect(await this.game.findLabelText(this.locators.txtHistoryDetailBetCoinValue)).toBe(this.settledResults.coinvalue.toString());
+            expect(await this.game.findLabelText(this.locators.txtHistoryDetailTotalBet)).toBe(this.settledResults.totalBet.toString());
+            expect(Number(await this.game.findLabelText(this.locators.txtHistoryDetailWin))).toBe(Number(this.settledResults.win));
                 if(this.settledResults.multiplier > 0) {
-                expect(await this.game.findLabelText(Portrail_Cascading_Locators.txtHistoryDetailMultiplier)).toBe(this.settledResults.multiplier.toString());
+                expect(await this.game.findLabelText(this.locators.txtHistoryDetailMultiplier)).toBe(this.settledResults.multiplier.toString());
             }
         });
 
         test("Verify user can close history popup", async () => {
-            await this.game.clickCocos(Portrail_Cascading_Locators.btnBackHistory);
+            await this.game.clickCocos(this.locators.btnBackHistory);
             await this.game.waitForTimeout(2000);
-            await this.game.clickCocos(Portrail_Cascading_Locators.btnClosePopup);
+            await this.game.clickCocos(this.locators.btnClosePopup);
             await this.game.waitForTimeout(2000);
-            expect(await this.game.isCocosLocatorExists(Portrail_Cascading_Locators.txtHistoryRoundId), "History round ID should not be visible after closing popup").toBe(false);
+            expect(await this.game.isCocosLocatorExists(this.locators.txtHistoryRoundId), "History round ID should not be visible after closing popup").toBe(false);
         });
         
 
@@ -373,8 +377,8 @@ export class PortrailCascadingGameBase {
             await test.step("Start 10 auto spins", async () => {
                 await this.openAutoSpinPopup();
                 await this.game.waitForTimeout(2000);
-                await this.game.clickCocos(Portrail_Cascading_Locators.lbl10AutoSpin);
-                await this.game.clickCocos(Portrail_Cascading_Locators.btnAutoSpinStart);
+                await this.game.clickCocos(this.locators.lbl10AutoSpin);
+                await this.game.clickCocos(this.locators.btnAutoSpinStart);
             });
 
             //Assert
@@ -384,7 +388,7 @@ export class PortrailCascadingGameBase {
                 
                 while (completedSpins < currentTotalAutoSpin) {
                     const settledResults = await waitForSettlementCascadingSlot(this.game);
-                    let spincount = await this.game.findLabelText(Portrail_Cascading_Locators.txtautoSpinCount);
+                    let spincount = await this.game.findLabelText(this.locators.txtautoSpinCount);
                     console.log("isbigWin", settledResults.isbigWin);               
                     if(settledResults.isbigWin) {
                         await this.game.waitForTimeout(10000);
@@ -424,7 +428,7 @@ export class PortrailCascadingGameBase {
             });
 
             await test.step("Close the popup", async () => {
-                await this.game.clickCocos(Portrail_Cascading_Locators.iconCloseAutoPlay);
+                await this.game.clickCocos(this.locators.iconCloseAutoPlay);
             });
         });
 
@@ -434,13 +438,13 @@ export class PortrailCascadingGameBase {
 
         test("Verify user can open buy free spin popup", async () => {
             // Arrange
-            await this.game.clickCocos(Portrail_Cascading_Locators.btnBuyFS);
-            await this.game.isCocosLocatorExists(Portrail_Cascading_Locators.btnYesBuyFS);
-            await this.game.isCocosLocatorExists(Portrail_Cascading_Locators.btnNoBuyFS);
+            await this.game.clickCocos(this.locators.btnBuyFS);
+            await this.game.isCocosLocatorExists(this.locators.btnYesBuyFS);
+            await this.game.isCocosLocatorExists(this.locators.btnNoBuyFS);
         })
 
         test("Verify user can buy free spin", async () => {
-            await this.game.clickCocos(Portrail_Cascading_Locators.btnYesBuyFS);
+            await this.game.clickCocos(this.locators.btnYesBuyFS);
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
             // Act
             this.settledResults = await waitForSettlementCascadingSlot(this.game);
@@ -453,13 +457,13 @@ export class PortrailCascadingGameBase {
             await this.game.page.mouse.click(600, 127);
             await this.game.waitForTimeout(2000);
             const roundIdBFS = this.settledResults.roundId+ " (Mua Free Spins)"
-            expect(await this.game.findLabelText(Portrail_Cascading_Locators.txtHistoryDetailRoundId)).toBe(roundIdBFS);
-            expect(Number(await this.game.findLabelText(Portrail_Cascading_Locators.txtHistoryDetailWin))).toBe(Number(this.settledResults.win));
-            expect(await this.game.findLabelText(Portrail_Cascading_Locators.txtHistoryDetailTotalFreeSpin)).toBe("15 Free Spins");
-            expect(await this.game.findLabelText(Portrail_Cascading_Locators.txtHistoryDetailTitleFirstRow)).toBe("Vòng Quay Đầu")    
-            await this.game.clickCocos(Portrail_Cascading_Locators.btnBackHistory);
+            expect(await this.game.findLabelText(this.locators.txtHistoryDetailRoundId)).toBe(roundIdBFS);
+            expect(Number(await this.game.findLabelText(this.locators.txtHistoryDetailWin))).toBe(Number(this.settledResults.win));
+            expect(await this.game.findLabelText(this.locators.txtHistoryDetailTotalFreeSpin)).toBe("15 Free Spins");
+            expect(await this.game.findLabelText(this.locators.txtHistoryDetailTitleFirstRow)).toBe("Vòng Quay Đầu")    
+            await this.game.clickCocos(this.locators.btnBackHistory);
             await this.game.waitForTimeout(2000);
-            await this.game.clickCocos(Portrail_Cascading_Locators.btnClosePopup);
+            await this.game.clickCocos(this.locators.btnClosePopup);
             await this.game.waitForTimeout(8000); //wait for free spin popup close
             await this.game.clickOutSide();
         });
@@ -472,10 +476,10 @@ export class PortrailCascadingGameBase {
              
              while (completedSpins < totalAutoSpin) {
                 if (totalAutoSpin == 0) {
-                    expect(await this.game.isCocosLocatorExists(Portrail_Cascading_Locators.lblLastFreeSpin)).toBe(true);
+                    expect(await this.game.isCocosLocatorExists(this.locators.lblLastFreeSpin)).toBe(true);
                 }
                 const settledResults = await waitForSettlementCascadingSlot(this.game);
-                 let currentSpincount = await this.game.findLabelText(Portrail_Cascading_Locators.txtFreeSpinCount);
+                 let currentSpincount = await this.game.findLabelText(this.locators.txtFreeSpinCount);
                  
                  if (settledResults.isbigWin) {
                     await this.game.waitForTimeout(10000);
@@ -506,7 +510,7 @@ export class PortrailCascadingGameBase {
              
              console.log(`✅ Completed ${totalAutoSpin} free spins! Total win: ${totalWinAmount}`);             
              await this.game.waitForTimeout(8000);
-             const displayedTotalWin = await this.game.findLabelText(Portrail_Cascading_Locators.lblFSTotalWin);
+             const displayedTotalWin = await this.game.findLabelText(this.locators.lblFSTotalWin);
              
              // Compare calculated total with displayed total
              expect(parseFloat(displayedTotalWin)).toBeCloseTo(totalWinAmount+this.settledResults.win, 2);
@@ -551,19 +555,19 @@ export class PortrailCascadingGameBase {
     }
 
     async clickPlayNowButton() {
-        await this.game.clickCocos(Portrail_Cascading_Locators.btnPlayNow);
+        await this.game.clickCocos(this.locators.btnPlayNow);
         await this.game.waitForTimeout(2000);
     }
     
     async openAutoSpinPopup() {
-        await this.game.clickCocos(Portrail_Cascading_Locators.btnAutoSpin);
+        await this.game.clickCocos(this.locators.btnAutoSpin);
         await this.game.waitForTimeout(2000);
     }
 
     async openHistoryPopup() {
-        await this.game.clickCocos(Portrail_Cascading_Locators.btnMenu);
+        await this.game.clickCocos(this.locators.btnMenu);
         await this.game.waitForTimeout(1000);
-        await this.game.clickCocos(Portrail_Cascading_Locators.btnHistory);
+        await this.game.clickCocos(this.locators.btnHistory);
         await this.game.waitForTimeout(2000);
     }
 
@@ -579,39 +583,39 @@ export class PortrailCascadingGameBase {
     }
 
     async setBetConfiguration(game: BaseGame, betlevel: number, coinvalue: number) {
-        await this.game.clickCocos(Portrail_Cascading_Locators.betAmountSetting);
+        await this.game.clickCocos(this.locators.betAmountSetting);
         
         // Adjust Bet Level
-        let currentBetLevel = Number(await game.findLabelText(Portrail_Cascading_Locators.txtBetLevelValue));
+        let currentBetLevel = Number(await game.findLabelText(this.locators.txtBetLevelValue));
         // console.log(`Initial Bet Level: ${currentBetLevel}, Target: ${betlevel}`);
         
         while (currentBetLevel !== betlevel) {
             if (currentBetLevel < betlevel) {
-                await game.clickCocos(Portrail_Cascading_Locators.btnBetLevelIncrease);
+                await game.clickCocos(this.locators.btnBetLevelIncrease);
             } else {
-                await game.clickCocos(Portrail_Cascading_Locators.btnBetLevelDecrease);
+                await game.clickCocos(this.locators.btnBetLevelDecrease);
             }
             await game.waitForTimeout(500);
-            currentBetLevel = Number(await game.findLabelText(Portrail_Cascading_Locators.txtBetLevelValue));
+            currentBetLevel = Number(await game.findLabelText(this.locators.txtBetLevelValue));
             // console.log(`Current Bet Level: ${currentBetLevel}, Target: ${betlevel}`);
         }
         
         // Adjust Coin Value
-        let currentCoinValue = Number(await game.findLabelText(Portrail_Cascading_Locators.txtCoinValue));
+        let currentCoinValue = Number(await game.findLabelText(this.locators.txtCoinValue));
         // console.log(`Initial Coin Value: ${currentCoinValue}, Target: ${coinvalue}`);
         
         while (currentCoinValue !== coinvalue) {
             if (currentCoinValue < coinvalue) {
-                await game.clickCocos(Portrail_Cascading_Locators.btnCoinValueIncrease);
+                await game.clickCocos(this.locators.btnCoinValueIncrease);
             } else {
-                await game.clickCocos(Portrail_Cascading_Locators.btnCoinValueDecrease);
+                await game.clickCocos(this.locators.btnCoinValueDecrease);
             }
             await game.waitForTimeout(500);
-            currentCoinValue = Number(await game.findLabelText(Portrail_Cascading_Locators.txtCoinValue));
+            currentCoinValue = Number(await game.findLabelText(this.locators.txtCoinValue));
             // console.log(`Current Coin Value: ${currentCoinValue}, Target: ${coinvalue}`);
         }
         
-        await this.game.clickCocos(Portrail_Cascading_Locators.iconCloseMainPopup);
+        await this.game.clickCocos(this.locators.iconCloseMainPopup);
         await game.waitForTimeout(1000);
     }
 }

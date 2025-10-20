@@ -56,7 +56,7 @@ export const Portrail_Cascading_Locators = {
     iconTurboON: `${CENTER}/full-widget/container/low/bottom-center/portrait-bottom-area/turbo-container/portrait-turbo-mode-button/check/icon-active`,
 
     // Menu items
-    btnLobby: `lobby`,
+    btnLobby: `Canvas/center/full-widget/container/low/in-game-menu/outer-menu/btn-menu/expandable-layout/lobby`,
     btnMusic: `music`,
     btnSound: `sfx`,
     btnMenuClose: "close",
@@ -95,7 +95,7 @@ export const Portrail_Cascading_Locators = {
 
     // Popup controls
     iconCloseMainPopup: "main-popup-close-btn",
-    btnClosePopup: "btnClosed"
+    btnClosePopup: "btnClosed",
 };
 
 export const Portrail_Classic_Locators = {
@@ -109,18 +109,26 @@ export const Portrail_Classic_Locators = {
     btnLineSettingClose: "line-setting-close",
     popupLineSetting: "Canvas/center/line-setting-popup",
     lineSettingContainer: "Canvas/center/line-setting-popup/container",
-    btnTop: "top",
+    btnHallOfFame: "Canvas/center/bottom-controls/container/low/bottom-center/in-game-menu/expandable-layout/top",
     txtOperator: `${CENTER}/top-section/system-decorator-label`,
     txtMessageCenter: `${CENTER}/auto-scale-widget/bottom-message/slot-ingame-message`,
+    btnLobby: "lobby",
     btnAutoSpin: "auto",
     btnTurbo: "Canvas/center/bottom-controls/container/low/bottom-center/bet-control/right/turbo",
-    betAmountSetting: "btn-bet-selection",
+    betAmountSetting: "Canvas/center/bottom-controls/container/low/bottom-center/bet-control/right/btn-bet-selection/open",
     btnguide: "btn-guide",
-    iconTurboOFF: `active`,
-    iconTurboON: `deactive`,
+    iconTurboOFF: `Canvas/center/bottom-controls/container/low/bottom-center/bet-control/right/turbo/bg/autoplay/deactive`,
+    iconTurboON: `Canvas/center/bottom-controls/container/low/bottom-center/bet-control/right/turbo/bg/autoplay/active`,
     btnLine: "Canvas/center/bottom-controls/container/low/bottom-center/in-game-menu/expandable-layout/line",
     btnAutoSpinStart: `Canvas/center/auto-spin-dialog-container/auto-spin-dialog/container/start-button`,
     btnAutoPlayTurbo: `Canvas/center/auto-spin-dialog-container/auto-spin-dialog/container/turbo-mode/turbo_toggle`,
     iconCloseAutoPlay: `main-popup-close-btn`,
     txtautoSpinCount: `Canvas/center/bottom-controls/container/high/center/btn-spin-container/btn-spin/btn-spin-square/bg/number-font`,
+    popupLineSelection: "Canvas/outer-containers/outer-container/line-selection/line-selection-dialog-portrait",
+    btnBigWin: "Canvas/outer-containers/outer-container/slot-game-top-winner-container/top-winners-dialog-portrait/container/main-popup-bg/content/tabs/bigWinningWinners",
+    btnJackpot: "Canvas/outer-containers/outer-container/slot-game-top-winner-container/top-winners-dialog-portrait/container/main-popup-bg/content/tabs/jackpotWinners",
+    barPagination: "Canvas/outer-containers/outer-container/slot-game-top-winner-container/top-winners-dialog-portrait/container/main-popup-bg/pagination",
+    headerJackpot: "Canvas/outer-containers/outer-container/slot-game-top-winner-container/top-winners-dialog-portrait/container/main-popup-bg/content/header/jackpot",
+    headerBigWin: "Canvas/outer-containers/outer-container/slot-game-top-winner-container/top-winners-dialog-portrait/container/main-popup-bg/content/header/big",
+    iconCloseAmountSetting: "close-line",
 };

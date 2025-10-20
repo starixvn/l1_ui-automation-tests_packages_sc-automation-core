@@ -7,5 +7,6 @@ import { ImageLocator, ImageSnapshot } from "./base-image-locator";
 import { BaseElementLocator } from "./base-element-locator";
 import * as BaseLocator from "./base-game-locator";
 import { BaseAdmin } from "./base-admin";
+import {Portrail_Cascading_Locators, Portrail_Classic_Locators} from "./base-cocos-game-locator"
 
-export { BaseGame, BasePlayer, GameConfiguration, ImageLocator, BaseElementLocator, ImageSnapshot, test, BaseLocator,BaseAdmin,admintest };
+export { BaseGame, BasePlayer, GameConfiguration, ImageLocator, BaseElementLocator, ImageSnapshot, test, BaseLocator,BaseAdmin,admintest,Portrail_Cascading_Locators, Portrail_Classic_Locators };
