@@ -1,3 +1,10 @@
+# [1.81.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.80.2...v1.81.0) (2025-10-20)
+
+
+### Features
+
+* new portrait classic slot and enhance locator base option ([2402d82](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/2402d827fc59bd9b9b89874bab807f852ef34abb))
+
 ## [1.80.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.80.1...v1.80.2) (2025-10-17)
 
 
