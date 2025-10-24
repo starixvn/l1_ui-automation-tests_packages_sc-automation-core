@@ -16,8 +16,8 @@ export const Portrail_Cascading_Locators = {
     btnBuyFS: "buy-fs-btn",
 
     // Bet controls
-    btnBetIncrease: `${CENTER}/full-widget/container/high/center/betamout-increase`,
-    btnBetDecrease: `${CENTER}/full-widget/container/high/center/betamout-decrease`,
+    btnBetIncrease: `betamout-increase`,
+    btnBetDecrease: `betamout-decrease`,
     betAmountSetting: `${CENTER}/full-widget/container/low/bottom-center/portrait-bottom-area/bet-container/totalBetContainer/total-bet/bet-click/value-container`,
 
     // Bet level controls
@@ -96,39 +96,55 @@ export const Portrail_Cascading_Locators = {
     // Popup controls
     iconCloseMainPopup: "main-popup-close-btn",
     btnClosePopup: "btnClosed",
+    btnCloseGuide: "Canvas/outer-containers/outer-container/game-guide-container/game-guide-portrait/popup/main/Node/btn-close"
 };
 
 export const Portrail_Classic_Locators = {
     ...exports.Portrail_Cascading_Locators,
-    //top JP Classic Menu items
-    lblMajorJackpot: "Canvas/center/auto-scale-widget/jackpot-visi/auto-load-node/jackpot-pools/content/major/value",
-    lblGrandJackpot: "Canvas/center/auto-scale-widget/jackpot-visi/auto-load-node/jackpot-pools/content/grand/value",
-    lblMinorJackpot: "Canvas/center/auto-scale-widget/jackpot-visi/auto-load-node/jackpot-pools/content/minor/value",
-    // Line Setting Popup
-    btnLineSetting: "line-setting",
-    btnLineSettingClose: "line-setting-close",
-    popupLineSetting: "Canvas/center/line-setting-popup",
-    lineSettingContainer: "Canvas/center/line-setting-popup/container",
-    btnHallOfFame: "Canvas/center/bottom-controls/container/low/bottom-center/in-game-menu/expandable-layout/top",
-    txtOperator: `${CENTER}/top-section/system-decorator-label`,
-    txtMessageCenter: `${CENTER}/auto-scale-widget/bottom-message/slot-ingame-message`,
-    btnLobby: "lobby",
-    btnAutoSpin: "auto",
-    btnTurbo: "Canvas/center/bottom-controls/container/low/bottom-center/bet-control/right/turbo",
-    betAmountSetting: "Canvas/center/bottom-controls/container/low/bottom-center/bet-control/right/btn-bet-selection/open",
-    btnguide: "btn-guide",
-    iconTurboOFF: `Canvas/center/bottom-controls/container/low/bottom-center/bet-control/right/turbo/bg/autoplay/deactive`,
-    iconTurboON: `Canvas/center/bottom-controls/container/low/bottom-center/bet-control/right/turbo/bg/autoplay/active`,
-    btnLine: "Canvas/center/bottom-controls/container/low/bottom-center/in-game-menu/expandable-layout/line",
-    btnAutoSpinStart: `Canvas/center/auto-spin-dialog-container/auto-spin-dialog/container/start-button`,
-    btnAutoPlayTurbo: `Canvas/center/auto-spin-dialog-container/auto-spin-dialog/container/turbo-mode/turbo_toggle`,
-    iconCloseAutoPlay: `main-popup-close-btn`,
-    txtautoSpinCount: `Canvas/center/bottom-controls/container/high/center/btn-spin-container/btn-spin/btn-spin-square/bg/number-font`,
-    popupLineSelection: "Canvas/outer-containers/outer-container/line-selection/line-selection-dialog-portrait",
-    btnBigWin: "Canvas/outer-containers/outer-container/slot-game-top-winner-container/top-winners-dialog-portrait/container/main-popup-bg/content/tabs/bigWinningWinners",
-    btnJackpot: "Canvas/outer-containers/outer-container/slot-game-top-winner-container/top-winners-dialog-portrait/container/main-popup-bg/content/tabs/jackpotWinners",
-    barPagination: "Canvas/outer-containers/outer-container/slot-game-top-winner-container/top-winners-dialog-portrait/container/main-popup-bg/pagination",
-    headerJackpot: "Canvas/outer-containers/outer-container/slot-game-top-winner-container/top-winners-dialog-portrait/container/main-popup-bg/content/header/jackpot",
-    headerBigWin: "Canvas/outer-containers/outer-container/slot-game-top-winner-container/top-winners-dialog-portrait/container/main-popup-bg/content/header/big",
-    iconCloseAmountSetting: "close-line",
-};
+     //top JP Classic Menu items
+     lblMajorJackpot: "Canvas/center/board/auto-scale-widget/jackpot-visi/auto-load-node/jackpot-pools/content/major/value",
+     lblGrandJackpot: "Canvas/center/board/auto-scale-widget/jackpot-visi/auto-load-node/jackpot-pools/content/grand/value",
+     lblMinorJackpot: "Canvas/center/board/auto-scale-widget/jackpot-visi/auto-load-node/jackpot-pools/content/minor/value",
+     // Line Setting Popup
+     btnLineSetting: "line-setting",
+     btnLineSettingClose: "line-setting-close",
+     popupLineSetting: "Canvas/center/board/line-setting-popup",
+     lineSettingContainer: "Canvas/center/board/line-setting-popup/container",
+     btnHallOfFame: "Canvas/center/bottom-controls/container/low/bottom-center/in-game-menu/expandable-layout/top",
+     txtOperator: `${CENTER}/top-section/system-decorator-label`,
+     txtMessageCenter: `${CENTER}/board/auto-scale-widget/bottom-message/slot-ingame-message`,
+     btnLobby: "lobby",
+     btnAutoSpin: "auto",
+     btnTurbo: "Canvas/center/bottom-controls/container/low/bottom-center/bet-control/right/turbo",
+     betAmountSetting: "Canvas/center/bottom-controls/container/low/bottom-center/bet-control/right/btn-bet-selection/open",
+     btnguide: "btn-guide",
+     iconTurboOFF: `Canvas/center/bottom-controls/container/low/bottom-center/bet-control/right/turbo/bg/autoplay/deactive`,
+     iconTurboON: `Canvas/center/bottom-controls/container/low/bottom-center/bet-control/right/turbo/bg/autoplay/active`,
+     btnLine: "Canvas/center/bottom-controls/container/low/bottom-center/in-game-menu/expandable-layout/line",
+     btnAutoSpinStart: `start-button`,
+     btnAutoPlayTurbo: `Canvas/center/auto-spin-dialog-container/auto-spin-dialog/container/turbo-mode/turbo_toggle`,
+     iconCloseAutoPlay: `main-popup-close-btn`,
+     txtautoSpinCount: `Canvas/center/bottom-controls/container/high/center/btn-spin-container/btn-spin/btn-spin-square/bg/number-font`,
+     popupLineSelection: "Canvas/outer-containers/outer-container/line-selection/line-selection-dialog-portrait",
+     btnBigWin: "bigWinningWinners",
+     btnJackpot: "jackpotWinners",
+     barPagination: "Canvas/outer-containers/outer-container/slot-game-top-winner-container/top-winners-dialog-portrait/container/main-popup-bg/pagination",
+     headerJackpot: "Canvas/outer-containers/outer-container/slot-game-top-winner-container/top-winners-dialog-portrait/container/main-popup-bg/content/header/jackpot",
+     headerBigWin: "Canvas/outer-containers/outer-container/slot-game-top-winner-container/top-winners-dialog-portrait/container/main-popup-bg/content/header/big",
+     iconCloseAmountSetting: "close-line",
+     txtbottomTotalBet: "Canvas/center/info-player/center/total-bet",
+     txtbottomWin: `Canvas/center/info-player/right/total-win`,
+     lblHistoryRoundPath: "Canvas/outer-containers/outer-container/bet-history-container/portrait-bet-history-dialog/popup/back-wrapper/Node/table-bg/content/item-",
+     // History detail
+     btnBackHistory: `Canvas/outer-containers/outer-container/classic-slot-bet-detail-container/portrait-ticket-detail/popup/back-wrapper/btn-back`,
+     iconCloseHistoryDetail: `Canvas/outer-containers/outer-container/classic-slot-bet-detail-container/portrait-ticket-detail/popup/back-wrapper/btn-close`,
+     txtHistoryDetailRoundId: `id`,
+     txtHistoryDetailBetLevel: "Canvas/outer-containers/outer-container/classic-slot-bet-detail-container/portrait-ticket-detail/popup/back-wrapper/wrap-content/content-container/header/text/bet/lblBetLevelValue",
+     txtHistoryDetailLine: "Canvas/outer-containers/outer-container/classic-slot-bet-detail-container/portrait-ticket-detail/popup/back-wrapper/wrap-content/content-container/header/text/line/value",
+     txtHistoryDetailTotalBet: "Canvas/outer-containers/outer-container/classic-slot-bet-detail-container/portrait-ticket-detail/popup/back-wrapper/wrap-content/content-container/header/text/wrapTotalBet/lblBetValue",
+     txtHistoryDetailWin: `Canvas/outer-containers/outer-container/classic-slot-bet-detail-container/portrait-ticket-detail/popup/back-wrapper/wrap-content/content-container/header/text/wrapTotalWin/lblBetValue`,
+     btnClose: "Canvas/outer-containers/outer-container/line-selection/line-selection-dialog-portrait/popup/body/close",
+     iconCloseHallOfFame: "Canvas/outer-containers/outer-container/slot-game-top-winner-container/top-winners-dialog-portrait/container/main-popup-bg/btn-close",
+     iconCloseHistory: "Canvas/outer-containers/outer-container/bet-history-container/portrait-bet-history-dialog/popup/back-wrapper/wrapper",
+
+    };

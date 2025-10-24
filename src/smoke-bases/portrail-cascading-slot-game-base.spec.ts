@@ -5,6 +5,11 @@ import { expect } from "../expects";
 import { GameEvent } from "../_shared";
 import { GameGuides } from "../game-components/guides/guides.spec";
 
+const projectName = process.env.npm_config_project?.includes("l1")
+    ? "SG"
+    : process.env.npm_config_project?.includes("l2")
+      ? "VG"
+      : process.env.npm_config_project;
 export interface SlotGameOptions extends IBaseOptions {
     placeBetAmount?: number;
 }
@@ -137,7 +142,7 @@ export class PortrailCascadingGameBase {
             // Debug: Log coinValues array structure
             console.log("coinValues array:", this.game.gameConfigs.coinValues);
             console.log("Selected coinvalue at index 1:", coinvalue);
-            this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
+            this.game.attachSocketAndCaptureEvent(GameEvent.Settlement);
             // Act
             await this.game.clickCocos(this.locators.btnTurbo);
             await this.setBetConfiguration(this.game, betlevel, coinvalue);
@@ -185,7 +190,6 @@ export class PortrailCascadingGameBase {
 
         test("Verify bet ticket detail data in history popup", async () => {
             await this.game.page.mouse.click(600, 127);
-            // await this.game.clickCocosByLabel(this.settledResults.roundId.toString());
             await this.game.waitForTimeout(2000);
 
             expect(await this.game.findLabelText(this.locators.txtHistoryDetailRoundId)).toBe(this.settledResults.roundId.toString());
@@ -224,7 +228,7 @@ export class PortrailCascadingGameBase {
             locators: [this.options.locators],
         });
 
-        test.describe.serial(`${this.options.gameConfiguration.name} Smoke Testing`, () => {
+        test.describe.serial(`${projectName} - ${this.options.gameConfiguration.name} Smoke Tests`, () => {
             test.beforeAll(async ({ baseGame }) => {
                 this.game = baseGame;
                 this.player = new BasePlayer(this.game);
@@ -263,7 +267,7 @@ export class PortrailCascadingGameBase {
     protected runScenario() {
         this.mainUITests();
         this.placeBetAndSettleTests();
-        // this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
+        // this.gameGuides.cocosTests(this.options.gameConfiguration.maxTimeout, this.locators, !!process.env.npm_config_jackpot);
 
     }
 

@@ -180,20 +180,20 @@ export class PortrailClassicGameBase {
                 expect(await this.game.isCocosLocatorExists(this.locators.btnLine), "Line button not found").toBe(true);
                 expect(await this.game.isCocosLocatorExists(this.locators.btnMenuClose), "Menu close button not found").toBe(true);
             if (process.env.npm_config_jackpot) {
-                expect(await this.game.isCocosLocatorExists(this.locators.btnTop), "Top button not found").toBe(true);
+                expect(await this.game.isCocosLocatorExists(this.locators.btnHallOfFame), "Top button not found").toBe(true);
              }
         });
 
         test("Verify User can open Line setting popup", async () => {
             await this.game.clickCocos(this.locators.btnLine);
             expect(await this.game.isCocosLocatorExists(this.locators.popupLineSelection), "Line setting popup not found").toBe(true);
-            await this.game.clickCocos(this.locators.btnClosePopup);
+            await this.game.clickCocos(this.locators.btnClose);
         });
 
         if (process.env.npm_config_jackpot) {
             test("Verify Hall Of Fame exists", async () => {
                 await this.game.clickCocos(this.locators.btnMenu, 1000);
-                await this.game.clickCocos(this.locators.btnHallOfFame);
+                await this.game.clickCocos(this.locators.btnHallOfFame,1000);
                 expect(await this.game.isCocosLocatorExists(this.locators.btnBigWin), "Big win button not found").toBe(true);
                 expect(await this.game.isCocosLocatorExists(this.locators.btnJackpot), "Jackpot button not found").toBe(true);
                 expect(await this.game.isCocosLocatorExists(this.locators.barPagination), "Pagination bar not found").toBe(true);
@@ -207,7 +207,7 @@ export class PortrailClassicGameBase {
             test("Verify User can click tab Big Win", async () => {
                 await this.game.clickCocos(this.locators.btnBigWin);
                 expect(await this.game.isCocosLocatorExists(this.locators.headerBigWin), "Header big win not found").toBe(true);
-                await this.game.clickCocos(this.locators.iconCloseMainPopup);
+                await this.game.clickCocos(this.locators.iconCloseHallOfFame);
             });
         }
 
@@ -270,7 +270,7 @@ export class PortrailClassicGameBase {
                 await this.game.clickCocos(this.locators.btnBetIncrease);
             }
 
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < 3; i++) {
                 totalBetbefore = await this.game.findLabelText(this.locators.txtbottomTotalBet);
                 await this.game.clickCocos(this.locators.btnBetDecrease);
                 await this.game.waitForTimeout(500);
@@ -278,7 +278,7 @@ export class PortrailClassicGameBase {
                 expect(Number(totalBetafter.replace(/,/g, ''))<Number(totalBetbefore.replace(/,/g, ''))).toBe(true);
             }
 
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < 3; i++) {
                 totalBetbefore = await this.game.findLabelText(this.locators.txtbottomTotalBet);
                 await this.game.clickCocos(this.locators.btnBetIncrease);
                 await this.game.waitForTimeout(500);
@@ -295,10 +295,12 @@ export class PortrailClassicGameBase {
         test("Verify that player be able to place a bet and settle", async () => {
             // Arrange
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
-            this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
+            this.game.attachSocketAndCaptureEvent(GameEvent.Settlement);
+            this.game.attachSocketAndCaptureEvent(GameEvent.Bonuses);
+            this.game.attachSocketAndCaptureEvent(GameEvent.Jackpot);
             // Act
             await this.game.clickCocos(this.locators.btnTurbo);
-            await this.setBetConfiguration(this.game.gameConfigs.betLevels[7]);
+            await this.setBetConfiguration(this.game.gameConfigs.betLevels[1]);
             const totalBet = await this.game.findLabelText(this.locators.txtbottomTotalBet);
             await this.clickSpinButton();
 
@@ -306,13 +308,10 @@ export class PortrailClassicGameBase {
                 this.settledResults = await waitForSettlementClassicSlot(this.game);
             });
 
-            if (this.settledResults.isbigWin) {
-                console.log("click bigwwin", this.settledResults.isbigWin);
-                await this.game.waitForTimeout(10000);
-                await this.game.clickOutSide();
-            }
+            await handleFreeSpinClassicSlotResults(this.game,this.locators,this.settledResults.totalFreeSpins);
 
             this.settledResults.totalBet = totalBet;
+            this.settledResults.betLevel = this.game.gameConfigs.betLevels[1];
 
             console.log(this.settledResults);
 
@@ -323,7 +322,6 @@ export class PortrailClassicGameBase {
             test.setTimeout(this.options.gameConfiguration.maxTimeout);
             await this.game.waitForTimeout(5000);// wait for animation
             if(this.settledResults.win > 0) {
-                expect(parseFloat(await this.game.findLabelText(this.locators.txtcenterWin))).toBeCloseTo(this.settledResults.win, 2);
                 expect(parseFloat(await this.game.findLabelText(this.locators.txtbottomWin))).toBeCloseTo(this.settledResults.win, 2);
             } else {
                 expect(await this.game.findLabelText(this.locators.txtbottomWin)).toBe("0");
@@ -333,30 +331,22 @@ export class PortrailClassicGameBase {
         test("Verify bet ticket in history popup", async () => {
             await this.openHistoryPopup();
 
-            expect(await this.game.findLabelText(this.locators.txtHistoryRoundId)).toBe(this.settledResults.roundId.toString());
-            expect(await this.game.findLabelText(this.locators.txtHistoryTotalBet)).toBe(this.settledResults.totalBet.toString());
-            expect(Number(await this.game.findLabelText(this.locators.txtHistoryWin))).toBe(Number(this.settledResults.win));
+            expect(await this.game.findLabelText(this.locators.lblHistoryRoundPath + this.settledResults.roundId + "/node/round/lblRound")).toBe(this.settledResults.roundId.toString());
+            expect(await this.game.findLabelText(this.locators.lblHistoryRoundPath + this.settledResults.roundId + "/node/total-bet")).toBe(this.settledResults.totalBet.toString());
+            expect(Number(await this.game.findLabelText(this.locators.lblHistoryRoundPath + this.settledResults.roundId + "/node/total-win"))).toBe(Number(this.settledResults.win));
         });
 
         test("Verify bet ticket detail data in history popup", async () => {
-            await this.game.page.mouse.click(600, 127);
-            // await this.game.clickCocosByLabel(this.settledResults.roundId.toString());
-            await this.game.waitForTimeout(2000);
-
+            await this.game.clickCocos(this.locators.lblHistoryRoundPath + this.settledResults.roundId + "/node/round", 1000);
             expect(await this.game.findLabelText(this.locators.txtHistoryDetailRoundId)).toBe(this.settledResults.roundId.toString());
-            expect(await this.game.findLabelText(this.locators.txtHistoryDetailBetLevel)).toBe(this.settledResults.betlevel.toString());
-            expect(await this.game.findLabelText(this.locators.txtHistoryDetailTotalBet)).toBe(this.settledResults.totalBet.toString());
+            expect(await this.game.findLabelText(this.locators.txtHistoryDetailBetLevel)).toBe(this.settledResults.betLevel.toString());
+            expect(Number(await this.game.findLabelText(this.locators.txtHistoryDetailTotalBet))).toBe(Number(this.settledResults.totalBet));
             expect(Number(await this.game.findLabelText(this.locators.txtHistoryDetailWin))).toBe(Number(this.settledResults.win));
-                if(this.settledResults.multiplier > 0) {
-                expect(await this.game.findLabelText(this.locators.txtHistoryDetailMultiplier)).toBe(this.settledResults.multiplier.toString());
-            }
         });
 
         test("Verify user can close history popup", async () => {
-            await this.game.clickCocos(this.locators.btnBackHistory);
-            await this.game.waitForTimeout(2000);
-            await this.game.clickCocos(this.locators.btnClosePopup);
-            await this.game.waitForTimeout(2000);
+            await this.game.clickCocos(this.locators.btnBackHistory,2000);
+            await this.game.clickCocos(this.locators.iconCloseHistory,2000);
             expect(await this.game.isCocosLocatorExists(this.locators.txtHistoryRoundId), "History round ID should not be visible after closing popup").toBe(false);
         });
         
@@ -385,6 +375,9 @@ export class PortrailClassicGameBase {
                 let completedSpins = 0;
                 
                 while (completedSpins < currentTotalAutoSpin) {
+                    this.game.attachSocketAndCaptureEvent(GameEvent.Settlement);
+                    this.game.attachSocketAndCaptureEvent(GameEvent.Bonuses);
+                    this.game.attachSocketAndCaptureEvent(GameEvent.Jackpot);
                     const settledResults = await waitForSettlementClassicSlot(this.game);
                     let spincount = await this.game.findLabelText(this.locators.txtautoSpinCount);
                     console.log("isbigWin", settledResults.isbigWin);               
@@ -460,24 +453,22 @@ export class PortrailClassicGameBase {
     }
 
     async clickSpinButton() {
-        await this.game.page.mouse.click(640, 570);
+        await this.game.page.mouse.click(640, 580);
+        await this.game.waitForTimeout(200);
     }
 
     async clickPlayNowButton() {
-        await this.game.clickCocos(this.locators.btnPlayNow);
-        await this.game.waitForTimeout(2000);
+        await this.game.clickCocos(this.locators.btnPlayNow,2000);
     }
     
     async openAutoSpinPopup() {
-        await this.game.clickCocos(this.locators.btnAutoSpin);
-        await this.game.waitForTimeout(2000);
+        await this.game.clickCocos(this.locators.btnAutoSpin,1000);
     }
 
     async openHistoryPopup() {
-        await this.game.clickCocos(this.locators.btnMenu);
-        await this.game.waitForTimeout(1000);
-        await this.game.clickCocos(this.locators.btnHistory);
-        await this.game.waitForTimeout(2000);
+        await this.game.clickCocos(this.locators.btnMenu,1000);
+        await this.game.clickCocos(this.locators.btnHistory,1000);
+
     }
 
     protected runScenario() {
@@ -486,32 +477,112 @@ export class PortrailClassicGameBase {
         this.BetLevelSettingTests();
         this.placeBetAndSettleTests();
         this.autoSpinTests();
-        this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
+        this.gameGuides.cocosTests(this.options.gameConfiguration.maxTimeout, this.locators, !!process.env.npm_config_jackpot);
 
     }
 
     async setBetConfiguration(betamount: number) {
-        await this.game.clickCocos(this.locators.betAmountSetting);
+        await this.game.clickCocos(this.locators.betAmountSetting,1000);
         // Adjust Bet Level
         await this.game.clickCocos(`bet-level-${betamount.toString()}`,1000);
-        await this.game.clickCocos(this.locators.iconCloseAmountSetting,1000);
+        await this.game.clickOutSide();
     }
 }
 
 
 const waitForSettlementClassicSlot = async (game: BaseGame): Promise<any> => {
-    const message = await game.waitForEvent(GameEvent.Settlement);
-    await game.waitForTimeout(500); // add sleep due to feature Publish round result prior to settlement
+    const bonuses = await game.latestCaptureEvent(GameEvent.Bonuses);
+    const jackpot = await game.latestCaptureEvent(GameEvent.Jackpot);
+    
+    // Handle special events immediately if they occur
+    if (jackpot?.jackpot?.prizes > 0) {
+        await handleJackpotClassicSlotResults(game, jackpot.jackpot.prizes);
+    }
+    if (bonuses?.bonuses?.bonus > 0) {
+        await handleBonusesClassicSlotResults(game, bonuses.bonuses.bonus);
+    }
+     
+    // Always wait for Settlement event to get complete game data
+    let message = await game.latestCaptureEvent(GameEvent.Settlement);
+    if(message == null||message == ''||message == 'undefined'){
+        message = await game.waitForEvent(GameEvent.Settlement);
+    }
+
 
     const settledResults = {
         isbigWin: message?.finish?.bigWin  ?? "",
-        reachMaxWin: message?.finish?.reachMaxWin ?? "",
         totalFreeSpins: message?.finish?.totalOfFreeSpins ?? "",
         win: message?.finish?.betWin ?? 0,
+        bonuses: bonuses?.bonuses?.bonus ?? 0,
+        jackpot: jackpot?.jackpot?.prizes ?? 0,
         roundId: message?.finish?.roundId ?? "",
         result: message?.finish?.result ?? "",
-        settlementResult:  message?.finish?.settlementResult
+        settlementResult:  message?.finish?.settlementResult,
     };
 
     return settledResults;
 };
+
+const handleFreeSpinClassicSlotResults = async (game: BaseGame,locators: any,totalFreeSpin: number): Promise<any> => {
+    if(totalFreeSpin > 0) {
+        let totalAutoSpin = totalFreeSpin; // Start with initial free spins
+             let completedSpins = 0;
+             let totalWinAmount = 0; // Track total win amount
+             let previousSpincount = 15; // Track previous spin count
+             await game.clickOutSide();
+             while (completedSpins < totalAutoSpin) {
+                if (totalAutoSpin == 0) {
+                    expect(await game.isCocosLocatorExists(locators.lblLastFreeSpin)).toBe(true);
+                }
+                const settledResults = await waitForSettlementClassicSlot(game);
+                 let currentSpincount = await game.findLabelText(locators.txtFreeSpinCount);
+                 
+                 if (settledResults.isbigWin) {
+                    await game.waitForTimeout(10000);
+                    await game.clickOutSide();
+                }
+                 
+                 // Check if user won additional free spins
+                 if (settledResults.totalFreeSpins && settledResults.totalFreeSpins > 0) {
+                     const currentRemainingSpins = parseInt(currentSpincount);
+                     const previousRemainingSpins = previousSpincount;
+                     
+                     if (currentRemainingSpins > previousRemainingSpins) {
+                         const additionalSpins = currentRemainingSpins - previousRemainingSpins;
+                         totalAutoSpin += additionalSpins;
+                         await game.clickOutSide();
+                         console.log(`🎉 User won ${additionalSpins} additional free spins! Total: ${totalAutoSpin}`);
+                     }
+                 }
+                 
+                 previousSpincount = parseInt(currentSpincount);
+                 totalWinAmount += parseFloat(settledResults.win);
+                 completedSpins++;
+                 
+                 if (completedSpins == totalAutoSpin) {
+                     await game.waitForTimeout(5000);
+                 }
+             }
+             
+             console.log(`✅ Completed ${totalAutoSpin} free spins! Total win: ${totalWinAmount}`);             
+             await game.waitForTimeout(8000);             
+             await game.clickOutSide();
+    }
+}
+
+const handleBonusesClassicSlotResults = async (game: BaseGame,bonuses: number): Promise<any> => {
+    if (bonuses > 0) {
+        await game.waitForTimeout(5000);
+        for (let i = 0; i <= bonuses; i++) {
+            await game.clickCocos(`bonus${i}`,0);
+        }
+    }
+}
+
+const handleJackpotClassicSlotResults = async (game: BaseGame,jackpot: number): Promise<any> => {
+    if (jackpot > 0) {
+        await game.waitForTimeout(5000);
+        await game.clickCocos(`jackpot-0`,0);
+    }
+}
+

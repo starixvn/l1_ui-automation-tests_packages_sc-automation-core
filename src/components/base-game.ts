@@ -893,7 +893,7 @@ export class BaseGame {
         }
     }
 
-    async clickCocos(nodeNameOrPath: string,timeout: number = 500) {
+    async clickCocos(nodeNameOrPath: string,timeout: number = 250) {
         try {
           const result = await this.page.evaluate((nameOrPath) => {
             const cc = (window as any).cc;
@@ -950,128 +950,6 @@ export class BaseGame {
         }
     }
 
-
-    /**
-     * Find Cocos node by label text
-     * @param labelText - The text content to search for
-     * @param exactMatch - Whether to match exact text or contains text (default: false)
-     * @returns Promise<{success: boolean, nodePath?: string, error?: string}>
-     */
-    async findCocosByLabel(labelText: string, exactMatch: boolean = false) {
-        try {
-            console.log(`findCocosByLabel: Searching for "${labelText}", exactMatch: ${exactMatch}`);
-            
-            const result = await this.page.evaluate((args) => {
-                const [text, exact] = args as [string, boolean];
-                console.log(`Browser: Searching for "${text}", exactMatch: ${exact}`);
-                
-                const cc = window.cc;
-                if (!cc) {
-                    console.log('Browser: Cocos Creator not found');
-                    return { success: false, message: 'Cocos Creator not found' };
-                }
-                
-                const findNodeByLabel = (parent: any, targetText: string, exactMatch: boolean): any => {
-                    // Check if current node has Label component
-                    const label = parent.getComponent(cc.Label);
-                    if (label && label.string) {
-                        const nodeText = label.string.trim();
-                        const matches = exactMatch ? 
-                            nodeText === targetText : 
-                            nodeText.includes(targetText);
-                        
-                        console.log(`Browser: Checking node "${parent.name}" with text "${nodeText}", matches: ${matches}`);
-                        
-                        if (matches) {
-                            console.log(`Browser: Found matching node: "${parent.name}"`);
-                            return parent;
-                        }
-                    }
-                    
-                    // Check children recursively
-                    for (let i = 0; i < parent.children.length; i++) {
-                        const found = findNodeByLabel(parent.children[i], targetText, exactMatch);
-                        if (found) return found;
-                    }
-                    
-                    return null;
-                };
-                
-                const canvas = cc.find('Canvas');
-                if (!canvas) {
-                    console.log('Browser: Canvas not found');
-                    return { success: false, message: 'Canvas not found' };
-                }
-                
-                console.log(`Browser: Starting search in Canvas with ${canvas.children.length} children`);
-                const targetNode = findNodeByLabel(canvas, text, exact);
-                
-                if (!targetNode) {
-                    console.log(`Browser: No node found with label text "${text}"`);
-                    return { success: false, message: 'Node with label text not found' };
-                }
-                
-                console.log(`Browser: Found target node: "${targetNode.name}"`);
-                
-                // Get the full path of the node
-                const getNodePath = (node: any): string => {
-                    const path: string[] = [];
-                    let current = node;
-                    
-                    while (current && current !== canvas) {
-                        path.unshift(current.name);
-                        current = current.parent;
-                    }
-                    
-                    // Include Canvas in the path for compatibility with cc.find()
-                    return 'Canvas/' + path.join('/');
-                };
-                
-                return {
-                    success: true,
-                    nodePath: getNodePath(targetNode),
-                    nodeName: targetNode.name,
-                    labelText: targetNode.getComponent(cc.Label)?.string?.trim() || ''
-                };
-            }, [labelText, exactMatch]);
-            
-            return result;
-        } catch (err) {
-            return { success: false, error: (err as Error).message };
-        }
-    }
-
-    /**
-     * Click Cocos node by label text
-     * @param labelText - The text content to search for
-     * @param exactMatch - Whether to match exact text or contains text (default: false)
-     * @returns Promise<{success: boolean, error?: string}>
-     */
-    async clickCocosByLabel(labelText: string, exactMatch: boolean = false) {
-        try {
-            console.log(`Searching for label: "${labelText}", exactMatch: ${exactMatch}`);
-            
-            const findResult = await this.findCocosByLabel(labelText, exactMatch) as {success: boolean, nodePath?: string, message?: string, nodeName?: string, labelText?: string};
-            
-            console.log('Find result:', findResult);
-            
-            if (!findResult.success) {
-                console.log(`Failed to find node with label: ${findResult.message}`);
-                return { success: false, error: findResult.message || 'Node not found' };
-            }
-            
-            console.log(`Found node: ${findResult.nodeName}, path: ${findResult.nodePath}, label: ${findResult.labelText}`);
-            
-            // Use the found node path to click
-            const clickResult = await this.clickCocos(findResult.nodePath!);
-            console.log('Click result:', clickResult);
-            
-            return clickResult;
-        } catch (err) {
-            console.error('Error in clickCocosByLabel:', err);
-            return { success: false, error: (err as Error).message };
-        }
-    }
     
     // Helper function to find node and return label text
     async findLabelText(nodeNameOrPath: string): Promise<string> {

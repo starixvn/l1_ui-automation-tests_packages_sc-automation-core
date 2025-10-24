@@ -32,6 +32,31 @@ export class GameGuides {
         });
     }
 
+    cocosTests(timeout: number, locators: any ,isJackpot: boolean = false,) {
+        test(`Verify that player could open guide and clarify appropriate content @Guide`, async () => {
+            // Arrange
+            test.setTimeout(timeout);
+            await test.step("Open game guide", async () => {
+                const isGuideVisible = await this.game.isCocosLocatorExists(locators.btnguide);
+                if(!isGuideVisible) {
+                    await this.game.clickCocos(locators.btnMenu);
+                    await this.game.waitForTimeout(2000);
+                }
+                await this.game.clickCocos(locators.btnguide,10000);
+            });
+
+            // Act
+            await test.step("Verify guide content", async () => {
+                await this.verifyGuideContent(isJackpot);
+            });
+
+            //Post-Act
+            await test.step("Click outside to close game guide", async () => {
+                await this.game.clickCocos(locators.btnCloseGuide,2000);
+            });
+        });
+    }
+
     async captureGuideContent(isJackpot: boolean = false, extName: string = "") {
         let guidepages = await this.game.getCountFrameLocator(GuideLocator.xpathItem);
         if (guidepages == 0) {
@@ -46,6 +71,17 @@ export class GameGuides {
             const element = `${GuideLocator.xpathItem}[${index}]`;
             await this.snapshot(this.game.page, filename, element);
             await verifyImage(this.game, filename, 0.05);
+        }
+    }
+
+    async verifyGuideContent(isJackpot: boolean = false, extName: string = "") {
+        let guidepages = await this.game.getCountFrameLocator(GuideLocator.xpathItem);
+        expect(guidepages).toBeGreaterThan(0);
+        
+        for (let index = 1; index <= guidepages; index++) {
+            const filename = isJackpot == true ? `${extName}guide-JP-${index}` : `${extName}guide-${index}`;
+            const element = `${GuideLocator.xpathItem}[${index}]`;
+            await expect.soft( this.game.page.frameLocator("iframe").locator(element)).toHaveScreenshot(filename+'.png', { maxDiffPixelRatio: 0.05 });
         }
     }
 
@@ -74,4 +110,5 @@ export class GameGuides {
         }
         await root.locator(element).screenshot({ path: formatScreenshotFile(name) });
     }
+
 }

@@ -292,7 +292,7 @@ export class PortrailCascadingGameBase {
             // Debug: Log coinValues array structure
             console.log("coinValues array:", this.game.gameConfigs.coinValues);
             console.log("Selected coinvalue at index 1:", coinvalue);
-            this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
+            this.game.attachSocketAndCaptureEvent(GameEvent.Settlement);
             // Act
             await this.game.clickCocos(this.locators.btnTurbo);
             await this.setBetConfiguration(this.game, betlevel, coinvalue);
@@ -341,7 +341,6 @@ export class PortrailCascadingGameBase {
 
         test("Verify bet ticket detail data in history popup", async () => {
             await this.game.page.mouse.click(600, 127);
-            // await this.game.clickCocosByLabel(this.settledResults.roundId.toString());
             await this.game.waitForTimeout(2000);
 
             expect(await this.game.findLabelText(this.locators.txtHistoryDetailRoundId)).toBe(this.settledResults.roundId.toString());
@@ -385,7 +384,8 @@ export class PortrailCascadingGameBase {
             await test.step("Wait for finish 10 spins", async () => {
                 let currentTotalAutoSpin = totalAutoSpin; // Start with initial auto spins
                 let completedSpins = 0;
-                
+                this.game.attachSocketAndCaptureEvent(GameEvent.Settlement);
+
                 while (completedSpins < currentTotalAutoSpin) {
                     const settledResults = await waitForSettlementCascadingSlot(this.game);
                     let spincount = await this.game.findLabelText(this.locators.txtautoSpinCount);
@@ -444,7 +444,7 @@ export class PortrailCascadingGameBase {
         })
 
         test("Verify user can buy free spin", async () => {
-            await this.game.clickCocos(this.locators.btnYesBuyFS);
+            await this.game.clickCocos(this.locators.btnYesBuyFS,0);
             this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
             // Act
             this.settledResults = await waitForSettlementCascadingSlot(this.game);
@@ -473,7 +473,7 @@ export class PortrailCascadingGameBase {
              let completedSpins = 0;
              let totalWinAmount = 0; // Track total win amount
              let previousSpincount = 15; // Track previous spin count
-             
+             await this.game.clickOutSide();
              while (completedSpins < totalAutoSpin) {
                 if (totalAutoSpin == 0) {
                     expect(await this.game.isCocosLocatorExists(this.locators.lblLastFreeSpin)).toBe(true);
