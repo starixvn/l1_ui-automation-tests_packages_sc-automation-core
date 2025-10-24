@@ -1,3 +1,10 @@
+# [1.82.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.81.0...v1.82.0) (2025-10-24)
+
+
+### Features
+
+* new classic slot game base ([d62bbc8](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/d62bbc82785647f23c77d169790e1b46578ef086))
+
 # [1.81.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.80.2...v1.81.0) (2025-10-20)
 
 
