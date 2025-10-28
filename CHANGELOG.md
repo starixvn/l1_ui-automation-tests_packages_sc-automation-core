@@ -1,3 +1,10 @@
+## [1.82.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.82.0...v1.82.1) (2025-10-28)
+
+
+### Bug Fixes
+
+* remove step check operator name on portrail smoke ([90e0748](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/90e0748c2219d0383d05aa823e8d49dd655aafb6))
+
 # [1.82.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.81.0...v1.82.0) (2025-10-24)
 
 
