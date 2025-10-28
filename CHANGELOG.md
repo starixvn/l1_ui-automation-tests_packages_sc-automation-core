@@ -1,3 +1,10 @@
+## [1.82.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.82.1...v1.82.2) (2025-10-28)
+
+
+### Bug Fixes
+
+* isjackpot param for classic slot portrait ([97cc12f](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/97cc12f6910e2a829f50cc4da804fe98e7147641))
+
 ## [1.82.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.82.0...v1.82.1) (2025-10-28)
 
 
