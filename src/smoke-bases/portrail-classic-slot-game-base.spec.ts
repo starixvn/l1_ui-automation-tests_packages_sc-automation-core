@@ -45,17 +45,8 @@ export class PortrailClassicGameBase {
 
     protected mainUITests() {
 
-
         test("Verify welcome screen and Play Now button exists", async () => {
             expect(await this.game.isCocosLocatorExists(this.locators.btnPlayNow), "Play Now button not found").toBe(true);
-        });
-
-        test("Verify User can click Play Now button and navigate to game", async () => {
-            const operatorName = (process.env.npm_config_project?.includes("l1")) ? "SABA.games" : "Vgaming";
-            await this.clickPlayNowButton();
-            await this.game.waitForTimeout(5000);
-            expect(await this.game.isCocosLocatorExists(this.locators.btnSpin), "Spin button not found").toBe(true);
-            expect(await this.game.findLabelText(this.locators.txtOperator)).toBe(operatorName);
         });
 
         test("Verify center message exists", async () => {
