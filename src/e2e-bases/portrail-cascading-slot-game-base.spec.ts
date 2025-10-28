@@ -578,8 +578,7 @@ export class PortrailCascadingGameBase {
         this.placeBetAndSettleTests();
         this.autoSpinTests();
         this.buyFreeSpinTests();
-        this.gameGuides.tests(this.options.gameConfiguration.maxTimeout);
-
+        this.gameGuides.cocosTests(this.options.gameConfiguration.maxTimeout, this.locators, false);
     }
 
     async setBetConfiguration(game: BaseGame, betlevel: number, coinvalue: number) {
