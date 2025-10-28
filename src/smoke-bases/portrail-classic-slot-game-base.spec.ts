@@ -13,6 +13,7 @@ const projectName = process.env.npm_config_project?.includes("l1")
 
 export interface SlotGameOptions extends IBaseOptions {
     placeBetAmount?: number;
+    isJackpot?: boolean;
 }
 
 export class PortrailClassicGameBase {
@@ -26,6 +27,8 @@ export class PortrailClassicGameBase {
     private get locators() {
         return this.options.locators || Portrail_Classic_Locators;
     }
+
+    
 
     private overrideClickOutSide() {
         // Override the method globally for this project
@@ -49,6 +52,12 @@ export class PortrailClassicGameBase {
             expect(await this.game.isCocosLocatorExists(this.locators.btnPlayNow), "Play Now button not found").toBe(true);
         });
 
+        test("Verify User can click Play Now button and navigate to game", async () => {
+            await this.clickPlayNowButton();
+            await this.game.waitForTimeout(5000);
+            expect(await this.game.isCocosLocatorExists(this.locators.btnSpin), "Spin button not found").toBe(true);
+        });
+
         test("Verify center message exists", async () => {
             const centerMessages = [
                 "Bấm Quay hoặc giữ phím Space",
@@ -63,7 +72,7 @@ export class PortrailClassicGameBase {
             expect(centerMessages).toContain(actualMessage.trim());
         });
 
-        if (process.env.npm_config_jackpot) {
+        if (this.options.isJackpot) {
             test("Verify Jackpot panel exists", async () => {
                 expect(await this.game.isCocosLocatorExists(this.locators.lblMajorJackpot), "Major jackpot label not found").toBe(true);
                 expect(await this.game.isCocosLocatorExists(this.locators.lblGrandJackpot), "Grand jackpot label not found").toBe(true);
@@ -99,7 +108,7 @@ export class PortrailClassicGameBase {
                 expect(await this.game.isCocosLocatorExists(this.locators.btnHistory), "History button not found").toBe(true);
                 expect(await this.game.isCocosLocatorExists(this.locators.btnLine), "Line button not found").toBe(true);
                 expect(await this.game.isCocosLocatorExists(this.locators.btnMenuClose), "Menu close button not found").toBe(true);
-            if (process.env.npm_config_jackpot) {
+            if (this.options.isJackpot) {
                 expect(await this.game.isCocosLocatorExists(this.locators.btnHallOfFame), "Top button not found").toBe(true);
              }
         });
@@ -110,7 +119,7 @@ export class PortrailClassicGameBase {
             await this.game.clickCocos(this.locators.btnClose);
         });
 
-        if (process.env.npm_config_jackpot) {
+        if (this.options.isJackpot) {
             test("Verify Hall Of Fame exists", async () => {
                 await this.game.clickCocos(this.locators.btnMenu, 1000);
                 await this.game.clickCocos(this.locators.btnHallOfFame,1000);
@@ -248,7 +257,7 @@ export class PortrailClassicGameBase {
     protected runScenario() {
         this.mainUITests();
         this.placeBetAndSettleTests();
-        // this.gameGuides.cocosTests(this.options.gameConfiguration.maxTimeout, this.locators, !!process.env.npm_config_jackpot);
+        this.gameGuides.cocosTests(this.options.gameConfiguration.maxTimeout, this.locators, this.options.isJackpot);
 
     }
 

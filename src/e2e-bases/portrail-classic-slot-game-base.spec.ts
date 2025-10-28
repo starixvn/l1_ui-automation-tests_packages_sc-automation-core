@@ -9,6 +9,7 @@ import { GameGuides } from "../game-components/guides/guides.spec";
 
 export interface SlotGameOptions extends IBaseOptions {
     placeBetAmount?: number;
+    isJackpot?: boolean;
 }
 
 export class PortrailClassicGameBase {
@@ -143,7 +144,7 @@ export class PortrailClassicGameBase {
             expect(centerMessages).toContain(actualMessage.trim());
         });
 
-        if (process.env.npm_config_jackpot) {
+        if (this.options.isJackpot) {
             test("Verify Jackpot panel exists", async () => {
                 expect(await this.game.isCocosLocatorExists(this.locators.lblMajorJackpot), "Major jackpot label not found").toBe(true);
                 expect(await this.game.isCocosLocatorExists(this.locators.lblGrandJackpot), "Grand jackpot label not found").toBe(true);
@@ -179,7 +180,7 @@ export class PortrailClassicGameBase {
                 expect(await this.game.isCocosLocatorExists(this.locators.btnHistory), "History button not found").toBe(true);
                 expect(await this.game.isCocosLocatorExists(this.locators.btnLine), "Line button not found").toBe(true);
                 expect(await this.game.isCocosLocatorExists(this.locators.btnMenuClose), "Menu close button not found").toBe(true);
-            if (process.env.npm_config_jackpot) {
+            if (this.options.isJackpot) {
                 expect(await this.game.isCocosLocatorExists(this.locators.btnHallOfFame), "Top button not found").toBe(true);
              }
         });
@@ -190,7 +191,7 @@ export class PortrailClassicGameBase {
             await this.game.clickCocos(this.locators.btnClose);
         });
 
-        if (process.env.npm_config_jackpot) {
+        if (this.options.isJackpot) {
             test("Verify Hall Of Fame exists", async () => {
                 await this.game.clickCocos(this.locators.btnMenu, 1000);
                 await this.game.clickCocos(this.locators.btnHallOfFame,1000);
@@ -477,7 +478,7 @@ export class PortrailClassicGameBase {
         this.BetLevelSettingTests();
         this.placeBetAndSettleTests();
         this.autoSpinTests();
-        this.gameGuides.cocosTests(this.options.gameConfiguration.maxTimeout, this.locators, !!process.env.npm_config_jackpot);
+        this.gameGuides.cocosTests(this.options.gameConfiguration.maxTimeout, this.locators, this.options.isJackpot);
 
     }
 
