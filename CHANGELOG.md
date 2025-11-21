@@ -1,3 +1,10 @@
+## [1.83.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.83.0...v1.83.1) (2025-11-21)
+
+
+### Bug Fixes
+
+* mini issue in cocos round games base ([6d6a191](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/6d6a191d1e76621975dfa066feed1b039d655cbf))
+
 # [1.83.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.82.2...v1.83.0) (2025-11-21)
 
 
