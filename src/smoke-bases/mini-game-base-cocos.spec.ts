@@ -84,6 +84,7 @@ export class RoundGameBaseCocos {
             // Act - Place bet with retry until success
             await this.placeBetWithRetry(bet.choice??'', bet.amountLocator?.toString());
             this.settledResults = await this.game.waitForSettlement();
+            this.settledResults.amount = bet.amount;
             expect(roundId).toContain(this.settledResults.roundId.toString());
         });
 
