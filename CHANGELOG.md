@@ -1,3 +1,15 @@
+# [1.83.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.82.2...v1.83.0) (2025-11-21)
+
+
+### Bug Fixes
+
+* game guide test for portrait cascading ([defa703](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/defa703f154800dda59c31aecab7046a003b7a00))
+
+
+### Features
+
+* round cocos and tap game base ([3983ac3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/3983ac3a24b3636ab5fb07d2a659d1100bc742d3))
+
 ## [1.82.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.82.1...v1.82.2) (2025-10-28)
 
 
