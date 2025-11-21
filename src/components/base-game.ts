@@ -401,7 +401,7 @@ export class BaseGame {
         if (this.gameConfiguration.slotsgame) {
             settledResults["winAmount"] = message?.finish?.betWin ?? 0;
         } else {
-            settledResults["winAmount"] = winningByChoice.status.win ? winningByChoice.status.bet : 0;
+            settledResults["winAmount"] = winningByChoice?.status.win ? winningByChoice.status.bet : 0;
         }
         return settledResults;
     }
@@ -893,60 +893,122 @@ export class BaseGame {
         }
     }
 
-    async clickCocos(nodeNameOrPath: string,timeout: number = 250) {
+    async clickCocos(nodeNameOrPath, timeout = 250) {
         try {
-          const result = await this.page.evaluate((nameOrPath) => {
-            const cc = (window as any).cc;
-            if (!cc) return { success: false, message: 'Cocos Creator not found' };
-            
-            let targetNode = null;
-            
-            if (nameOrPath.includes('/')) {
-              // Use full path directly
-              targetNode = cc.find(nameOrPath);
-            } else {
-              // Search by name in Canvas
-              const findNodeByName = (parent: any, targetName: string) => {
-                if (parent.name === targetName) {
-                  return parent;
+            await this.page.evaluate((nameOrPath) => {
+                const cc = window.cc;
+                if (!cc || !cc.find) {
+                    return { success: false, message: 'Cocos Creator not found' };
                 }
-                for (let i = 0; i < parent.children.length; i++) {
-                  const found = findNodeByName(parent.children[i], targetName);
-                  if (found) return found;
+                let targetNode = null;
+                // Find node by path or name
+                if (nameOrPath.includes('/')) {
+                    targetNode = cc.find(nameOrPath);
                 }
-                return null;
-              };
-              
-              const canvas = cc.find('Canvas');
-              if (!canvas) return { success: false, message: 'Canvas not found' };
-              targetNode = findNodeByName(canvas, nameOrPath);
-            }
-            
-            if (!targetNode) {
-              return { success: false, message: 'Node not found' };
-            }
-            
-            // Try button component first
-            const button = (targetNode as any).getComponent(cc.Button);
-            if (button && button.clickEvents) {
-              button.clickEvents.forEach((eventHandler: any) => {
-                eventHandler.emit([eventHandler.customEventData]);
-              });
-            }
-            
-            // Always emit events as fallback
-            (targetNode as any).emit('click');
-            (targetNode as any).emit('touchstart');
-            (targetNode as any).emit('touchend');
-            
-            return { success: true };
-          }, nodeNameOrPath);
-
-          await this.waitForTimeout(timeout);
-
-          return result;
-        } catch (err) {
-          return { success: false, error: (err as Error).message };
+                else {
+                    const canvas = cc.find('Canvas');
+                    if (!canvas) {
+                        return { success: false, message: 'Canvas not found' };
+                    }
+                    // Robust node finding that handles both name/_name and children/_children
+                    const findByName = (parent, targetName) => {
+                        var _a, _b, _c;
+                        if (!parent)
+                            return null;
+                        const nodeName = (_a = parent.name) !== null && _a !== void 0 ? _a : parent._name;
+                        if (nodeName === targetName) {
+                            return parent;
+                        }
+                        const children = (_c = (_b = parent.children) !== null && _b !== void 0 ? _b : parent._children) !== null && _c !== void 0 ? _c : [];
+                        for (const child of children) {
+                            const found = findByName(child, targetName);
+                            if (found)
+                                return found;
+                        }
+                        return null;
+                    };
+                    targetNode = findByName(canvas, nameOrPath);
+                }
+                if (!targetNode) {
+                    return { success: false, message: `Node not found: ${nameOrPath}` };
+                }
+                // Method 1: Try Button component clickEvents first
+                let method1Success = false;
+                try {
+                    const button = (targetNode as any).getComponent(cc.Button);
+                    if (button && button.clickEvents && button.clickEvents.length > 0) {
+                        button.clickEvents.forEach((eventHandler) => {
+                            if (eventHandler && eventHandler.emit) {
+                                eventHandler.emit([eventHandler.customEventData]);
+                            }
+                        });
+                        method1Success = true;
+                    }
+                }
+                catch (e) {
+                    // Button component method failed, continue to other methods
+                }
+                // If Method 1 succeeded, skip other methods to avoid double-click
+                if (method1Success) {
+                     return { success: true };
+                }
+                // Method 2: Try Touch events with dispatchEvent
+                try {
+                    const createTouchEvent = (type) => {
+                        try {
+                            const touch = new cc.Touch(0, 0, 0);
+                            if (touch.setTouchInfo) {
+                                touch.setTouchInfo(0, 0, 0);
+                            }
+                            const event = new cc.Event.EventTouch([touch], true);
+                            event.type = type;
+                            event.touch = touch;
+                            event.bubbles = true;
+                            return event;
+                        }
+                        catch {
+                            return { type, touch: null, bubbles: true };
+                        }
+                    };
+                    const touchEvents = ['touchstart', 'touchmove', 'touchend'].map(createTouchEvent);
+                    touchEvents.forEach(ev => {
+                        try {
+                            if ((targetNode as any).dispatchEvent) {
+                                (targetNode as any).dispatchEvent(ev);
+                            }
+                        }
+                        catch { }
+                    });
+                    // Use systemEvent if available
+                    if (cc.systemEvent) {
+                        touchEvents.forEach(ev => {
+                            try {
+                                cc.systemEvent.emit(ev.type, ev);
+                            }
+                            catch { }
+                        });
+                    }
+                }
+                catch (e) {
+                    // Touch event method failed, continue to fallback
+                }
+                // Method 3: Fallback to simple emit events
+                try {
+                    if ((targetNode as any).emit) {
+                        (targetNode as any).emit('click');
+                        (targetNode as any).emit('touchstart');
+                        (targetNode as any).emit('touchend');
+                    }
+                }
+                catch (e) {
+                    // Emit method failed
+                }
+                return { success: true };
+            }, nodeNameOrPath);
+            await this.waitForTimeout(timeout);
+        }
+        catch (err: any) {
+            console.log(`[clickCocos] Error: ${err.message}`);
         }
     }
 
@@ -1002,7 +1064,6 @@ export class BaseGame {
           return '';
         }
     }
-
 
     async navigateToMicrositeIframe(timeout: number = 5000): Promise<void> {
         try {

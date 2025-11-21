@@ -63,7 +63,7 @@ export class PortrailCascadingGameBase {
                 "Hệ Số Nhân cộng dồn trong Free Spin",
                 "Thắng lên đến 2000x tiền cược",
                 "Quay trúng",
-                "Hệ Số Nhân ngẫu nhiên lên đến 500x",
+                "Hệ Số Nhân ngẫu nhiên lên đến 5000x",
                 "Biểu tượng được tính thắng nằm ở vị trí bất kỳ"
             ];
          
@@ -267,7 +267,6 @@ export class PortrailCascadingGameBase {
     protected runScenario() {
         this.mainUITests();
         this.placeBetAndSettleTests();
-        // this.gameGuides.cocosTests(this.options.gameConfiguration.maxTimeout, this.locators, !!process.env.npm_config_jackpot);
 
     }
 

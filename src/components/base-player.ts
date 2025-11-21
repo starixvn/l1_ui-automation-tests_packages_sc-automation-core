@@ -90,6 +90,78 @@ export class BasePlayer {
         }
     }
 
+    async placeBetCocos(betBoard:boolean, choice: string, amountLocator?:string): Promise<any> {
+        if (betBoard) {
+            await this.game.clickCocos(choice, 1000);
+            if (amountLocator) {
+                await this.game.clickCocos(amountLocator,1000);
+                await this.game.clickCocos("button.ok");
+            }
+        }
+        else {
+            await this.game.clickCocos(choice);
+        }
+    }
+
+    async placeBetTapGame(locator: any,amountLocator: string, totalTaps: number): Promise<any> {
+        // Setup socket event listeners
+        this.game.attachSocketAndCaptureEvent(GameEvent.EndBet);
+        this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
+        this.game.attachSocketAndCaptureEvent(GameEvent.RecentBet);
+
+        // First, click btnPlay
+        await this.game.clickCocos(amountLocator, 1000);
+        await this.game.clickCocos(locator.btnPlay, 1000);
+        
+        // Get latest placeBetResponse and status
+        let recentBet = await this.game.latestCaptureEvent(GameEvent.RecentBet);
+        let winStatus = await this.game.latestCaptureEvent(GameEvent.WinStatus);
+        let endBet = await this.game.latestCaptureEvent(GameEvent.EndBet);
+        let roundId = endBet?.roundId || endBet?.endBet?.roundId || '';
+
+        // If status returns "win": false (failed), return status message immediately
+        if (winStatus) { 
+            return {winStatus, recentBet, roundId};
+        }
+
+        for (let i = 0; i < totalTaps; i++) {
+            // Reset captured event to ensure we wait for new response
+            this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
+            this.game.attachSocketAndCaptureEvent(GameEvent.RecentBet);
+            
+            // Click btnGo
+            await this.game.clickCocos(locator.btnGo, 1000);
+            
+            // Get latest status
+            recentBet = await this.game.latestCaptureEvent(GameEvent.RecentBet);
+            winStatus = await this.game.latestCaptureEvent(GameEvent.WinStatus);
+
+            // If status returns "win": false (failed), break loop and return status
+            if (winStatus) { 
+                // Get latest endBet to ensure we have correct roundId
+                endBet = await this.game.latestCaptureEvent(GameEvent.EndBet);
+                roundId = endBet?.roundId || endBet?.endBet?.roundId || roundId;
+                return {winStatus, recentBet, roundId};
+            }
+        }
+
+        // If after totalTaps clicks the status still doesn't have win:false, click btnCashOut
+        if (!winStatus) {
+            this.game.attachSocketAndCaptureEvent(GameEvent.EndBet);
+            this.game.attachSocketAndCaptureEvent(GameEvent.WinStatus);
+            this.game.attachSocketAndCaptureEvent(GameEvent.RecentBet);
+            await this.game.clickCocos(locator.btnCashOut, 1000);
+            // Get final status after cash out
+            recentBet = await this.game.latestCaptureEvent(GameEvent.RecentBet);
+            winStatus = await this.game.latestCaptureEvent(GameEvent.WinStatus);
+            endBet = await this.game.latestCaptureEvent(GameEvent.EndBet);
+            roundId = endBet?.roundId || endBet?.endBet?.roundId || roundId;
+        }
+
+        // Finally, return message status
+        return {winStatus, recentBet, roundId};
+    }
+
     async gnQuickPlaceBet(choice: string, amount: number): Promise<any> {
         const odds = await this.game.gnWaitUntilPlaceBet();
         await this.gnBetOn(choice, amount);
@@ -109,14 +181,6 @@ export class BasePlayer {
             placeBetResponse = await this.mbBetOn(choice, amount,subGameName);;
         }
         return placeBetResponse
-    }
-
-    async gnSlowPlaceBet(choice: string, amount: number): Promise<any> {
-        const odds = await this.game.gnWaitUntilPlaceBet();
-        await  this.gnBetOn(choice, amount);
-        await this.game.click(numberGameLocator.commonControls.btnConfirmBet);
-        const endBets =await this.game.waitForEndBet();
-        return {endBet: endBets.endBet, odds: odds};
     }
 
     async selectPayline(choice: string): Promise<void> {

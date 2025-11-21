@@ -10,3 +10,15 @@ export interface IBaseOptions {
     isconfig?: any;
     isJackpot?: boolean;
 }
+
+export interface IBaseOptionsCocos {
+    gameConfiguration: GameConfiguration;
+    locators?: any;
+    snapshotFolderPath: string;
+    placeBetChoices?: string[];
+    placeBetAmount?: string[];
+    totalTaps?: number;
+    isJackpot?: boolean;
+    uiLocatorsToVerify?: object; // Array of locator keys to verify in UI tests
+}
+

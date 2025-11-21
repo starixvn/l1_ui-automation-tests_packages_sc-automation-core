@@ -57,6 +57,35 @@ export class GameGuides {
         });
     }
 
+    cocosTestsPFguide(timeout: number, locators: any ) {
+        test(`Verify that player could open PF guide and clarify appropriate content @Guide`, async () => {
+            // Arrange
+            test.setTimeout(timeout);
+            await test.step("Open PF popup", async () => {
+                const isGuideVisible = await this.game.isCocosLocatorExists(locators.btnPfSetting);
+                if(!isGuideVisible) {
+                    await this.game.clickCocos(locators.btnMenu);
+                    await this.game.waitForTimeout(2000);
+                }
+                await this.game.clickCocos(locators.btnPfSetting, 2000);
+            });
+
+            await test.step("Open PF guide", async () => {
+                await this.game.clickCocos(locators.iconPFGuideSetting, 10000);
+            });
+
+            // Act
+            await test.step("Verify guide content", async () => {
+                await this.verifyGuidePFContent();
+            });
+
+            //Post-Act
+            await test.step("Close PF guide", async () => {
+                await this.game.clickCocos(locators.btnClosePFGuide, 2000);
+            });
+        });
+    }
+
     async captureGuideContent(isJackpot: boolean = false, extName: string = "") {
         let guidepages = await this.game.getCountFrameLocator(GuideLocator.xpathItem);
         if (guidepages == 0) {
@@ -78,37 +107,91 @@ export class GameGuides {
         let guidepages = await this.game.getCountFrameLocator(GuideLocator.xpathItem);
         expect(guidepages).toBeGreaterThan(0);
         
+        const root = await this.getRootLocator(this.game.page);
+        
         for (let index = 1; index <= guidepages; index++) {
             const filename = isJackpot == true ? `${extName}guide-JP-${index}` : `${extName}guide-${index}`;
             const element = `${GuideLocator.xpathItem}[${index}]`;
-            await expect.soft( this.game.page.frameLocator("iframe").locator(element)).toHaveScreenshot(filename+'.png', { maxDiffPixelRatio: 0.05 });
+            await expect.soft(root.locator(element)).toHaveScreenshot(filename+'.png', {  maxDiffPixels: 1500  });
+        }
+
+        await this.game.page.mouse.click(640, 15);
+        await this.game.waitForTimeout(1000);
+    }
+
+    async verifyGuidePFContent() {
+        let guidepages = await this.game.getCountFrameLocator(GuideLocator.xpathItemPF);
+        expect(guidepages).toBeGreaterThan(0);
+        
+        const root = await this.getRootLocator(this.game.page);
+        
+        for (let index = 1; index <= guidepages; index++) {
+            const filename = `PF-guide-${index}`;
+            const element = `${GuideLocator.xpathItemPF}[${index}]`;
+            await expect.soft(root.locator(element)).toHaveScreenshot(filename+'.png', { maxDiffPixels: 1500 });
         }
     }
 
     async snapshot(page: Page, name: string, element: string) {
-        //const imageName = formatName(name);
-        let root: any = page;
-        if (
-            await page
-                .frameLocator("#frmGame")
-                .frameLocator("#microsite")
-                .frameLocator("#webview")
-                .locator(`${GuideLocator.xpathItem}[1]`)
-                .isVisible()
-        ) {
-            root = page.frameLocator("#frmGame").frameLocator("#microsite").frameLocator("#webview");
-        } else if (await page.frameLocator("#frmGame").frameLocator("iframe").locator(`${GuideLocator.xpathItem}[1]`).isVisible()) {
-            root = page.frameLocator("#frmGame").frameLocator("iframe");
-        } else if (await page.frameLocator("iframe").frameLocator("#webview").locator(`${GuideLocator.xpathItem}[1]`).isVisible()) {
-            root = page.frameLocator("iframe").frameLocator("#webview");
-        } 
-        else if (await page.frameLocator('//iframe[contains(@title,"Gaming")]').frameLocator('//iframe[contains(@title,"Game")]').frameLocator('#webview').locator(`${GuideLocator.xpathItem}[1]`).isVisible()) {
-            root = page.frameLocator('//iframe[contains(@title,"Gaming")]').frameLocator('//iframe[contains(@title,"Game")]').frameLocator('#webview');
-        }
-        else {
-            root = page.frameLocator("iframe");
-        }
+        const root = await this.getRootLocator(page);
         await root.locator(element).screenshot({ path: formatScreenshotFile(name) });
+    }
+
+    private async getRootLocator(page: Page) {
+        try {
+            if (
+                await page
+                    .frameLocator("#frmGame")
+                    .frameLocator("#microsite")
+                    .frameLocator("#webview")
+                    .locator(`${GuideLocator.xpathItem}[1]`)
+                    .isVisible()
+            ) {
+                return page.frameLocator("#frmGame").frameLocator("#microsite").frameLocator("#webview");
+            }
+        } catch (e) {
+            // Continue to next check
+        }
+
+        try {
+            if (await page.frameLocator("#frmGame").frameLocator("iframe").first().locator(`${GuideLocator.xpathItem}[1]`).isVisible()) {
+                return page.frameLocator("#frmGame").frameLocator("iframe").first();
+            }
+        } catch (e) {
+            // Continue to next check
+        }
+
+        try {
+            if (await page.frameLocator("iframe").first().frameLocator("#webview").locator(`${GuideLocator.xpathItem}[1]`).isVisible()) {
+                return page.frameLocator("iframe").first().frameLocator("#webview");
+            }
+        } catch (e) {
+            // Continue to next check
+        }
+
+        try {
+            if (await page.frameLocator('//iframe[contains(@title,"Gaming")]').first().frameLocator('//iframe[contains(@title,"Game")]').first().frameLocator('#webview').locator(`${GuideLocator.xpathItem}[1]`).isVisible()) {
+                return page.frameLocator('//iframe[contains(@title,"Gaming")]').first().frameLocator('//iframe[contains(@title,"Game")]').first().frameLocator('#webview');
+            }
+        } catch (e) {
+            // Continue to next check
+        }
+
+        // Try to find the iframe that contains the guide element
+        const iframeCount = await page.locator("iframe").count();
+        for (let i = 0; i < iframeCount; i++) {
+            try {
+                const isVisible = await page.frameLocator("iframe").nth(i).locator(`${GuideLocator.xpathItem}[1]`).isVisible();
+                if (isVisible) {
+                    return page.frameLocator("iframe").nth(i);
+                }
+            } catch (e) {
+                // Continue to next iframe
+            }
+        }
+        
+        // Fallback to first iframe
+        return page.frameLocator("iframe").first();
     }
 
 }

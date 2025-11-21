@@ -1,6 +1,7 @@
 export class GameConfiguration {
     id: number;
     name: string;
+    cocosNameSpace?: string;
     durations: {
         wholeRound: number;
         placingBets: number;

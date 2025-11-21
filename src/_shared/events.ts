@@ -17,4 +17,6 @@ export enum GameEvent {
     Odds = "odds",
     Bonuses = "bonuses",
     Jackpot = "prizes",
+    Multiplier = "multiplier",
+    RecentBet = "recentBet",
 }

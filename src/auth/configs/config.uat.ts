@@ -3,7 +3,7 @@ export default {
     l1lobbyDomain: "VendorGame/OpenSabaClub?deviceType=1&GameID",
     l1memberSiteMobile: "http://casinoqavm2.viva88.com:6201/",
     l1lobbyDomainMobile: "VendorGame/OpenSabaClub?deviceType=1&GameID=",
-    l2memberSite: "http://qeo013.athena000.com/",
+    l2memberSite: "https://osqad01.nova88.com/",
     l2lobbyDomain: "VendorGame/GamePageLoading?Game=VGaming&refer=&GameID=",
     l2memberSiteMobile: "http://qcm014.athena000.com/",
     l2lobbyDomainMobile: "#ThirdPartyGame/vid=66&gid=",

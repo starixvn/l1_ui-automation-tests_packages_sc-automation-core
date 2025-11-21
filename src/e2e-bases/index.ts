@@ -1,4 +1,4 @@
-import { IBaseOptions } from "./base-options";
+import { IBaseOptions, IBaseOptionsCocos } from "./base-options";
 import { MiniGameBase } from "./mini-game-base.spec";
 import { TableGameBase } from "./table-game-base.spec";
 import { SlotGameBase } from "./slot-game-base.spec";
@@ -12,10 +12,12 @@ import { MarbleGameBase } from "./marble-game-base.spec";
 import { TapGameBase } from "./tap-game-base.spec";
 import { PortrailCascadingGameBase } from "./portrail-cascading-slot-game-base.spec";
 import { PortrailClassicGameBase } from "./portrail-classic-slot-game-base.spec";
+import { TapGameBaseCocos } from "./tap-game-base-cocos.spec";
 
 
 export {
     IBaseOptions,
+    IBaseOptionsCocos,
     MiniGameBase,
     TableGameBase,
     MultiplayGameOptions,
@@ -29,5 +31,6 @@ export {
     MarbleGameBase,
     TapGameBase,
     PortrailCascadingGameBase,
-    PortrailClassicGameBase
+    PortrailClassicGameBase,
+    TapGameBaseCocos
 };

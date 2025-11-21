@@ -487,6 +487,8 @@ export class PortrailClassicGameBase {
         // Adjust Bet Level
         await this.game.clickCocos(`bet-level-${betamount.toString()}`,1000);
         await this.game.clickOutSide();
+        await this.game.waitForTimeout(1000);
+
     }
 }
 

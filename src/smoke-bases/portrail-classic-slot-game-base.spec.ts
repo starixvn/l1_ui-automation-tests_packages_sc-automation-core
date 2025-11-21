@@ -264,8 +264,10 @@ export class PortrailClassicGameBase {
     async setBetConfiguration(betamount: number) {
         await this.game.clickCocos(this.locators.betAmountSetting,1000);
         // Adjust Bet Level
+        expect(await this.game.isCocosLocatorExists(`bet-level-${betamount.toString()}`), "Bet level button not found").toBe(true);
         await this.game.clickCocos(`bet-level-${betamount.toString()}`,1000);
         await this.game.clickOutSide();
+        await this.game.waitForTimeout(1000);
     }
 }
 
