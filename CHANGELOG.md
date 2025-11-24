@@ -1,3 +1,10 @@
+## [1.83.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.83.1...v1.83.2) (2025-11-24)
+
+
+### Bug Fixes
+
+* get round id from retry placebet ([28017fe](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/28017fe969a035b59a8cae9d74774b7372361146))
+
 ## [1.83.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.83.0...v1.83.1) (2025-11-21)
 
 
