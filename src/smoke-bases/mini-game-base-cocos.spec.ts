@@ -80,9 +80,8 @@ export class RoundGameBaseCocos {
                 amount: this.extractAmountFromLocator(amountLocator)
             };
             
-            const roundId = await this.game.findLabelText(this.locators.lblRoundId);
             // Act - Place bet with retry until success
-            await this.placeBetWithRetry(bet.choice??'', bet.amountLocator?.toString());
+            const roundId = await this.placeBetWithRetry(bet.choice??'', bet.amountLocator?.toString());
             this.settledResults = await this.game.waitForSettlement();
             this.settledResults.amount = bet.amount;
             expect(roundId).toContain(this.settledResults.roundId.toString());
@@ -167,7 +166,7 @@ export class RoundGameBaseCocos {
 
     }
 
-    private async placeBetWithRetry(choice: string, amountLocator?: string): Promise<void> {
+    private async placeBetWithRetry(choice: string, amountLocator?: string): Promise<string> {
         let placeBetResponse: any;
         let retryCount = 0;
         const maxRetries = 10; // Prevent infinite loop
@@ -188,12 +187,10 @@ export class RoundGameBaseCocos {
                 console.log(`Place bet failed (endBet: -1), retrying... (attempt ${retryCount})`);
                 await this.game.waitForTimeout(500); // Small delay before retry
             } else {
-                break; // Success, exit loop
+                return await this.game.findLabelText(this.locators.lblRoundId);
             }
         } while (retryCount < maxRetries);
         
-        if (retryCount >= maxRetries) {
-            throw new Error(`Failed to place bet after ${maxRetries} attempts`);
-        }
+        throw new Error(`Failed to place bet after ${maxRetries} attempts`);
     }
 }
