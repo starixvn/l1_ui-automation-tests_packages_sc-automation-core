@@ -1,3 +1,10 @@
+## [1.83.4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.83.3...v1.83.4) (2025-11-28)
+
+
+### Bug Fixes
+
+* add project code to verify game guide ([c577bdb](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/c577bdb32142e72a0ccad1791d2bab05bbac2264))
+
 ## [1.83.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.83.2...v1.83.3) (2025-11-28)
 
 
