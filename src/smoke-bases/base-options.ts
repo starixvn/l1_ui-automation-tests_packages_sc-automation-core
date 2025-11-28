@@ -15,7 +15,7 @@ export interface IBaseOptionsCocos {
     gameConfiguration: GameConfiguration;
     locators?: any;
     snapshotFolderPath: string;
-    placeBetChoices?: string[];
+    placeBetChoices?: any;
     placeBetAmount?: string[];
     totalTaps?: number;
     isJackpot?: boolean;

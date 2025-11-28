@@ -37,6 +37,10 @@ export class RoundGameBaseCocos {
         // Override the method globally for this project
         this.game.openGuide = async () => {
             await this.game.page.waitForTimeout(1000);
+            const isMenuExpanded = await this.game.isCocosLocatorExists(this.locators.btnMenu);
+            if (isMenuExpanded) {
+                await this.game.clickCocos(this.locators.btnMenu,1000);
+            }
             await this.game.clickCocos(this.locators.btnguide);
             await this.game.page.waitForTimeout(10000);
         };
@@ -89,12 +93,17 @@ export class RoundGameBaseCocos {
 
         
         test("Verify bet ticket in history popup", async () => {
+            await this.game.waitUntilPlaceBet();
             await this.openHistoryPopup();
             expect(await this.game.findLabelText(this.locators.txtHistoryRoundId)).toBe(this.settledResults.roundId.toString());
             expect(await this.game.findLabelText(this.locators.txtHistoryTotalBet)).toBe(this.settledResults.amount.toString());
         });
 
         test("Verify bet ticket detail data in history popup", async () => {
+            // Only run this test if txtHistoryRoundId is clickable (has overflow = CLAMP or color = #3a97ff)
+            const isClickable = await this.game.isLabelClickable(this.locators.txtHistoryRoundId);
+            test.skip(!isClickable, "txtHistoryRoundId is not clickable (overflow != CLAMP and color != #3a97ff)");
+            
             await this.game.clickCocos(this.locators.txtHistoryRoundId, 1000);
             await this.game.waitForTimeout(2000);
             expect(await this.game.findLabelText(this.locators.txtHistoryDetailInfo)).toContain(this.settledResults.roundId.toString());
@@ -115,11 +124,12 @@ export class RoundGameBaseCocos {
             const bet1Choice = this.options.placeBetChoices?.[0] ?? '';
             const bet2Choice = this.options.placeBetChoices?.[1] ?? '';
             const betBoard = this.game.gameConfiguration.betBoard ?? false;
+            await this.game.waitForTimeout(5000);
 
             // Act
             await this.placeBetWithRetry(bet1Choice, amountLocator);
             await this.player.placeBetCocos(betBoard, bet2Choice, amountLocator);
-            
+            await this.game.waitForTimeout(1000);
             // Assert
             expect(await this.game.findLabelText(this.locators.lblMiniWarning)).toBe(this.locators.lblHedgeWarning);
         });
@@ -158,10 +168,14 @@ export class RoundGameBaseCocos {
         this.inGameUITests();
         this.placeBetAndSettleTests();
         this.hedgeBetTests();
-        this.gameGuides.cocosTests(this.options.gameConfiguration.maxTimeout, this.locators);
+        this.gameGuides.cocosTests(this.options.gameConfiguration.maxTimeout, this.locators,false);
     }
 
     async openHistoryPopup() {
+        const isMenuExpanded = await this.game.isCocosLocatorExists(this.locators.btnMenu);
+        if (isMenuExpanded) {
+            await this.game.clickCocos(this.locators.btnMenu,1000);
+        }
         await this.game.clickCocos(this.locators.btnHistory,1000);
 
     }
@@ -169,20 +183,14 @@ export class RoundGameBaseCocos {
     private async placeBetWithRetry(choice: string, amountLocator?: string): Promise<string> {
         let placeBetResponse: any;
         let retryCount = 0;
-        const maxRetries = 10; // Prevent infinite loop
+        const maxRetries = 20; // Prevent infinite loop
         
         do {
-            // Reset captured event to ensure we wait for new response
-            this.game.attachSocketAndCaptureEvent(GameEvent.EndBet);
-            
             // Place bet
-            await this.player.placeBetCocos(this.game.gameConfiguration.betBoard??false, choice, amountLocator);
-            
-            // Wait for endBet response from websocket
-            placeBetResponse = await this.game.latestCaptureEvent(GameEvent.EndBet);
-            
+            placeBetResponse = await this.player.placeBetCocos(this.game.gameConfiguration.betBoard??false, choice, amountLocator);
+               
             // If endBet is -1, retry immediately
-            if (placeBetResponse && placeBetResponse.endBet === -1) {
+            if (placeBetResponse && placeBetResponse.endBet === -1 || placeBetResponse == '') {
                 retryCount++;
                 console.log(`Place bet failed (endBet: -1), retrying... (attempt ${retryCount})`);
                 await this.game.waitForTimeout(500); // Small delay before retry

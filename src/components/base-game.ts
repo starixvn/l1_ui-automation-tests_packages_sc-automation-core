@@ -390,7 +390,7 @@ export class BaseGame {
         let settledResults = {
             settlementResult: message?.finish?.settlementResult,
             odds: this.odds,
-            winStatus: typeof winningByChoice == "object" ? winningByChoice.status.win : "",
+            winStatus: typeof winningByChoice == "object" && winningByChoice !== null && winningByChoice.status ? winningByChoice.status.win : "",
             roundId: message.finish.roundId || 0,
         };
 
@@ -401,7 +401,8 @@ export class BaseGame {
         if (this.gameConfiguration.slotsgame) {
             settledResults["winAmount"] = message?.finish?.betWin ?? 0;
         } else {
-            settledResults["winAmount"] = winningByChoice?.status.win ? winningByChoice.status.bet : 0;
+            const hasWin = winningByChoice !== null && winningByChoice !== void 0 && winningByChoice.status && winningByChoice.status.win;
+            settledResults["winAmount"] = hasWin ? (winningByChoice.status.bet || 0) : 0;
         }
         return settledResults;
     }
@@ -893,123 +894,271 @@ export class BaseGame {
         }
     }
 
-    async clickCocos(nodeNameOrPath, timeout = 250) {
-        try {
-            await this.page.evaluate((nameOrPath) => {
-                const cc = window.cc;
-                if (!cc || !cc.find) {
-                    return { success: false, message: 'Cocos Creator not found' };
+    async clickCocos(nodeNameOrPath, timeout = 250, clickMethod: 'auto' | 'button' | 'touch' | 'direct' = 'auto') {
+        const result = await this.page.evaluate((params: { nodeNameOrPath: string; clickMethod: string }): { success: boolean; method?: string; message?: string } => {
+            const { nodeNameOrPath, clickMethod } = params;
+            const cc = window.cc;
+            if (!cc || !cc.find) {
+                return { success: false, message: 'Cocos Creator not found' };
+            }
+            // Find node by path or name
+            let targetNode = null;
+            if (nodeNameOrPath.includes('/')) {
+                targetNode = cc.find(nodeNameOrPath);
+            }
+            else {
+                const canvas = cc.find('Canvas');
+                if (!canvas) {
+                    return { success: false, message: 'Canvas not found' };
                 }
-                let targetNode = null;
-                // Find node by path or name
-                if (nameOrPath.includes('/')) {
-                    targetNode = cc.find(nameOrPath);
-                }
-                else {
-                    const canvas = cc.find('Canvas');
-                    if (!canvas) {
-                        return { success: false, message: 'Canvas not found' };
-                    }
-                    // Robust node finding that handles both name/_name and children/_children
-                    const findByName = (parent, targetName) => {
-                        var _a, _b, _c;
-                        if (!parent)
-                            return null;
-                        const nodeName = (_a = parent.name) !== null && _a !== void 0 ? _a : parent._name;
-                        if (nodeName === targetName) {
-                            return parent;
-                        }
-                        const children = (_c = (_b = parent.children) !== null && _b !== void 0 ? _b : parent._children) !== null && _c !== void 0 ? _c : [];
-                        for (const child of children) {
-                            const found = findByName(child, targetName);
-                            if (found)
-                                return found;
-                        }
+                const findByName = (parent, targetName) => {
+                    if (!parent)
                         return null;
-                    };
-                    targetNode = findByName(canvas, nameOrPath);
+                    const nodeName = parent.name || parent._name;
+                    if (nodeName === targetName) {
+                        return parent;
+                    }
+                    const children = parent.children || parent._children || [];
+                    for (const child of children) {
+                        const found = findByName(child, targetName);
+                        if (found)
+                            return found;
+                    }
+                    return null;
+                };
+                targetNode = findByName(canvas, nodeNameOrPath);
+            }
+            if (!targetNode) {
+                return { success: false, message: `Node not found: ${nodeNameOrPath}` };
+            }
+            const node = targetNode as any;
+            const button1 = node.getComponent && node.getComponent(cc.Button);
+            
+            // Method 1: Try Button component clickEvents (if button exists, has clickEvents, and not FixedShapeButton)
+            // Skip if node name contains "even<FixedShapeButton>" or button is FixedShapeButton type
+            let isFixedShapeButton = false;
+            try {
+                // Check node name
+                const nodeName = node.name || node._name || '';
+                if (nodeName.includes('FixedShapeButton') || nodeName.includes('even<FixedShapeButton>')) {
+                    isFixedShapeButton = true;
+                    console.log('[clickCocos] FixedShapeButton detected by node name:', nodeName);
                 }
-                if (!targetNode) {
-                    return { success: false, message: `Node not found: ${nameOrPath}` };
-                }
-                // Method 1: Try Button component clickEvents first
-                let method1Success = false;
-                try {
-                    const button = (targetNode as any).getComponent(cc.Button);
-                    if (button && button.clickEvents && button.clickEvents.length > 0) {
-                        button.clickEvents.forEach((eventHandler) => {
-                            if (eventHandler && eventHandler.emit) {
-                                eventHandler.emit([eventHandler.customEventData]);
-                            }
-                        });
-                        method1Success = true;
+                // Check button component type/name
+                if (!isFixedShapeButton && button1) {
+                    const buttonType = button1.constructor ? button1.constructor.name : '';
+                    const buttonName = button1.name || '';
+                    if (buttonType === 'FixedShapeButton' || buttonName === 'FixedShapeButton' || 
+                        buttonType.includes('FixedShapeButton') || buttonName.includes('FixedShapeButton')) {
+                        isFixedShapeButton = true;
+                        console.log('[clickCocos] FixedShapeButton detected by button type/name:', buttonType, buttonName);
                     }
                 }
-                catch (e) {
-                    // Button component method failed, continue to other methods
-                }
-                // If Method 1 succeeded, skip other methods to avoid double-click
-                if (method1Success) {
-                     return { success: true };
-                }
-                // Method 2: Try Touch events with dispatchEvent
-                try {
-                    const createTouchEvent = (type) => {
-                        try {
-                            const touch = new cc.Touch(0, 0, 0);
-                            if (touch.setTouchInfo) {
-                                touch.setTouchInfo(0, 0, 0);
-                            }
-                            const event = new cc.Event.EventTouch([touch], true);
-                            event.type = type;
-                            event.touch = touch;
-                            event.bubbles = true;
-                            return event;
-                        }
-                        catch {
-                            return { type, touch: null, bubbles: true };
-                        }
-                    };
-                    const touchEvents = ['touchstart', 'touchmove', 'touchend'].map(createTouchEvent);
-                    touchEvents.forEach(ev => {
-                        try {
-                            if ((targetNode as any).dispatchEvent) {
-                                (targetNode as any).dispatchEvent(ev);
+                // Check if has FixedShapeButton component
+                if (!isFixedShapeButton && node.getComponent) {
+                    if (cc.FixedShapeButton && node.getComponent(cc.FixedShapeButton)) {
+                        isFixedShapeButton = true;
+                        console.log('[clickCocos] FixedShapeButton detected by component check');
+                    }
+                    // Also check by component name
+                    if (!isFixedShapeButton) {
+                        const components = node.getComponents && node.getComponents(cc.Component);
+                        if (components) {
+                            for (let i = 0; i < components.length; i++) {
+                                const comp = components[i];
+                                if (comp && (comp.constructor.name === 'FixedShapeButton' || comp.name === 'FixedShapeButton')) {
+                                    isFixedShapeButton = true;
+                                    console.log('[clickCocos] FixedShapeButton detected by component name');
+                                    break;
+                                }
                             }
                         }
-                        catch { }
-                    });
-                    // Use systemEvent if available
-                    if (cc.systemEvent) {
-                        touchEvents.forEach(ev => {
+                    }
+                }
+            }
+            catch (e) {
+                console.log('[clickCocos] Error checking FixedShapeButton:', e);
+            }
+
+            // Method 1: Button clickEvents (emit)
+            const tryMethod1 = () => {
+                if (button1 && button1.clickEvents && button1.clickEvents.length > 0 && !isFixedShapeButton) {
+                    // Try emit method first
+                    for (const eventHandler of button1.clickEvents) {
+                        if (eventHandler && eventHandler.emit) {
                             try {
-                                cc.systemEvent.emit(ev.type, ev);
+                                eventHandler.emit([eventHandler.customEventData]);
+                                return { success: true, method: 'Button.clickEvents.emit' };
                             }
-                            catch { }
-                        });
+                            catch (e) {
+                                // Emit failed, continue to next handler
+                            }
+                        }
                     }
                 }
-                catch (e) {
-                    // Touch event method failed, continue to fallback
-                }
-                // Method 3: Fallback to simple emit events
-                try {
-                    if ((targetNode as any).emit) {
-                        (targetNode as any).emit('click');
-                        (targetNode as any).emit('touchstart');
-                        (targetNode as any).emit('touchend');
+                // If button has no clickEvents, try simple emit
+                if (button1 && (!button1.clickEvents || button1.clickEvents.length === 0)) {
+                    if (node.emit) {
+                        try {
+                            node.emit('click');
+                            node.emit('touchstart');
+                            node.emit('touchend');
+                            return { success: true, method: 'Node.emit(click/touchstart/touchend)' };
+                        }
+                        catch (e) {
+                            // Emit failed
+                        }
                     }
                 }
-                catch (e) {
-                    // Emit method failed
+                return null;
+            };
+
+            // Method 2: Touch events with dispatchEvent
+            const tryMethod2 = () => {
+                let touchX = 0;
+                let touchY = 0;
+                if (node.getBoundingBoxToWorld) {
+                    const boundingBox = node.getBoundingBoxToWorld();
+                    touchX = boundingBox.x + boundingBox.width / 2;
+                    touchY = boundingBox.y + boundingBox.height / 2;
                 }
-                return { success: true };
-            }, nodeNameOrPath);
-            await this.waitForTimeout(timeout);
+                else if (node.getPosition) {
+                    const pos = node.getPosition();
+                    touchX = pos.x || 0;
+                    touchY = pos.y || 0;
+                }
+                else if (node.getWorldPosition) {
+                    const worldPos = node.getWorldPosition();
+                    touchX = worldPos.x || 0;
+                    touchY = worldPos.y || 0;
+                }
+                const createTouchEvent = (type) => {
+                    const touch = new cc.Touch(touchX, touchY, 0);
+                    if (touch.setTouchInfo)
+                        touch.setTouchInfo(touchX, touchY, 0);
+                    if (touch.setLocation)
+                        touch.setLocation(touchX, touchY);
+                    const event = new cc.Event.EventTouch([touch], true);
+                    event.type = type;
+                    event.touch = touch;
+                    event.bubbles = true;
+                    if (event.setLocation)
+                        event.setLocation(touchX, touchY);
+                    return event;
+                };
+                const touchStart = createTouchEvent('touchstart');
+                const touchEnd = createTouchEvent('touchend');
+                // Try dispatch on target node first
+                if (node.dispatchEvent) {
+                    node.dispatchEvent(touchStart);
+                    node.dispatchEvent(touchEnd);
+                    return { success: true, method: 'Touch events (node.dispatchEvent)' };
+                }
+                // If node.dispatchEvent didn't work, try systemEvent
+                if (cc.systemEvent) {
+                    cc.systemEvent.emit('touchstart', touchStart);
+                    cc.systemEvent.emit('touchend', touchEnd);
+                    return { success: true, method: 'Touch events (cc.systemEvent)' };
+                }
+                // If both above didn't work, try parent node
+                if (node.parent && node.parent.dispatchEvent) {
+                    node.parent.dispatchEvent(touchStart);
+                    node.parent.dispatchEvent(touchEnd);
+                    return { success: true, method: 'Touch events (parent.dispatchEvent)' };
+                }
+                return null;
+            };
+
+            // Method 3: Direct method call
+            const tryMethod3 = () => {
+                if (button1 && button1.clickEvents && button1.clickEvents.length > 0 && !isFixedShapeButton) {
+                    // Try direct method call
+                    for (const eventHandler of button1.clickEvents) {
+                        if (eventHandler && eventHandler.target && typeof eventHandler.handler === 'string') {
+                            const handlerName = eventHandler.handler;
+                            const customEventData = eventHandler.customEventData;
+                            const handlerTarget = eventHandler.target;
+                            // Try on target node
+                            if (typeof handlerTarget[handlerName] === 'function') {
+                                try {
+                                    const customEventDataNum = parseInt(customEventData, 10);
+                                    if (!isNaN(customEventDataNum)) {
+                                        handlerTarget[handlerName](customEventDataNum);
+                                    }
+                                    else {
+                                        handlerTarget[handlerName](customEventData);
+                                    }
+                                    return { success: true, method: 'Button.clickEvents.direct-call-on-target' };
+                                }
+                                catch (e) {
+                                    // Continue to components
+                                }
+                            }
+                            // Try on components
+                            const components = handlerTarget.getComponents && handlerTarget.getComponents(cc.Component);
+                            if (components) {
+                                for (let i = 0; i < components.length; i++) {
+                                    const comp = components[i];
+                                    if (comp && typeof comp[handlerName] === 'function') {
+                                        try {
+                                            const customEventDataNum = parseInt(customEventData, 10);
+                                            if (!isNaN(customEventDataNum)) {
+                                                comp[handlerName].call(comp, customEventDataNum);
+                                            }
+                                            else {
+                                                comp[handlerName].call(comp, customEventData);
+                                            }
+                                            return { success: true, method: `Button.clickEvents.direct-call-on-component[${i}]` };
+                                        }
+                                        catch (e) {
+                                            // Continue to next component
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                return null;
+            };
+
+            // Execute based on selected method
+            if (clickMethod === 'button') {
+                // Method 1 only
+                const result = tryMethod1();
+                if (result) return result;
+            }
+            else if (clickMethod === 'touch') {
+                // Method 2 only
+                const result = tryMethod2();
+                if (result) return result;
+            }
+            else if (clickMethod === 'direct') {
+                // Method 3 only
+                const result = tryMethod3();
+                if (result) return result;
+            }
+            else {
+                // auto: Try all methods in order (1 -> 2 -> 3)
+                const result1 = tryMethod1();
+                if (result1) return result1;
+                
+                const result2 = tryMethod2();
+                if (result2) return result2;
+                
+                const result3 = tryMethod3();
+                if (result3) return result3;
+            }
+            
+            return { success: false, method: 'No method available' };
+        }, { nodeNameOrPath, clickMethod });
+        if (result && result.method) {
+            console.log(`${result.method} Node: ${nodeNameOrPath}`);
         }
-        catch (err: any) {
-            console.log(`[clickCocos] Error: ${err.message}`);
+        else if (result && result.message) {
+            console.log(`[clickCocos] Node: ${nodeNameOrPath}, Error: ${result.message}`);
         }
+        await this.waitForTimeout(timeout);
     }
 
     
@@ -1062,6 +1211,69 @@ export class BaseGame {
         } catch (err) {
           console.error(`Error finding label text: ${(err as Error).message}`);
           return '';
+        }
+    }
+
+    // Helper function to check if label is clickable (has overflow = CLAMP or color = #3a97ff)
+    async isLabelClickable(nodeNameOrPath: string): Promise<boolean> {
+        try {
+          const result = await this.page.evaluate((nameOrPath) => {
+            const cc = window.cc;
+            if (!cc) return false;
+            
+            let targetNode = null;
+            
+            if (nameOrPath.includes('/')) {
+              targetNode = cc.find(nameOrPath);
+            } else {
+              const findNodeByName = (parent: any, targetName: string) => {
+                if (parent.name === targetName) {
+                  return parent;
+                }
+                for (let i = 0; i < parent.children.length; i++) {
+                  const found = findNodeByName(parent.children[i], targetName);
+                  if (found) return found;
+                }
+                return null;
+              };
+              
+              const canvas = cc.find('Canvas');
+              if (!canvas) return false;
+              targetNode = findNodeByName(canvas, nameOrPath);
+            }
+            
+            if (!targetNode || !(targetNode as any)._active) {
+              return false;
+            }
+    
+            const label = (targetNode as any).getComponent(cc.Label);
+            let labelComponent = label;
+            if (!labelComponent) {
+              labelComponent = (targetNode as any).getComponentInChildren(cc.Label);
+            }
+            
+            if (!labelComponent) {
+              return false;
+            }
+            
+            // Check overflow = CLAMP (value is 1 in Cocos Creator)
+            const overflow = labelComponent.overflow;
+            const isClamp = overflow === 1 || (cc.Label && cc.Label.Overflow && overflow === cc.Label.Overflow.CLAMP);
+            
+            // Check color = #3a97ff (RGB: 58, 151, 255)
+            // Check both label component color and node color
+            const labelColor = labelComponent.color;
+            const nodeColor = labelComponent.node ? labelComponent.node.color : null;
+            const isBlueColor = (labelColor && labelColor.r === 58 && labelColor.g === 151 && labelColor.b === 255) ||
+                               (nodeColor && nodeColor.r === 58 && nodeColor.g === 151 && nodeColor.b === 255);
+            
+            return isClamp || isBlueColor;
+          }, nodeNameOrPath);
+    
+          return result || false;
+        } catch (err) {
+          console.error(`Error checking label clickable: ${(err as Error).message}`);
+          return false;
         }
     }
 

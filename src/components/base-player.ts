@@ -90,17 +90,28 @@ export class BasePlayer {
         }
     }
 
-    async placeBetCocos(betBoard:boolean, choice: string, amountLocator?:string): Promise<any> {
+    private async clickChoice(choice: any, timeout: number): Promise<void> {
+        if (typeof choice === 'string') {
+            await this.game.clickCocos(choice, timeout);
+        } else if (choice && typeof choice === 'object' && 'x' in choice && 'y' in choice) {
+            await this.game.page.mouse.click(choice.x, choice.y);
+            await this.game.waitForTimeout(timeout);
+        }
+    }
+
+    async placeBetCocos(betBoard:boolean, choice: any, amountLocator?:string): Promise<any> {
+        this.game.attachSocketAndCaptureEvent(GameEvent.EndBet);
         if (betBoard) {
-            await this.game.clickCocos(choice, 1000);
+            await this.clickChoice(choice, 1000);
             if (amountLocator) {
-                await this.game.clickCocos(amountLocator,1000);
-                await this.game.clickCocos("button.ok");
+                await this.game.clickCocos(amountLocator, 1000);
+                await this.game.clickCocos("button.ok", 500);
             }
+        } else {
+            await this.game.clickCocos(amountLocator, 1000);
+            await this.clickChoice(choice, 500);
         }
-        else {
-            await this.game.clickCocos(choice);
-        }
+        return await this.game.latestCaptureEvent(GameEvent.EndBet);
     }
 
     async placeBetTapGame(locator: any,amountLocator: string, totalTaps: number): Promise<any> {

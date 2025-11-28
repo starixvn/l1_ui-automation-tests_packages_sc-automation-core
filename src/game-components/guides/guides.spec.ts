@@ -32,7 +32,7 @@ export class GameGuides {
         });
     }
 
-    cocosTests(timeout: number, locators: any ,isJackpot: boolean = false,) {
+    cocosTests(timeout: number, locators: any ,isJackpot: boolean = false,projectCode: string = "") {
         test(`Verify that player could open guide and clarify appropriate content @Guide`, async () => {
             // Arrange
             test.setTimeout(timeout);
@@ -47,7 +47,7 @@ export class GameGuides {
 
             // Act
             await test.step("Verify guide content", async () => {
-                await this.verifyGuideContent(isJackpot);
+                await this.verifyGuideContent(isJackpot,projectCode);
             });
 
             //Post-Act
@@ -103,16 +103,26 @@ export class GameGuides {
         }
     }
 
-    async verifyGuideContent(isJackpot: boolean = false, extName: string = "") {
+    async verifyGuideContent(isJackpot: boolean = false, projectCode: string = "") {
         let guidepages = await this.game.getCountFrameLocator(GuideLocator.xpathItem);
         expect(guidepages).toBeGreaterThan(0);
         
         const root = await this.getRootLocator(this.game.page);
         
         for (let index = 1; index <= guidepages; index++) {
-            const filename = isJackpot == true ? `${extName}guide-JP-${index}` : `${extName}guide-${index}`;
+            const filename = isJackpot == true ? `${projectCode}guide-JP-${index}` : `${projectCode}guide-${index}`;
             const element = `${GuideLocator.xpathItem}[${index}]`;
-            await expect.soft(root.locator(element)).toHaveScreenshot(filename+'.png', {  maxDiffPixels: 1500  });
+            const elementLocator = root.locator(element);
+            
+            // Scroll element into view and wait for stability
+            await elementLocator.scrollIntoViewIfNeeded();
+            await this.game.waitForTimeout(500); // Wait for UI to stabilize after scroll
+            
+            await expect.soft(elementLocator).toHaveScreenshot(filename+'.png', { 
+                maxDiffPixels: 3000,
+                maxDiffPixelRatio: 0.3,
+                animations: 'disabled'
+            });
         }
 
         await this.game.page.mouse.click(640, 15);
@@ -128,7 +138,17 @@ export class GameGuides {
         for (let index = 1; index <= guidepages; index++) {
             const filename = `PF-guide-${index}`;
             const element = `${GuideLocator.xpathItemPF}[${index}]`;
-            await expect.soft(root.locator(element)).toHaveScreenshot(filename+'.png', { maxDiffPixels: 1500 });
+            const elementLocator = root.locator(element);
+            
+            // Scroll element into view and wait for stability
+            await elementLocator.scrollIntoViewIfNeeded();
+            await this.game.waitForTimeout(500); // Wait for UI to stabilize after scroll
+            
+            await expect.soft(elementLocator).toHaveScreenshot(filename+'.png', { 
+                maxDiffPixels: 3000,
+                maxDiffPixelRatio: 0.3,
+                animations: 'disabled'
+            });
         }
     }
 

@@ -172,7 +172,10 @@ export const RoundGame_Locators = {
     btnCloseHistoryDetail: `${MINI_GAME_DIALOG}/GameNameBetHistory/betdetail-frame/BetDetail/auto_scale/back_wrapper/CloseButton`,
     btnCloseHistory: `${MINI_GAME_DIALOG}/GameNameHistory/history-frame/BetDetail/auto scale/back-wrapper/CloseButton`,
     lblHedgeWarning: "Chỉ được cược 1 bên.",
-    
+    btnLobby: "Canvas/UI_landscape/menu-area/InGameMenu/home-icon",
+    btnMenu: "Canvas/UI_landscape/menu-area/InGameMenu/expandableMenu", 
+    btnCloseGuide: "Canvas/mini-panel/MiniPanel/GuideContainer/new-guide/main/background/CloseButton"
+
 }
 
 export function replaceGameNameInLocators<T extends Record<string, any>>(locators: T, gameName: string): T {
@@ -217,8 +220,8 @@ export const TapGame_Locators = {
     lblHardmode: "hard-mode",
     lblHardcoremode: "hardcore-mode",
     btnSound: "sfx",
-    btnguide: "Canvas/full/content/scroll/scroll-content/in-game-menu/expandable-layout/guide",
-    btnPfSetting: "Canvas/full/content/scroll/scroll-content/in-game-menu/expandable-layout/provably-fair-btn-001",
+    btnguide: "Canvas/full/content/scroll/scroll-content/auto-load-in-game-menu/in-game-menu/expandable-layout/guide",
+    btnPfSetting: "Canvas/full/content/scroll/scroll-content/auto-load-in-game-menu/in-game-menu/expandable-layout/provably-fair-btn-001",
     ckbRandomSeed: "Canvas/auto-lazy-load-container/lazy-load-container/custome-pf-container/pf-popup-container/container/ClientSeedSetting/content/layout/main-content/seed-wrapper/toggle-container/random/checkmark",
     txtRandomSeed: "Canvas/auto-lazy-load-container/lazy-load-container/custome-pf-container/pf-popup-container/container/ClientSeedSetting/content/layout/main-content/seed-wrapper/random-section/bg/value",
     ckbManualSeed: "Canvas/auto-lazy-load-container/lazy-load-container/custome-pf-container/pf-popup-container/container/ClientSeedSetting/content/layout/main-content/seed-wrapper/toggle-container/manual/checkmark",
@@ -229,25 +232,26 @@ export const TapGame_Locators = {
     lblGameName: "game-name",
     lblRtp: "rtp",
     lblAllBets: "lbl-top",
-    btnHistory: "Canvas/full/content/scroll/scroll-content/bet-result-container-portrait/tabheader/toggle-my-bet",
+    btnHistory: "Canvas/full/content/scroll/scroll-content/auto-load-bet-result-container-portrait/bet-result-container-portrait/tabheader/toggle-my-bet",
     btnLobby: "Canvas/full/content/scroll/scroll-content/back-to-lobby/outer-menu/lobby/lobby-out-side",
     btnCloseSoundSetting: "Canvas/auto-lazy-load-container/lazy-load-container/volume-container/volume-dialog/popup/back-wrapper/btnClosed",
     iconSoundSetting: "Canvas/auto-lazy-load-container/lazy-load-container/volume-container/volume-dialog/popup/back-wrapper/sfx",
     iconMusicSetting: "Canvas/auto-lazy-load-container/lazy-load-container/volume-container/volume-dialog/popup/back-wrapper/music",
     iconPFGuide: "Canvas/auto-lazy-load-container/lazy-load-container/custome-pf-container/pf-popup-container/container/ClientSeedSetting/content/title-section/icon-guide",
     lblAUtoCashoutNotice: "Canvas/full/content/scroll/scroll-content/auto-lazy-load-notice-container/lazy-load-notice-container/auto-cashout-nottice",
-    txtHistoryRound: "Canvas/full/content/scroll/scroll-content/bet-result-container-portrait/tabcontent/content-my-bet/my-bet-table/my-bet-body/my-bet-table-body/view/content",
+    txtHistoryRound: "Canvas/full/content/scroll/scroll-content/auto-load-bet-result-container-portrait/bet-result-container-portrait/tabcontent/content-my-bet/my-bet-table/my-bet-body/my-bet-table-body/view/content/",
     lblHistoryDetailRoundId: "Canvas/auto-lazy-load-container/lazy-load-container/bet-history-details-container/bet-detail-dialog/popup/back-wrapper/defail-summary-table/bet-details-summary-table/result-table/round/roundId-value",
     lblHistoryDetailCrashPoint: "Canvas/auto-lazy-load-container/lazy-load-container/bet-history-details-container/bet-detail-dialog/popup/back-wrapper/defail-summary-table/bet-details-summary-table/result-table/Node/crash-point-value",
     lblHistoryDetailTotalBet: "Canvas/auto-lazy-load-container/lazy-load-container/bet-history-details-container/bet-detail-dialog/popup/back-wrapper/detail-log-table/bet-detail-log-table/detail-table/content/total/valueBet",
     lblHistoryDetailTotalWin: "Canvas/auto-lazy-load-container/lazy-load-container/bet-history-details-container/bet-detail-dialog/popup/back-wrapper/detail-log-table/bet-detail-log-table/detail-table/content/total/valueWin",
     lblHistoryDetailMultiplier: "Canvas/auto-lazy-load-container/lazy-load-container/bet-history-details-container/bet-detail-dialog/popup/back-wrapper/detail-log-table/bet-detail-log-table/detail-table/content/rows/bet-detail-item/lblMultiplier",
-    btnCloseHistoryDetail: "Canvas/auto-lazy-load-container/lazy-load-container/bet-history-details-container/bet-detail-dialog/popup/back-wrapper/btnClosed",  
+    btnCloseHistoryDetail: "Canvas/auto-lazy-load-container/lazy-load-container/bet-history-details-container/bet-detail-dialog/popup/back-wrapper/btnClosed",
     btnCloseHistoryDetailPF: "Canvas/auto-lazy-load-container/lazy-load-container/custome-pf-container/pf-popup-container/container/PFVerification/content/title-section/btn-close",
     btnHistoryDetailPF: "Canvas/auto-lazy-load-container/lazy-load-container/bet-history-details-container/bet-detail-dialog/popup/back-wrapper/detail-log-table/bet-detail-log-table/PF",
-    iconHistoryDetailPFGuide: "Canvas/auto-lazy-load-container/lazy-load-container/custome-pf-container/pf-popup-container/container/PFVerification/content/title-section/icon-guide",
+    iconHistoryDetailPFGuide: "Canvas/auto-lazy-load-container/lazy-load-container/bet-history-details-container/bet-detail-dialog/popup/back-wrapper/detail-log-table/bet-detail-log-table/PF",
     lblClientSeed: "Canvas/auto-lazy-load-container/lazy-load-container/custome-pf-container/pf-popup-container/container/PFVerification/content/content-section/view/content/layout/client-seed/merge-cs/label-copy/bg/mask/Label",
-    lblHistoryDetailPFRoundId: "Canvas/auto-lazy-load-container/lazy-load-container/custome-pf-container/pf-popup-container/container/PFVerification/content/content-section/view/content/layout/round-info/round/roundId-value",
-    btnClosePFGuide: "Canvas/auto-lazy-load-container/lazy-load-container/pf-intro-container/pf-intro-popup-portrait/popup/content/popup-icon-close/popup-icon-close-001"
-
-}   
+    lblHistoryDetailPFRoundId: "Canvas/auto-lazy-load-container/lazy-load-container/custome-pf-container/pf-popup-container/container/PFVerification/content/round-info/round/roundId-value",
+    btnClosePFGuide: "Canvas/auto-lazy-load-container/lazy-load-container/pf-intro-container/pf-intro-popup-portrait/popup/content/popup-icon-close/popup-icon-close-001",
+    btnCloseGuide: "Canvas/auto-lazy-load-container/lazy-load-container/game-guide-direct-container/game-guide-portrait/popup/main/btn-close"
+}
+;
