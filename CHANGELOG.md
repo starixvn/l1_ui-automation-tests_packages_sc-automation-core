@@ -1,3 +1,10 @@
+## [1.83.3](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.83.2...v1.83.3) (2025-11-28)
+
+
+### Bug Fixes
+
+* clickCocos ([a3f266d](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/a3f266d9e19bea4a076c10129ffd0c614c3cf084))
+
 ## [1.83.2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.83.1...v1.83.2) (2025-11-24)
 
 
