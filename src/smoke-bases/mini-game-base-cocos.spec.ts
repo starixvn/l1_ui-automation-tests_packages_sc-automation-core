@@ -168,7 +168,7 @@ export class RoundGameBaseCocos {
         this.inGameUITests();
         this.placeBetAndSettleTests();
         this.hedgeBetTests();
-        this.gameGuides.cocosTests(this.options.gameConfiguration.maxTimeout, this.locators,false);
+        this.gameGuides.cocosTests(this.options.gameConfiguration.maxTimeout, this.locators,false,projectName);
     }
 
     async openHistoryPopup() {
