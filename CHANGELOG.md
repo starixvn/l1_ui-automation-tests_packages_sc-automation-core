@@ -1,3 +1,10 @@
+# [1.84.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.83.4...v1.84.0) (2025-12-02)
+
+
+### Features
+
+* base crash game cocos ([2090e1e](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/2090e1e4933409db6a7d57a6781b238b684e69db))
+
 ## [1.83.4](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.83.3...v1.83.4) (2025-11-28)
 
 
