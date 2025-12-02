@@ -254,4 +254,76 @@ export const TapGame_Locators = {
     btnClosePFGuide: "Canvas/auto-lazy-load-container/lazy-load-container/pf-intro-container/pf-intro-popup-portrait/popup/content/popup-icon-close/popup-icon-close-001",
     btnCloseGuide: "Canvas/auto-lazy-load-container/lazy-load-container/game-guide-direct-container/game-guide-portrait/popup/main/btn-close"
 }
+
+export const CrashGame_Locators = {
+    //Main Controls
+    btnEarlyBet: "Canvas/center/auto-scale-widget/bottom-area/right/early-bet-button",
+    btnPlaceBet: "Canvas/center/auto-scale-widget/bottom-area/right/place-bet-button",
+    btnCashOut: "cash-out",
+    lblRoundId: "RoundID",
+    statisticsBar: "statistics-bar",
+    btnCloseIcon: "close-icon",
+    btnConfirmBetAmount: "confirm",
+    btnStartAutoPlay: "start-button",
+    iconAutoPlay: "auto-play-button",
+    btnBetAmount: "bet-amount-container",
+    btnIncreaseBetAmount: "Canvas/center/auto-scale-widget/bottom-area/left/bet-amount-wrapper/bet-input/increase",
+    btnDecreaseBetAmount: "Canvas/center/auto-scale-widget/bottom-area/left/bet-amount-wrapper/bet-input/decrease",
+    btnMultiplier: "Canvas/center/auto-scale-widget/bottom-area/left/auto-cash-out/right/multiplier",
+    btnIncreaseMultiplier: "Canvas/center/auto-scale-widget/bottom-area/left/auto-cash-out/right/multiplier/increase",
+    btnDecreaseMultiplier: "Canvas/center/auto-scale-widget/bottom-area/left/auto-cash-out/right/multiplier/decrease",
+    btnAutoCashout: "Canvas/center/auto-scale-widget/bottom-area/left/auto-cash-out/left/Toggle",
+    btnCashoutFull: "cash-out-full",
+    btnCashoutHalf: "cash-out-half",
+    pathBetChip: "Canvas/center/auto-scale-widget/popup-containers-lazy-load/popup-containers/bet-amount-popup-container/bet-amount-popup/Node/button-container/",
+    //PF Setting
+    btnPfSetting: "provably-fair-btn",
+    ckbRandomSeed: "Canvas/outter-lazy-load-container/outter-containers-landscape/pf-popup-container/container/ClientSeedSetting/content/main-content/seed-wrapper/toggle-container/random/checkmark",
+    txtRandomSeed: "Canvas/outter-lazy-load-container/outter-containers-landscape/pf-popup-container/container/ClientSeedSetting/content/main-content/seed-wrapper/random-section/bg/value",
+    ckbManualSeed: "Canvas/outter-lazy-load-container/outter-containers-landscape/pf-popup-container/container/ClientSeedSetting/content/main-content/seed-wrapper/toggle-container/manual",
+    txtManualSeed: "Canvas/outter-lazy-load-container/outter-containers-landscape/pf-popup-container/container/ClientSeedSetting/content/main-content/seed-wrapper/manual-section/bg-001/value",
+    btnChangePfSetting: "Canvas/outter-lazy-load-container/outter-containers-landscape/pf-popup-container/container/ClientSeedSetting/content/main-content/seed-wrapper/manual-section/btn-change",
+    btnClosePFSetting: "Canvas/outter-lazy-load-container/outter-containers-landscape/pf-popup-container/container/ClientSeedSetting/content/btn-close",
+    iconPFGuideSetting: "Canvas/outter-lazy-load-container/outter-containers-landscape/pf-popup-container/container/ClientSeedSetting/content/title-section/icon-guide",
+    btnCopyServerSeed: "Canvas/outter-lazy-load-container/outter-containers-landscape/pf-popup-container/container/ClientSeedSetting/content/server-seed-hash/label-copy/bg/copy-button",
+    //Menu
+    btnSound: "sfx",
+    btnguide: "Canvas/outter-lazy-load-container/outter-containers-landscape/in-game-menu/outer-menu/btn-menu/expandable-layout/guide",
+    btnHistory: "Canvas/outter-lazy-load-container/outter-containers-landscape/in-game-menu/outer-menu/btn-menu/expandable-layout/history",
+    btnMenu: "Canvas/outter-lazy-load-container/outter-containers-landscape/in-game-menu/outer-menu/btn-menu",
+    btnLobby: "Canvas/outter-lazy-load-container/outter-containers-landscape/in-game-menu/outer-menu/lobby/lobby-out-side",
+    btnClosePFGuide: "Canvas/outter-lazy-load-container/outter-containers-landscape/pf-intro-container/pf-intro-popup/popup/main/btn-close",
+    btnCloseGuide: "Canvas/outter-lazy-load-container/outter-containers-landscape/game-guide-container/game-guide/popup/main/btn-close",
+    //AUTO Play Setting Popup
+    btnCloseAutoPlay: "Canvas/center/auto-scale-widget/popup-containers-lazy-load/popup-containers/auto-play-popup-container/auto-play-popup/bg/main-popup-close-btn",
+    pathNumAutoPlay: "Canvas/center/auto-scale-widget/popup-containers-lazy-load/popup-containers/auto-play-popup-container/auto-play-popup/bg/main/content/",
+    lblCountDownAutoPlay: "Canvas/center/auto-scale-widget/bottom-area/auto-play/auto-play-button/bg/number-rounds-value",
+    //Multiplier Setting Popup
+    btnCloseMultiplier: "Canvas/center/auto-scale-widget/popup-containers-lazy-load/popup-containers/auto-cash-out-popup-container/auto-cash-out-popup/main-popup-close-btn",
+    pathNumMultiplier: "Canvas/center/auto-scale-widget/popup-containers-lazy-load/popup-containers/auto-cash-out-popup-container/auto-cash-out-popup/bg/content/numbers/",
+    btnConfirmAutoCashout: "confirm-button",
+    // History
+    lblHistoryRoundId: "Canvas/outter-lazy-load-container/outter-containers-landscape/bet-history-container/bet-history-dialog/popup/back-wrapper/table-bg/content/bet-history-body-item/node/round",
+    lblHistoryTotalBet: "Canvas/outter-lazy-load-container/outter-containers-landscape/bet-history-container/bet-history-dialog/popup/back-wrapper/table-bg/content/bet-history-body-item/node/lblTotalStake",
+    lblHistoryWin: "Canvas/outter-lazy-load-container/outter-containers-landscape/bet-history-container/bet-history-dialog/popup/back-wrapper/table-bg/content/bet-history-body-item/node/lblWin",
+    btnCloseHistory: "Canvas/outter-lazy-load-container/outter-containers-landscape/bet-history-container/bet-history-dialog/popup/back-wrapper/btnClosed",
+    //History detail
+    lblHistoryDetailRoundId: "Canvas/outter-lazy-load-container/outter-containers-landscape/bet-history-details-container/bet-detail-dialog/popup/back-wrapper/defail-summary-table/bet-details-summary-table/result-table/round/roundId-value",
+    lblHistoryDetailTotalBet: "Canvas/outter-lazy-load-container/outter-containers-landscape/bet-history-details-container/bet-detail-dialog/popup/back-wrapper/detail-log-table/bet-detail-log-table/detail-table/scrollview/view/content/rows/bet-detail-item/lblBet",
+    lblHistoryDetailTotalWin: "Canvas/outter-lazy-load-container/outter-containers-landscape/bet-history-details-container/bet-detail-dialog/popup/back-wrapper/detail-log-table/bet-detail-log-table/detail-table/scrollview/view/content/rows/bet-detail-item/lblWin",
+    btnCloseHistoryDetail: "Canvas/outter-lazy-load-container/outter-containers-landscape/bet-history-details-container/bet-detail-dialog/popup/back-wrapper/btnClosed",
+    // PF History
+    btnHistoryPF: "Canvas/outter-lazy-load-container/outter-containers-landscape/bet-history-container/bet-history-dialog/popup/back-wrapper/table-bg/content/bet-history-body-item/node/verify",
+    btnCloseHistorPF: "Canvas/outter-lazy-load-container/outter-containers-landscape/pf-popup-container/container/PFVerification/content/popup-icon-close",
+    iconHistoryPFGuide: "Canvas/outter-lazy-load-container/outter-containers-landscape/pf-popup-container/container/PFVerification/content/title-section/icon-guide",
+    lblClientSeed: "Canvas/outter-lazy-load-container/outter-containers-landscape/pf-popup-container/container/PFVerification/content/client-seed/merge-cs/label-copy/bg/mask/Label",
+    lblHistoryPFRoundId: "Canvas/outter-lazy-load-container/outter-containers-landscape/pf-popup-container/container/PFVerification/content/result-table/round/roundId-value"
+    
+   
+   
+   
+   
+,
+
+}
 ;

@@ -102,7 +102,7 @@ export class RoundGameBaseCocos {
         test("Verify bet ticket detail data in history popup", async () => {
             // Only run this test if txtHistoryRoundId is clickable (has overflow = CLAMP or color = #3a97ff)
             const isClickable = await this.game.isLabelClickable(this.locators.txtHistoryRoundId);
-            test.skip(!isClickable, "txtHistoryRoundId is not clickable (overflow != CLAMP and color != #3a97ff)");
+            test.skip(!isClickable, "No Histor detail popup");
             
             await this.game.clickCocos(this.locators.txtHistoryRoundId, 1000);
             await this.game.waitForTimeout(2000);

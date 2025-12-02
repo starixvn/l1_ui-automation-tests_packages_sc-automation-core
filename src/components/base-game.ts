@@ -265,17 +265,8 @@ export class BaseGame {
             await this.page.waitForTimeout(50);
         }
         
-        // Check if portrait mode was detected
-        if (filterA.includes("PORTRAIT_MODE_DETECTED")) {
-            console.log("Switching to portrait mode handling");
-            await this.waitForTimeout(3000);
-            await this.navigateToMicrositeIframe();
-            console.log("Portrait Game UI is ready for testing");
-            await this.page.screenshot({ path: `./test-results/afterInGame.png` });
-            return;
-        }
-        
-        await this.page.waitForTimeout(1000);
+        await this.waitForTimeout(3000);
+        await this.navigateToMicrositeIframe();
         console.log("Landscape Game UI is ready for testing");
         await this.page.screenshot({ path: `./test-results/afterInGame.png` });
     }
@@ -355,7 +346,7 @@ export class BaseGame {
 
     async waitUntilPlaceBet(subGameName?: string): Promise<void> {
         await this.waitForEvent(GameEvent.StartPlaceBet, subGameName);
-        await this.waitForTimeout(5000);
+        await this.waitForTimeout(4000);
     }
 
     async gnWaitUntilPlaceBet(timeout = 3000): Promise<void> {
@@ -891,6 +882,15 @@ export class BaseGame {
         } catch (err) {
             console.error(`Error checking Cocos locator existence: ${(err as Error).message}`);
             return false;
+        }
+    }
+
+     async dynamicClick(locator: any, timeout: number = 500): Promise<void> {
+        if (typeof locator === 'string') {
+            await this.clickCocos(locator, timeout);
+        } else if (locator && typeof locator === 'object' && 'x' in locator && 'y' in locator) {
+            await this.page.mouse.click(locator.x, locator.y);
+            await this.waitForTimeout(timeout);
         }
     }
 

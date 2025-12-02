@@ -18,6 +18,7 @@ import { PortrailCascadingGameBase } from "./portrail-cascading-slot-game-base.s
 import { PortrailClassicGameBase } from "./portrail-classic-slot-game-base.spec";
 import { RoundGameBaseCocos } from "./mini-game-base-cocos.spec";
 import { TapGameBaseCocos } from "./tap-game-base-cocos.spec";
+import { CrashGameBaseCocos } from "./crash-game-base-cocos.spec";
 
 
 export {
@@ -42,5 +43,6 @@ export {
     MobiDirect,
     PortrailCascadingGameBase,
     PortrailClassicGameBase,
-    TapGameBaseCocos
+    TapGameBaseCocos,
+    CrashGameBaseCocos
 };

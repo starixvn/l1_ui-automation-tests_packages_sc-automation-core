@@ -16,7 +16,7 @@ export interface IBaseOptionsCocos {
     locators?: any;
     snapshotFolderPath: string;
     placeBetChoices?: any;
-    placeBetAmount?: string[];
+    placeBetAmount?: any;
     totalTaps?: number;
     isJackpot?: boolean;
     uiLocatorsToVerify?: object; // Array of locator keys to verify in UI tests

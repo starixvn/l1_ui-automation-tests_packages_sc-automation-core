@@ -90,26 +90,18 @@ export class BasePlayer {
         }
     }
 
-    private async clickChoice(choice: any, timeout: number): Promise<void> {
-        if (typeof choice === 'string') {
-            await this.game.clickCocos(choice, timeout);
-        } else if (choice && typeof choice === 'object' && 'x' in choice && 'y' in choice) {
-            await this.game.page.mouse.click(choice.x, choice.y);
-            await this.game.waitForTimeout(timeout);
-        }
-    }
 
     async placeBetCocos(betBoard:boolean, choice: any, amountLocator?:string): Promise<any> {
         this.game.attachSocketAndCaptureEvent(GameEvent.EndBet);
         if (betBoard) {
-            await this.clickChoice(choice, 1000);
+            await this.game.clickCocos(choice, 500);
             if (amountLocator) {
                 await this.game.clickCocos(amountLocator, 1000);
                 await this.game.clickCocos("button.ok", 500);
             }
         } else {
             await this.game.clickCocos(amountLocator, 1000);
-            await this.clickChoice(choice, 500);
+            await this.game.clickCocos(choice, 500);
         }
         return await this.game.latestCaptureEvent(GameEvent.EndBet);
     }

@@ -13,6 +13,7 @@ import {
   RoundGame_Locators,
   replaceGameNameInLocators,
   TapGame_Locators,
+  CrashGame_Locators,
 } from "./base-cocos-game-locator";
 
 export {
@@ -23,13 +24,15 @@ export {
   ImageLocator,
   ImageSnapshot,
   GameConfiguration,
+  replaceGameNameInLocators,
   test,
   admintest,
   BaseLocator,
   Portrail_Cascading_Locators,
   Portrail_Classic_Locators,
   RoundGame_Locators,
-  replaceGameNameInLocators,
   TapGame_Locators,
+  CrashGame_Locators,
+
 };
 
