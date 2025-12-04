@@ -840,12 +840,67 @@ export class BaseGame {
         try {
             const result = await this.page.evaluate((nameOrPath) => {
                 const cc = window.cc;
-                if (!cc) return { success: false, message: 'Cocos Creator not found' };
+                if (!cc || !cc.find) return { success: false, message: 'Cocos Creator not found' };
                 
                 let targetNode = null;
                 
                 if (nameOrPath.includes('/')) {
+                    // Try full path first
                     targetNode = cc.find(nameOrPath);
+                    
+                    // If not found and path starts with '/', try partial path matching
+                    if (!targetNode && nameOrPath.startsWith('/')) {
+                        const canvas = cc.find('Canvas');
+                        if (!canvas) {
+                            return { success: false, message: 'Canvas not found' };
+                        }
+                        
+                        // Normalize partial path (remove leading slash if present)
+                        const partialPath = nameOrPath.startsWith('/') ? nameOrPath.substring(1) : nameOrPath;
+                        
+                        // Function to get full path of a node from Canvas
+                        const getNodePath = (node) => {
+                            const path: string[] = [];
+                            let current = node;
+                            while (current) {
+                                const name = current.name || current._name || '';
+                                if (name) {
+                                    path.unshift(name);
+                                }
+                                current = current.parent;
+                                // Stop at Canvas
+                                if (current && (current.name === 'Canvas' || current._name === 'Canvas')) {
+                                    break;
+                                }
+                            }
+                            return path.join('/');
+                        };
+                        
+                        // Function to find node by partial path (path ends with partialPath)
+                        const findByPartialPath = (parent) => {
+                            if (!parent) return null;
+                            
+                            try {
+                                const currentPath = getNodePath(parent);
+                                // Check if current path ends with the partial path
+                                if (currentPath.endsWith(partialPath)) {
+                                    return parent;
+                                }
+                            } catch (e) {
+                                // Ignore errors in path calculation
+                            }
+                            
+                            // Check children
+                            const children = parent.children || parent._children || [];
+                            for (const child of children) {
+                                const found = findByPartialPath(child);
+                                if (found) return found;
+                            }
+                            return null;
+                        };
+                        
+                        targetNode = findByPartialPath(canvas);
+                    }
                 } else {
                     const findNodeByName = (parent: any, targetName: string) => {
                         if (parent.name === targetName) {
@@ -904,7 +959,62 @@ export class BaseGame {
             // Find node by path or name
             let targetNode = null;
             if (nodeNameOrPath.includes('/')) {
+                // Try full path first
                 targetNode = cc.find(nodeNameOrPath);
+                
+                // If not found and path starts with '/', try partial path matching
+                if (!targetNode && nodeNameOrPath.startsWith('/')) {
+                    const canvas = cc.find('Canvas');
+                    if (!canvas) {
+                        return { success: false, message: 'Canvas not found' };
+                    }
+                    
+                    // Normalize partial path (remove leading slash if present)
+                    const partialPath = nodeNameOrPath.startsWith('/') ? nodeNameOrPath.substring(1) : nodeNameOrPath;
+                    
+                    // Function to get full path of a node from Canvas
+                    const getNodePath = (node) => {
+                        const path: string[] = [];
+                        let current = node;
+                        while (current) {
+                            const name = current.name || current._name || '';
+                            if (name) {
+                                path.unshift(name);
+                            }
+                            current = current.parent;
+                            // Stop at Canvas
+                            if (current && (current.name === 'Canvas' || current._name === 'Canvas')) {
+                                break;
+                            }
+                        }
+                        return path.join('/');
+                    };
+                    
+                    // Function to find node by partial path (path ends with partialPath)
+                    const findByPartialPath = (parent) => {
+                        if (!parent) return null;
+                        
+                        try {
+                            const currentPath = getNodePath(parent);
+                            // Check if current path ends with the partial path
+                            if (currentPath.endsWith(partialPath)) {
+                                return parent;
+                            }
+                        } catch (e) {
+                            // Ignore errors in path calculation
+                        }
+                        
+                        // Check children
+                        const children = parent.children || parent._children || [];
+                        for (const child of children) {
+                            const found = findByPartialPath(child);
+                            if (found) return found;
+                        }
+                        return null;
+                    };
+                    
+                    targetNode = findByPartialPath(canvas);
+                }
             }
             else {
                 const canvas = cc.find('Canvas');
@@ -1167,12 +1277,67 @@ export class BaseGame {
         try {
           const result = await this.page.evaluate((nameOrPath) => {
             const cc = window.cc;
-            if (!cc) return '';
+            if (!cc || !cc.find) return '';
             
             let targetNode = null;
             
             if (nameOrPath.includes('/')) {
+              // Try full path first
               targetNode = cc.find(nameOrPath);
+              
+              // If not found and path starts with '/', try partial path matching
+              if (!targetNode && nameOrPath.startsWith('/')) {
+                  const canvas = cc.find('Canvas');
+                  if (!canvas) {
+                      return '';
+                  }
+                  
+                  // Normalize partial path (remove leading slash if present)
+                  const partialPath = nameOrPath.startsWith('/') ? nameOrPath.substring(1) : nameOrPath;
+                  
+                  // Function to get full path of a node from Canvas
+                  const getNodePath = (node) => {
+                      const path: string[] = [];
+                      let current = node;
+                      while (current) {
+                          const name = current.name || current._name || '';
+                          if (name) {
+                              path.unshift(name);
+                          }
+                          current = current.parent;
+                          // Stop at Canvas
+                          if (current && (current.name === 'Canvas' || current._name === 'Canvas')) {
+                              break;
+                          }
+                      }
+                      return path.join('/');
+                  };
+                  
+                  // Function to find node by partial path (path ends with partialPath)
+                  const findByPartialPath = (parent) => {
+                      if (!parent) return null;
+                      
+                      try {
+                          const currentPath = getNodePath(parent);
+                          // Check if current path ends with the partial path
+                          if (currentPath.endsWith(partialPath)) {
+                              return parent;
+                          }
+                      } catch (e) {
+                          // Ignore errors in path calculation
+                      }
+                      
+                      // Check children
+                      const children = parent.children || parent._children || [];
+                      for (const child of children) {
+                          const found = findByPartialPath(child);
+                          if (found) return found;
+                      }
+                      return null;
+                  };
+                  
+                  targetNode = findByPartialPath(canvas);
+              }
             } else {
               const findNodeByName = (parent: any, targetName: string) => {
                 if (parent.name === targetName) {
@@ -1219,12 +1384,67 @@ export class BaseGame {
         try {
           const result = await this.page.evaluate((nameOrPath) => {
             const cc = window.cc;
-            if (!cc) return false;
+            if (!cc || !cc.find) return false;
             
             let targetNode = null;
             
             if (nameOrPath.includes('/')) {
+              // Try full path first
               targetNode = cc.find(nameOrPath);
+              
+              // If not found and path starts with '/', try partial path matching
+              if (!targetNode && nameOrPath.startsWith('/')) {
+                  const canvas = cc.find('Canvas');
+                  if (!canvas) {
+                      return false;
+                  }
+                  
+                  // Normalize partial path (remove leading slash if present)
+                  const partialPath = nameOrPath.startsWith('/') ? nameOrPath.substring(1) : nameOrPath;
+                  
+                  // Function to get full path of a node from Canvas
+                  const getNodePath = (node) => {
+                      const path: string[] = [];
+                      let current = node;
+                      while (current) {
+                          const name = current.name || current._name || '';
+                          if (name) {
+                              path.unshift(name);
+                          }
+                          current = current.parent;
+                          // Stop at Canvas
+                          if (current && (current.name === 'Canvas' || current._name === 'Canvas')) {
+                              break;
+                          }
+                      }
+                      return path.join('/');
+                  };
+                  
+                  // Function to find node by partial path (path ends with partialPath)
+                  const findByPartialPath = (parent) => {
+                      if (!parent) return null;
+                      
+                      try {
+                          const currentPath = getNodePath(parent);
+                          // Check if current path ends with the partial path
+                          if (currentPath.endsWith(partialPath)) {
+                              return parent;
+                          }
+                      } catch (e) {
+                          // Ignore errors in path calculation
+                      }
+                      
+                      // Check children
+                      const children = parent.children || parent._children || [];
+                      for (const child of children) {
+                          const found = findByPartialPath(child);
+                          if (found) return found;
+                      }
+                      return null;
+                  };
+                  
+                  targetNode = findByPartialPath(canvas);
+              }
             } else {
               const findNodeByName = (parent: any, targetName: string) => {
                 if (parent.name === targetName) {
