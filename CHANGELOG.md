@@ -1,3 +1,10 @@
+# [1.85.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.84.1...v1.85.0) (2025-12-04)
+
+
+### Features
+
+* hyperspin base component ([c8a72fd](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/c8a72fd99522440fede0a218156d807a22cec215))
+
 ## [1.84.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.84.0...v1.84.1) (2025-12-04)
 
 
