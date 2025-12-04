@@ -3,7 +3,7 @@ import { GameEvent } from "../_shared";
 import { expect } from "../expects";
 import { IBaseOptionsCocos } from "./base-options";
 import { GameGuides } from "../game-components/guides/guides.spec";
-import {  replaceGameNameInLocators, RoundGame_Locators } from "../components/base-cocos-game-locator";
+import { RoundGame_Locators } from "../components/base-cocos-game-locator";
 
 const projectName = process.env.npm_config_project?.includes("l1")
     ? "SG"
@@ -20,10 +20,7 @@ export class RoundGameBaseCocos {
     constructor(protected options: IBaseOptionsCocos) {}
 
     private get locators() {
-        return replaceGameNameInLocators(
-            this.options.locators || RoundGame_Locators,
-            this.options.gameConfiguration.cocosNameSpace || this.options.gameConfiguration.name
-        );
+        return this.options.locators || RoundGame_Locators;
     }
 
     private overrideClickOutSide() {

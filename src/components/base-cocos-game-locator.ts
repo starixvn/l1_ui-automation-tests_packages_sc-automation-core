@@ -3,7 +3,6 @@ const CANVAS = "Canvas";
 const CENTER = "Canvas/center";
 const BET_CONTAINER = "Canvas/center/full-widget/container/low/bottom-center/portrait-bottom-area/bet-container/totalBetContainer/total-bet/portrait-bet-control/container";
 const AUTO_PLAY = "Canvas/center/auto-play-lazyload-container/auto-play-container/auto-play-popup/container/container";
-const MINI_GAME_DIALOG = "Canvas/mini-panel/MiniPanel/Dialog";
 
 export const Portrail_Cascading_Locators = {
     // Main buttons
@@ -178,21 +177,6 @@ export const RoundGame_Locators = {
 
 }
 
-export function replaceGameNameInLocators<T extends Record<string, any>>(locators: T, gameName: string): T {
-    const result = { ...locators };
-    
-    // Replace "GameName" in all string values that contain it
-    Object.keys(result).forEach(key => {
-        const value = result[key];
-        if (typeof value === 'string' && value.includes('GameName')) {
-            (result as any)[key] = value.replace(/GameName/g, gameName);
-        }
-    });
-    
-    return result;
-}
-
-
 export const TapGame_Locators = {
     lblRoundId: "RoundID",
     btnPlay: "start-bet-button",
@@ -317,13 +301,7 @@ export const CrashGame_Locators = {
     btnCloseHistorPF: "/PFVerification/content/popup-icon-close",
     iconHistoryPFGuide: "/PFVerification/content/title-section/icon-guide",
     lblClientSeed: "/PFVerification/content/client-seed/merge-cs/label-copy/bg/mask/Label",
-    lblHistoryPFRoundId: "/PFVerification/content/result-table/round/roundId-value"
-    
-   
-   
-   
-   
-,
+    lblHistoryPFRoundId: "/PFVerification/content/result-table/round/roundId-value",
 
 };
 
