@@ -1,3 +1,11 @@
+## [1.84.1](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.84.0...v1.84.1) (2025-12-04)
+
+
+### Bug Fixes
+
+* enhance cocos locator, can input partial path instead of full path ([580ee76](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/580ee76aa2ce59944aa3fe75da38fdb5c1ec4f08))
+* remove function replaceGamenamInLocators ([ceb5aa2](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/commit/ceb5aa246a03998d2468e2172cc1163e0b3325f7))
+
 # [1.84.0](https://git3.nexdev.net/l1/ui-automation-tests/packages/sc-automation-core/compare/v1.83.4...v1.84.0) (2025-12-02)
 
 
