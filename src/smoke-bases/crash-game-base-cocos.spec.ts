@@ -6,11 +6,6 @@ import { performanceTest } from "../game-components/performance/performance";
 import { GameGuides } from "../game-components/guides/guides.spec";
 import { CrashGame_Locators } from "../components/base-cocos-game-locator";
 
-const CrashGameEvent = {
-    StartCashOut: (msg) => msg?.c?.t == 0,
-    CashOut: (msg) => msg?.cashOut,
-    HalfCashOut: (msg) => msg?.halfCashOut,
-};
 
 const projectName = process.env.npm_config_project?.includes("l1")
     ? "SG"
@@ -77,8 +72,7 @@ export class CrashGameBaseCocos {
                 const savedClientSeed = this.settledResults.clientSeed;
                 if (isCrashed === "" || isCrashed === undefined) {
                     //Have not crash yet
-                    await this.game.waitForTimeout(5000);
-                    await this.game.waitForSpecificEvent(CrashGameEvent.StartCashOut);
+                    await this.game.waitForTimeout(8000);
                     await this.game.clickCocos(this.locators.btnCashoutFull, 100); //click cash out
                     this.settledResults = await this.game.waitForSettlement();
                 } else {
