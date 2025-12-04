@@ -4,7 +4,7 @@ import { Portrail_Classic_Locators } from "../components/base-cocos-game-locator
 import { expect } from "../expects";
 import { GameEvent } from "../_shared";
 import { GameGuides } from "../game-components/guides/guides.spec";
-
+import { Promotion} from "../game-components/promotion/promotion.spec";
 const projectName = process.env.npm_config_project?.includes("l1")
     ? "SG"
     : process.env.npm_config_project?.includes("l2")
@@ -14,6 +14,7 @@ const projectName = process.env.npm_config_project?.includes("l1")
 export interface SlotGameOptions extends IBaseOptions {
     placeBetAmount?: number;
     isJackpot?: boolean;
+    isPromotion?: boolean;
 }
 
 export class PortrailClassicGameBase {
@@ -21,7 +22,7 @@ export class PortrailClassicGameBase {
     player: BasePlayer;
     settledResults: any;
     protected gameGuides: GameGuides = new GameGuides();
-
+    protected promotion: Promotion = new Promotion();
     constructor(protected options: SlotGameOptions) {}
 
     private get locators() {
@@ -225,7 +226,7 @@ export class PortrailClassicGameBase {
                 this.game = baseGame;
                 this.player = new BasePlayer(this.game);
                 this.gameGuides.init(this.game);
-
+                this.promotion.init(this.game);
                 // Override clickOutSide method globally for this project
                 this.overrideClickOutSide();
                 this.overrideopenGuide();
@@ -257,8 +258,8 @@ export class PortrailClassicGameBase {
     protected runScenario() {
         this.mainUITests();
         this.placeBetAndSettleTests();
+        this.promotion.runPromotion(this.options.isPromotion);
         this.gameGuides.cocosTests(this.options.gameConfiguration.maxTimeout, this.locators, this.options.isJackpot);
-
     }
 
     async setBetConfiguration(betamount: number) {

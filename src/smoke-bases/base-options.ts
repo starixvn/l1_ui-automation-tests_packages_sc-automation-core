@@ -9,6 +9,7 @@ export interface IBaseOptions {
     placeBetAmount?: number;
     isconfig?: any;
     isJackpot?: boolean;
+    isPromotion?: boolean;
 }
 
 export interface IBaseOptionsCocos {
@@ -19,6 +20,7 @@ export interface IBaseOptionsCocos {
     placeBetAmount?: string[];
     totalTaps?: number;
     isJackpot?: boolean;
+    isPromotion?: boolean;
     uiLocatorsToVerify?: object; // Array of locator keys to verify in UI tests
 }
 

@@ -4,6 +4,8 @@ import { Portrail_Cascading_Locators } from "../components/base-cocos-game-locat
 import { expect } from "../expects";
 import { GameEvent } from "../_shared";
 import { GameGuides } from "../game-components/guides/guides.spec";
+import { Promotion} from "../game-components/promotion/promotion.spec";
+
 
 const projectName = process.env.npm_config_project?.includes("l1")
     ? "SG"
@@ -19,6 +21,8 @@ export class PortrailCascadingGameBase {
     player: BasePlayer;
     settledResults: any;
     protected gameGuides: GameGuides = new GameGuides();
+    protected promotion: Promotion = new Promotion();
+
 
     constructor(protected options: SlotGameOptions) {}
 
@@ -233,7 +237,7 @@ export class PortrailCascadingGameBase {
                 this.game = baseGame;
                 this.player = new BasePlayer(this.game);
                 this.gameGuides.init(this.game);
-
+                this.promotion.init(this.game);
                 // Override clickOutSide method globally for this project
                 this.overrideClickOutSide();
                 this.overrideopenGuide();
@@ -267,6 +271,8 @@ export class PortrailCascadingGameBase {
     protected runScenario() {
         this.mainUITests();
         this.placeBetAndSettleTests();
+        this.promotion.runPromotion(this.options.isPromotion);
+
 
     }
 

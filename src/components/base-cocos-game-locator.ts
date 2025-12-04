@@ -149,7 +149,17 @@ export const Portrail_Classic_Locators = {
      iconCloseHistory: "Canvas/outer-containers/outer-container/bet-history-container/portrait-bet-history-dialog/popup/back-wrapper/wrapper",
 
     };
-
+export const PromotionLocators = {
+    remainingFS: 'Canvas/center/fsb-container/fsb-promotion-container/portrait-fsb-promotion-info/bg/content/remaining-fsb/value',
+    bonusWin: 'Canvas/center/fsb-promotion-popup-container/portrait-promotion-ended-popup/main/background/value',
+    endFS: 'Canvas/center/fsb-promotion-popup-container/portrait-promotion-ended-popup/main/background/button',
+    percentage: 'Canvas/center/fsb-container/fsb-promotion-container/portrait-turn-over-required-panel/bg/content/progressBar/lbl-percentage',
+    promotionEndPopup: 'Canvas/center/fsb-promotion-popup-container/portrait-claim-bonus-notification/main/background/button',
+    banlaceLbl: 'Canvas/center/info-player/balance-container/balance',
+    btnTurbo: 'Canvas/center/full-widget/container/low/bottom-center/portrait-bottom-area/turbo-container/portrait-turbo-mode-button',
+    fsEffect: 'Canvas/center/outer-container/outer-container/effect-game-container/effect-freespin/text-you-win',
+    redeemIcon: 'Canvas/center/fsb-container/fsb-promotion-container/portrait-gift-code/icon'
+}
 
 export const RoundGame_Locators = {
     lblRoundId: "Phien",
